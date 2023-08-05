@@ -52,7 +52,7 @@ def main():
     st.subheader('Upload your CSV data:')
     file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
 
-    user_api = st.text_input("Masukkan OpenAI API Key anda: ")
+    # user_api = st.text_input("Masukkan OpenAI API Key anda: ")
     openai.api_key = user_api
 
     if file is not None:
