@@ -13,8 +13,6 @@ from io import StringIO
 warnings.filterwarnings('ignore')
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-openai.api_key = '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'
-
 def detect_delimiter(file):
     file.seek(0)  # Reset file position to the beginning
     file_content = file.read(1024).decode()  # Convert bytes to string
