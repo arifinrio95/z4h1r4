@@ -64,11 +64,19 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
     messages = [
         {"role": "system", "content": "I only response with syntax, no other text explanation."},
         {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. {input_pengguna}. 
-        My dataframe already load previously, named df, use it, do not reload the dataframe. Respond with scripts without any text. Only code in a single cell. 
-        Don’t start your response with “Sure, here are”. Start your response with “import” inside the python block. 
-        Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
-        Don’t give me any explanation about the script. Response only with python block. Do not reload the dataframe. 
-        Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi. Pastikan semua library yang dibutuhkan telah diimport."""}
+        Use the preloaded dataframe "df" in your response. Provide a Python script that includes:
+- Import statements at the beginning.
+- Streamlit titles for each step, using st.write for explanations and st.pyplot for visualizations.
+- Do not reload the dataframe or include any text outside the Python code block.
+- Use st.write for non-visual explanations, and st.pyplot for visualizations.
+- Ensure all necessary libraries are imported."""}
+
+        
+        # My dataframe already load previously, named df, use it, do not reload the dataframe. Respond with scripts without any text. Only code in a single cell. 
+        # Don’t start your response with “Sure, here are”. Start your response with “import” inside the python block. 
+        # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
+        # Don’t give me any explanation about the script. Response only with python block. Do not reload the dataframe. 
+        # Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi. Pastikan semua library yang dibutuhkan telah diimport."""}
     ]
     
     if error_message and previous_script:
