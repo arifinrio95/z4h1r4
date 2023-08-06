@@ -157,9 +157,10 @@ def main():
                         error_message = None
                         previous_script = None
                         input_pengguna = ""
-                        if st.button('Lihat Script.'):
-                            st.write("The Script:")
-                            st.text(script)
+                        # if st.button('Lihat Script.'):
+                        st.write("")
+                        st.write("The Script:")
+                        st.text(script)
                         break
                     except Exception as e:
                         error_message = str(e)
