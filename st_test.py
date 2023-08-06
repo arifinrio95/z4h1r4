@@ -179,8 +179,9 @@ def main():
             )
             
             script = response.choices[0].message['content']
-            exec(str(script), globals())
             st.write(str(script))
+            exec(str(script), globals())
+
             st.write('First 5 rows of clean dataset.')
             st.dataframe(df.head())
             st.download_button("Klik untuk mendownload clean dataframe",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
