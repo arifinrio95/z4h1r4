@@ -149,47 +149,47 @@ def main():
                 st.write('Missing values telah dihandle.')
         # else:
         #     st.write("Tidak ada missing values dalam DataFrame.")
-        df_ori = df.copy()
-        if st.button('Klik disini jika kamu ingin saya melakukan data cleansing secara otomatis.'):
-            # st.subheader('Data cleansing...')
-            df = load_file_auto_delimiter(file)
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo-16k",
-                # model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "I will cleansing your df, no other text explanation."},
-                    {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-                                                    1. Do a data cleansing and assign to df.
-                                                    2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-                                                    3. Respond with scripts without any text. 
-                                                    4. Only code in a single cell. 
-                                                    5. Don’t start your response with “Sure, here are”. 
-                                                    6. Start your response with “import” inside the python block. 
-                                                    7. Give and show with streamlit the title for every steps.
-                                                    8. Print with st.write the explanation for every syntax.
-                                                    9. Don’t give me any explanation about the script. Response only with python block.
-                                                    10. Do not reload the dataframe.
-                                                    11. Use Try and Except for each syntax.
-                                                    12. Print and show the detail step of data cleansing you did.
-                                                    13. Dont forget to show the steps with st.write.
-                                                    14. Don't forget to assign all the cleansing step to df.
-                                                    """}
-                ],
-                max_tokens=14000,
-                temperature=0
-            )
+        # df_ori = df.copy()
+        # if st.button('Klik disini jika kamu ingin saya melakukan data cleansing secara otomatis.'):
+        #     # st.subheader('Data cleansing...')
+        #     df = load_file_auto_delimiter(file)
+        #     response = openai.ChatCompletion.create(
+        #         model="gpt-3.5-turbo-16k",
+        #         # model="gpt-4",
+        #         messages=[
+        #             {"role": "system", "content": "I will cleansing your df, no other text explanation."},
+        #             {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
+        #                                             1. Do a data cleansing and assign to df.
+        #                                             2. My dataframe already load previously, named df, use it, do not reload the dataframe.
+        #                                             3. Respond with scripts without any text. 
+        #                                             4. Only code in a single cell. 
+        #                                             5. Don’t start your response with “Sure, here are”. 
+        #                                             6. Start your response with “import” inside the python block. 
+        #                                             7. Give and show with streamlit the title for every steps.
+        #                                             8. Print with st.write the explanation for every syntax.
+        #                                             9. Don’t give me any explanation about the script. Response only with python block.
+        #                                             10. Do not reload the dataframe.
+        #                                             11. Use Try and Except for each syntax.
+        #                                             12. Print and show the detail step of data cleansing you did.
+        #                                             13. Dont forget to show the steps with st.write.
+        #                                             14. Don't forget to assign all the cleansing step to df.
+        #                                             """}
+        #         ],
+        #         max_tokens=14000,
+        #         temperature=0
+        #     )
             
-            script = response.choices[0].message['content']
-            # st.write(str(script))
-            exec(str(script), locals().update(locals()))
+        #     script = response.choices[0].message['content']
+        #     # st.write(str(script))
+        #     exec(str(script), locals().update(locals()))
 
-            st.write('First 5 rows of clean dataset.')
-            st.dataframe(df.head())
-            st.download_button("Klik untuk mendownload clean dataframe",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
-            if st.button('Tolak data cleansing dan kembalikan ke semula.'):  
-                st.write('Dataframe telah dikembalikan.')
-                time.sleep(3)
-                df = df_ori.copy()
+        #     st.write('First 5 rows of clean dataset.')
+        #     st.dataframe(df.head())
+        #     st.download_button("Klik untuk mendownload clean dataframe",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
+        #     if st.button('Tolak data cleansing dan kembalikan ke semula.'):  
+        #         st.write('Dataframe telah dikembalikan.')
+        #         time.sleep(3)
+        #         df = df_ori.copy()
 
         # password = st.text_input("Masukkan Password: ")
         # if st.button('Submit'):
@@ -204,9 +204,6 @@ def main():
         input_pengguna = ""
         # User Input
         input_pengguna = st.text_input("Masukkan perintah anda untuk mengolah data tersebut:")
-
-        
-                
         if (input_pengguna != "") & (input_pengguna != None) :
             if st.button('Eksekusi!'):
                 # schema_dict = {col: str(dtype) for col, dtype in df.dtypes.iteritems()}
