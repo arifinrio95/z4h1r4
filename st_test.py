@@ -267,23 +267,23 @@ def main():
 
                         if retry_count == 5:
                             st.write("Maaf saya tidak bisa menyelesaikan perintah tersebut, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
-                if (script!='') & st.button('Lihat Script.'):
-                    st.write("")
-                    # st.write("The Script:")
-                    st.text(script)
-                error_message = None
-                previous_script = None
-                input_pengguna = ""
-    
-                # Mengevaluasi string sebagai kode Python
-                # exec(str(script))
-                # if st.button('Lihat Script.'):
-                #     st.write("The Script:")
-                #     st.text(script)
-                
-                # Menyimpan plot sebagai file sementara dan menampilkan dengan Streamlit
-                # plt.savefig("plot.png")
-                # st.image("plot.png")
+            if (script!='') & st.button('Lihat Script.'):
+                st.write("")
+                # st.write("The Script:")
+                st.text(script)
+            error_message = None
+            previous_script = None
+            # input_pengguna = ""
+
+            # Mengevaluasi string sebagai kode Python
+            # exec(str(script))
+            # if st.button('Lihat Script.'):
+            #     st.write("The Script:")
+            #     st.text(script)
+            
+            # Menyimpan plot sebagai file sementara dan menampilkan dengan Streamlit
+            # plt.savefig("plot.png")
+            # st.image("plot.png")
 
     # except:
     #     st.write("Mohon maaf error ges, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
