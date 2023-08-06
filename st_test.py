@@ -53,7 +53,7 @@ def main():
     file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
 
     # user_api = st.text_input("Masukkan OpenAI API Key anda: ")
-    openai.api_key = user_api
+    # openai.api_key = user_api
 
     if file is not None:
         # df = pd.read_csv(file)
