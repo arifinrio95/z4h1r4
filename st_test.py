@@ -143,8 +143,8 @@ def main():
                                                     9. Don’t give me any explanation about the script. Response only with python block.
                                                     10. Do not reload the dataframe.
                                                     11. Use Try and Except for each syntax.
-                                                    12. Print with st.write the step of data cleansing you did.
-                                                    13. Export clean df with st.download_button
+                                                    12. Print with st.write the detail step of data cleansing you did.
+                                                    13. Export clean df with st.download_button("Press to Download",csv,"file.csv","text/csv",key='download-csv')
                                                     """}
                 ],
                 max_tokens=14000,
