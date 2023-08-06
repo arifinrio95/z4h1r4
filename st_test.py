@@ -169,8 +169,7 @@ def main():
                 messages=[
                     {"role": "system", "content": "I only response with syntax, no other text explanation."},
                     {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-                                                    0. Do a data cleansing and update the df.
-                                                    1. Do EDA. 
+                                                    1. Do a data cleansing and update the df. 
                                                     2. My dataframe already load previously, named df, use it, do not reload the dataframe.
                                                     3. Respond with scripts without any text. 
                                                     4. Only code in a single cell. 
@@ -181,7 +180,8 @@ def main():
                                                     9. Don’t give me any explanation about the script. Response only with python block.
                                                     10. Do not reload the dataframe.
                                                     11. Use Try and Except for each syntax.
-                                                    12. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi."""}
+                                                    12. Print with st.write the step of data cleansing you did.
+                                                    """}
                 ],
                 max_tokens=14000,
                 temperature=0
