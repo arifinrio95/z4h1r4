@@ -176,7 +176,7 @@ def main():
                                                     5. Don’t start your response with “Sure, here are”. 
                                                     6. Start your response with “import” inside the python block. 
                                                     7. Give and show with streamlit the title for every steps.
-                                                    8. Give an explanation for every syntax.
+                                                    8. Print with st.write the explanation for every syntax.
                                                     9. Don’t give me any explanation about the script. Response only with python block.
                                                     10. Do not reload the dataframe.
                                                     11. Use Try and Except for each syntax.
