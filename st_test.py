@@ -236,14 +236,14 @@ def main():
                 retry_count = 0
                 error_message = None
                 previous_script = None
-                while retry_count < 1:
+                while retry_count < 5:
                     try:
                         script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
                         exec(str(script))
     
-                        error_message = None
-                        previous_script = None
-                        input_pengguna = ""
+                        # error_message = None
+                        # previous_script = None
+                        # input_pengguna = ""
                         # if st.button('Lihat Script.'):
                         #     st.write("")
                         #     # st.write("The Script:")
