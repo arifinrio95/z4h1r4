@@ -119,7 +119,11 @@ def main():
         schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
         schema_str = json.dumps(schema_dict)
         # st.write("\nDataframe schema : ", schema_str)
-
+        
+        # Extract the first two rows into a dictionary
+        rows_dict = df.head(2).to_dict('records')
+        rows_str = json.dumps(rows_dict, default=str)
+        
         if st.button('Klik disini jika kamu ingin saya melakukan data cleansing secara otomatis.'):
             # st.subheader('Data cleansing...')
             response = openai.ChatCompletion.create(
@@ -181,9 +185,7 @@ def main():
                 
         #     if password == st.secrets['pass']:
                 
-        # Extract the first two rows into a dictionary
-        rows_dict = df.head(2).to_dict('records')
-        rows_str = json.dumps(rows_dict, default=str)
+        
 
         # EDA (automate sebelum 
         input_pengguna = ""
