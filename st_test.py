@@ -144,7 +144,6 @@ def main():
                                                     10. Do not reload the dataframe.
                                                     11. Use Try and Except for each syntax.
                                                     12. Print with st.write the detail step of data cleansing you did.
-                                                    13. Export clean df with st.download_button("Press to Download",df.to_csv(index=False).encode('utf-8'),"file.csv","text/csv",key='download-csv')
                                                     """}
                 ],
                 max_tokens=14000,
@@ -153,6 +152,7 @@ def main():
             
             script = response.choices[0].message['content']
             exec(str(script))
+            st.download_button("Press to Download Clean Dataset",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
 
         # Cari kolom yang memiliki missing values
         missing_columns = [col for col in df.columns if df[col].isnull().any()]
