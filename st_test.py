@@ -181,12 +181,11 @@ def main():
             st.write('First 5 rows of clean dataset.')
             st.dataframe(df.head())
             st.download_button("Klik untuk mendownload clean dataframe",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
-            if st.button('Tolak data cleansing dan kembalikan ke semula.'):
-                df = df_ori.copy()
+            if st.button('Tolak data cleansing dan kembalikan ke semula.'):  
                 st.write('Dataframe telah dikembalikan.')
                 time.sleep(3)
-        
-            
+                df = df_ori.copy()
+
         # password = st.text_input("Masukkan Password: ")
         # if st.button('Submit'):
         #     if password != st.secrets['pass']:
