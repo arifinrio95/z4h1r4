@@ -44,6 +44,37 @@ def load_file_auto_delimiter(file):
         raise ValueError(f'Unsupported file type: {file_extension}')
     return df
 
+def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0):
+    messages = [
+        {"role": "system", "content": "I only response with syntax, no other text explanation."},
+        {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
+                                                    1. {input_pengguna}. 
+                                                    2. My dataframe already load previously, named df, use it, do not reload the dataframe.
+                                                    3. Respond with scripts without any text. 
+                                                    4. Only code in a single cell. 
+                                                    5. Don’t start your response with “Sure, here are”. 
+                                                    6. Start your response with “import” inside the python block. 
+                                                    7. Give and show with streamlit the title for every steps.
+                                                    8. Give an explanation for every syntax.
+                                                    9. Don’t give me any explanation about the script. Response only with python block.
+                                                    10. Do not reload the dataframe.
+                                                    11. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi."""}
+    ]
+    
+    if error_message and previous_script:
+        messages.append({"role": "user", "content": f"Modif the previous Script : {previous_script} to solve this error: {error_message}"})
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-16k",
+        messages=messages,
+        max_tokens=12000,
+        temperature=0
+    )
+    script = response.choices[0].message['content']
+
+    return script
+
+
 def main():
     import warnings
     warnings.filterwarnings('ignore')
@@ -83,37 +114,52 @@ def main():
 
             # Membuat text input dan menyimpan hasilnya ke dalam variabel
             
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo-16k",
-                # model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "I only response with syntax, no other text explanation."},
-                    {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-                                                    1. {input_pengguna}. 
-                                                    2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-                                                    3. Respond with scripts without any text. 
-                                                    4. Only code in a single cell. 
-                                                    5. Don’t start your response with “Sure, here are”. 
-                                                    6. Start your response with “import” inside the python block. 
-                                                    7. Give and show with streamlit the title for every steps.
-                                                    8. Give an explanation for every syntax.
-                                                    9. Don’t give me any explanation about the script. Response only with python block.
-                                                    10. Do not reload the dataframe.
-                                                    11. Use Try Except for each syntax.
-                                                    12. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi."""}
-                ],
-                max_tokens=14000,
-                temperature=0
-            )
+            # response = openai.ChatCompletion.create(
+            #     # model="gpt-3.5-turbo-16k",
+            #     model="gpt-4",
+            #     messages=[
+            #         {"role": "system", "content": "I only response with syntax, no other text explanation."},
+            #         {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
+            #                                         1. {input_pengguna}. 
+            #                                         2. My dataframe already load previously, named df, use it, do not reload the dataframe.
+            #                                         3. Respond with scripts without any text. 
+            #                                         4. Only code in a single cell. 
+            #                                         5. Don’t start your response with “Sure, here are”. 
+            #                                         6. Start your response with “import” inside the python block. 
+            #                                         7. Give and show with streamlit the title for every steps.
+            #                                         8. Give an explanation for every syntax.
+            #                                         9. Don’t give me any explanation about the script. Response only with python block.
+            #                                         10. Do not reload the dataframe.
+            #                                         11. Use Try Except for each syntax.
+            #                                         12. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi."""}
+            #     ],
+            #     max_tokens=14000,
+            #     temperature=0
+            # )
             
-            script = response.choices[0].message['content']
+            # script = response.choices[0].message['content']
             
             
-            
+            retry_count = 0
+            error_message = None
+            previous_script = None
+            while retry_count < 5:
+                try:
+                    script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+                    exec(str(script))
+                    break
+                except Exception as e:
+                    error_message = str(e)
+                    previous_script = str(script)
+                    retry_count += 1
+                    st.write("Previous script:")
+                    st.text(previous_script)
+                    st.write("Error: ",error_message)
+                    st.write("Trying to solving...")
 
 
             # Mengevaluasi string sebagai kode Python
-            exec(str(script))
+            # exec(str(script))
             if st.button('Lihat Script.'):
                 st.write("The Script:")
                 st.text(script)
@@ -122,7 +168,7 @@ def main():
             # plt.savefig("plot.png")
             # st.image("plot.png")
     # except:
-        # st.write("Mohon maaf error ges, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
+    #     st.write("Mohon maaf error ges, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
 
 
 if __name__ == "__main__":
