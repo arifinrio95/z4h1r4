@@ -131,27 +131,21 @@ def main():
             st.write("Terdeteksi beberapa kolom dengan missing values, bantu saya menanganinya:")
             
             selected_methods = {}
-            placeholders = {}
             for column in missing_columns:
                 # Tentukan opsi berdasarkan tipe data
                 if df[column].dtype == 'float64' or df[column].dtype == 'int64':
                     options = ['0', 'Average']
                 else:
                     options = ['Modus', 'Unknown']
-            
+        
                 # Dropdown untuk memilih metode pengisian untuk setiap kolom
-                placeholder = st.empty()
-                selected_methods[column] = placeholder.selectbox(f"Pilih metode pengisian untuk kolom {column}:", options)
-                placeholders[column] = placeholder
+                selected_methods[column] = st.selectbox(f"Pilih metode pengisian untuk kolom {column}:", options)
         
             # Tombol untuk mengisi semua missing values
             if st.button("Handling missing values"):
                 for column, method in selected_methods.items():
                     fill_missing_values(df, column, method)
                 st.write('Missing values telah dihandle.')
-                # Menghapus semua elemen sebelumnya
-                for placeholder in placeholders.values():
-                    placeholder.empty()
         # else:
         #     st.write("Tidak ada missing values dalam DataFrame.")
         
