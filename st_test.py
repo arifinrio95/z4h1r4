@@ -67,7 +67,8 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         My dataframe already load previously, named df, use it, do not reload the dataframe. Respond with scripts without any text. Only code in a single cell. 
         Don’t start your response with “Sure, here are”. Start your response with “import” inside the python block. 
         Don’t give me any explanation about the script. Response only with python block. Do not reload the dataframe. Beri judul setiap step.
-        Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi. Pastikan semua library yang dibutuhkan telah diimport."""}
+        Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi. Pastikan semua library yang dibutuhkan telah diimport.
+        Gunakan Try Except untuk setiap step."""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
     
@@ -235,7 +236,7 @@ def main():
                 retry_count = 0
                 error_message = None
                 previous_script = None
-                while retry_count < 5:
+                while retry_count < 1:
                     try:
                         script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
                         exec(str(script))
@@ -252,10 +253,10 @@ def main():
                         error_message = str(e)
                         previous_script = str(script)
                         retry_count += 1
-                        # st.write("Previous script:")
-                        # st.text(previous_script)
-                        st.write("Error: ",error_message)
-                        st.write("Trying to solving...")
+                        # # st.write("Previous script:")
+                        # # st.text(previous_script)
+                        # st.write("Error: ",error_message)
+                        # st.write("Trying to solving...")
 
                         if retry_count == 5:
                             st.write("Maaf saya tidak bisa menyelesaikan perintah tersebut, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
