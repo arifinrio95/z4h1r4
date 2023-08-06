@@ -267,10 +267,10 @@ def main():
 
                         if retry_count == 5:
                             st.write("Maaf saya tidak bisa menyelesaikan perintah tersebut, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
-                    if (script!='') & st.button('Lihat Script.'):
-                        st.write("")
-                        # st.write("The Script:")
-                        st.text(script)
+                    # if (script!='') & st.button('Lihat Script.'):
+                    #     st.write("")
+                    #     # st.write("The Script:")
+                    #     st.text(script)
             error_message = None
             previous_script = None
             input_pengguna = ""
