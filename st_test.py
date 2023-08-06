@@ -163,8 +163,8 @@ def main():
 
         if input_pengguna == "":
             response = openai.ChatCompletion.create(
-                # model="gpt-3.5-turbo-16k",
-                model="gpt-4",
+                model="gpt-3.5-turbo-16k",
+                # model="gpt-4",
                 messages=[
                     {"role": "system", "content": "I only response with syntax, no other text explanation."},
                     {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
