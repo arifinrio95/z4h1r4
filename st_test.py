@@ -144,6 +144,7 @@ def main():
                                                     10. Do not reload the dataframe.
                                                     11. Use Try and Except for each syntax.
                                                     12. Print with st.write the step of data cleansing you did.
+                                                    13. Export clean df with st.download_button
                                                     """}
                 ],
                 max_tokens=14000,
