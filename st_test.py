@@ -152,6 +152,7 @@ def main():
 
                     error_message = None
                     previous_script = None
+                    input_pengguna = ""
                     if st.button('Lihat Script.'):
                         st.write("The Script:")
                         st.text(script)
