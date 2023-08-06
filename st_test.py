@@ -63,19 +63,12 @@ def load_file_auto_delimiter(file):
 def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0):
     messages = [
         {"role": "system", "content": "I only response with syntax, no other text explanation."},
-        {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-                                                    1. {input_pengguna}. 
-                                                    2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-                                                    3. Respond with scripts without any text. 
-                                                    4. Only code in a single cell. 
-                                                    5. Don’t start your response with “Sure, here are”. 
-                                                    6. Start your response with “import” inside the python block. 
-                                                    7. Give and show with streamlit the title for every steps.
-                                                    8. Give an explanation for every syntax.
-                                                    9. Don’t give me any explanation about the script. Response only with python block.
-                                                    10. Do not reload the dataframe.
-                                                    11. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi.
-                                                    12. Pastikan semua library yang dibutuhkan telah diimport."""}
+        {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. {input_pengguna}. 
+        My dataframe already load previously, named df, use it, do not reload the dataframe. Respond with scripts without any text. Only code in a single cell. 
+        Don’t start your response with “Sure, here are”. Start your response with “import” inside the python block. 
+        Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
+        Don’t give me any explanation about the script. Response only with python block. Do not reload the dataframe. 
+        Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi. Pastikan semua library yang dibutuhkan telah diimport."""}
     ]
     
     if error_message and previous_script:
