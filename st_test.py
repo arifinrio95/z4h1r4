@@ -55,8 +55,8 @@ def main():
 
     # user_api = st.text_input("Masukkan OpenAI API Key anda: ")
     
-    os.environ['user_api'] = st.secrets['user_api']
-    openai.api_key = user_api
+    # os.environ['user_api'] = st.secrets['user_api']
+    openai.api_key = st.secrets['user_api']
     
     if file is not None:
         # df = pd.read_csv(file)
