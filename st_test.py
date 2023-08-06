@@ -112,7 +112,7 @@ def main():
         # User Input
         input_pengguna = st.text_input("Masukkan perintah anda untuk mengolah data tersebut:")
         
-        while (input_pengguna != "") & (input_pengguna != None) :
+        if (input_pengguna != "") & (input_pengguna != None) :
             if st.button('Eksekusi!'):
                 # schema_dict = {col: str(dtype) for col, dtype in df.dtypes.iteritems()}
                 
