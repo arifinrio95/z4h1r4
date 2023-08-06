@@ -127,7 +127,7 @@ def main():
         # Cari kolom yang memiliki missing values
         missing_columns = [col for col in df.columns if df[col].isnull().any()]
         
-        while missing_columns:
+        if missing_columns:
             st.write("Terdeteksi beberapa kolom dengan missing values, bantu saya menanganinya:")
             
             selected_methods = {}
