@@ -15,7 +15,7 @@ warnings.filterwarnings('ignore')
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Fungsi untuk mengisi missing values berdasarkan pilihan pengguna
-def fill_missing_values(column, method):
+def fill_missing_values(df, column, method):
     if df[column].dtype == 'float64' or df[column].dtype == 'int64': # Jika numeric
         if method == '0':
             df[column].fillna(0, inplace=True)
@@ -145,9 +145,8 @@ def main():
             # Tombol untuk mengisi semua missing values
             if st.button("Handling missing values"):
                 for column, method in selected_methods.items():
-                    fill_missing_values(column, method)
-                st.write("DataFrame setelah pengisian:")
-                st.write(df)
+                    fill_missing_values(df, column, method)
+
         else:
             st.write("Tidak ada missing values dalam DataFrame.")
             
