@@ -147,6 +147,9 @@ def main():
                 try:
                     script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
                     exec(str(script))
+
+                    error_message = None
+                    previous_script = None
                     if st.button('Lihat Script.'):
                         st.write("The Script:")
                         st.text(script)
