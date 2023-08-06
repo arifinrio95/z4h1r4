@@ -76,6 +76,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
 
 
 def main():
+    input_pengguna = ""
     import warnings
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -107,10 +108,11 @@ def main():
         rows_dict = df.head(2).to_dict('records')
         rows_str = json.dumps(rows_dict, default=str)
 
+        input_pengguna = ""
         # User Input
         input_pengguna = st.text_input("Masukkan perintah anda untuk mengolah data tersebut:")
-
-        if input_pengguna != "":
+        
+        if (input_pengguna != "") & (input_pengguna != None) :
             # if st.button('Eksplorasi Dataset'):
             # schema_dict = {col: str(dtype) for col, dtype in df.dtypes.iteritems()}
             
