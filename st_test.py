@@ -75,7 +75,8 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
                                                     9. Don’t give me any explanation about the script. Response only with python block.
                                                     10. Do not reload the dataframe.
                                                     11. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi.
-                                                    12. Pastikan semua library yang dibutuhkan telah diimport"""}
+                                                    12. Pastikan semua library yang dibutuhkan telah diimport.
+                                                    13. Proses code sesuai dengan column schema-nya."""}
     ]
     
     if error_message and previous_script:
