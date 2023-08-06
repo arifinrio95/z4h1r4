@@ -124,6 +124,9 @@ def main():
         rows_dict = df.head(2).to_dict('records')
         rows_str = json.dumps(rows_dict, default=str)
 
+        # Cari kolom yang memiliki missing values
+        missing_columns = [col for col in df.columns if df[col].isnull().any()]
+        
         if missing_columns:
             st.write("Terdeteksi beberapa kolom dengan missing values, bantu saya menanganinya:")
             
@@ -178,8 +181,7 @@ def main():
             st.dataframe(df.head())
             st.download_button("Press to Download Clean Dataset",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
 
-        # Cari kolom yang memiliki missing values
-        missing_columns = [col for col in df.columns if df[col].isnull().any()]
+        
         
         
             
