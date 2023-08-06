@@ -148,7 +148,7 @@ def main():
                 st.write('Missing values telah dihandle.')
         # else:
         #     st.write("Tidak ada missing values dalam DataFrame.")
-        
+        df_ori = df.copy()
         if st.button('Klik disini jika kamu ingin saya melakukan data cleansing secara otomatis.'):
             # st.subheader('Data cleansing...')
             response = openai.ChatCompletion.create(
@@ -179,8 +179,9 @@ def main():
             exec(str(script))
             st.write('First 5 rows of clean dataset.')
             st.dataframe(df.head())
-            st.download_button("Press to Download Clean Dataset",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
-
+            st.download_button("Klik untuk mendownload clean dataframe",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
+            if st.button('Tolak data cleansing dan kembalikan ke semula.'):
+                df = df_ori.copy()
         
         
         
