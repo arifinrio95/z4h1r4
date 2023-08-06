@@ -170,6 +170,7 @@ def main():
                                                     10. Do not reload the dataframe.
                                                     11. Use Try and Except for each syntax.
                                                     12. Print and show the detail step of data cleansing you did.
+                                                    13. Dont forget to show the steps with st.write.
                                                     """}
                 ],
                 max_tokens=14000,
