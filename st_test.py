@@ -58,11 +58,12 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
                                                     8. Give an explanation for every syntax.
                                                     9. Don’t give me any explanation about the script. Response only with python block.
                                                     10. Do not reload the dataframe.
-                                                    11. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi."""}
+                                                    11. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi.
+                                                    12. Pastikan semua library yang dibutuhkan telah diimport"""}
     ]
     
     if error_message and previous_script:
-        messages.append({"role": "user", "content": f"Modif the previous Script : {previous_script} to solve this error: {error_message}"})
+        messages.append({"role": "user", "content": f"Solve this error: {error_message} in previous Script : {previous_script} to "})
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
