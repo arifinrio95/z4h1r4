@@ -160,7 +160,7 @@ def main():
         missing_columns = [col for col in df.columns if df[col].isnull().any()]
         
         if missing_columns:
-            st.write("Kolom dengan missing values:")
+            st.write("Terdeteksi kolom dengan missing values:")
             
             selected_methods = {}
             for column in missing_columns:
@@ -177,9 +177,9 @@ def main():
             if st.button("Handling missing values"):
                 for column, method in selected_methods.items():
                     fill_missing_values(df, column, method)
-                st.write('Missing values telah dihandle.')
-        else:
-            st.write("Tidak ada missing values dalam DataFrame.")
+        #         st.write('Missing values telah dihandle.')
+        # else:
+        #     st.write("Tidak ada missing values dalam DataFrame.")
             
         # password = st.text_input("Masukkan Password: ")
         # if st.button('Submit'):
