@@ -146,7 +146,7 @@ def main():
             if st.button("Handling missing values"):
                 for column, method in selected_methods.items():
                     fill_missing_values(df, column, method)
-
+                st.write('Missing values telah dihandle.')
         else:
             st.write("Tidak ada missing values dalam DataFrame.")
             
