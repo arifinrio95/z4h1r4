@@ -182,7 +182,7 @@ def main():
             st.download_button("Klik untuk mendownload clean dataframe",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
             if st.button('Tolak data cleansing dan kembalikan ke semula.'):
                 df = df_ori.copy()
-        
+                st.write('Dataframe telah dikembalikan.')
         
         
             
