@@ -97,7 +97,7 @@ def main():
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
 
-    st.title('Datasans Code Interpreter')
+    st.title('Personal Data Analysis by Datasans')
     st.write('Beta Access.')
     st.write('Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.')
     st.subheader('Upload your CSV / Excel data:')
@@ -120,7 +120,7 @@ def main():
         schema_str = json.dumps(schema_dict)
         # st.write("\nDataframe schema : ", schema_str)
 
-        if st.button('Apakah kamu ingin saya melakukan data cleansing secara otomatis?'):
+        if st.button('Klik disini jika kamu ingin saya melakukan data cleansing secara otomatis.'):
             # st.subheader('Data cleansing...')
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo-16k",
