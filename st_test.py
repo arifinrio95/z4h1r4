@@ -156,7 +156,7 @@ def main():
                 model="gpt-3.5-turbo-16k",
                 # model="gpt-4",
                 messages=[
-                    {"role": "system", "content": "I only response with syntax, no other text explanation."},
+                    {"role": "system", "content": "I will cleansing your df, no other text explanation."},
                     {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
                                                     1. Do a data cleansing and assign to df.
                                                     2. My dataframe already load previously, named df, use it, do not reload the dataframe.
@@ -169,7 +169,7 @@ def main():
                                                     9. Don’t give me any explanation about the script. Response only with python block.
                                                     10. Do not reload the dataframe.
                                                     11. Use Try and Except for each syntax.
-                                                    12. Print with st.write the detail step of data cleansing you did.
+                                                    12. Print and show the detail step of data cleansing you did.
                                                     """}
                 ],
                 max_tokens=14000,
