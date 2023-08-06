@@ -179,7 +179,7 @@ def main():
             )
             
             script = response.choices[0].message['content']
-            exec(str(script))
+            exec(str(script), globals())
             st.write(str(script))
             st.write('First 5 rows of clean dataset.')
             st.dataframe(df.head())
