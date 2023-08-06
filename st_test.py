@@ -163,8 +163,8 @@ def main():
                     st.write("Error: ",error_message)
                     st.write("Trying to solving...")
 
-                error_message = None
-                previous_script = None
+            error_message = None
+            previous_script = None
 
 
             # Mengevaluasi string sebagai kode Python
