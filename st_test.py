@@ -178,7 +178,7 @@ def main():
                                                     8. Give an explanation for every syntax.
                                                     9. Don’t give me any explanation about the script. Response only with python block.
                                                     10. Do not reload the dataframe.
-                                                    11. Use Try Except for each syntax.
+                                                    11. Use Try and Except with pass for each syntax.
                                                     12. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi."""}
                 ],
                 max_tokens=14000,
