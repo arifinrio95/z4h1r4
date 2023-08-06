@@ -118,7 +118,7 @@ def main():
         # Extract df schema
         schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
         schema_str = json.dumps(schema_dict)
-        st.write("\nDataframe schema : ", schema_str)
+        # st.write("\nDataframe schema : ", schema_str)
 
         # Cari kolom yang memiliki missing values
         missing_columns = [col for col in df.columns if df[col].isnull().any()]
