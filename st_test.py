@@ -148,12 +148,10 @@ def main():
             if st.button("Handling missing values"):
                 for column, method in selected_methods.items():
                     fill_missing_values(df, column, method)
-                
-                # Menghapus semua elemen sebelumnya
-                for placeholder in placeholders.values():
-                    placeholder.empty()
-        
                 st.write('Missing values telah dihandle.')
+        # Menghapus semua elemen sebelumnya
+        for placeholder in placeholders.values():
+            placeholder.empty()
         # else:
         #     st.write("Tidak ada missing values dalam DataFrame.")
         
