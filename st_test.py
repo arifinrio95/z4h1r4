@@ -93,6 +93,7 @@ def main():
 
     # try:
     if file is not None:
+        input_pengguna = ""
         # df = pd.read_csv(file)
         df = load_file_auto_delimiter(file)
         st.dataframe(df.head())
