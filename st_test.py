@@ -167,7 +167,7 @@ def main():
 
             error_message = None
             previous_script = None
-
+        input_pengguna = ""
 
             # Mengevaluasi string sebagai kode Python
             # exec(str(script))
@@ -178,6 +178,7 @@ def main():
             # Menyimpan plot sebagai file sementara dan menampilkan dengan Streamlit
             # plt.savefig("plot.png")
             # st.image("plot.png")
+
     # except:
     #     st.write("Mohon maaf error ges, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
 
