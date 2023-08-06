@@ -122,7 +122,7 @@ def main():
             # plt.savefig("plot.png")
             # st.image("plot.png")
     # except:
-    st.write("Mohon maaf error ges, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
+        # st.write("Mohon maaf error ges, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
 
 
 if __name__ == "__main__":
