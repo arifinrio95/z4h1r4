@@ -171,6 +171,7 @@ def main():
                                                     11. Use Try and Except for each syntax.
                                                     12. Print and show the detail step of data cleansing you did.
                                                     13. Dont forget to show the steps with st.write.
+                                                    14. Don't forget to assign to df all the cleansing step.
                                                     """}
                 ],
                 max_tokens=14000,
