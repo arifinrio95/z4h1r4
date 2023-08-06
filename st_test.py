@@ -57,59 +57,8 @@ def load_file_auto_delimiter(file):
         delimiter = detect_delimiter(file)
         file.seek(0)  # Reset file position to the beginning
         df = pd.read_csv(file, delimiter=delimiter)
-
-        # Cari kolom yang memiliki missing values
-        missing_columns = [col for col in df.columns if df[col].isnull().any()]
-        
-        if missing_columns:
-            st.write("Kolom dengan missing values:")
-            st.write(missing_columns)
-        
-            # Dropdown untuk memilih kolom yang akan diisi
-            selected_column = st.selectbox("Pilih kolom yang ingin diisi:", missing_columns)
-        
-            # Tentukan opsi berdasarkan tipe data
-            if df[selected_column].dtype == 'float64' or df[selected_column].dtype == 'int64':
-                options = ['0', 'Average']
-            else:
-                options = ['Modus', 'Unknown']
-        
-            # Dropdown untuk memilih metode pengisian
-            selected_method = st.selectbox(f"Pilih metode pengisian untuk kolom {selected_column}:", options)
-        
-            # Tombol untuk mengisi missing values
-            if st.button(f"Isi missing values pada kolom {selected_column}"):
-                fill_missing_values(selected_column, selected_method)
-        else:
-            st.write("Tidak ada missing values dalam DataFrame.")
     elif file_extension in ['xls', 'xlsx']:
         df = pd.read_excel(file)
-
-        # Cari kolom yang memiliki missing values
-        missing_columns = [col for col in df.columns if df[col].isnull().any()]
-        
-        if missing_columns:
-            st.write("Kolom dengan missing values:")
-            st.write(missing_columns)
-        
-            # Dropdown untuk memilih kolom yang akan diisi
-            selected_column = st.selectbox("Pilih kolom yang ingin diisi:", missing_columns)
-        
-            # Tentukan opsi berdasarkan tipe data
-            if df[selected_column].dtype == 'float64' or df[selected_column].dtype == 'int64':
-                options = ['0', 'Average']
-            else:
-                options = ['Modus', 'Unknown']
-        
-            # Dropdown untuk memilih metode pengisian
-            selected_method = st.selectbox(f"Pilih metode pengisian untuk kolom {selected_column}:", options)
-        
-            # Tombol untuk mengisi missing values
-            if st.button(f"Isi missing values pada kolom {selected_column}"):
-                fill_missing_values(selected_column, selected_method)
-        else:
-            st.write("Tidak ada missing values dalam DataFrame.")
-            
     else:
         raise ValueError(f'Unsupported file type: {file_extension}')
     return df
@@ -180,6 +129,31 @@ def main():
         schema_str = json.dumps(schema_dict)
         st.write("\nDataframe schema : ", schema_str)
 
+        # Cari kolom yang memiliki missing values
+        missing_columns = [col for col in df.columns if df[col].isnull().any()]
+        
+        if missing_columns:
+            st.write("Kolom dengan missing values:")
+            st.write(missing_columns)
+        
+            # Dropdown untuk memilih kolom yang akan diisi
+            selected_column = st.selectbox("Pilih kolom yang ingin diisi:", missing_columns)
+        
+            # Tentukan opsi berdasarkan tipe data
+            if df[selected_column].dtype == 'float64' or df[selected_column].dtype == 'int64':
+                options = ['0', 'Average']
+            else:
+                options = ['Modus', 'Unknown']
+        
+            # Dropdown untuk memilih metode pengisian
+            selected_method = st.selectbox(f"Pilih metode pengisian untuk kolom {selected_column}:", options)
+        
+            # Tombol untuk mengisi missing values
+            if st.button(f"Isi missing values pada kolom {selected_column}"):
+                fill_missing_values(selected_column, selected_method)
+        else:
+            st.write("Tidak ada missing values dalam DataFrame.")
+            
         # password = st.text_input("Masukkan Password: ")
         # if st.button('Submit'):
         #     if password != st.secrets['pass']:
