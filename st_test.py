@@ -93,10 +93,6 @@ def main():
     # os.environ['user_api'] = st.secrets['user_api']
     openai.api_key = st.secrets['user_api']
 
-    password = st.text_input("Masukkan Password: ")
-    if password != st.secrets['pass']:
-        st.write('Password Salah.')
-    if password == st.secrets['pass']:
     # try:
     if file is not None:
         input_pengguna = ""
