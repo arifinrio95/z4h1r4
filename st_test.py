@@ -172,7 +172,6 @@ def main():
                 error_message = None
                 previous_script = None
                 input_pengguna = ""
-                break
     
                 # Mengevaluasi string sebagai kode Python
                 # exec(str(script))
