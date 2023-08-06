@@ -18,10 +18,10 @@ def detect_delimiter(file):
     file.seek(0)  # Reset file position to the beginning
     file_content = file.read(1024).decode()  # Convert bytes to string
     try:
+        delimiter = ","
+    except csv.Error:
         dialect = csv.Sniffer().sniff(file_content)
         delimiter = dialect.delimiter
-    except csv.Error:
-        delimiter = ","  # Fallback to comma if Sniffer fails
     file.seek(0)  # Reset file position to the beginning after reading
     return delimiter
 
