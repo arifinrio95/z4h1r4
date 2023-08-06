@@ -66,10 +66,10 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. {input_pengguna}. 
         My dataframe already load previously, named df, use it, do not reload the dataframe. Respond with scripts without any text. Only code in a single cell. 
         Don’t start your response with “Sure, here are”. Start your response with “import” inside the python block. 
-        Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
         Don’t give me any explanation about the script. Response only with python block. Do not reload the dataframe. 
         Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi. Pastikan semua library yang dibutuhkan telah diimport."""}
     ]
+    # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
     
     if error_message and previous_script:
         messages.append({"role": "user", "content": f"Solve this error: {error_message} in previous Script : {previous_script} to "})
