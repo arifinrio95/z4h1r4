@@ -147,22 +147,25 @@ def main():
                 try:
                     script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
                     exec(str(script))
+                    if st.button('Lihat Script.'):
+                        st.write("The Script:")
+                        st.text(script)
                     break
                 except Exception as e:
                     error_message = str(e)
                     previous_script = str(script)
                     retry_count += 1
-                    st.write("Previous script:")
-                    st.text(previous_script)
+                    # st.write("Previous script:")
+                    # st.text(previous_script)
                     st.write("Error: ",error_message)
                     st.write("Trying to solving...")
 
 
             # Mengevaluasi string sebagai kode Python
             # exec(str(script))
-            if st.button('Lihat Script.'):
-                st.write("The Script:")
-                st.text(script)
+            # if st.button('Lihat Script.'):
+            #     st.write("The Script:")
+            #     st.text(script)
             
             # Menyimpan plot sebagai file sementara dan menampilkan dengan Streamlit
             # plt.savefig("plot.png")
