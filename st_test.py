@@ -81,7 +81,9 @@ def main():
     st.set_option('deprecation.showPyplotGlobalUse', False)
 
     st.title('Datasans Code Interpreter')
-    st.subheader('Upload your CSV data:')
+    st.write('Beta Access.')
+    st.write('Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input jika ada error atau fitur yang kurang.')
+    st.subheader('Upload your CSV / Excel data:')
     file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
 
     # user_api = st.text_input("Masukkan OpenAI API Key anda: ")
