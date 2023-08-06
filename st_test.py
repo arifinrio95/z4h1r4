@@ -59,8 +59,8 @@ def fill_missing_values(column, method):
             df[column].fillna('Unknown', inplace=True)
 
 # Tampilkan DataFrame asli
-st.write("Original DataFrame:")
-st.write(df)
+# st.write("Original DataFrame:")
+# st.write(df)
 
 # Cari kolom yang memiliki missing values
 missing_columns = [col for col in df.columns if df[col].isnull().any()]
