@@ -162,6 +162,7 @@ def main():
         input_pengguna = st.text_input("Masukkan perintah anda untuk mengolah data tersebut:")
 
         if input_pengguna == "":
+            st.subheader('Exploratory Dataset (Automated) :')
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo-16k",
                 # model="gpt-4",
