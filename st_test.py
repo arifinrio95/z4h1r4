@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import csv
 import pandas as pd
 from io import StringIO
+import os
 
 warnings.filterwarnings('ignore')
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -53,8 +54,10 @@ def main():
     file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
 
     # user_api = st.text_input("Masukkan OpenAI API Key anda: ")
-    # openai.api_key = user_api
-
+    
+    os.environ['user_api'] = st.secrets['user_api']
+    openai.api_key = user_api
+    
     if file is not None:
         # df = pd.read_csv(file)
         df = load_file_auto_delimiter(file)
