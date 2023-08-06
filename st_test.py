@@ -45,6 +45,51 @@ def load_file_auto_delimiter(file):
         raise ValueError(f'Unsupported file type: {file_extension}')
     return df
 
+# Fungsi untuk mengisi missing values berdasarkan pilihan pengguna
+def fill_missing_values(column, method):
+    if df[column].dtype == 'float64' or df[column].dtype == 'int64': # Jika numeric
+        if method == '0':
+            df[column].fillna(0, inplace=True)
+        elif method == 'Average':
+            df[column].fillna(df[column].mean(), inplace=True)
+    else: # Jika kategorikal
+        if method == 'Modus':
+            df[column].fillna(df[column].mode().iloc[0], inplace=True)
+        elif method == 'Unknown':
+            df[column].fillna('Unknown', inplace=True)
+
+# Tampilkan DataFrame asli
+st.write("Original DataFrame:")
+st.write(df)
+
+# Cari kolom yang memiliki missing values
+missing_columns = [col for col in df.columns if df[col].isnull().any()]
+
+if missing_columns:
+    st.write("Kolom dengan missing values:")
+    st.write(missing_columns)
+
+    # Dropdown untuk memilih kolom yang akan diisi
+    selected_column = st.selectbox("Pilih kolom yang ingin diisi:", missing_columns)
+
+    # Tentukan opsi berdasarkan tipe data
+    if df[selected_column].dtype == 'float64' or df[selected_column].dtype == 'int64':
+        options = ['0', 'Average']
+    else:
+        options = ['Modus', 'Unknown']
+
+    # Dropdown untuk memilih metode pengisian
+    selected_method = st.selectbox(f"Pilih metode pengisian untuk kolom {selected_column}:", options)
+
+    # Tombol untuk mengisi missing values
+    if st.button(f"Isi missing values pada kolom {selected_column}"):
+        fill_missing_values(selected_column, selected_method)
+        st.write("DataFrame setelah pengisian:")
+        st.write(df)
+else:
+    st.write("Tidak ada missing values dalam DataFrame.")
+
+
 def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0):
     messages = [
         {"role": "system", "content": "I only response with syntax, no other text explanation."},
