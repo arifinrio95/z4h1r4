@@ -27,10 +27,6 @@ def fill_missing_values(column, method):
         elif method == 'Unknown':
             df[column].fillna('Unknown', inplace=True)
 
-# Tampilkan DataFrame asli
-# st.write("Original DataFrame:")
-# st.write(df)
-
 
 def detect_delimiter(file):
     file.seek(0)  # Reset file position to the beginning
@@ -134,23 +130,24 @@ def main():
         
         if missing_columns:
             st.write("Kolom dengan missing values:")
-            st.write(missing_columns)
+            
+            selected_methods = {}
+            for column in missing_columns:
+                # Tentukan opsi berdasarkan tipe data
+                if df[column].dtype == 'float64' or df[column].dtype == 'int64':
+                    options = ['0', 'Average']
+                else:
+                    options = ['Modus', 'Unknown']
         
-            # Dropdown untuk memilih kolom yang akan diisi
-            selected_column = st.selectbox("Pilih kolom yang ingin diisi:", missing_columns)
+                # Dropdown untuk memilih metode pengisian untuk setiap kolom
+                selected_methods[column] = st.selectbox(f"Pilih metode pengisian untuk kolom {column}:", options)
         
-            # Tentukan opsi berdasarkan tipe data
-            if df[selected_column].dtype == 'float64' or df[selected_column].dtype == 'int64':
-                options = ['0', 'Average']
-            else:
-                options = ['Modus', 'Unknown']
-        
-            # Dropdown untuk memilih metode pengisian
-            selected_method = st.selectbox(f"Pilih metode pengisian untuk kolom {selected_column}:", options)
-        
-            # Tombol untuk mengisi missing values
-            if st.button(f"Isi missing values pada kolom {selected_column}"):
-                fill_missing_values(selected_column, selected_method)
+            # Tombol untuk mengisi semua missing values
+            if st.button("Handling missing values"):
+                for column, method in selected_methods.items():
+                    fill_missing_values(column, method)
+                st.write("DataFrame setelah pengisian:")
+                st.write(df)
         else:
             st.write("Tidak ada missing values dalam DataFrame.")
             
