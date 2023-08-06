@@ -10,6 +10,7 @@ import csv
 import pandas as pd
 from io import StringIO
 import os
+import time
 
 warnings.filterwarnings('ignore')
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -183,7 +184,7 @@ def main():
             if st.button('Tolak data cleansing dan kembalikan ke semula.'):
                 df = df_ori.copy()
                 st.write('Dataframe telah dikembalikan.')
-        
+                time.sleep(3)
         
             
         # password = st.text_input("Masukkan Password: ")
