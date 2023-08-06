@@ -162,7 +162,7 @@ def main():
         input_pengguna = st.text_input("Masukkan perintah anda untuk mengolah data tersebut:")
 
         if input_pengguna == "":
-            st.subheader('Exploratory Dataset (Automated) :')
+            st.subheader('(Automated)')
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo-16k",
                 # model="gpt-4",
@@ -179,7 +179,7 @@ def main():
                                                     8. Give an explanation for every syntax.
                                                     9. Don’t give me any explanation about the script. Response only with python block.
                                                     10. Do not reload the dataframe.
-                                                    11. Use Try and Except with pass for each syntax, put chart title inside Try and Except.
+                                                    11. Use Try and Except with pass for each syntax, put chart title inside Try and Except dengan st.write.
                                                     12. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi."""}
                 ],
                 max_tokens=14000,
