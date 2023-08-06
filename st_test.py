@@ -152,6 +152,8 @@ def main():
             
             script = response.choices[0].message['content']
             exec(str(script))
+            st.write('First 5 rows of clean dataset.')
+            st.dataframe(df.head())
             st.download_button("Press to Download Clean Dataset",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
 
         # Cari kolom yang memiliki missing values
