@@ -152,6 +152,7 @@ def main():
         df_ori = df.copy()
         if st.button('Klik disini jika kamu ingin saya melakukan data cleansing secara otomatis.'):
             # st.subheader('Data cleansing...')
+            df = load_file_auto_delimiter(file)
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo-16k",
                 # model="gpt-4",
