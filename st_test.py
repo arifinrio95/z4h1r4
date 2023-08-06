@@ -169,7 +169,7 @@ def main():
                         # st.text(previous_script)
                         st.write("Error: ",error_message)
                         st.write("Trying to solving...")
-    
+                st.write("Maaf saya tidak bisa menyelesaikan perintah tersebut, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
                 error_message = None
                 previous_script = None
                 input_pengguna = ""
