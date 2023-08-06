@@ -248,7 +248,7 @@ def main():
                         #     st.write("")
                         #     # st.write("The Script:")
                         #     st.text(script)
-                        # break
+                        break
                     except Exception as e:
                         error_message = str(e)
                         previous_script = str(script)
