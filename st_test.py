@@ -76,7 +76,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
                                                     10. Do not reload the dataframe.
                                                     11. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi.
                                                     12. Pastikan semua library yang dibutuhkan telah diimport.
-                                                    13. Lakukan proses sesuai dengan column schema-nya."""}
+                                                    13. Lakukan proses sesuai dengan datatype kolomnya."""}
     ]
     
     if error_message and previous_script:
