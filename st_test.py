@@ -123,6 +123,28 @@ def main():
         # Extract the first two rows into a dictionary
         rows_dict = df.head(2).to_dict('records')
         rows_str = json.dumps(rows_dict, default=str)
+
+        if missing_columns:
+            st.write("Terdeteksi beberapa kolom dengan missing values, bantu saya menanganinya:")
+            
+            selected_methods = {}
+            for column in missing_columns:
+                # Tentukan opsi berdasarkan tipe data
+                if df[column].dtype == 'float64' or df[column].dtype == 'int64':
+                    options = ['0', 'Average']
+                else:
+                    options = ['Modus', 'Unknown']
+        
+                # Dropdown untuk memilih metode pengisian untuk setiap kolom
+                selected_methods[column] = st.selectbox(f"Pilih metode pengisian untuk kolom {column}:", options)
+        
+            # Tombol untuk mengisi semua missing values
+            if st.button("Handling missing values"):
+                for column, method in selected_methods.items():
+                    fill_missing_values(df, column, method)
+                st.write('Missing values telah dihandle.')
+        # else:
+        #     st.write("Tidak ada missing values dalam DataFrame.")
         
         if st.button('Klik disini jika kamu ingin saya melakukan data cleansing secara otomatis.'):
             # st.subheader('Data cleansing...')
@@ -159,27 +181,7 @@ def main():
         # Cari kolom yang memiliki missing values
         missing_columns = [col for col in df.columns if df[col].isnull().any()]
         
-        if missing_columns:
-            st.write("Terdeteksi kolom dengan missing values:")
-            
-            selected_methods = {}
-            for column in missing_columns:
-                # Tentukan opsi berdasarkan tipe data
-                if df[column].dtype == 'float64' or df[column].dtype == 'int64':
-                    options = ['0', 'Average']
-                else:
-                    options = ['Modus', 'Unknown']
         
-                # Dropdown untuk memilih metode pengisian untuk setiap kolom
-                selected_methods[column] = st.selectbox(f"Pilih metode pengisian untuk kolom {column}:", options)
-        
-            # Tombol untuk mengisi semua missing values
-            if st.button("Handling missing values"):
-                for column, method in selected_methods.items():
-                    fill_missing_values(df, column, method)
-        #         st.write('Missing values telah dihandle.')
-        # else:
-        #     st.write("Tidak ada missing values dalam DataFrame.")
             
         # password = st.text_input("Masukkan Password: ")
         # if st.button('Submit'):
