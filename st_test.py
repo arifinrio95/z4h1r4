@@ -149,9 +149,9 @@ def main():
                 for column, method in selected_methods.items():
                     fill_missing_values(df, column, method)
                 st.write('Missing values telah dihandle.')
-        # Menghapus semua elemen sebelumnya
-        for placeholder in placeholders.values():
-            placeholder.empty()
+            # Menghapus semua elemen sebelumnya
+            for placeholder in placeholders.values():
+                placeholder.empty()
         # else:
         #     st.write("Tidak ada missing values dalam DataFrame.")
         
