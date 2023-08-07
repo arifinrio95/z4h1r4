@@ -435,12 +435,30 @@ def perform_linear_regression(df):
     y = df[y_column]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
-    model = LinearRegression(fit_intercept=fit_intercept) # Note: 'normalize' argument removed
+    model = LinearRegression(fit_intercept=fit_intercept)
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
     st.write("Model Coefficients:", model.coef_)
     st.write("Mean Squared Error:", mean_squared_error(y_test, y_pred))
+
+    # Scatter plot of predicted vs actual values
+    plt.scatter(y_test, y_pred, alpha=0.5)
+    plt.title('Predicted vs Actual Values')
+    plt.xlabel('Actual Values')
+    plt.ylabel('Predicted Values')
+    plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red')  # Identity line
+    st.pyplot()
+    plt.clf()
+
+    # Residual plot
+    residuals = y_test - y_pred
+    plt.scatter(y_pred, residuals, alpha=0.5)
+    plt.title('Residual Plot')
+    plt.xlabel('Predicted Values')
+    plt.ylabel('Residuals')
+    plt.axhline(y=0, color='red', linestyle='--')
+    st.pyplot()
 
 
 # Function to perform Logistic Regression
