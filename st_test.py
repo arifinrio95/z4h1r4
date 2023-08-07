@@ -15,7 +15,9 @@ import time
 from pandas_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
 from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 from scipy import stats
+import statsmodels.api as sm
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
@@ -127,6 +129,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
 
 # Function to display descriptive statistics
 def show_descriptive_statistics(df):
+    st.write('Descriptive Statistics')
     st.write(df.describe())
 
 # Function to display a histogram
@@ -166,9 +169,22 @@ def show_scatter_plot(df):
 
 # Function to display correlation matrix
 def show_correlation_matrix(df):
-    corr = df.corr()
-    sns.heatmap(corr, annot=True)
-    st.pyplot()
+    # Select only numerical columns
+    numerical_df = df.select_dtypes(include=['number'])
+
+    # Compute the correlation matrix
+    corr = numerical_df.corr()
+
+    # You can then display the correlation matrix using Streamlit as you desire
+    st.write(corr)
+
+    # Optionally, you may want to visualize it as a heatmap
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+
+    plt.figure(figsize=(12, 8))
+    sns.heatmap(corr, annot=True, cmap="coolwarm")
+    st.pyplot(plt)
 
 # Function to perform PCA
 def perform_pca(df):
@@ -185,15 +201,39 @@ def perform_pca(df):
 
 # Function to show missing data
 def show_missing_data(df):
+    st.write('Check Missing Values')
     missing_data = df.isnull().sum()
     st.write(missing_data[missing_data > 0])
 
 # Function to show outliers using Z-score
 def show_outliers(df):
     column = st.selectbox('Select a Numeric Column for Outlier Detection:', df.select_dtypes(include=['number']).columns.tolist())
-    z_scores = np.abs(stats.zscore(df[column].dropna()))
-    outliers = np.where(z_scores > 2)
+    values = df[column].dropna()
+    z_scores = np.abs(stats.zscore(values))
+    threshold = 2
+    outliers = np.where(z_scores > threshold)
+
     st.write(f"Outliers found at index positions: {outliers}")
+
+    # Plotting the data
+    plt.figure(figsize=(14, 6))
+    plt.plot(values, label='Data')
+    plt.axhline(y=np.mean(values) + threshold*np.std(values), color='r', linestyle='--', label='Upper bound')
+    plt.axhline(y=np.mean(values) - threshold*np.std(values), color='r', linestyle='--', label='Lower bound')
+
+    # Annotating the outliers
+    for idx in outliers[0]:
+        plt.annotate(f'Outlier\n{values.iloc[idx]}', (idx, values.iloc[idx]), 
+                     textcoords="offset points", 
+                     xytext=(-5,5),
+                     ha='center',
+                     arrowprops=dict(facecolor='red', arrowstyle='wedge,tail_width=0.7', alpha=0.5))
+        
+    plt.title(f'Outlier Detection in {column}')
+    plt.xlabel('Index')
+    plt.ylabel('Value')
+    plt.legend()
+    st.pyplot(plt)
 
 # Function to create polynomial features
 def create_polynomial_features(df):
@@ -205,11 +245,29 @@ def create_polynomial_features(df):
 # Function to perform Shapiro-Wilk normality test
 def perform_shapiro_wilk_test(df):
     column = st.selectbox('Select a Numeric Column for Normality Testing:', df.select_dtypes(include=['number']).columns.tolist())
-    _, p_value = stats.shapiro(df[column].dropna())
+    data = df[column].dropna()
+    _, p_value = stats.shapiro(data)
     if p_value > 0.05:
         st.write(f"The data in the column '{column}' appears to be normally distributed (p-value = {p_value}).")
     else:
         st.write(f"The data in the column '{column}' does not appear to be normally distributed (p-value = {p_value}).")
+
+    # Plotting the histogram
+    plt.figure(figsize=(14, 6))
+    plt.subplot(1, 2, 1)
+    sns.histplot(data, bins=15, kde=True)
+    plt.title(f'Histogram of {column}')
+    plt.xlabel('Value')
+    plt.ylabel('Frequency')
+
+    # Plotting the Q-Q plot
+    plt.subplot(1, 2, 2)
+    sm.qqplot(data, line='s', ax=plt.gca())
+    plt.title(f'Q-Q Plot of {column}')
+    plt.xlabel('Theoretical Quantiles')
+    plt.ylabel('Sample Quantiles')
+
+    st.pyplot(plt)
 
 # Function to perform bar plot for categorical data
 def show_bar_plot(df):
@@ -340,10 +398,14 @@ def perform_text_analysis(df):
     text_column = st.selectbox('Select a Text Column for Word Cloud:', df.select_dtypes(include=['object']).columns.tolist())
     text_data = " ".join(text for text in df[text_column])
     wordcloud = WordCloud().generate(text_data)
+    plt.figure(figsize=(10, 5))
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
-    plt.show()
+    st.pyplot(plt)
 
+# Function to save the result as a CSV file
+def save_results(df):
+    st.download_button('Download CSV File', data=df.to_csv(index=False), file_name='results.csv', mime='text/csv')
 
 def main():
     input_pengguna = ""
