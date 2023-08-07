@@ -109,6 +109,189 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
 
     return script
 
+# Function to display descriptive statistics
+def show_descriptive_statistics(df):
+    st.write(df.describe())
+
+# Function to display a histogram
+def show_histogram(df):
+    column = st.selectbox('Select a Numeric Column for Histogram:', df.select_dtypes(include=['number']).columns.tolist())
+    sns.histplot(df[column])
+    st.pyplot()
+
+# Function to display a box plot
+def show_box_plot(df):
+    column = st.selectbox('Select a Numeric Column for Box Plot:', df.select_dtypes(include=['number']).columns.tolist())
+    sns.boxplot(x=df[column])
+    st.pyplot()
+
+# Function to display descriptive statistics
+def show_descriptive_statistics(df):
+    st.write(df.describe())
+
+# Function to display a histogram
+def show_histogram(df):
+    column = st.selectbox('Select a Numeric Column for Histogram:', df.select_dtypes(include=['number']).columns.tolist())
+    sns.histplot(df[column])
+    st.pyplot()
+
+# Function to display a box plot
+def show_box_plot(df):
+    column = st.selectbox('Select a Numeric Column for Box Plot:', df.select_dtypes(include=['number']).columns.tolist())
+    sns.boxplot(x=df[column])
+    st.pyplot()
+
+# Function to display scatter plot
+def show_scatter_plot(df):
+    col1 = st.selectbox('Select the first Numeric Column:', df.select_dtypes(include=['number']).columns.tolist())
+    col2 = st.selectbox('Select the second Numeric Column:', df.select_dtypes(include=['number']).columns.tolist())
+    sns.scatterplot(x=col1, y=col2, data=df)
+    st.pyplot()
+
+# Function to display correlation matrix
+def show_correlation_matrix(df):
+    corr = df.corr()
+    sns.heatmap(corr, annot=True)
+    st.pyplot()
+
+# Function to perform PCA
+def perform_pca(df):
+    numeric_df = df.select_dtypes(include=['number'])
+    scaler = StandardScaler()
+    scaled_data = scaler.fit_transform(numeric_df)
+    pca = PCA(n_components=2)
+    pca_result = pca.fit_transform(scaled_data)
+    st.write("Explained Variance Ratio:", pca.explained_variance_ratio_)
+    plt.scatter(pca_result[:, 0], pca_result[:, 1])
+    plt.xlabel('Principal Component 1')
+    plt.ylabel('Principal Component 2')
+    st.pyplot()
+
+# Function to show missing data
+def show_missing_data(df):
+    missing_data = df.isnull().sum()
+    st.write(missing_data[missing_data > 0])
+
+# Function to show outliers using Z-score
+def show_outliers(df):
+    column = st.selectbox('Select a Numeric Column for Outlier Detection:', df.select_dtypes(include=['number']).columns.tolist())
+    z_scores = np.abs(stats.zscore(df[column].dropna()))
+    outliers = np.where(z_scores > 2)
+    st.write(f"Outliers found at index positions: {outliers}")
+
+# Function to create polynomial features
+def create_polynomial_features(df):
+    column = st.selectbox('Select a Numeric Column for Polynomial Features:', df.select_dtypes(include=['number']).columns.tolist())
+    degree = st.slider('Select Degree for Polynomial Features:', 2, 5)
+    poly_values = np.power(df[column], degree)
+    st.line_chart(poly_values)
+
+# Function to perform Shapiro-Wilk normality test
+def perform_shapiro_wilk_test(df):
+    column = st.selectbox('Select a Numeric Column for Normality Testing:', df.select_dtypes(include=['number']).columns.tolist())
+    _, p_value = stats.shapiro(df[column].dropna())
+    if p_value > 0.05:
+        st.write(f"The data in the column '{column}' appears to be normally distributed (p-value = {p_value}).")
+    else:
+        st.write(f"The data in the column '{column}' does not appear to be normally distributed (p-value = {p_value}).")
+
+# Function to perform bar plot for categorical data
+def show_bar_plot(df):
+    column = st.selectbox('Select a Categorical Column for Bar Plot:', df.select_dtypes(include=['object']).columns.tolist())
+    sns.countplot(x=column, data=df)
+    st.pyplot()
+
+# Function to perform pie chart for categorical data
+def show_pie_chart(df):
+    column = st.selectbox('Select a Categorical Column for Pie Chart:', df.select_dtypes(include=['object']).columns.tolist())
+    df[column].value_counts().plot.pie(autopct='%1.1f%%')
+    st.pyplot()
+
+# Function to perform Linear Regression
+def perform_linear_regression(df):
+    X_columns = st.multiselect('Select Feature Columns:', df.select_dtypes(include=['number']).columns.tolist())
+    y_column = st.selectbox('Select Target Column:', df.select_dtypes(include=['number']).columns.tolist())
+    test_size = st.slider('Select Test Size for Train-Test Split:', 0.1, 0.5, 0.2)
+
+    X = df[X_columns]
+    y = df[y_column]
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    st.write("Model Coefficients:", model.coef_)
+    st.write("Mean Squared Error:", mean_squared_error(y_test, y_pred))
+
+# Function to perform Logistic Regression
+def perform_logistic_regression(df):
+    X_columns = st.multiselect('Select Feature Columns for Logistic Regression:', df.select_dtypes(include=['number']).columns.tolist())
+    y_column = st.selectbox('Select Target Column for Logistic Regression:', df.select_dtypes(include=['object']).columns.tolist())
+    test_size = st.slider('Select Test Size for Train-Test Split for Logistic Regression:', 0.1, 0.5, 0.2)
+
+    X = df[X_columns]
+    y = LabelEncoder().fit_transform(df[y_column])
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
+    model = LogisticRegression()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    st.write("Accuracy:", accuracy_score(y_test, y_pred))
+    st.write("Confusion Matrix:", confusion_matrix(y_test, y_pred))
+
+# Function to perform K-Means Clustering
+def perform_k_means_clustering(df):
+    num_clusters = st.slider('Select Number of Clusters for K-Means:', 2, 10)
+    X = df.select_dtypes(include=['number'])
+
+    kmeans = KMeans(n_clusters=num_clusters, random_state=42).fit(X)
+    labels = kmeans.labels_
+    df['Cluster'] = labels
+
+    st.write('Cluster Centers:', kmeans.cluster_centers_)
+    st.write(df)
+
+# Function to perform Time-Series Analysis
+def perform_time_series_analysis(df):
+    time_column = st.selectbox('Select Time Column:', df.select_dtypes(include=['datetime']).columns.tolist())
+    target_column = st.selectbox('Select Target Column for Time-Series Analysis:', df.select_dtypes(include=['number']).columns.tolist())
+    window_size = st.slider('Select Window Size for Moving Average:', 3, 30)
+
+    df[time_column] = pd.to_datetime(df[time_column])
+    df.set_index(time_column, inplace=True)
+    moving_avg = df[target_column].rolling(window=window_size).mean()
+
+    fig, ax = plt.subplots()
+    ax.plot(df[target_column], label='Original')
+    ax.plot(moving_avg, label=f'Moving Average (window={window_size})')
+    ax.legend()
+    st.pyplot(fig)
+
+# Function to perform Hierarchical Clustering
+def perform_hierarchical_clustering(df):
+    num_clusters = st.slider('Select Number of Clusters for Hierarchical Clustering:', 2, 10)
+    X = df.select_dtypes(include=['number'])
+    
+    clustering = AgglomerativeClustering(n_clusters=num_clusters).fit(X)
+    labels = clustering.labels_
+    df['Cluster'] = labels
+    
+    # Create a dendrogram
+    linkage_matrix = clustering.children_
+    dendrogram(linkage_matrix)
+    plt.show()
+
+# Function to perform Text Analysis using Word Cloud
+def perform_text_analysis(df):
+    text_column = st.selectbox('Select a Text Column for Word Cloud:', df.select_dtypes(include=['object']).columns.tolist())
+    text_data = " ".join(text for text in df[text_column])
+    wordcloud = WordCloud().generate(text_data)
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.show()
+
 
 def main():
     input_pengguna = ""
@@ -144,83 +327,56 @@ def main():
         rows_dict = df.head(2).to_dict('records')
         rows_str = json.dumps(rows_dict, default=str)
 
-        # # Cari kolom yang memiliki missing values
-        # missing_columns = [col for col in df.columns if df[col].isnull().any()]
-        
-        # if missing_columns:
-        #     st.write("Terdeteksi beberapa kolom dengan missing values, bantu saya menanganinya:")
-            
-        #     selected_methods = {}
-        #     for column in missing_columns:
-        #         # Tentukan opsi berdasarkan tipe data
-        #         if df[column].dtype == 'float64' or df[column].dtype == 'int64':
-        #             options = ['0', 'Average']
-        #         else:
-        #             options = ['Modus', 'Unknown']
-        
-        #         # Dropdown untuk memilih metode pengisian untuk setiap kolom
-        #         selected_methods[column] = st.selectbox(f"Pilih metode pengisian untuk kolom {column}:", options)
-        
-        #     # Tombol untuk mengisi semua missing values
-        #     if st.button("Handling missing values"):
-        #         for column, method in selected_methods.items():
-        #             fill_missing_values(df, column, method)
-        #         st.write('Missing values telah dihandle.')
-        # else:
-        #     st.write("Tidak ada missing values dalam DataFrame.")
-        # df_ori = df.copy()
-        # if st.button('Klik disini jika kamu ingin saya melakukan data cleansing secara otomatis.'):
-        #     # st.subheader('Data cleansing...')
-        #     df = load_file_auto_delimiter(file)
-        #     response = openai.ChatCompletion.create(
-        #         model="gpt-3.5-turbo-16k",
-        #         # model="gpt-4",
-        #         messages=[
-        #             {"role": "system", "content": "I will cleansing your df, no other text explanation."},
-        #             {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-        #                                             1. Do a data cleansing and assign to df.
-        #                                             2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-        #                                             3. Respond with scripts without any text. 
-        #                                             4. Only code in a single cell. 
-        #                                             5. Don’t start your response with “Sure, here are”. 
-        #                                             6. Start your response with “import” inside the python block. 
-        #                                             7. Give and show with streamlit the title for every steps.
-        #                                             8. Print with st.write the explanation for every syntax.
-        #                                             9. Don’t give me any explanation about the script. Response only with python block.
-        #                                             10. Do not reload the dataframe.
-        #                                             11. Use Try and Except for each syntax.
-        #                                             12. Print and show the detail step of data cleansing you did.
-        #                                             13. Dont forget to show the steps with st.write.
-        #                                             14. Don't forget to assign all the cleansing step to df.
-        #                                             """}
-        #         ],
-        #         max_tokens=14000,
-        #         temperature=0
-        #     )
-            
-        #     script = response.choices[0].message['content']
-        #     # st.write(str(script))
-        #     exec(str(script), locals().update(locals()))
+        analysis_option = st.sidebar.selectbox('Choose an analysis:', 
+                                           ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Correlation Matrix',
+                                            'Principal Component Analysis', 'Missing Data', 'Outlier Detection', 'Polynomial Features', 
+                                            'Normality Test', 'Bar Plot', 'Pie Chart', 'Linear Regression', 'Logistic Regression',
+                                            'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering', 'Handle Imbalance Classes',
+                                            'Text Analysis', 'Save Results'))
 
-        #     st.write('First 5 rows of clean dataset.')
-        #     st.dataframe(df.head())
-        #     st.download_button("Klik untuk mendownload clean dataframe",df.to_csv(index=False).encode('utf-8'),"cleaned_df.csv","text/csv",key='download-csv')
-        #     if st.button('Tolak data cleansing dan kembalikan ke semula.'):  
-        #         st.write('Dataframe telah dikembalikan.')
-        #         time.sleep(3)
-        #         df = df_ori.copy()
-
-        # password = st.text_input("Masukkan Password: ")
-        # if st.button('Submit'):
-        #     if password != st.secrets['pass']:
-        #         st.write('Password Salah.')
-                
-        #     if password == st.secrets['pass']:
-                
+        if analysis_option == 'Hierarchical Clustering':
+            perform_hierarchical_clustering(df)
+        elif analysis_option == 'Handle Imbalance Classes':
+            handle_imbalance_classes(df)
+        elif analysis_option == 'Text Analysis':
+            perform_text_analysis(df)
+        elif analysis_option == 'Save Results':
+            save_results(df)
+        elif analysis_option == 'Logistic Regression':
+            perform_logistic_regression(df)
+        elif analysis_option == 'K-Means Clustering':
+            perform_k_means_clustering(df)
+        elif analysis_option == 'Time-Series Analysis':
+            perform_time_series_analysis(df)
+        elif analysis_option == 'Bar Plot':
+            show_bar_plot(df)
+        elif analysis_option == 'Pie Chart':
+            show_pie_chart(df)
+        elif analysis_option == 'Linear Regression':
+            perform_linear_regression(df)
+        elif analysis_option == 'Missing Data':
+            show_missing_data(df)
+        elif analysis_option == 'Outlier Detection':
+            show_outliers(df)
+        elif analysis_option == 'Polynomial Features':
+            create_polynomial_features(df)
+        elif analysis_option == 'Normality Test':
+            perform_shapiro_wilk_test(df)
+        elif analysis_option == 'Descriptive Statistics':
+            show_descriptive_statistics(df)
+        elif analysis_option == 'Histogram':
+            show_histogram(df)
+        elif analysis_option == 'Box Plot':
+            show_box_plot(df)
+        elif analysis_option == 'Scatter Plot':
+            show_scatter_plot(df)
+        elif analysis_option == 'Correlation Matrix':
+            show_correlation_matrix(df)
+        elif analysis_option == 'Principal Component Analysis':
+            perform_pca(df)
         
-
         # Create a button in the Streamlit app
-        if st.button('Klik untuk Explore Data dengan Pandas Profiling'):
+        if st.button('Or automatically Explore the Data with Pandas Profiling'):
             # Create Pandas Profiling Report
             pr = ProfileReport(df, explorative=True)
         
