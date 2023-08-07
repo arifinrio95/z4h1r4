@@ -68,7 +68,8 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         2. My dataframe already load previously, named df, use it, do not reload the dataframe.
         3. Only respond with python scripts in streamlit version without any text. 
         4. Start your response with “import”.
-        5. Show all your response to streamlit apps."""}
+        5. Show all your response to streamlit apps.
+        6. Use Try and Except."""}
     ]
 
     # messages = [
