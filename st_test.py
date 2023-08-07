@@ -1,6 +1,7 @@
 import openai
 import streamlit as st
 import pandas as pd
+import numpy as np
 import requests
 import json
 import warnings
@@ -13,6 +14,7 @@ import os
 import time
 from pandas_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
+from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings('ignore')
 st.set_option('deprecation.showPyplotGlobalUse', False)
