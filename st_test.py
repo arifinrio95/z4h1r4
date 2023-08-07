@@ -97,7 +97,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         model="gpt-3.5-turbo",
         # model="gpt-4",
         messages=messages,
-        max_tokens=12000,
+        max_tokens=3000,
         temperature=0
     )
     script = response.choices[0].message['content']
