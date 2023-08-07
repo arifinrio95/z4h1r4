@@ -426,36 +426,21 @@ def perform_linear_regression(df):
     if not X_columns:  # If no features are selected
         st.warning('Please select feature columns.')
         return
-
+    
     y_column = st.selectbox('Select Target Column:', df.select_dtypes(include=['number']).columns.tolist())
     test_size = st.slider('Select Test Size for Train-Test Split:', 0.1, 0.5, 0.2)
+    fit_intercept = st.checkbox('Fit Intercept?', value=True)
 
     X = df[X_columns]
     y = df[y_column]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
-
-    fit_intercept = st.checkbox('Fit Intercept?')
-    normalize = st.checkbox('Normalize?')
-
-    model = LinearRegression(fit_intercept=fit_intercept, normalize=normalize)
+    model = LinearRegression(fit_intercept=fit_intercept) # Note: 'normalize' argument removed
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
     st.write("Model Coefficients:", model.coef_)
-    st.write("Model Intercept:", model.intercept_)
     st.write("Mean Squared Error:", mean_squared_error(y_test, y_pred))
-    st.write("Mean Absolute Error:", mean_absolute_error(y_test, y_pred))
-    st.write("R2 Score:", r2_score(y_test, y_pred))
-
-    # Plot actual vs predicted values
-    fig, ax = plt.subplots()
-    ax.scatter(y_test, y_pred, edgecolors=(0, 0, 0))
-    ax.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=4)
-    ax.set_xlabel('Actual')
-    ax.set_ylabel('Predicted')
-    ax.set_title("Ground Truth vs Predicted")
-    st.pyplot(fig)
 
 
 # Function to perform Logistic Regression
