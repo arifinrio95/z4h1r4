@@ -31,7 +31,7 @@ from wordcloud import WordCloud
 
 hide_menu = """
 <style>
-#stToolbar {
+#stHeader {
     visibility:hidden;
 }
 </style>
