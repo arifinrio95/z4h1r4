@@ -11,6 +11,8 @@ import pandas as pd
 from io import StringIO
 import os
 import time
+from pandas_profiling import ProfileReport
+from streamlit_pandas_profiling import st_profile_report
 
 warnings.filterwarnings('ignore')
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -217,7 +219,16 @@ def main():
                 
         
 
-        # EDA (automate sebelum 
+        # Create a button in the Streamlit app
+        if st.button('Klik untuk Explore Data dengan Pandas Profiling'):
+            # Create Pandas Profiling Report
+            pr = ProfileReport(df, explorative=True)
+        
+            # Display the report
+            st.title('Pandas Profiling Report')
+            st_profile_report(pr)
+        else:
+            st.write('Klik tombol untuk memulai profiling data!')
         input_pengguna = ""
         # User Input
         input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.' """)
