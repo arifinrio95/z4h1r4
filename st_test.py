@@ -227,8 +227,7 @@ def main():
             # Display the report
             st.title('Pandas Profiling Report')
             st_profile_report(pr)
-        else:
-            st.write('Klik tombol untuk memulai profiling data!')
+            
         input_pengguna = ""
         # User Input
         input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.' """)
