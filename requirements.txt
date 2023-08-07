@@ -8,3 +8,4 @@ matplotlib>=3.4.3
 openpyxl
 scikit-learn
 wordcloud
+streamlit-pandas-profiling
