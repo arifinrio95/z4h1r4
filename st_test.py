@@ -241,7 +241,7 @@ def main():
                 # script = response.choices[0].message['content']
                 
                 script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
-                        exec(str(script))
+                exec(str(script))
                 
                 # retry_count = 0
                 # error_message = None
