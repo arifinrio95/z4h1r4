@@ -1,3 +1,6 @@
+[ui]
+hideTopBar = true
+
 [browser]
 serverAddress = "localhost"
 serverPort = 8501
