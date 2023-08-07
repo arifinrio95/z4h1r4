@@ -69,7 +69,8 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         3. Only respond with python scripts in streamlit version without any text. 
         4. Start your response with “import”.
         5. Show all your response to streamlit apps.
-        6. Use Try and Except."""}
+        6. Use Try and Except.
+        7. Pay attention to the column type before creating the script."""}
     ]
 
     # messages = [
@@ -219,7 +220,7 @@ def main():
         # EDA (automate sebelum 
         input_pengguna = ""
         # User Input
-        input_pengguna = st.text_input("Masukkan perintah anda untuk mengolah data tersebut:")
+        input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: "Lakukan EDA.", "BUat 5 visualisasi insightful.", "Lakukan metode2 statistika pada data tersebut."""")
         if (input_pengguna != "") & (input_pengguna != None) :
             if st.button('Eksekusi!'):
                 # schema_dict = {col: str(dtype) for col, dtype in df.dtypes.iteritems()}
