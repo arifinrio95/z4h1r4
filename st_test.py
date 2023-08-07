@@ -410,7 +410,6 @@ def main():
         """,
         unsafe_allow_html=True
     )
-    css-ztfqz8 ef3psqc4
     input_pengguna = ""
     import warnings
     warnings.filterwarnings('ignore')
