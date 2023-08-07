@@ -35,6 +35,9 @@ from wordcloud import WordCloud
 
 # Add custom CSS to hide the GitHub icon
 hide_github_icon = """
+#MainMenu {
+  visibility: hidden;
+}
 #GithubIcon {
   visibility: hidden;
 }
