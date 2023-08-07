@@ -15,6 +15,20 @@ import time
 from pandas_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
 from sklearn.preprocessing import StandardScaler
+from scipy import stats
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import LabelEncoder
+from sklearn.cluster import AgglomerativeClustering
+from scipy.cluster.hierarchy import dendrogram
+from wordcloud import WordCloud
+
+
+
 
 warnings.filterwarnings('ignore')
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -245,15 +259,44 @@ def perform_logistic_regression(df):
 
 # Function to perform K-Means Clustering
 def perform_k_means_clustering(df):
-    num_clusters = st.slider('Select Number of Clusters for K-Means:', 2, 10)
-    X = df.select_dtypes(include=['number'])
+    # Choose features
+    features = st.multiselect('Select features for K-Means clustering:', df.select_dtypes(include=['number']).columns.tolist())
+    
+    if not features:  # If no features are selected
+        st.warning('Please select at least one feature.')
+        return
+    
+    X = df[features]
 
+    # Choose number of clusters
+    num_clusters = st.slider('Select Number of Clusters for K-Means:', 2, 10)
+
+    # Perform K-Means clustering
     kmeans = KMeans(n_clusters=num_clusters, random_state=42).fit(X)
     labels = kmeans.labels_
     df['Cluster'] = labels
 
+    # Display results
     st.write('Cluster Centers:', kmeans.cluster_centers_)
     st.write(df)
+
+    # Optional: Visualize clusters if a target is chosen
+    target = st.selectbox('Select a target column (Optional for visualization):', [None] + df.columns.tolist())
+    
+    if target:
+        import matplotlib.pyplot as plt
+
+        for i in range(num_clusters):
+            subset = df[df['Cluster'] == i]
+            plt.scatter(subset[features[0]], subset[features[1]], label=f"Cluster {i}", alpha=0.6)
+            plt.scatter(kmeans.cluster_centers_[i][0], kmeans.cluster_centers_[i][1], marker='x', color='red')
+        
+        plt.xlabel(features[0])
+        plt.ylabel(features[1])
+        plt.legend()
+        plt.title(f'K-Means Clustering with {num_clusters} clusters')
+        st.pyplot(plt)
+
 
 # Function to perform Time-Series Analysis
 def perform_time_series_analysis(df):
@@ -333,7 +376,7 @@ def main():
                                            ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Correlation Matrix',
                                             'Principal Component Analysis', 'Missing Data', 'Outlier Detection', 'Polynomial Features', 
                                             'Normality Test', 'Bar Plot', 'Pie Chart', 'Linear Regression', 'Logistic Regression',
-                                            'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering', 'Handle Imbalance Classes',
+                                            'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
                                             'Text Analysis', 'Save Results'))
 
         if analysis_option == 'Hierarchical Clustering':
