@@ -158,20 +158,25 @@ def show_box_plot(df):
     y_column = st.selectbox('Select a Numeric Column for Y-axis:', numeric_columns)
     x_column = st.selectbox('Select a Categorical Column for X-axis (Optional):', [None] + categorical_columns)
 
+    show_swarm = st.checkbox('Show Swarm Plot?')
+    color_option = st.color_picker('Pick a Color for Box Plot')
+    cat_color_option = st.color_picker('Pick a Color for Categorical Box Plot', '#95a5a6') if x_column else None
+
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    sns.boxplot(x=x_column, y=y_column, data=df, ax=ax, color="skyblue")
-    
-    # Removing unnecessary grid lines and ticks for a cleaner look
+    sns.boxplot(x=x_column, y=y_column, data=df, ax=ax, palette=[color_option] if not x_column else cat_color_option)
+
+    if show_swarm:
+        sns.swarmplot(x=x_column, y=y_column, data=df, ax=ax, color='black', size=3)
+
     sns.despine(left=True, bottom=True)
-    ax.xaxis.set_ticks_position('none') 
+    ax.xaxis.set_ticks_position('none')
     ax.yaxis.set_ticks_position('none')
 
     plt.title('Box Plot of ' + y_column, fontsize=16, fontweight="bold")
     plt.ylabel(y_column, fontsize=12)
     plt.xlabel(x_column if x_column else '', fontsize=12)
-    
-    # Annotate with key statistics
+
     if x_column:
         categories = df[x_column].unique()
         for category in categories:
@@ -179,16 +184,47 @@ def show_box_plot(df):
             median = subset.median()
             plt.annotate(f'Median: {median}', xy=(categories.tolist().index(category), median), xytext=(-20,20),
                          textcoords='offset points', arrowprops=dict(arrowstyle='->'), fontsize=10)
+    else:
+        median = df[y_column].median()
+        plt.annotate(f'Median: {median}', xy=(0, median), xytext=(-20,20),
+                     textcoords='offset points', arrowprops=dict(arrowstyle='->'), fontsize=10)
 
     st.pyplot(fig)
 
 
+
 # Function to display scatter plot
 def show_scatter_plot(df):
-    col1 = st.selectbox('Select the first Numeric Column:', df.select_dtypes(include=['number']).columns.tolist())
-    col2 = st.selectbox('Select the second Numeric Column:', df.select_dtypes(include=['number']).columns.tolist())
-    sns.scatterplot(x=col1, y=col2, data=df)
-    st.pyplot()
+    numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
+    categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
+    col1 = st.selectbox('Select the first Numeric Column:', numeric_columns)
+    col2 = st.selectbox('Select the second Numeric Column:', numeric_columns)
+    hue_col = st.selectbox('Select a Categorical Column for Coloring (Optional):', [None] + categorical_columns)
+    size_option = st.slider('Select Point Size:', min_value=1, max_value=10, value=5)
+    show_regression_line = st.checkbox('Show Regression Line?')
+    annotate_points = st.checkbox('Annotate Points?')
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    sns.scatterplot(x=col1, y=col2, hue=hue_col, data=df, s=size_option * 10, ax=ax, palette='viridis' if hue_col else None)
+
+    if show_regression_line:
+        sns.regplot(x=col1, y=col2, data=df, scatter=False, ax=ax, line_kws={'color': 'red'})
+
+    if annotate_points:
+        for i, txt in enumerate(df.index):
+            ax.annotate(txt, (df[col1].iloc[i], df[col2].iloc[i]), fontsize=8)
+
+    sns.despine(left=True, bottom=True)
+    ax.xaxis.set_ticks_position('none')
+    ax.yaxis.set_ticks_position('none')
+
+    plt.title(f'Scatter Plot of {col1} vs {col2}', fontsize=16, fontweight="bold")
+    plt.xlabel(col1, fontsize=12)
+    plt.ylabel(col2, fontsize=12)
+
+    st.pyplot(fig)
+
 
 # Function to display correlation matrix
 def show_correlation_matrix(df):
@@ -212,15 +248,63 @@ def show_correlation_matrix(df):
 # Function to perform PCA
 def perform_pca(df):
     numeric_df = df.select_dtypes(include=['number'])
-    scaler = StandardScaler()
+    categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
+
+    # User options
+    n_components = st.slider('Select Number of Principal Components:', 1, min(numeric_df.shape[1], 10), 2)
+    scaling_option = st.selectbox('Select Scaling Option:', ['StandardScaler', 'MinMaxScaler', 'RobustScaler'])
+    color_by = st.selectbox('Color By Categorical Column:', [None] + categorical_columns)
+    show_scree_plot = st.checkbox('Show Scree Plot', value=False)
+
+    # Scaling
+    if scaling_option == 'StandardScaler':
+        scaler = StandardScaler()
+    elif scaling_option == 'MinMaxScaler':
+        scaler = MinMaxScaler()
+    elif scaling_option == 'RobustScaler':
+        scaler = RobustScaler()
+
     scaled_data = scaler.fit_transform(numeric_df)
-    pca = PCA(n_components=2)
+
+    # PCA
+    pca = PCA(n_components=n_components)
     pca_result = pca.fit_transform(scaled_data)
+
+    # Membuat DataFrame dengan hasil PCA dan data aktual
+    pca_df = pd.DataFrame(data=pca_result, columns=[f'Principal Component {i}' for i in range(1, n_components + 1)])
+    combined_df = pd.concat([df.reset_index(drop=True), pca_df], axis=1)
+
+    # Tombol Unduh
+    csv = combined_df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # Beberapa byte dance
+    href = f'<a href="data:file/csv;base64,{b64}" download="pca_result.csv">Download CSV File</a>'
+    st.markdown(href, unsafe_allow_html=True)
+    
     st.write("Explained Variance Ratio:", pca.explained_variance_ratio_)
-    plt.scatter(pca_result[:, 0], pca_result[:, 1])
+
+    # Scatter plot
+    fig, ax = plt.subplots()
+    if color_by:
+        sns.scatterplot(x=pca_result[:, 0], y=pca_result[:, 1], hue=df[color_by], palette='viridis')
+    else:
+        plt.scatter(pca_result[:, 0], pca_result[:, 1])
     plt.xlabel('Principal Component 1')
     plt.ylabel('Principal Component 2')
-    st.pyplot()
+    st.pyplot(fig)
+
+    # Scree plot
+    if show_scree_plot:
+        fig, ax = plt.subplots()
+        plt.bar(range(1, len(pca.explained_variance_ratio_)+1), pca.explained_variance_ratio_)
+        plt.xlabel('Principal Component')
+        plt.ylabel('Explained Variance')
+        st.pyplot(fig)
+
+    # Loadings
+    loadings = pd.DataFrame(pca.components_.T, columns=[f'PC{i+1}' for i in range(n_components)], index=numeric_df.columns)
+    st.write("Loadings:")
+    st.write(loadings)
+
 
 # Function to show missing data
 def show_missing_data(df):
@@ -287,15 +371,54 @@ def perform_shapiro_wilk_test(df):
 
 # Function to perform bar plot for categorical data
 def show_bar_plot(df):
-    column = st.selectbox('Select a Categorical Column for Bar Plot:', df.select_dtypes(include=['object']).columns.tolist())
-    sns.countplot(x=column, data=df)
+    categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
+    numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
+    column = st.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
+    y_column = st.selectbox('Select a Numeric Column for Y values (Optional):', [None] + numeric_columns)
+    orientation = st.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
+    color_option = st.selectbox('Select Bar Color:', sns.color_palette().as_hex())
+    sort_option = st.selectbox('Sort By:', ['None', 'Value', 'Category'])
+
+    order = None
+    if sort_option == 'Value':
+        order = df.groupby(column)[y_column].sum().sort_values(ascending=False).index if y_column else df[column].value_counts().index
+    elif sort_option == 'Category':
+        order = sorted(df[column].unique())
+
+    if orientation == 'Vertical':
+        sns.countplot(x=column, y=y_column, data=df, order=order, color=color_option) if y_column else sns.countplot(x=column, data=df, order=order, color=color_option)
+    else:
+        sns.countplot(y=column, x=y_column, data=df, order=order, color=color_option) if y_column else sns.countplot(y=column, data=df, order=order, color=color_option)
+
+    plt.title(f'Bar Plot of {column}', fontsize=16, fontweight="bold")
+    plt.xlabel(column, fontsize=12)
+    plt.ylabel(y_column if y_column else 'Count', fontsize=12)
+    sns.despine(left=True, bottom=True)
     st.pyplot()
+
 
 # Function to perform pie chart for categorical data
 def show_pie_chart(df):
-    column = st.selectbox('Select a Categorical Column for Pie Chart:', df.select_dtypes(include=['object']).columns.tolist())
-    df[column].value_counts().plot.pie(autopct='%1.1f%%')
-    st.pyplot()
+    categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
+    column = st.selectbox('Select a Categorical Column for Pie Chart:', categorical_columns)
+    color_palette = st.selectbox('Choose a Color Palette:', sns.palettes.SEABORN_PALETTES.keys())
+    show_percentage = st.checkbox('Show Percentage', value=True)
+    show_labels = st.checkbox('Show Labels', value=True)
+    explode_option = st.slider('Explode Segments:', 0.0, 0.5, 0.0)
+    figsize_option = st.slider('Size of Pie Chart:', 5, 20, 10)
+
+    labels = df[column].value_counts().index
+    sizes = df[column].value_counts().values
+    colors = sns.color_palette(color_palette, len(labels))
+    explode = [explode_option] * len(labels)
+    autopct = '%1.1f%%' if show_percentage else None
+
+    fig, ax = plt.subplots(figsize=(figsize_option, figsize_option))
+    ax.pie(sizes, explode=explode, labels=labels if show_labels else None, colors=colors, autopct=autopct, shadow=True, startangle=90)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    st.pyplot(fig)
+
 
 # Function to perform Linear Regression
 def perform_linear_regression(df):
