@@ -427,6 +427,10 @@ def perform_linear_regression(df):
     y_column = st.selectbox('Select Target Column:', df.select_dtypes(include=['number']).columns.tolist())
     test_size = st.slider('Select Test Size for Train-Test Split:', 0.1, 0.5, 0.2)
 
+    if not X_columns:  # If no features are selected
+        st.warning('Please select feature columns.')
+        return
+        
     X = df[X_columns]
     y = df[y_column]
 
