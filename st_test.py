@@ -464,56 +464,45 @@ def perform_linear_regression(df):
 # Function to perform Logistic Regression
 def perform_logistic_regression(df):
     X_columns = st.multiselect('Select Feature Columns for Logistic Regression:', df.select_dtypes(include=['number']).columns.tolist())
-    if not X_columns:  # If no features are selected
-        st.warning('Please select feature columns.')
-        return
-
     y_column = st.selectbox('Select Target Column for Logistic Regression:', df.select_dtypes(include=['object']).columns.tolist())
     test_size = st.slider('Select Test Size for Train-Test Split for Logistic Regression:', 0.1, 0.5, 0.2)
 
-    solvers = ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
-    solver = st.selectbox('Select Solver for Logistic Regression:', solvers)
-
-    penalty_options = ['l1', 'l2', 'elasticnet', 'none']
-    penalty = st.selectbox('Select Regularization Penalty:', penalty_options)
-
-    c_values = st.slider('Select Inverse of Regularization Strength:', min_value=0.01, max_value=10.0, value=1.0)
-
-    class_weight_option = st.checkbox('Use Balanced Class Weights?')
-    class_weight = 'balanced' if class_weight_option else None
+    penalty_option = st.selectbox('Select Penalty Type:', ['l2', 'l1'])
+    solver_option = 'saga' if penalty_option == 'l1' else 'newton-cg'
 
     X = df[X_columns]
     y = LabelEncoder().fit_transform(df[y_column])
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
-    model = LogisticRegression(solver=solver, penalty=penalty, C=c_values, class_weight=class_weight)
+    model = LogisticRegression(penalty=penalty_option, solver=solver_option)
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
+    y_prob = model.predict_proba(X_test)[:, 1]
 
     st.write("Accuracy:", accuracy_score(y_test, y_pred))
+    st.write("Confusion Matrix:", confusion_matrix(y_test, y_pred))
     st.write("Classification Report:", classification_report(y_test, y_pred))
 
-    conf_matrix = confusion_matrix(y_test, y_pred)
-    fig, ax = plt.subplots(figsize=(8,6))
-    sns.heatmap(conf_matrix, annot=True, fmt='d')
-    plt.ylabel('Actual')
-    plt.xlabel('Predicted')
-    st.pyplot(fig)
-
-    y_prob = model.predict_proba(X_test)[:, 1]
+    # ROC Curve
     fpr, tpr, thresholds = roc_curve(y_test, y_prob)
     roc_auc = auc(fpr, tpr)
-
-    fig, ax = plt.subplots(figsize=(8,6))
-    plt.plot(fpr, tpr, label='AUC = %0.2f' % roc_auc)
-    plt.plot([0, 1], [0, 1], 'r--')
-    plt.xlim([0, 1])
-    plt.ylim([0, 1])
+    plt.figure(figsize=(10, 8))
+    plt.plot(fpr, tpr, label=f'ROC curve (area = {roc_auc:.2f})')
+    plt.plot([0, 1], [0, 1], 'k--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('Receiver Operating Characteristic (ROC)')
-    plt.legend(loc='lower right')
-    st.pyplot(fig)
+    plt.title('Receiver Operating Characteristic')
+    plt.legend(loc="lower right")
+    st.pyplot()
+
+    # Confusion Matrix Heatmap
+    plt.figure(figsize=(6, 4))
+    sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt="d")
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    st.pyplot()
 
 # Function to perform K-Means Clustering
 def perform_k_means_clustering(df):
