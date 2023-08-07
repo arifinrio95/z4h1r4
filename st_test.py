@@ -29,10 +29,6 @@ from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
 from wordcloud import WordCloud
 
-st.set_option('browser.serverAddress', 'localhost')
-st.set_option('browser.serverPort', 8501)
-st.set_option('browser.gatherUsageStats', False)
-st.set_option('browser.show_traceback_stack', False)
 
 # Fungsi untuk mengisi missing values berdasarkan pilihan pengguna
 def fill_missing_values(df, column, method):
