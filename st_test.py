@@ -155,22 +155,6 @@ def show_box_plot(df):
     sns.boxplot(x=df[column])
     st.pyplot()
 
-# Function to display descriptive statistics
-def show_descriptive_statistics(df):
-    st.write(df.describe())
-
-# Function to display a histogram
-def show_histogram(df):
-    column = st.selectbox('Select a Numeric Column for Histogram:', df.select_dtypes(include=['number']).columns.tolist())
-    sns.histplot(df[column])
-    st.pyplot()
-
-# Function to display a box plot
-def show_box_plot(df):
-    column = st.selectbox('Select a Numeric Column for Box Plot:', df.select_dtypes(include=['number']).columns.tolist())
-    sns.boxplot(x=df[column])
-    st.pyplot()
-
 # Function to display scatter plot
 def show_scatter_plot(df):
     col1 = st.selectbox('Select the first Numeric Column:', df.select_dtypes(include=['number']).columns.tolist())
