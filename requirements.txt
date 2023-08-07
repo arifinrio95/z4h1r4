@@ -10,3 +10,4 @@ scikit-learn
 wordcloud
 streamlit-pandas-profiling
 pandas-profiling
+scipy
