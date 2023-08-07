@@ -240,41 +240,43 @@ def main():
                 
                 # script = response.choices[0].message['content']
                 
-                
-                retry_count = 0
-                error_message = None
-                previous_script = None
-                while retry_count < 5:
-                    try:
-                        script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+                script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
                         exec(str(script))
+                
+                # retry_count = 0
+                # error_message = None
+                # previous_script = None
+                # while retry_count < 5:
+                #     try:
+                #         script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+                #         exec(str(script))
     
-                        # error_message = None
-                        # previous_script = None
-                        # input_pengguna = ""
-                        # if st.button('Lihat Script.'):
-                        # st.write("")
-                        # # st.write("The Script:")
-                        # st.text(script)
-                        break
-                    except Exception as e:
-                        error_message = str(e)
-                        # previous_script = str(script)
-                        retry_count += 1
-                        # # st.write("Previous script:")
-                        # # st.text(previous_script)
-                        # st.write("Error: ",error_message)
-                        # st.write("Trying to solving...")
+                #         # error_message = None
+                #         # previous_script = None
+                #         # input_pengguna = ""
+                #         # if st.button('Lihat Script.'):
+                #         # st.write("")
+                #         # # st.write("The Script:")
+                #         # st.text(script)
+                #         break
+                #     except Exception as e:
+                #         error_message = str(e)
+                #         # previous_script = str(script)
+                #         retry_count += 1
+                #         # # st.write("Previous script:")
+                #         # # st.text(previous_script)
+                #         # st.write("Error: ",error_message)
+                #         # st.write("Trying to solving...")
 
-                        if retry_count == 5:
-                            st.write("Maaf saya tidak bisa menyelesaikan perintah tersebut, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
-                            retry_count = 0
+                #         if retry_count == 5:
+                #             st.write("Maaf saya tidak bisa menyelesaikan perintah tersebut, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
+                #             retry_count = 0
                     # if (script!='') & st.button('Lihat Script.'):
                     #     st.write("")
                     #     # st.write("The Script:")
                     #     st.text(script)
-            error_message = None
-            previous_script = None
+            # error_message = None
+            # previous_script = None
             input_pengguna = ""
 
             # Mengevaluasi string sebagai kode Python
