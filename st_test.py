@@ -67,7 +67,8 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         1. Respon pertanyaan atau pernyataan ini: {input_pengguna}. 
         2. My dataframe already load previously, named df, use it, do not reload the dataframe.
         3. Only respond with python scripts in streamlit version without any text. 
-        4. Start your response with “import”."""}
+        4. Start your response with “import”.
+        5. Show all your response to streamlit apps."""}
     ]
 
     # messages = [
