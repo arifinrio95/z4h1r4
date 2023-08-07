@@ -134,9 +134,20 @@ def show_descriptive_statistics(df):
 
 # Function to display a histogram
 def show_histogram(df):
+    # Selecting the numeric column
     column = st.selectbox('Select a Numeric Column for Histogram:', df.select_dtypes(include=['number']).columns.tolist())
-    sns.histplot(df[column])
-    st.pyplot()
+    
+    # Customization options
+    bins = st.slider('Select Number of Bins:', 5, 50, 15) # Default is 15 bins
+    kde = st.checkbox('Include Kernel Density Estimate (KDE)?', value=True) # Default is to include KDE
+    color = st.color_picker('Pick a color for the bars:', '#3498db') # Default is a shade of blue
+    
+    # Plotting the histogram using Seaborn
+    plt.figure(figsize=(10, 5))
+    sns.histplot(df[column], bins=bins, kde=kde, color=color)
+    
+    # Rendering the plot in Streamlit
+    st.pyplot(plt)
 
 # Function to display a box plot
 def show_box_plot(df):
