@@ -259,7 +259,7 @@ def main():
                         break
                     except Exception as e:
                         error_message = str(e)
-                        previous_script = str(script)
+                        # previous_script = str(script)
                         retry_count += 1
                         # # st.write("Previous script:")
                         # # st.text(previous_script)
