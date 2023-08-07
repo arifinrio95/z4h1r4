@@ -153,9 +153,35 @@ def show_histogram(df):
 
 # Function to display a box plot
 def show_box_plot(df):
-    column = st.selectbox('Select a Numeric Column for Box Plot:', df.select_dtypes(include=['number']).columns.tolist())
-    sns.boxplot(x=df[column])
-    st.pyplot()
+    numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
+    categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
+    y_column = st.selectbox('Select a Numeric Column for Y-axis:', numeric_columns)
+    x_column = st.selectbox('Select a Categorical Column for X-axis (Optional):', [None] + categorical_columns)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    sns.boxplot(x=x_column, y=y_column, data=df, ax=ax, color="skyblue")
+    
+    # Removing unnecessary grid lines and ticks for a cleaner look
+    sns.despine(left=True, bottom=True)
+    ax.xaxis.set_ticks_position('none') 
+    ax.yaxis.set_ticks_position('none')
+
+    plt.title('Box Plot of ' + y_column, fontsize=16, fontweight="bold")
+    plt.ylabel(y_column, fontsize=12)
+    plt.xlabel(x_column if x_column else '', fontsize=12)
+    
+    # Annotate with key statistics
+    if x_column:
+        categories = df[x_column].unique()
+        for category in categories:
+            subset = df[df[x_column] == category][y_column]
+            median = subset.median()
+            plt.annotate(f'Median: {median}', xy=(categories.tolist().index(category), median), xytext=(-20,20),
+                         textcoords='offset points', arrowprops=dict(arrowstyle='->'), fontsize=10)
+
+    st.pyplot(fig)
+
 
 # Function to display scatter plot
 def show_scatter_plot(df):
