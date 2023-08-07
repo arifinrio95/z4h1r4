@@ -29,6 +29,10 @@ from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
 from wordcloud import WordCloud
 
+#MainMenu {
+  visibility: hidden;
+}
+
 # Add custom CSS to hide the GitHub icon
 hide_github_icon = """
 #GithubIcon {
