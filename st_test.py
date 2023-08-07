@@ -62,22 +62,31 @@ def load_file_auto_delimiter(file):
 
 def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0):
     messages = [
-        {"role": "system", "content": "I only response with syntax, no other text explanation."},
+        {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
         {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-        1. {input_pengguna}. 
+        1. Respon pertanyaan atau pernyataan ini: {input_pengguna}. 
         2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-        3. Respond with scripts without any text. 
-        4. Only code in a single cell. 
-        5. Don’t start your response with “Sure, here are”. 
-        6. Start your response with “import” inside the python block. 
-        7. Give and show with streamlit the title for every steps.
-        8. Print with st.write the explanation for every syntax.
-        9. Don’t give me any explanation about the script. Response only with python block.
-        10. Do not reload the dataframe.
-        11. Use Try and Except for each syntax.
-        12. Print and show the detail step you did.
-        13. Dont forget to show the steps with st.write."""}
+        3. Only respond with python scripts in streamlit version without any text. 
+        4. Start your response with “import”."""}
     ]
+
+    # messages = [
+    #     {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
+    #     {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
+    #     1. {input_pengguna}. 
+    #     2. My dataframe already load previously, named df, use it, do not reload the dataframe.
+    #     3. Respond with scripts without any text. 
+    #     4. Only code in a single cell. 
+    #     5. Don’t start your response with “Sure, here are”. 
+    #     6. Start your response with “import” inside the python block. 
+    #     7. Give and show with streamlit the title for every steps.
+    #     8. Print with st.write the explanation for every syntax.
+    #     9. Don’t give me any explanation about the script. Response only with python block.
+    #     10. Do not reload the dataframe.
+    #     11. Use Try and Except for each syntax.
+    #     12. Print and show the detail step you did.
+    #     13. Dont forget to show the steps with st.write."""}
+    # ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
     
     if error_message and previous_script:
