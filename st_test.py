@@ -235,13 +235,6 @@ def show_outliers(df):
     plt.legend()
     st.pyplot(plt)
 
-# Function to create polynomial features
-def create_polynomial_features(df):
-    column = st.selectbox('Select a Numeric Column for Polynomial Features:', df.select_dtypes(include=['number']).columns.tolist())
-    degree = st.slider('Select Degree for Polynomial Features:', 2, 5)
-    poly_values = np.power(df[column], degree)
-    st.line_chart(poly_values)
-
 # Function to perform Shapiro-Wilk normality test
 def perform_shapiro_wilk_test(df):
     column = st.selectbox('Select a Numeric Column for Normality Testing:', df.select_dtypes(include=['number']).columns.tolist())
@@ -403,10 +396,6 @@ def perform_text_analysis(df):
     plt.axis("off")
     st.pyplot(plt)
 
-# Function to save the result as a CSV file
-def save_results(df):
-    st.download_button('Download CSV File', data=df.to_csv(index=False), file_name='results.csv', mime='text/csv')
-
 def main():
     input_pengguna = ""
     import warnings
@@ -442,11 +431,11 @@ def main():
         rows_str = json.dumps(rows_dict, default=str)
 
         analysis_option = st.sidebar.selectbox('Choose an analysis:', 
-                                           ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Correlation Matrix',
-                                            'Principal Component Analysis', 'Missing Data', 'Outlier Detection', 'Polynomial Features', 
-                                            'Normality Test', 'Bar Plot', 'Pie Chart', 'Linear Regression', 'Logistic Regression',
+                                           ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
+                                            'Principal Component Analysis', 'Outlier Detection',
+                                            'Normality Test', 'Linear Regression', 'Logistic Regression',
                                             'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
-                                            'Text Analysis', 'Save Results'))
+                                            'Text Analysis'))
 
         if analysis_option == 'Hierarchical Clustering':
             perform_hierarchical_clustering(df)
@@ -454,8 +443,6 @@ def main():
             handle_imbalance_classes(df)
         elif analysis_option == 'Text Analysis':
             perform_text_analysis(df)
-        elif analysis_option == 'Save Results':
-            save_results(df)
         elif analysis_option == 'Logistic Regression':
             perform_logistic_regression(df)
         elif analysis_option == 'K-Means Clustering':
@@ -472,8 +459,6 @@ def main():
             show_missing_data(df)
         elif analysis_option == 'Outlier Detection':
             show_outliers(df)
-        elif analysis_option == 'Polynomial Features':
-            create_polynomial_features(df)
         elif analysis_option == 'Normality Test':
             perform_shapiro_wilk_test(df)
         elif analysis_option == 'Descriptive Statistics':
