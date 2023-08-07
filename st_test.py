@@ -29,18 +29,10 @@ from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
 from wordcloud import WordCloud
 
-st.markdown(
-    """
-    <style>
-    .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
-    .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
-    .viewerBadge_text__1JaDK {
-        display: none;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+st.set_option('browser.serverAddress', 'localhost')
+st.set_option('browser.serverPort', 8501)
+st.set_option('browser.gatherUsageStats', False)
+st.set_option('browser.show_traceback_stack', False)
 
 # Fungsi untuk mengisi missing values berdasarkan pilihan pengguna
 def fill_missing_values(df, column, method):
