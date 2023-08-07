@@ -29,6 +29,13 @@ from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
 from wordcloud import WordCloud
 
+hide_menu = """
+<style>
+#MainMenu {
+    visibility:hidden;
+}
+</style>
+"""
 
 # Fungsi untuk mengisi missing values berdasarkan pilihan pengguna
 def fill_missing_values(df, column, method):
@@ -390,6 +397,7 @@ def perform_text_analysis(df):
     st.pyplot(plt)
 
 def main():
+    st.markdown(hide_menu,unsafe_allow_html=True)
     input_pengguna = ""
     import warnings
     warnings.filterwarnings('ignore')
