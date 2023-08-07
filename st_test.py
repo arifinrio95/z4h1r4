@@ -24,7 +24,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import LabelEncoder
 from sklearn.cluster import AgglomerativeClustering
-from scipy.cluster.hierarchy import dendrogram
+from scipy.cluster.hierarchy import dendrogram, linkage
 from wordcloud import WordCloud
 
 
@@ -316,17 +316,24 @@ def perform_time_series_analysis(df):
 
 # Function to perform Hierarchical Clustering
 def perform_hierarchical_clustering(df):
-    num_clusters = st.slider('Select Number of Clusters for Hierarchical Clustering:', 2, 10)
+    # Select numerical columns or appropriate features
     X = df.select_dtypes(include=['number'])
     
-    clustering = AgglomerativeClustering(n_clusters=num_clusters).fit(X)
-    labels = clustering.labels_
-    df['Cluster'] = labels
+    # Convert to float if not already
+    X = X.astype(float)
+
+    # Perform hierarchical clustering
+    linkage_matrix = linkage(X, method='ward') # You can choose different linkage methods
     
-    # Create a dendrogram
-    linkage_matrix = clustering.children_
+    # Check the data type
+    if linkage_matrix.dtype != 'float64':
+        st.error("Unexpected data type for linkage matrix")
+        return
+
+    # Plot dendrogram
     dendrogram(linkage_matrix)
-    plt.show()
+    plt.title('Hierarchical Clustering Dendrogram')
+    st.pyplot(plt)
 
 # Function to perform Text Analysis using Word Cloud
 def perform_text_analysis(df):
