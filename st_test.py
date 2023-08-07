@@ -220,7 +220,7 @@ def main():
         # EDA (automate sebelum 
         input_pengguna = ""
         # User Input
-        input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: "Lakukan EDA.", "BUat 5 visualisasi insightful.", "Lakukan metode2 statistika pada data tersebut."""")
+        input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.' """)
         if (input_pengguna != "") & (input_pengguna != None) :
             if st.button('Eksekusi!'):
                 # schema_dict = {col: str(dtype) for col, dtype in df.dtypes.iteritems()}
