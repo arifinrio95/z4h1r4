@@ -1,0 +1,43 @@
+[browser]
+serverAddress = "localhost"
+serverPort = 8501
+gatherUsageStats = false
+show_traceback_stack = false
+
+[global]
+developmentMode = false
+disableWatchdogWarning = false
+unitTest = false
+
+[theme]
+primaryColor="#F63366"
+backgroundColor="#F0F2F6"
+secondaryBackgroundColor="#F3F6F9"
+textColor="#262730"
+font="sans serif"
+
+[server]
+headless = false
+enableCORS = false
+enableXsrfProtection = true
+port = 8501
+maxUploadSize = 200
+
+[slogger]
+level = "info"
+
+[runner]
+magicEnabled = true
+installTracer = false
+fixMatplotlib = true
+
+[client]
+displayEnabled = true
+
+[deprecation]
+showfileUploaderEncoding = false
+showImageFormat = false
+showPyplotGlobalUse = false
+
+[experimental]
+maxCachedMessageAge = 3600
