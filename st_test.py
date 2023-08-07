@@ -28,6 +28,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
 from wordcloud import WordCloud
+import base64
 
 hide_menu = """
 <style>
