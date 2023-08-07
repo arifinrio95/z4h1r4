@@ -42,10 +42,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-warnings.filterwarnings('ignore')
-st.set_option('deprecation.showPyplotGlobalUse', False)
-
 # Fungsi untuk mengisi missing values berdasarkan pilihan pengguna
 def fill_missing_values(df, column, method):
     if df[column].dtype == 'float64' or df[column].dtype == 'int64': # Jika numeric
