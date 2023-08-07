@@ -31,7 +31,7 @@ from wordcloud import WordCloud
 
 hide_menu = """
 <style>
-#MainMenu {
+#stToolbar {
     visibility:hidden;
 }
 </style>
@@ -397,7 +397,7 @@ def perform_text_analysis(df):
     st.pyplot(plt)
 
 def main():
-    # st.markdown(hide_menu,unsafe_allow_html=True)
+    st.markdown(hide_menu,unsafe_allow_html=True)
     st.markdown(
         """
         <style>
@@ -410,6 +410,7 @@ def main():
         """,
         unsafe_allow_html=True
     )
+    css-ztfqz8 ef3psqc4
     input_pengguna = ""
     import warnings
     warnings.filterwarnings('ignore')
