@@ -75,9 +75,8 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         9. Don’t give me any explanation about the script. Response only with python block.
         10. Do not reload the dataframe.
         11. Use Try and Except for each syntax.
-        12. Print and show the detail step of data cleansing you did.
-        13. Dont forget to show the steps with st.write.
-        14. Don't forget to assign all the cleansing step to df."""}
+        12. Print and show the detail step you did.
+        13. Dont forget to show the steps with st.write."""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
     
