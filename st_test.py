@@ -363,6 +363,9 @@ def perform_k_means_clustering(df):
 # Function to perform Time-Series Analysis
 def perform_time_series_analysis(df):
     time_column = st.selectbox('Select Time Column:', df.select_dtypes(include=['datetime']).columns.tolist())
+    if not time_column:  # If no features are selected
+        st.warning('Please select column for time.')
+        return
     target_column = st.selectbox('Select Target Column for Time-Series Analysis:', df.select_dtypes(include=['number']).columns.tolist())
     window_size = st.slider('Select Window Size for Moving Average:', 3, 30)
 
