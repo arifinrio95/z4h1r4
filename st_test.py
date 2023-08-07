@@ -397,7 +397,7 @@ def perform_text_analysis(df):
     st.pyplot(plt)
 
 def main():
-    st.markdown(hide_menu,unsafe_allow_html=True)
+    # st.markdown(hide_menu,unsafe_allow_html=True)
     st.markdown(
         """
         <style>
