@@ -654,6 +654,7 @@ def main():
         st.session_state.rows_dict = df.head(2).to_dict('records')
         st.dataframe(df.head())
 
+        st.experimental_rerun()
         # CSS untuk mengatur perataan teks tombol ke kiri
         st.markdown("""
             <style>
