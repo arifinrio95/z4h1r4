@@ -665,28 +665,20 @@ def main():
 
         st.sidebar.subheader('Ada 4 opsi untuk mengeksplorasi data:')
         # Tombol 1
-        if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
+        if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)') = True and st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)')=False and st.sidebar.button('3. Analisa tingkat lanjutan.') = False and st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)') = False:
             st.session_state.manual_exploration = True
-            # st.session_state.selected_option = 1
-            # st.experimental_rerun()
         
         # Tombol 2
         if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
             st.session_state.auto_exploration = True
-            # st.session_state.selected_option = 2
-            # st.experimental_rerun()
         
         # Tombol 3
         if st.sidebar.button('3. Analisa tingkat lanjutan.'):
             st.session_state.show_analisis_lanjutan = True
-            # st.session_state.selected_option = 3
-            # st.experimental_rerun()
         
         # Tombol 4
         if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
             st.session_state.show_natural_language_exploration = True
-            # st.session_state.selected_option = 4
-            # st.experimental_rerun()
 
         
         if st.session_state.get('manual_exploration', False):
