@@ -514,14 +514,7 @@ def show_bar_plot(df):
         st.warning('Please select a Numerical Column for chart types other than Single.')
         return
     
-    if aggregation_method == 'count':
-        data_to_plot = df.groupby(column)[y_column].count().reset_index()
-        y_value = y_column
-    elif aggregation_method == None:
-        pass
-    else:
-        data_to_plot = df.groupby(column)[y_column].agg(aggregation_func).reset_index()
-        y_value = y_column
+    
 
     if chart_type == 'Single':
         # Handle Single chart type
@@ -531,13 +524,39 @@ def show_bar_plot(df):
             sns.countplot(y=column, data=df, order=order, color=color_option)
     
     elif chart_type == 'Grouped':
+        if aggregation_method == 'count':
+            data_to_plot = df.groupby(column)[y_column].count().reset_index()
+            y_value = y_column
+        elif aggregation_method == None:
+            pass
+        else:
+            data_to_plot = df.groupby(column)[y_column].agg(aggregation_func).reset_index()
+            y_value = y_column
+            
         if orientation == 'Vertical':
             sns.barplot(x=column, y=y_value, data=data_to_plot, order=order, color=color_option)
         elif orientation == 'Horizontal':
             sns.barplot(y=column, x=y_value, data=data_to_plot, order=order, color=color_option)
     elif chart_type == 'Stacked':
+        if aggregation_method == 'count':
+            data_to_plot = df.groupby(column)[y_column].count().reset_index()
+            y_value = y_column
+        elif aggregation_method == None:
+            pass
+        else:
+            data_to_plot = df.groupby(column)[y_column].agg(aggregation_func).reset_index()
+            y_value = y_column
+            
         data_to_plot.plot(kind='bar', x=column, y=y_value, stacked=True, color=color_option)
     elif chart_type == '100% Stacked':
+        if aggregation_method == 'count':
+            data_to_plot = df.groupby(column)[y_column].count().reset_index()
+            y_value = y_column
+        elif aggregation_method == None:
+            pass
+        else:
+            data_to_plot = df.groupby(column)[y_column].agg(aggregation_func).reset_index()
+            y_value = y_column
         df_stacked = df.groupby(column)[y_column].apply(lambda x: 100 * x / x.sum()).reset_index()
         df_stacked.plot(kind='bar', x=column, y=y_column, stacked=True, color=color_option)
 
