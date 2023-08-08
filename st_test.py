@@ -744,7 +744,7 @@ def main():
 
         if 'button_4_clicked' not in st.session_state:
             st.session_state.button_4_clicked = False 
-        if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
+        if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)') or st.session_state.get('button_4_clicked', False):
             st.session_state.button_4_clicked = True
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
