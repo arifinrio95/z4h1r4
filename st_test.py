@@ -695,7 +695,7 @@ def main():
         if 'button_3_clicked' not in st.session_state:
             st.session_state.button_3_clicked = False
         # Tambahkan tombol di sidebar untuk memberikan opsi kepada pengguna
-        if st.sidebar.button('3. Analisa tingkat lanjutan.'):
+        if st.sidebar.button('3. Analisa tingkat lanjutan.') or st.session_state.get('button_3_clicked', False):
             st.session_state.button_3_clicked = True
             st.subheader("Analisis Lanjutan")
             analysis_option = st.sidebar.selectbox('Choose an analysis:', 
