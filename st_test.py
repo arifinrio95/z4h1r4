@@ -754,6 +754,7 @@ def perform_text_analysis(df):
 def main():
     st.set_page_config(layout="wide")
     st.markdown(hide_menu,unsafe_allow_html=True)
+
     st.markdown(
         """
         <style>
@@ -783,6 +784,9 @@ def main():
             .st-ah {
                 color: #f0f0f0;
             }
+            .stButton>button {
+                    text-align: left !important;
+                }
         </style>
         """,
         unsafe_allow_html=True,
@@ -819,15 +823,7 @@ def main():
         rows_str = json.dumps(rows_dict, default=str)
 
         
-        # CSS untuk mengatur perataan teks tombol ke kiri
-        st.markdown("""
-            <style>
-                .stButton>button {
-                    text-align: left !important;
-                }
-            </style>
-        """, unsafe_allow_html=True)
-
+        
         st.sidebar.subheader('Ada 4 opsi untuk mengeksplorasi data:')
         # Tombol 1
         if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
