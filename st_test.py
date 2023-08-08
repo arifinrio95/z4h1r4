@@ -671,104 +671,101 @@ def main():
         """, unsafe_allow_html=True)
 
         st.sidebar.subheader('Ada 4 opsi untuk mengeksplorasi data:')
-        # Inisialisasi status tombol jika belum ada
-        if 'show_content' not in st.session_state:
-            st.session_state.show_content = [False, False, False, False]
-        
         # Tombol 1
         if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
-            st.session_state.show_content = [True, False, False, False]
+            st.session_state.selected_option = 1
         
         # Tombol 2
         if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
-            st.session_state.show_content = [False, True, False, False]
+            st.session_state.selected_option = 2
         
         # Tombol 3
         if st.sidebar.button('3. Analisa tingkat lanjutan.'):
-            st.session_state.show_content = [False, False, True, False]
+            st.session_state.selected_option = 3
         
         # Tombol 4
         if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
-            st.session_state.show_content = [False, False, False, True]
+            st.session_state.selected_option = 4
 
         
-        if st.session_state.show_content[0]:
-            st.subheader("PyGWalker")
-            # Jika tombol diklik, gunakan PyGWalker
-            walker = pyg.walk(df, env='Streamlit')
+        if st.session_state.selected_option == 1:
+            with st.expander("PyGWalker", expanded=True):
+                st.subheader("PyGWalker")
+                # Jika tombol diklik, gunakan PyGWalker
+                walker = pyg.walk(df, env='Streamlit')
 
-        if st.session_state.show_content[1]:
-            st.subheader("Pandas Profiling Report")
-            # Create Pandas Profiling Report
-            pr = ProfileReport(df, explorative=True)
-        
-            # Display the report
-            st_profile_report(pr)
+        elif st.session_state.selected_option == 2:
+            with st.expander("Pandas Profiling Report", expanded=True):
+                st.subheader("Pandas Profiling Report")
+                # Create Pandas Profiling Report
+                pr = ProfileReport(df, explorative=True)
+            
+                # Display the report
+                st_profile_report(pr)
 
-        if st.session_state.show_content[2]:
-            st.subheader("Analisis Lanjutan")
-            st.subheader("Analisis Lanjutan")
-            analysis_option = st.sidebar.selectbox('Choose an analysis:', 
-                                                   ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
-                                                    'Principal Component Analysis', 'Outlier Detection',
-                                                    'Normality Test', 'Linear Regression', 'Logistic Regression',
-                                                    'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
-                                                    'Text Analysis'))
+        elif st.session_state.selected_option == 3:
+            with st.expander("Analisis Lanjutan", expanded=True):
+                st.subheader("Analisis Lanjutan")
+                st.subheader("Analisis Lanjutan")
+                analysis_option = st.sidebar.selectbox('Choose an analysis:', 
+                                                       ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
+                                                        'Principal Component Analysis', 'Outlier Detection',
+                                                        'Normality Test', 'Linear Regression', 'Logistic Regression',
+                                                        'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
+                                                        'Text Analysis'))
+    
+                if analysis_option == 'Hierarchical Clustering':
+                    perform_hierarchical_clustering(df)
+                elif analysis_option == 'Handle Imbalance Classes':
+                    handle_imbalance_classes(df)
+                elif analysis_option == 'Text Analysis':
+                    perform_text_analysis(df)
+                elif analysis_option == 'Logistic Regression':
+                    perform_logistic_regression(df)
+                elif analysis_option == 'K-Means Clustering':
+                    perform_k_means_clustering(df)
+                elif analysis_option == 'Time-Series Analysis':
+                    perform_time_series_analysis(df)
+                elif analysis_option == 'Bar Plot':
+                    show_bar_plot(df)
+                elif analysis_option == 'Pie Chart':
+                    show_pie_chart(df)
+                elif analysis_option == 'Linear Regression':
+                    perform_linear_regression(df)
+                elif analysis_option == 'Missing Data':
+                    show_missing_data(df)
+                elif analysis_option == 'Outlier Detection':
+                    show_outliers(df)
+                elif analysis_option == 'Normality Test':
+                    perform_shapiro_wilk_test(df)
+                elif analysis_option == 'Descriptive Statistics':
+                    show_descriptive_statistics(df)
+                elif analysis_option == 'Histogram':
+                    show_histogram(df)
+                elif analysis_option == 'Box Plot':
+                    show_box_plot(df)
+                elif analysis_option == 'Scatter Plot':
+                    show_scatter_plot(df)
+                elif analysis_option == 'Correlation Matrix':
+                    show_correlation_matrix(df)
+                elif analysis_option == 'Principal Component Analysis':
+                    perform_pca(df)
 
-            if analysis_option == 'Hierarchical Clustering':
-                perform_hierarchical_clustering(df)
-            elif analysis_option == 'Handle Imbalance Classes':
-                handle_imbalance_classes(df)
-            elif analysis_option == 'Text Analysis':
-                perform_text_analysis(df)
-            elif analysis_option == 'Logistic Regression':
-                perform_logistic_regression(df)
-            elif analysis_option == 'K-Means Clustering':
-                perform_k_means_clustering(df)
-            elif analysis_option == 'Time-Series Analysis':
-                perform_time_series_analysis(df)
-            elif analysis_option == 'Bar Plot':
-                show_bar_plot(df)
-            elif analysis_option == 'Pie Chart':
-                show_pie_chart(df)
-            elif analysis_option == 'Linear Regression':
-                perform_linear_regression(df)
-            elif analysis_option == 'Missing Data':
-                show_missing_data(df)
-            elif analysis_option == 'Outlier Detection':
-                show_outliers(df)
-            elif analysis_option == 'Normality Test':
-                perform_shapiro_wilk_test(df)
-            elif analysis_option == 'Descriptive Statistics':
-                show_descriptive_statistics(df)
-            elif analysis_option == 'Histogram':
-                show_histogram(df)
-            elif analysis_option == 'Box Plot':
-                show_box_plot(df)
-            elif analysis_option == 'Scatter Plot':
-                show_scatter_plot(df)
-            elif analysis_option == 'Correlation Matrix':
-                show_correlation_matrix(df)
-            elif analysis_option == 'Principal Component Analysis':
-                perform_pca(df)
-
-        if st.session_state.show_content[3]:
-            st.subheader("Natural Language Exploration")
-            # input_pengguna = ""
-            # User Input
-            input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.' """)
-            if (input_pengguna != "") & (input_pengguna != None) :
-                error_message = None
-                previous_script = None
-                retry_count = 0
-                script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
-                exec(str(script))
-                st.write("The Script:")
-                st.text(script)
-                input_pengguna = ""
-
-    # except:
-    #     st.write("Mohon maaf error ges, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
+        elif st.session_state.selected_option == 4:
+            with st.expander("Natural Language Exploration", expanded=True):
+                st.subheader("Natural Language Exploration")
+                # input_pengguna = ""
+                # User Input
+                input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.' """)
+                if (input_pengguna != "") & (input_pengguna != None) :
+                    error_message = None
+                    previous_script = None
+                    retry_count = 0
+                    script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+                    exec(str(script))
+                    st.write("The Script:")
+                    st.text(script)
+                    input_pengguna = ""
 
 
 if __name__ == "__main__":
