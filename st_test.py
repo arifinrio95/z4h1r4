@@ -426,7 +426,7 @@ def show_bar_plot(df):
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     column = st.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
-    y_column = st.selectbox('Select a Numeric Column for Y values (Optional):', [None] + numeric_columns)
+    y_column = st.selectbox('Select a Numeric Column (Optional):', [None] + numeric_columns)
     aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min']) if y_column else None
     aggregation_func = getattr(np, aggregation_method) if aggregation_method else None
     chart_type = st.selectbox('Select Chart Type:', ['Single', 'Grouped', 'Stacked', '100% Stacked'])
@@ -453,6 +453,9 @@ def show_bar_plot(df):
                 sns.countplot(y=column, data=df, order=order, color=color_option)  # Plotting the count of categories
 
     elif chart_type == 'Grouped':
+        if not y_column:  # If no features are selected
+            st.warning('Please select a Numerical Column for chart types other than Single.')
+            return
         if orientation == 'Vertical':
             sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=aggregation_func)
         elif orientation == 'Horizontal':
@@ -460,14 +463,20 @@ def show_bar_plot(df):
     # elif chart_type == 'Grouped':
     #     sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=getattr(np, aggregation_method))
     elif chart_type == 'Stacked':
+        if not y_column:  # If no features are selected
+            st.warning('Please select a Numerical Column for chart types other than Single.')
+            return
         df_stacked = df.groupby(column).agg({y_column: aggregation_method}).reset_index()
         df_stacked.plot(kind='bar', x=column, y=y_column, stacked=True, color=color_option)
     elif chart_type == '100% Stacked':
+        if not y_column:  # If no features are selected
+            st.warning('Please select a Numerical Column for chart types other than Single.')
+            return
         df_stacked = df.groupby(column)[y_column].apply(lambda x: 100 * x / x.sum()).reset_index()
         df_stacked.plot(kind='bar', x=column, y=y_column, stacked=True, color=color_option)
 
-    if orientation == 'Horizontal' and chart_type != 'Grouped':
-        plt.gca().invert_yaxis()
+    # if orientation == 'Horizontal' and chart_type != 'Grouped':
+    #     plt.gca().invert_yaxis()
 
     plt.title(f'Bar Plot of {column}', fontsize=16, fontweight="bold")
     plt.xlabel('Value' if y_column else 'Count', fontsize=12)
