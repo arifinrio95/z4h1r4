@@ -700,6 +700,32 @@ def perform_k_means_clustering(df):
     st.write('Cluster Centers (in scaled space):', kmeans.cluster_centers_)
     st.write(df)
 
+    # Ambil statistik dari semua klaster
+    cluster_stats = []
+    for i in range(num_clusters):
+        cluster_stat = df[df['Cluster'] == i].describe()
+        cluster_stats.append(cluster_stat)
+
+    # Analisis Klaster yang Mendetail dan Kesimpulan
+    for i in range(num_clusters):
+        st.write(f"Cluster {i} Statistics:")
+        st.write(cluster_stats[i])
+
+        conclusions = []
+        for j in range(num_clusters):
+            if i != j:
+                conclusion = f"Compared to Cluster {j}, Cluster {i} has "
+                
+                # Contoh perbandingan berdasarkan rata-rata fitur pertama (gantikan dengan analisis yang relevan)
+                if cluster_stats[i][features[0]]['mean'] > cluster_stats[j][features[0]]['mean']:
+                    conclusion += f"a higher average of {features[0]}."
+                else:
+                    conclusion += f"a lower average of {features[0]}."
+
+                conclusions.append(conclusion)
+
+        st.write(conclusions)
+
     # Visualisasi 2D (gunakan dua fitur pertama)
     for i in range(num_clusters):
         subset = df[df['Cluster'] == i]
