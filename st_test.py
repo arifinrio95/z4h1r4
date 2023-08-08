@@ -384,13 +384,16 @@ def show_bar_plot(df):
     sort_option = st.selectbox('Sort By:', ['None', 'Value', 'Category'])
 
     order = None
-    if sort_option == 'Value':
-        order = df.groupby(column)[y_columns].sum().sort_values(ascending=False).index if y_columns else df[column].value_counts().index
+    if sort_option == 'Value' and y_columns:
+        order = df.groupby(column)[y_columns].sum().sum(axis=1).sort_values(ascending=False).index
     elif sort_option == 'Category':
         order = sorted(df[column].unique())
 
     if chart_type == 'Single':
-        sns.barplot(x=column, y=y_columns[0], data=df, order=order, color=color_option) if y_columns else sns.barplot(x=column, data=df, order=order, color=color_option)
+        if orientation == 'Vertical':
+            sns.barplot(x=column, y=y_columns[0] if y_columns else None, data=df, order=order, color=color_option)
+        else:
+            sns.barplot(x=y_columns[0] if y_columns else None, y=column, data=df, order=order, color=color_option)
     elif chart_type == 'Grouped':
         for y_col in y_columns:
             sns.barplot(x=column, y=y_col, data=df, order=order, color=color_option)
