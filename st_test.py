@@ -441,11 +441,11 @@ def show_bar_plot(df):
 
     if chart_type == 'Single':
         if orientation == 'Vertical':
-            sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=getattr(pd.np, aggregation_method))
+            sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=getattr(np, aggregation_method))
         elif orientation == 'Horizontal':
-            sns.barplot(y=column, x=y_column, data=df, order=order, color=color_option, estimator=getattr(pd.np, aggregation_method))
+            sns.barplot(y=column, x=y_column, data=df, order=order, color=color_option, estimator=getattr(np, aggregation_method))
     elif chart_type == 'Grouped':
-        sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=getattr(pd.np, aggregation_method))
+        sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=getattr(np, aggregation_method))
     elif chart_type == 'Stacked':
         df_stacked = df.groupby(column).agg({y_column: aggregation_method}).reset_index()
         df_stacked.plot(kind='bar', x=column, y=y_column, stacked=True, color=color_option)
