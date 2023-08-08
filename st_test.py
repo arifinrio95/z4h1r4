@@ -395,7 +395,7 @@ def show_bar_plot(df):
             sns.barplot(x=column, y=y_columns[0] if y_columns else None, data=df, order=order, color=color_option)
         elif orientation == 'Horizontal':
             if y_columns:
-                sns.barplot(x=y_columns[0], y=column, data=df, order=order, color=color_option)
+                sns.barplot(y=column, x=y_columns[0], data=df, order=order, color=color_option)
             else:
                 sns.countplot(y=column, data=df, order=order, color=color_option)  # Plotting the count of categories
 
@@ -413,8 +413,8 @@ def show_bar_plot(df):
         plt.gca().invert_yaxis()
 
     plt.title(f'Bar Plot of {column}', fontsize=16, fontweight="bold")
-    plt.xlabel(column, fontsize=12)
-    plt.ylabel('Value' if y_columns else 'Count', fontsize=12)
+    plt.xlabel('Value' if y_columns else 'Count', fontsize=12)
+    plt.ylabel(column, fontsize=12)
     sns.despine(left=True, bottom=True)
     st.pyplot()
 
