@@ -748,7 +748,7 @@ def main():
             elif analysis_option == 'Principal Component Analysis':
                 perform_pca(df)
 
-        elif st.session_state.get('show_natural_language_exploration', False) and st.session_state.get('show_analisis_lanjutan', False) :
+        elif st.session_state.get('show_natural_language_exploration', False) :
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
             # User Input
