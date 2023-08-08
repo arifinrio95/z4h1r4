@@ -517,6 +517,8 @@ def show_bar_plot(df):
     if aggregation_method == 'count':
         data_to_plot = df.groupby(column)[y_column].count().reset_index()
         y_value = y_column
+    elif aggregation_method == None:
+        pass
     else:
         data_to_plot = df.groupby(column)[y_column].agg(aggregation_func).reset_index()
         y_value = y_column
