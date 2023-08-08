@@ -12,3 +12,4 @@ streamlit-pandas-profiling
 pandas-profiling
 scipy
 statsmodels
+pygwalker
