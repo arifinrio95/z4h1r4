@@ -489,7 +489,7 @@ def show_bar_plot(df):
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     column = st.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
     y_column = st.selectbox('Select a Numeric Column (Optional):', [None] + numeric_columns)
-    aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min']) #if y_column else None
+    aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min']) if y_column else None
     aggregation_func = getattr(np, aggregation_method) if aggregation_method else None
     chart_type = st.selectbox('Select Chart Type:', ['Single', 'Grouped', 'Stacked', '100% Stacked'])
     orientation = st.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
