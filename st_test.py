@@ -762,7 +762,7 @@ def main():
         'textColor': '#444444',
         'font': 'sans serif',
     },
-)
+    )
     
     import warnings
     warnings.filterwarnings('ignore')
