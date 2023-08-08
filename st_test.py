@@ -663,151 +663,160 @@ def main():
         rows_dict = df.head(2).to_dict('records')
         rows_str = json.dumps(rows_dict, default=str)
 
-        # Tambahkan tombol untuk memberikan opsi kepada pengguna
-        if st.button('Gunakan PyGWalker untuk mengeksplorasi data secara manual.'):
+        st.write(Ada 4 opsi untuk mengeksplorasi data:)
+        if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
+            st.subheader("PyGWalker")
             # Jika tombol diklik, gunakan PyGWalker
             walker = pyg.walk(df, env='Streamlit')
-        
-        analysis_option = st.sidebar.selectbox('Choose an analysis:', 
-                                           ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
-                                            'Principal Component Analysis', 'Outlier Detection',
-                                            'Normality Test', 'Linear Regression', 'Logistic Regression',
-                                            'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
-                                            'Text Analysis'))
 
-        if analysis_option == 'Hierarchical Clustering':
-            perform_hierarchical_clustering(df)
-        elif analysis_option == 'Handle Imbalance Classes':
-            handle_imbalance_classes(df)
-        elif analysis_option == 'Text Analysis':
-            perform_text_analysis(df)
-        elif analysis_option == 'Logistic Regression':
-            perform_logistic_regression(df)
-        elif analysis_option == 'K-Means Clustering':
-            perform_k_means_clustering(df)
-        elif analysis_option == 'Time-Series Analysis':
-            perform_time_series_analysis(df)
-        elif analysis_option == 'Bar Plot':
-            show_bar_plot(df)
-        elif analysis_option == 'Pie Chart':
-            show_pie_chart(df)
-        elif analysis_option == 'Linear Regression':
-            perform_linear_regression(df)
-        elif analysis_option == 'Missing Data':
-            show_missing_data(df)
-        elif analysis_option == 'Outlier Detection':
-            show_outliers(df)
-        elif analysis_option == 'Normality Test':
-            perform_shapiro_wilk_test(df)
-        elif analysis_option == 'Descriptive Statistics':
-            show_descriptive_statistics(df)
-        elif analysis_option == 'Histogram':
-            show_histogram(df)
-        elif analysis_option == 'Box Plot':
-            show_box_plot(df)
-        elif analysis_option == 'Scatter Plot':
-            show_scatter_plot(df)
-        elif analysis_option == 'Correlation Matrix':
-            show_correlation_matrix(df)
-        elif analysis_option == 'Principal Component Analysis':
-            perform_pca(df)
-        
         # Create a button in the Streamlit app
-        if st.button('Or automatically Explore the Data with Pandas Profiling'):
+        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
+            st.subheader("Pandas Profiling")
             # Create Pandas Profiling Report
             pr = ProfileReport(df, explorative=True)
         
             # Display the report
             st.title('Pandas Profiling Report')
             st_profile_report(pr)
-            
-        input_pengguna = ""
-        # User Input
-        input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.' """)
-        if (input_pengguna != "") & (input_pengguna != None) :
-            if st.button('Eksekusi!'):
-                # schema_dict = {col: str(dtype) for col, dtype in df.dtypes.iteritems()}
-                
+        
+        # Tambahkan tombol di sidebar untuk memberikan opsi kepada pengguna
+        if st.sidebar.button('3. Analisa tingkat lanjutan.'):
+            st.subheader("Analisis Lanjutan")
+            analysis_option = st.sidebar.selectbox('Choose an analysis:', 
+                                                   ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
+                                                    'Principal Component Analysis', 'Outlier Detection',
+                                                    'Normality Test', 'Linear Regression', 'Logistic Regression',
+                                                    'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
+                                                    'Text Analysis'))
+
+            if analysis_option == 'Hierarchical Clustering':
+                perform_hierarchical_clustering(df)
+            elif analysis_option == 'Handle Imbalance Classes':
+                handle_imbalance_classes(df)
+            elif analysis_option == 'Text Analysis':
+                perform_text_analysis(df)
+            elif analysis_option == 'Logistic Regression':
+                perform_logistic_regression(df)
+            elif analysis_option == 'K-Means Clustering':
+                perform_k_means_clustering(df)
+            elif analysis_option == 'Time-Series Analysis':
+                perform_time_series_analysis(df)
+            elif analysis_option == 'Bar Plot':
+                show_bar_plot(df)
+            elif analysis_option == 'Pie Chart':
+                show_pie_chart(df)
+            elif analysis_option == 'Linear Regression':
+                perform_linear_regression(df)
+            elif analysis_option == 'Missing Data':
+                show_missing_data(df)
+            elif analysis_option == 'Outlier Detection':
+                show_outliers(df)
+            elif analysis_option == 'Normality Test':
+                perform_shapiro_wilk_test(df)
+            elif analysis_option == 'Descriptive Statistics':
+                show_descriptive_statistics(df)
+            elif analysis_option == 'Histogram':
+                show_histogram(df)
+            elif analysis_option == 'Box Plot':
+                show_box_plot(df)
+            elif analysis_option == 'Scatter Plot':
+                show_scatter_plot(df)
+            elif analysis_option == 'Correlation Matrix':
+                show_correlation_matrix(df)
+            elif analysis_option == 'Principal Component Analysis':
+                perform_pca(df)
+
+        if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
+            st.subheader("Natural Language Exploration")
+            input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.')""")
     
-                # Membuat text input dan menyimpan hasilnya ke dalam variabel
+            input_pengguna = ""
+            # User Input
+            input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.' """)
+            if (input_pengguna != "") & (input_pengguna != None) :
+                if st.button('Eksekusi!'):
+                    # schema_dict = {col: str(dtype) for col, dtype in df.dtypes.iteritems()}
+                    
+        
+                    # Membuat text input dan menyimpan hasilnya ke dalam variabel
+                    
+                    # response = openai.ChatCompletion.create(
+                    #     # model="gpt-3.5-turbo-16k",
+                    #     model="gpt-4",
+                    #     messages=[
+                    #         {"role": "system", "content": "I only response with syntax, no other text explanation."},
+                    #         {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
+                    #                                         1. {input_pengguna}. 
+                    #                                         2. My dataframe already load previously, named df, use it, do not reload the dataframe.
+                    #                                         3. Respond with scripts without any text. 
+                    #                                         4. Only code in a single cell. 
+                    #                                         5. Don’t start your response with “Sure, here are”. 
+                    #                                         6. Start your response with “import” inside the python block. 
+                    #                                         7. Give and show with streamlit the title for every steps.
+                    #                                         8. Give an explanation for every syntax.
+                    #                                         9. Don’t give me any explanation about the script. Response only with python block.
+                    #                                         10. Do not reload the dataframe.
+                    #                                         11. Use Try Except for each syntax.
+                    #                                         12. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi."""}
+                    #     ],
+                    #     max_tokens=14000,
+                    #     temperature=0
+                    # )
+                    
+                    # script = response.choices[0].message['content']
+                    error_message = None
+                    previous_script = None
+                    retry_count = 0
+                    script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+                    exec(str(script))
+                    st.write("The Script:")
+                    st.text(script)
                 
-                # response = openai.ChatCompletion.create(
-                #     # model="gpt-3.5-turbo-16k",
-                #     model="gpt-4",
-                #     messages=[
-                #         {"role": "system", "content": "I only response with syntax, no other text explanation."},
-                #         {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-                #                                         1. {input_pengguna}. 
-                #                                         2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-                #                                         3. Respond with scripts without any text. 
-                #                                         4. Only code in a single cell. 
-                #                                         5. Don’t start your response with “Sure, here are”. 
-                #                                         6. Start your response with “import” inside the python block. 
-                #                                         7. Give and show with streamlit the title for every steps.
-                #                                         8. Give an explanation for every syntax.
-                #                                         9. Don’t give me any explanation about the script. Response only with python block.
-                #                                         10. Do not reload the dataframe.
-                #                                         11. Use Try Except for each syntax.
-                #                                         12. Gunakan st.write untuk selain visualisasi, dan st.pyplot untuk visualisasi."""}
-                #     ],
-                #     max_tokens=14000,
-                #     temperature=0
-                # )
-                
-                # script = response.choices[0].message['content']
-                error_message = None
-                previous_script = None
-                retry_count = 0
-                script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
-                exec(str(script))
-                st.write("The Script:")
-                st.text(script)
-            
-                # retry_count = 0
+                    # retry_count = 0
+                    # error_message = None
+                    # previous_script = None
+                    # while retry_count < 5:
+                    #     try:
+                    #         script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+                    #         exec(str(script))
+        
+                    #         # error_message = None
+                    #         # previous_script = None
+                    #         # input_pengguna = ""
+                    #         # if st.button('Lihat Script.'):
+                    #         # st.write("")
+                    #         # # st.write("The Script:")
+                    #         # st.text(script)
+                    #         break
+                    #     except Exception as e:
+                    #         error_message = str(e)
+                    #         # previous_script = str(script)
+                    #         retry_count += 1
+                    #         # # st.write("Previous script:")
+                    #         # # st.text(previous_script)
+                    #         # st.write("Error: ",error_message)
+                    #         # st.write("Trying to solving...")
+    
+                    #         if retry_count == 5:
+                    #             st.write("Maaf saya tidak bisa menyelesaikan perintah tersebut, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
+                    #             retry_count = 0
+                        # if (script!='') & st.button('Lihat Script.'):
+                        #     st.write("")
+                        #     # st.write("The Script:")
+                        #     st.text(script)
                 # error_message = None
                 # previous_script = None
-                # while retry_count < 5:
-                #     try:
-                #         script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
-                #         exec(str(script))
+                input_pengguna = ""
     
-                #         # error_message = None
-                #         # previous_script = None
-                #         # input_pengguna = ""
-                #         # if st.button('Lihat Script.'):
-                #         # st.write("")
-                #         # # st.write("The Script:")
-                #         # st.text(script)
-                #         break
-                #     except Exception as e:
-                #         error_message = str(e)
-                #         # previous_script = str(script)
-                #         retry_count += 1
-                #         # # st.write("Previous script:")
-                #         # # st.text(previous_script)
-                #         # st.write("Error: ",error_message)
-                #         # st.write("Trying to solving...")
-
-                #         if retry_count == 5:
-                #             st.write("Maaf saya tidak bisa menyelesaikan perintah tersebut, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
-                #             retry_count = 0
-                    # if (script!='') & st.button('Lihat Script.'):
-                    #     st.write("")
-                    #     # st.write("The Script:")
-                    #     st.text(script)
-            # error_message = None
-            # previous_script = None
-            input_pengguna = ""
-
-            # Mengevaluasi string sebagai kode Python
-            # exec(str(script))
-            # if st.button('Lihat Script.'):
-            #     st.write("The Script:")
-            #     st.text(script)
-            
-            # Menyimpan plot sebagai file sementara dan menampilkan dengan Streamlit
-            # plt.savefig("plot.png")
-            # st.image("plot.png")
+                # Mengevaluasi string sebagai kode Python
+                # exec(str(script))
+                # if st.button('Lihat Script.'):
+                #     st.write("The Script:")
+                #     st.text(script)
+                
+                # Menyimpan plot sebagai file sementara dan menampilkan dengan Streamlit
+                # plt.savefig("plot.png")
+                # st.image("plot.png")
 
     # except:
     #     st.write("Mohon maaf error ges, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
