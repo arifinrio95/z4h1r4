@@ -671,14 +671,14 @@ def main():
         """, unsafe_allow_html=True)
      
         st.sidebar.subheader('Ada 4 opsi untuk mengeksplorasi data:')
-        if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)') or st.session_state.get('button_1_clicked', False):
+        if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)') and st.session_state.get('button_1_clicked', False):
             st.session_state.button_1_clicked = True
             st.subheader("PyGWalker")
             # Jika tombol diklik, gunakan PyGWalker
             walker = pyg.walk(df, env='Streamlit')
             st.session_state.button_1_clicked = False
 
-        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)') or st.session_state.get('button_2_clicked', False):
+        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)') and st.session_state.get('button_2_clicked', False):
             st.session_state.button_2_clicked = True
             st.subheader("Pandas Profiling Report")
             # Create Pandas Profiling Report
@@ -688,7 +688,7 @@ def main():
             st_profile_report(pr)
             st.session_state.button_2_clicked = False
 
-        if st.sidebar.button('3. Analisa tingkat lanjutan.') or st.session_state.get('button_3_clicked', False):
+        if st.sidebar.button('3. Analisa tingkat lanjutan.') and st.session_state.get('button_3_clicked', False):
             st.session_state.button_3_clicked = True
             st.subheader("Analisis Lanjutan")
             analysis_option = st.sidebar.selectbox('Choose an analysis:', 
@@ -736,7 +736,7 @@ def main():
                 perform_pca(df)
             st.session_state.button_3_clicked = False
 
-        if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)') or st.session_state.get('button_4_clicked', False):
+        if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)') and st.session_state.get('button_4_clicked', False):
             st.session_state.button_4_clicked = True
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
