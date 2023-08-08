@@ -677,11 +677,13 @@ def main():
         
         # Tombol 3
         elif st.sidebar.button('3. Analisa tingkat lanjutan.'):
+            st.session_state.show_natural_language_exploration = False
             st.session_state.selected_option = 3
             st.experimental_rerun()
         
         # Tombol 4
         elif st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
+            st.session_state.show_natural_language_exploration = True
             st.session_state.selected_option = 4
             st.experimental_rerun()
 
@@ -703,7 +705,6 @@ def main():
 
         elif st.session_state.selected_option == 3:
             with st.expander("Analisis Lanjutan", expanded=True):
-                st.subheader("Analisis Lanjutan")
                 st.subheader("Analisis Lanjutan")
                 analysis_option = st.sidebar.selectbox('Choose an analysis:', 
                                                        ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
@@ -749,21 +750,20 @@ def main():
                 elif analysis_option == 'Principal Component Analysis':
                     perform_pca(df)
 
-        elif st.session_state.selected_option == 4:
-            with st.expander("Natural Language Exploration", expanded=True):
-                st.subheader("Natural Language Exploration")
-                # input_pengguna = ""
-                # User Input
-                input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.' """)
-                if (input_pengguna != "") & (input_pengguna != None) :
-                    error_message = None
-                    previous_script = None
-                    retry_count = 0
-                    script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
-                    exec(str(script))
-                    st.write("The Script:")
-                    st.text(script)
-                    input_pengguna = ""
+        if st.session_state.get('show_natural_language_exploration', False):
+            st.subheader("Natural Language Exploration")
+            # input_pengguna = ""
+            # User Input
+            input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.' """)
+            if (input_pengguna != "") & (input_pengguna != None) :
+                error_message = None
+                previous_script = None
+                retry_count = 0
+                script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+                exec(str(script))
+                st.write("The Script:")
+                st.text(script)
+                input_pengguna = ""
 
 
 if __name__ == "__main__":
