@@ -649,11 +649,11 @@ def main():
     # try:
     if file is not None:
         if 'df' not in st.session_state:
-        df = load_file_auto_delimiter(file)
-        st.session_state.df = df
-        st.session_state.schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
-        st.session_state.rows_dict = df.head(2).to_dict('records')
-        st.dataframe(df.head())
+            df = load_file_auto_delimiter(file)
+            st.session_state.df = df
+            st.session_state.schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
+            st.session_state.rows_dict = df.head(2).to_dict('records')
+            st.dataframe(df.head())
 
         # CSS untuk mengatur perataan teks tombol ke kiri
         st.markdown("""
