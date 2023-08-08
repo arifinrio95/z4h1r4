@@ -328,7 +328,7 @@ def show_outliers(df):
 
     # Plotting the data
     plt.figure(figsize=(14, 6))
-    plt.plot(values, label='Data')
+    plt.scatter(range(len(values)), values, label='Data')
     plt.axhline(y=np.mean(values) + threshold*np.std(values), color='r', linestyle='--', label='Upper bound')
     plt.axhline(y=np.mean(values) - threshold*np.std(values), color='r', linestyle='--', label='Lower bound')
 
