@@ -663,7 +663,15 @@ def main():
         rows_dict = df.head(2).to_dict('records')
         rows_str = json.dumps(rows_dict, default=str)
 
-        st.sidebar.write('Ada 4 opsi untuk mengeksplorasi data:')
+        # CSS untuk mengatur perataan teks tombol ke kiri
+        st.markdown("""
+            <style>
+                .stButton>button {
+                    text-align: left !important;
+                }
+            </style>
+        """, unsafe_allow_html=True)
+        st.sidebar.subheader('Ada 4 opsi untuk mengeksplorasi data:')
         if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
             st.subheader("PyGWalker")
             # Jika tombol diklik, gunakan PyGWalker
@@ -671,12 +679,11 @@ def main():
 
         # Create a button in the Streamlit app
         if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
-            st.subheader("Pandas Profiling")
+            st.subheader("Pandas Profiling Report")
             # Create Pandas Profiling Report
             pr = ProfileReport(df, explorative=True)
         
             # Display the report
-            st.title('Pandas Profiling Report')
             st_profile_report(pr)
         
         # Tambahkan tombol di sidebar untuk memberikan opsi kepada pengguna
