@@ -377,27 +377,35 @@ def show_bar_plot(df):
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     column = st.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
-    y_column = st.selectbox('Select a Numeric Column for Y values (Optional):', [None] + numeric_columns)
+    y_columns = st.multiselect('Select Numeric Columns for Y values (Optional):', numeric_columns)
+    chart_type = st.selectbox('Select Chart Type:', ['Single', 'Grouped', 'Stacked', '100% Stacked'])
     orientation = st.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
     color_option = st.selectbox('Select Bar Color:', sns.color_palette().as_hex())
     sort_option = st.selectbox('Sort By:', ['None', 'Value', 'Category'])
 
     order = None
     if sort_option == 'Value':
-        order = df.groupby(column)[y_column].sum().sort_values(ascending=False).index if y_column else df[column].value_counts().index
+        order = df.groupby(column)[y_columns].sum().sort_values(ascending=False).index if y_columns else df[column].value_counts().index
     elif sort_option == 'Category':
         order = sorted(df[column].unique())
 
+    plot_func = sns.barplot
+    if chart_type == 'Stacked':
+        df = df.groupby(column)[y_columns].sum().reset_index()
+    elif chart_type == '100% Stacked':
+        df = (df.groupby(column)[y_columns].sum() / df[y_columns].sum().sum()).reset_index()
+
     if orientation == 'Vertical':
-        sns.countplot(x=column, y=y_column, data=df, order=order, color=color_option) if y_column else sns.countplot(x=column, data=df, order=order, color=color_option)
+        plot_func(x=column, y=y_columns, data=df, order=order, color=color_option) if y_columns else plot_func(x=column, data=df, order=order, color=color_option)
     else:
-        sns.countplot(y=column, x=y_column, data=df, order=order, color=color_option) if y_column else sns.countplot(y=column, data=df, order=order, color=color_option)
+        plot_func(y=column, x=y_columns, data=df, order=order, color=color_option) if y_columns else plot_func(y=column, data=df, order=order, color=color_option)
 
     plt.title(f'Bar Plot of {column}', fontsize=16, fontweight="bold")
     plt.xlabel(column, fontsize=12)
-    plt.ylabel(y_column if y_column else 'Count', fontsize=12)
+    plt.ylabel('Value' if y_columns else 'Count', fontsize=12)
     sns.despine(left=True, bottom=True)
     st.pyplot()
+
 
 
 # Function to perform pie chart for categorical data
