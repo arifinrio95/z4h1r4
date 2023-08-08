@@ -670,18 +670,18 @@ def main():
             st.experimental_rerun()
         
         # Tombol 2
-        elif st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
+        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
             st.session_state.selected_option = 2
             st.experimental_rerun()
         
         # Tombol 3
-        elif st.sidebar.button('3. Analisa tingkat lanjutan.'):
+        if st.sidebar.button('3. Analisa tingkat lanjutan.'):
             st.session_state.show_analisis_lanjutan = True
             st.session_state.selected_option = 3
             st.experimental_rerun()
         
         # Tombol 4
-        elif st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
+        if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
             st.session_state.show_natural_language_exploration = True
             st.session_state.selected_option = 4
             st.experimental_rerun()
@@ -748,7 +748,7 @@ def main():
             elif analysis_option == 'Principal Component Analysis':
                 perform_pca(df)
 
-        elif st.session_state.get('show_natural_language_exploration', True) and st.session_state.get('show_analisis_lanjutan', False) :
+        elif st.session_state.get('show_natural_language_exploration', False) and st.session_state.get('show_analisis_lanjutan', False) :
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
             # User Input
