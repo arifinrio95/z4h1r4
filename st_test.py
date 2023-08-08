@@ -785,10 +785,16 @@ def main():
     # try:
     if file is not None:
         df = load_file_auto_delimiter(file)
-        st.session_state.df = df
-        st.session_state.schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
-        st.session_state.rows_dict = df.head(2).to_dict('records')
         st.dataframe(df.head())
+
+        # Extract df schema
+        schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
+        schema_str = json.dumps(schema_dict)
+        st.write("\nDataframe schema : ", schema_str)
+
+        # Extract the first two rows into a dictionary
+        rows_dict = df.head(2).to_dict('records')
+        rows_str = json.dumps(rows_dict, default=str)
 
         
         # CSS untuk mengatur perataan teks tombol ke kiri
