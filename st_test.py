@@ -28,6 +28,7 @@ from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
 from wordcloud import WordCloud
 import base64
+import pygwalker as pyg
 
 hide_menu = """
 <style>
@@ -661,6 +662,11 @@ def main():
         rows_dict = df.head(2).to_dict('records')
         rows_str = json.dumps(rows_dict, default=str)
 
+        # Tambahkan tombol untuk memberikan opsi kepada pengguna
+        if st.button('Gunakan PyGWalker untuk mengeksplorasi data secara manual.'):
+            # Jika tombol diklik, gunakan PyGWalker
+            walker = pyg.walk(df, env='Streamlit')
+        
         analysis_option = st.sidebar.selectbox('Choose an analysis:', 
                                            ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
                                             'Principal Component Analysis', 'Outlier Detection',
