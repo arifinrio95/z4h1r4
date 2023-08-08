@@ -669,27 +669,41 @@ def main():
                 }
             </style>
         """, unsafe_allow_html=True)
-     
+
         st.sidebar.subheader('Ada 4 opsi untuk mengeksplorasi data:')
-        if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)') and st.session_state.get('button_1_clicked', False):
-            st.session_state.button_1_clicked = True
+        # Tombol 1
+        if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
+            st.session_state.last_button_clicked = 1
+        
+        # Tombol 2
+        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
+            st.session_state.last_button_clicked = 2
+        
+        # Tombol 3
+        if st.sidebar.button('3. Analisa tingkat lanjutan.'):
+            st.session_state.last_button_clicked = 3
+        
+        # Tombol 4
+        if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
+            st.session_state.last_button_clicked = 4
+
+        
+        if st.session_state.get('last_button_clicked') == 1:
             st.subheader("PyGWalker")
             # Jika tombol diklik, gunakan PyGWalker
             walker = pyg.walk(df, env='Streamlit')
-            st.session_state.button_1_clicked = False
 
-        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)') and st.session_state.get('button_2_clicked', False):
-            st.session_state.button_2_clicked = True
+        elif st.session_state.get('last_button_clicked') == 2:
+            st.subheader("Pandas Profiling Report")
             st.subheader("Pandas Profiling Report")
             # Create Pandas Profiling Report
             pr = ProfileReport(df, explorative=True)
         
             # Display the report
             st_profile_report(pr)
-            st.session_state.button_2_clicked = False
 
-        if st.sidebar.button('3. Analisa tingkat lanjutan.') and st.session_state.get('button_3_clicked', False):
-            st.session_state.button_3_clicked = True
+        elif st.session_state.get('last_button_clicked') == 3:
+            st.subheader("Analisis Lanjutan")
             st.subheader("Analisis Lanjutan")
             analysis_option = st.sidebar.selectbox('Choose an analysis:', 
                                                    ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
@@ -734,10 +748,8 @@ def main():
                 show_correlation_matrix(df)
             elif analysis_option == 'Principal Component Analysis':
                 perform_pca(df)
-            st.session_state.button_3_clicked = False
 
-        if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)') and st.session_state.get('button_4_clicked', False):
-            st.session_state.button_4_clicked = True
+        elif st.session_state.get('last_button_clicked') == 4:
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
             # User Input
@@ -751,7 +763,6 @@ def main():
                 st.write("The Script:")
                 st.text(script)
                 input_pengguna = ""
-            st.session_state.button_4_clicked = False
 
     # except:
     #     st.write("Mohon maaf error ges, coba perintah lain, atau modifikasi dan perjelas perintahnya.")
