@@ -750,6 +750,7 @@ def main():
                 exec(str(script))
                 st.write("The Script:")
                 st.text(script)
+                input_pengguna = ""
             st.session_state.button_4_clicked = False
 
     # except:
