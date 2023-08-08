@@ -669,14 +669,20 @@ def main():
                 }
             </style>
         """, unsafe_allow_html=True)
+
+        if 'button_clicked' not in st.session_state:
+            st.session_state.button_clicked = False   
+            
         st.sidebar.subheader('Ada 4 opsi untuk mengeksplorasi data:')
         if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
+            st.session_state.button_clicked = True
             st.subheader("PyGWalker")
             # Jika tombol diklik, gunakan PyGWalker
             walker = pyg.walk(df, env='Streamlit')
 
         # Create a button in the Streamlit app
         if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
+            st.session_state.button_clicked = True
             st.subheader("Pandas Profiling Report")
             # Create Pandas Profiling Report
             pr = ProfileReport(df, explorative=True)
@@ -686,6 +692,7 @@ def main():
         
         # Tambahkan tombol di sidebar untuk memberikan opsi kepada pengguna
         if st.sidebar.button('3. Analisa tingkat lanjutan.'):
+            st.session_state.button_clicked = True
             st.subheader("Analisis Lanjutan")
             analysis_option = st.sidebar.selectbox('Choose an analysis:', 
                                                    ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
@@ -732,11 +739,13 @@ def main():
                 perform_pca(df)
 
         if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
+            st.session_state.button_clicked = True
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
             # User Input
             input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Lakukan EDA.', 'Buat 5 visualisasi insightful.', 'Lakukan metode2 statistika pada data tersebut.' """)
             if (input_pengguna != "") & (input_pengguna != None) :
+                st.session_state.button_clicked = True
                 # if st.button('Eksekusi!'):
                 # schema_dict = {col: str(dtype) for col, dtype in df.dtypes.iteritems()}
                 
