@@ -164,7 +164,10 @@ def show_box_plot(df):
 
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    sns.boxplot(x=x_column, y=y_column, data=df, ax=ax, palette=[color_option] if not x_column else cat_color_option)
+    if x_column:
+        sns.boxplot(x=x_column, y=y_column, data=df, ax=ax, color=cat_color_option)
+    else:
+        sns.boxplot(x=x_column, y=y_column, data=df, ax=ax, color=color_option)
 
     if show_swarm:
         sns.swarmplot(x=x_column, y=y_column, data=df, ax=ax, color='black', size=3)
