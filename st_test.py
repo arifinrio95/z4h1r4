@@ -693,7 +693,7 @@ def main():
                 # Jika tombol diklik, gunakan PyGWalker
                 walker = pyg.walk(df, env='Streamlit')
 
-        elif st.session_state.selected_option == 2:
+        if st.session_state.selected_option == 2:
             with st.expander("Pandas Profiling Report", expanded=True):
                 st.subheader("Pandas Profiling Report")
                 # Create Pandas Profiling Report
@@ -702,7 +702,7 @@ def main():
                 # Display the report
                 st_profile_report(pr)
 
-        elif st.session_state.get('show_analisis_lanjutan', False):
+        if st.session_state.get('show_analisis_lanjutan', True):
             st.subheader("Analisis Lanjutan")
             analysis_option = st.sidebar.selectbox('Choose an analysis:', 
                                                    ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
@@ -748,7 +748,7 @@ def main():
             elif analysis_option == 'Principal Component Analysis':
                 perform_pca(df)
 
-        elif st.session_state.get('show_natural_language_exploration', False) :
+        if st.session_state.get('show_natural_language_exploration', True) and st.session_state.get('show_analisis_lanjutan', True):
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
             # User Input
