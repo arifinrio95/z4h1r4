@@ -20,12 +20,13 @@ from scipy import stats
 import statsmodels.api as sm
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, confusion_matrix, accuracy_score, classification_report, roc_curve, auc
+from sklearn.metrics import mean_squared_error, confusion_matrix, accuracy_score, classification_report, roc_curve, auc, silhouette_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import LabelEncoder
 from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
+from scipy.spatial.distance import cdist
 from wordcloud import WordCloud
 import base64
 import pygwalker as pyg
@@ -662,42 +663,64 @@ def perform_logistic_regression(df):
 
 # Function to perform K-Means Clustering
 def perform_k_means_clustering(df):
-    # Choose features
+    # Pilih fitur numerik
     features = st.multiselect('Select features for K-Means clustering:', df.select_dtypes(include=['number']).columns.tolist())
-    
-    if not features:  # If no features are selected
-        st.warning('Please select at least one feature.')
+    if not features or len(features) < 2:
+        st.warning('Please select at least two numerical features.')
         return
     
     X = df[features]
 
-    # Choose number of clusters
-    num_clusters = st.slider('Select Number of Clusters for K-Means:', 2, 10)
+    # Pra-pemrosesan: Skalakan fitur
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
 
-    # Perform K-Means clustering
-    kmeans = KMeans(n_clusters=num_clusters, random_state=42).fit(X)
-    labels = kmeans.labels_
-    df['Cluster'] = labels
+    # Metode Elbow untuk menentukan jumlah klaster optimal
+    distortions = []
+    for k in range(1, 11):
+        kmeans = KMeans(n_clusters=k).fit(X_scaled)
+        distortions.append(sum(np.min(cdist(X_scaled, kmeans.cluster_centers_, 'euclidean'), axis=1)) / X_scaled.shape[0])
 
-    # Display results
-    st.write('Cluster Centers:', kmeans.cluster_centers_)
+    plt.plot(range(1, 11), distortions, 'bx-')
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('Distortion')
+    plt.title('The Elbow Method showing the optimal k')
+    st.pyplot(plt)
+
+    optimal_clusters = np.argmin(np.diff(np.diff(distortions))) + 2
+    st.write(f"The optimal number of clusters based on the Elbow Method is: {optimal_clusters}")
+
+    num_clusters = st.slider('Select Number of Clusters for K-Means (recommended from Elbow Method):', 2, 10, optimal_clusters)
+
+    # Lakukan klastering K-Means
+    kmeans = KMeans(n_clusters=num_clusters, random_state=42).fit(X_scaled)
+    df['Cluster'] = kmeans.labels_
+
+    # Tampilkan pusat klaster dan label
+    st.write('Cluster Centers (in scaled space):', kmeans.cluster_centers_)
     st.write(df)
 
-    # Optional: Visualize clusters if a target is chosen
-    target = st.selectbox('Select a target column (Optional for visualization):', [None] + df.columns.tolist())
+    # Visualisasi 2D (gunakan dua fitur pertama)
+    for i in range(num_clusters):
+        subset = df[df['Cluster'] == i]
+        plt.scatter(subset[features[0]], subset[features[1]], label=f"Cluster {i}", alpha=0.6)
+        plt.scatter(kmeans.cluster_centers_[i][0], kmeans.cluster_centers_[i][1], marker='x', color='red')
     
-    if target:
-        import matplotlib.pyplot as plt
+    plt.xlabel(features[0])
+    plt.ylabel(features[1])
+    plt.legend()
+    plt.title(f'K-Means Clustering with {num_clusters} clusters')
+    st.pyplot(plt)
 
-        for i in range(num_clusters):
-            subset = df[df['Cluster'] == i]
-            plt.scatter(subset[features[0]], subset[features[1]], label=f"Cluster {i}", alpha=0.6)
-            plt.scatter(kmeans.cluster_centers_[i][0], kmeans.cluster_centers_[i][1], marker='x', color='red')
-        
-        plt.xlabel(features[0])
-        plt.ylabel(features[1])
-        plt.legend()
-        plt.title(f'K-Means Clustering with {num_clusters} clusters')
+    # Penilaian Kualitas Klaster
+    silhouette_avg = silhouette_score(X_scaled, df['Cluster'])
+    st.write('Silhouette Score:', silhouette_avg)
+    for i in range(num_clusters):
+        st.write(f"Cluster {i} Statistics:")
+        st.write(df[df['Cluster'] == i].describe())
+
+        # Opsional: Pairplot untuk fitur yang dipilih dalam masing-masing klaster
+        sns.pairplot(df[df['Cluster'] == i][features + ['Cluster']], hue='Cluster')
         st.pyplot(plt)
 
 
