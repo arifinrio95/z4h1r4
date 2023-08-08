@@ -752,45 +752,17 @@ def perform_text_analysis(df):
     st.pyplot(plt)
 
 def main():
-    st.set_page_config(layout="wide")
-    st.markdown(hide_menu,unsafe_allow_html=True)
-
-    st.markdown(
-        """
-        <style>
-            body {
-                color: #666666;
-                background-color: #ffffff;
-            }
-            .sidebar .sidebar-content {
-                background-image: linear-gradient(#ffffff,#ffffff);
-            }
-            h1 {
-                color: #333333;
-            }
-            h2 {
-                color: #444444;
-            }
-            h3 {
-                color: #555555;
-            }
-            .btn-primary {
-                background-color: #777777;
-                border-color: #777777;
-            }
-            .st-at {
-                background-color: #f0f0f0;
-            }
-            .st-ah {
-                color: #f0f0f0;
-            }
-            .stButton>button {
-                    text-align: left !important;
-                }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    st.set_page_config(
+    layout="wide",
+    theme={
+        'base': 'light',
+        'primaryColor': '#666666',
+        'backgroundColor': '#FFFFFF',
+        'secondaryBackgroundColor': '#F0F0F0',
+        'textColor': '#444444',
+        'font': 'sans serif',
+    },
+)
     
     import warnings
     warnings.filterwarnings('ignore')
