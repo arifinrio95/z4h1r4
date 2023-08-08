@@ -698,7 +698,6 @@ def main():
             st.subheader("PyGWalker")
             # Jika tombol diklik, gunakan PyGWalker
             walker = pyg.walk(df, env='Streamlit')
-            break
 
         if st.session_state.get('auto_exploration', False):
             st.subheader("Pandas Profiling Report")
@@ -707,7 +706,6 @@ def main():
         
             # Display the report
             st_profile_report(pr)
-            break
 
         if st.session_state.get('show_analisis_lanjutan', False):
             st.subheader("Analisis Lanjutan")
@@ -754,7 +752,6 @@ def main():
                 show_correlation_matrix(df)
             elif analysis_option == 'Principal Component Analysis':
                 perform_pca(df)
-            break
 
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
@@ -770,8 +767,6 @@ def main():
                 st.write("The Script:")
                 st.text(script)
                 input_pengguna = ""
-
-            break
 
 
 if __name__ == "__main__":
