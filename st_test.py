@@ -754,14 +754,6 @@ def perform_text_analysis(df):
 def main():
     st.set_page_config(
     layout="wide",
-    theme={
-        'base': 'light',
-        'primaryColor': '#666666',
-        'backgroundColor': '#FFFFFF',
-        'secondaryBackgroundColor': '#F0F0F0',
-        'textColor': '#444444',
-        'font': 'sans serif',
-    },
     )
     
     import warnings
