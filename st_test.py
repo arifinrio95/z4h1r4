@@ -648,18 +648,12 @@ def main():
 
     # try:
     if file is not None:
-        # df = pd.read_csv(file)
+        if 'df' not in st.session_state:
         df = load_file_auto_delimiter(file)
+        st.session_state.df = df
+        st.session_state.schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
+        st.session_state.rows_dict = df.head(2).to_dict('records')
         st.dataframe(df.head())
-
-        # Extract df schema
-        schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
-        schema_str = json.dumps(schema_dict)
-        # st.write("\nDataframe schema : ", schema_str)
-        
-        # Extract the first two rows into a dictionary
-        rows_dict = df.head(2).to_dict('records')
-        rows_str = json.dumps(rows_dict, default=str)
 
         # CSS untuk mengatur perataan teks tombol ke kiri
         st.markdown("""
@@ -674,18 +668,22 @@ def main():
         # Tombol 1
         if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
             st.session_state.selected_option = 1
+            st.experimental_rerun()
         
         # Tombol 2
         if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
             st.session_state.selected_option = 2
+            st.experimental_rerun()
         
         # Tombol 3
         if st.sidebar.button('3. Analisa tingkat lanjutan.'):
             st.session_state.selected_option = 3
+            st.experimental_rerun()
         
         # Tombol 4
         if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
             st.session_state.selected_option = 4
+            st.experimental_rerun()
 
         
         if st.session_state.selected_option == 1:
