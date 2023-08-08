@@ -663,7 +663,7 @@ def main():
         rows_dict = df.head(2).to_dict('records')
         rows_str = json.dumps(rows_dict, default=str)
 
-        st.write(Ada 4 opsi untuk mengeksplorasi data:)
+        st.sidebar.write('Ada 4 opsi untuk mengeksplorasi data:')
         if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
             st.subheader("PyGWalker")
             # Jika tombol diklik, gunakan PyGWalker
