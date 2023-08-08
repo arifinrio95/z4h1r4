@@ -498,7 +498,7 @@ def show_bar_plot(df):
     if chart_type != 'Single':
         y_column = st.selectbox('Select a Numeric Column:', numeric_columns)
         aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min'])
-    aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min']) if y_column else None
+    # aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min']) if y_column else None
     aggregation_func = getattr(np, aggregation_method) if aggregation_method else None
     orientation = st.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
     color_option = st.selectbox('Select Bar Color:', sns.color_palette().as_hex())
