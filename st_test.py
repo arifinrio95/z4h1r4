@@ -654,7 +654,7 @@ def main():
         st.session_state.rows_dict = df.head(2).to_dict('records')
         st.dataframe(df.head())
 
-        st.experimental_rerun()
+        
         # CSS untuk mengatur perataan teks tombol ke kiri
         st.markdown("""
             <style>
@@ -683,19 +683,19 @@ def main():
 
         
         if st.session_state.get('manual_exploration', False):
-            with st.expander("PyGWalker", expanded=True):
-                st.subheader("PyGWalker")
-                # Jika tombol diklik, gunakan PyGWalker
-                walker = pyg.walk(df, env='Streamlit')
+            st.subheader("PyGWalker")
+            # Jika tombol diklik, gunakan PyGWalker
+            walker = pyg.walk(df, env='Streamlit')
+            st.experimental_rerun()
 
         if st.session_state.get('auto_exploration', False):
-            with st.expander("Pandas Profiling Report", expanded=True):
-                st.subheader("Pandas Profiling Report")
-                # Create Pandas Profiling Report
-                pr = ProfileReport(df, explorative=True)
-            
-                # Display the report
-                st_profile_report(pr)
+            st.subheader("Pandas Profiling Report")
+            # Create Pandas Profiling Report
+            pr = ProfileReport(df, explorative=True)
+        
+            # Display the report
+            st_profile_report(pr)
+            st.experimental_rerun()
 
         if st.session_state.get('show_analisis_lanjutan', False):
             st.subheader("Analisis Lanjutan")
@@ -742,6 +742,7 @@ def main():
                 show_correlation_matrix(df)
             elif analysis_option == 'Principal Component Analysis':
                 perform_pca(df)
+            st.experimental_rerun()
 
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
@@ -757,6 +758,8 @@ def main():
                 st.write("The Script:")
                 st.text(script)
                 input_pengguna = ""
+
+            st.experimental_rerun()
 
 
 if __name__ == "__main__":
