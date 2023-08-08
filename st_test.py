@@ -677,7 +677,7 @@ def main():
         
         # Tombol 3
         elif st.sidebar.button('3. Analisa tingkat lanjutan.'):
-            st.session_state.show_natural_language_exploration = False
+            st.session_state.show_analisis_lanjutan = True
             st.session_state.selected_option = 3
             st.experimental_rerun()
         
@@ -703,54 +703,53 @@ def main():
                 # Display the report
                 st_profile_report(pr)
 
-        elif st.session_state.selected_option == 3:
-            with st.expander("Analisis Lanjutan", expanded=True):
-                st.subheader("Analisis Lanjutan")
-                analysis_option = st.sidebar.selectbox('Choose an analysis:', 
-                                                       ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
-                                                        'Principal Component Analysis', 'Outlier Detection',
-                                                        'Normality Test', 'Linear Regression', 'Logistic Regression',
-                                                        'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
-                                                        'Text Analysis'))
-    
-                if analysis_option == 'Hierarchical Clustering':
-                    perform_hierarchical_clustering(df)
-                elif analysis_option == 'Handle Imbalance Classes':
-                    handle_imbalance_classes(df)
-                elif analysis_option == 'Text Analysis':
-                    perform_text_analysis(df)
-                elif analysis_option == 'Logistic Regression':
-                    perform_logistic_regression(df)
-                elif analysis_option == 'K-Means Clustering':
-                    perform_k_means_clustering(df)
-                elif analysis_option == 'Time-Series Analysis':
-                    perform_time_series_analysis(df)
-                elif analysis_option == 'Bar Plot':
-                    show_bar_plot(df)
-                elif analysis_option == 'Pie Chart':
-                    show_pie_chart(df)
-                elif analysis_option == 'Linear Regression':
-                    perform_linear_regression(df)
-                elif analysis_option == 'Missing Data':
-                    show_missing_data(df)
-                elif analysis_option == 'Outlier Detection':
-                    show_outliers(df)
-                elif analysis_option == 'Normality Test':
-                    perform_shapiro_wilk_test(df)
-                elif analysis_option == 'Descriptive Statistics':
-                    show_descriptive_statistics(df)
-                elif analysis_option == 'Histogram':
-                    show_histogram(df)
-                elif analysis_option == 'Box Plot':
-                    show_box_plot(df)
-                elif analysis_option == 'Scatter Plot':
-                    show_scatter_plot(df)
-                elif analysis_option == 'Correlation Matrix':
-                    show_correlation_matrix(df)
-                elif analysis_option == 'Principal Component Analysis':
-                    perform_pca(df)
+        elif st.session_state.get('show_analisis_lanjutan', False):
+            st.subheader("Analisis Lanjutan")
+            analysis_option = st.sidebar.selectbox('Choose an analysis:', 
+                                                   ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
+                                                    'Principal Component Analysis', 'Outlier Detection',
+                                                    'Normality Test', 'Linear Regression', 'Logistic Regression',
+                                                    'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
+                                                    'Text Analysis'))
 
-        if st.session_state.get('show_natural_language_exploration', False):
+            if analysis_option == 'Hierarchical Clustering':
+                perform_hierarchical_clustering(df)
+            elif analysis_option == 'Handle Imbalance Classes':
+                handle_imbalance_classes(df)
+            elif analysis_option == 'Text Analysis':
+                perform_text_analysis(df)
+            elif analysis_option == 'Logistic Regression':
+                perform_logistic_regression(df)
+            elif analysis_option == 'K-Means Clustering':
+                perform_k_means_clustering(df)
+            elif analysis_option == 'Time-Series Analysis':
+                perform_time_series_analysis(df)
+            elif analysis_option == 'Bar Plot':
+                show_bar_plot(df)
+            elif analysis_option == 'Pie Chart':
+                show_pie_chart(df)
+            elif analysis_option == 'Linear Regression':
+                perform_linear_regression(df)
+            elif analysis_option == 'Missing Data':
+                show_missing_data(df)
+            elif analysis_option == 'Outlier Detection':
+                show_outliers(df)
+            elif analysis_option == 'Normality Test':
+                perform_shapiro_wilk_test(df)
+            elif analysis_option == 'Descriptive Statistics':
+                show_descriptive_statistics(df)
+            elif analysis_option == 'Histogram':
+                show_histogram(df)
+            elif analysis_option == 'Box Plot':
+                show_box_plot(df)
+            elif analysis_option == 'Scatter Plot':
+                show_scatter_plot(df)
+            elif analysis_option == 'Correlation Matrix':
+                show_correlation_matrix(df)
+            elif analysis_option == 'Principal Component Analysis':
+                perform_pca(df)
+
+        elif st.session_state.get('show_natural_language_exploration', False) and st.session_state.get('show_analisis_lanjutan', False) :
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
             # User Input
