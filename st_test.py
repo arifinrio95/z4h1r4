@@ -392,7 +392,10 @@ def show_bar_plot(df):
 
     if chart_type == 'Single':
         if orientation == 'Vertical':
-            sns.barplot(x=column, y=y_columns[0] if y_columns else None, data=df, order=order, color=color_option)
+            if y_columns:
+                sns.barplot(x=column, y=y_columns[0] if y_columns else None, data=df, order=order, color=color_option)
+            else:
+                sns.countplot(x=column, data=df, order=order, color=color_option)  # Plotting the count of categories
         elif orientation == 'Horizontal':
             if y_columns:
                 sns.barplot(y=column, x=y_columns[0], data=df, order=order, color=color_option)
