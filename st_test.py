@@ -671,30 +671,33 @@ def main():
         """, unsafe_allow_html=True)
 
         st.sidebar.subheader('Ada 4 opsi untuk mengeksplorasi data:')
+        # Inisialisasi status tombol jika belum ada
+        if 'show_content' not in st.session_state:
+            st.session_state.show_content = [False, False, False, False]
+        
         # Tombol 1
         if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
-            st.session_state.last_button_clicked = 1
+            st.session_state.show_content = [True, False, False, False]
         
         # Tombol 2
         if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
-            st.session_state.last_button_clicked = 2
+            st.session_state.show_content = [False, True, False, False]
         
         # Tombol 3
         if st.sidebar.button('3. Analisa tingkat lanjutan.'):
-            st.session_state.last_button_clicked = 3
+            st.session_state.show_content = [False, False, True, False]
         
         # Tombol 4
         if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
-            st.session_state.last_button_clicked = 4
+            st.session_state.show_content = [False, False, False, True]
 
         
-        if st.session_state.get('last_button_clicked') == 1:
+        if st.session_state.show_content[0]:
             st.subheader("PyGWalker")
             # Jika tombol diklik, gunakan PyGWalker
             walker = pyg.walk(df, env='Streamlit')
 
-        elif st.session_state.get('last_button_clicked') == 2:
-            st.subheader("Pandas Profiling Report")
+        if st.session_state.show_content[1]:
             st.subheader("Pandas Profiling Report")
             # Create Pandas Profiling Report
             pr = ProfileReport(df, explorative=True)
@@ -702,7 +705,7 @@ def main():
             # Display the report
             st_profile_report(pr)
 
-        elif st.session_state.get('last_button_clicked') == 3:
+        if st.session_state.show_content[2]:
             st.subheader("Analisis Lanjutan")
             st.subheader("Analisis Lanjutan")
             analysis_option = st.sidebar.selectbox('Choose an analysis:', 
@@ -749,7 +752,7 @@ def main():
             elif analysis_option == 'Principal Component Analysis':
                 perform_pca(df)
 
-        elif st.session_state.get('last_button_clicked') == 4:
+        if st.session_state.show_content[3]:
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
             # User Input
