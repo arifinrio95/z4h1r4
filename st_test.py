@@ -489,7 +489,7 @@ def show_bar_plot(df):
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     column = st.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
     y_column = st.selectbox('Select a Numeric Column (Optional):', [None] + numeric_columns)
-    aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min']) if y_column else None
+    aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min']) #if y_column else None
     aggregation_func = getattr(np, aggregation_method) if aggregation_method else None
     chart_type = st.selectbox('Select Chart Type:', ['Single', 'Grouped', 'Stacked', '100% Stacked'])
     orientation = st.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
@@ -513,7 +513,19 @@ def show_bar_plot(df):
         data_to_plot = df.groupby(column)[y_column].agg(aggregation_func).reset_index()
         y_value = y_column
 
-    if chart_type == 'Single' or chart_type == 'Grouped':
+    if chart_type == 'Single':
+        if orientation == 'Vertical':
+            if y_column:
+                sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option)
+            else:
+                sns.countplot(x=column, data=df, order=order, color=color_option)  # Plotting the count of categories
+        elif orientation == 'Horizontal':
+            if y_column:
+                sns.barplot(y=column, x=y_column, data=df, order=order, color=color_option)
+            else:
+                sns.countplot(y=column, data=df, order=order, color=color_option)  # Plotting the count of categories
+    
+    elif chart_type == 'Grouped':
         if orientation == 'Vertical':
             sns.barplot(x=column, y=y_value, data=data_to_plot, order=order, color=color_option)
         elif orientation == 'Horizontal':
