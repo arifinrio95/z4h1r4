@@ -397,8 +397,7 @@ def show_bar_plot(df):
             if y_columns:
                 sns.barplot(x=y_columns[0], y=column, data=df, order=order, color=color_option)
             else:
-                sns.barplot(y=column, data=df, order=order, color=color_option)  # Plotting the count of categories
-
+                sns.countplot(y=column, data=df, order=order, color=color_option)  # Plotting the count of categories
 
     elif chart_type == 'Grouped':
         for y_col in y_columns:
