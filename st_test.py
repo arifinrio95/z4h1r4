@@ -428,6 +428,7 @@ def show_bar_plot(df):
     column = st.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
     y_column = st.selectbox('Select a Numeric Column for Y values (Optional):', [None] + numeric_columns)
     aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min']) if y_column else None
+    aggregation_func = getattr(np, aggregation_method) if aggregation_method else None
     chart_type = st.selectbox('Select Chart Type:', ['Single', 'Grouped', 'Stacked', '100% Stacked'])
     orientation = st.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
     color_option = st.selectbox('Select Bar Color:', sns.color_palette().as_hex())
@@ -439,11 +440,11 @@ def show_bar_plot(df):
     elif sort_option == 'Category':
         order = sorted(df[column].unique())
 
-    if chart_type == 'Single':
+    if chart_type == 'Single' or chart_type == 'Grouped':
         if orientation == 'Vertical':
-            sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=getattr(np, aggregation_method))
+            sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=aggregation_func)
         elif orientation == 'Horizontal':
-            sns.barplot(y=column, x=y_column, data=df, order=order, color=color_option, estimator=getattr(np, aggregation_method))
+            sns.barplot(y=column, x=y_column, data=df, order=order, color=color_option, estimator=aggregation_func)
     elif chart_type == 'Grouped':
         sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=getattr(np, aggregation_method))
     elif chart_type == 'Stacked':
