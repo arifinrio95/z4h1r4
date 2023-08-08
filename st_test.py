@@ -630,7 +630,6 @@ def main():
         """,
         unsafe_allow_html=True
     )
-    input_pengguna = ""
     import warnings
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -649,7 +648,6 @@ def main():
 
     # try:
     if file is not None:
-        input_pengguna = ""
         # df = pd.read_csv(file)
         df = load_file_auto_delimiter(file)
         st.dataframe(df.head())
