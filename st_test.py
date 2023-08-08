@@ -757,15 +757,37 @@ def main():
     st.markdown(
         """
         <style>
-        .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
-        .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
-        .viewerBadge_text__1JaDK {
-            display: none;
-        }
+            body {
+                color: #666666;
+                background-color: #ffffff;
+            }
+            .sidebar .sidebar-content {
+                background-image: linear-gradient(#ffffff,#ffffff);
+            }
+            h1 {
+                color: #333333;
+            }
+            h2 {
+                color: #444444;
+            }
+            h3 {
+                color: #555555;
+            }
+            .btn-primary {
+                background-color: #777777;
+                border-color: #777777;
+            }
+            .st-at {
+                background-color: #f0f0f0;
+            }
+            .st-ah {
+                color: #f0f0f0;
+            }
         </style>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
+    
     import warnings
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
