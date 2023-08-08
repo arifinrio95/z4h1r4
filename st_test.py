@@ -671,17 +671,17 @@ def main():
             st.experimental_rerun()
         
         # Tombol 2
-        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
+        elif st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
             st.session_state.selected_option = 2
             st.experimental_rerun()
         
         # Tombol 3
-        if st.sidebar.button('3. Analisa tingkat lanjutan.'):
+        elif st.sidebar.button('3. Analisa tingkat lanjutan.'):
             st.session_state.selected_option = 3
             st.experimental_rerun()
         
         # Tombol 4
-        if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
+        elif st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
             st.session_state.selected_option = 4
             st.experimental_rerun()
 
