@@ -676,36 +676,38 @@ def main():
         st.sidebar.subheader('Ada 4 opsi untuk mengeksplorasi data:')
         if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)') and st.session_state.get('button_1_clicked', False):
             st.session_state.button_1_clicked = True
-            st.session_state.button_2_clicked = False
-            st.session_state.button_3_clicked = False
-            st.session_state.button_4_clicked = False
+            # st.session_state.button_2_clicked = False
+            # st.session_state.button_3_clicked = False
+            # st.session_state.button_4_clicked = False
             st.subheader("PyGWalker")
             # Jika tombol diklik, gunakan PyGWalker
             walker = pyg.walk(df, env='Streamlit')
+            st.session_state.button_1_clicked = False
 
         # if 'button_2_clicked' not in st.session_state:
         #     st.session_state.button_2_clicked = False
         # Create a button in the Streamlit app
         if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)') and st.session_state.get('button_2_clicked', False):
-            st.session_state.button_1_clicked = False
+            # st.session_state.button_1_clicked = False
             st.session_state.button_2_clicked = True
-            st.session_state.button_3_clicked = False
-            st.session_state.button_4_clicked = False
+            # st.session_state.button_3_clicked = False
+            # st.session_state.button_4_clicked = False
             st.subheader("Pandas Profiling Report")
             # Create Pandas Profiling Report
             pr = ProfileReport(df, explorative=True)
         
             # Display the report
             st_profile_report(pr)
+            st.session_state.button_2_clicked = False
 
         # if 'button_3_clicked' not in st.session_state:
         #     st.session_state.button_3_clicked = False
         # Tambahkan tombol di sidebar untuk memberikan opsi kepada pengguna
         if st.sidebar.button('3. Analisa tingkat lanjutan.') and st.session_state.get('button_3_clicked', False):
-            st.session_state.button_1_clicked = False
-            st.session_state.button_2_clicked = False
+            # st.session_state.button_1_clicked = False
+            # st.session_state.button_2_clicked = False
             st.session_state.button_3_clicked = True
-            st.session_state.button_4_clicked = False
+            # st.session_state.button_4_clicked = False
             st.subheader("Analisis Lanjutan")
             analysis_option = st.sidebar.selectbox('Choose an analysis:', 
                                                    ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
@@ -750,13 +752,13 @@ def main():
                 show_correlation_matrix(df)
             elif analysis_option == 'Principal Component Analysis':
                 perform_pca(df)
-
+        st.session_state.button_3_clicked = False
         # if 'button_4_clicked' not in st.session_state:
         #     st.session_state.button_4_clicked = False 
         if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)') and st.session_state.get('button_4_clicked', False):
-            st.session_state.button_1_clicked = False
-            st.session_state.button_2_clicked = False
-            st.session_state.button_3_clicked = False
+            # st.session_state.button_1_clicked = False
+            # st.session_state.button_2_clicked = False
+            # st.session_state.button_3_clicked = False
             st.session_state.button_4_clicked = True
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
@@ -800,7 +802,7 @@ def main():
                 exec(str(script))
                 st.write("The Script:")
                 st.text(script)
-            
+                st.session_state.button_4_clicked = False
                 # retry_count = 0
                 # error_message = None
                 # previous_script = None
