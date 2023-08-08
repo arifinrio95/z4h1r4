@@ -668,17 +668,29 @@ def main():
         # Tombol 1
         if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
             st.session_state.manual_exploration = True
+            st.session_state.auto_exploration = False
+            st.session_state.show_analisis_lanjutan = False
+            st.session_state.show_natural_language_exploration = False
         
         # Tombol 2
         if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
+            st.session_state.manual_exploration = False
             st.session_state.auto_exploration = True
+            st.session_state.show_analisis_lanjutan = False
+            st.session_state.show_natural_language_exploration = False
         
         # Tombol 3
         if st.sidebar.button('3. Analisa tingkat lanjutan.'):
+            st.session_state.manual_exploration = False
+            st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = True
+            st.session_state.show_natural_language_exploration = False
         
         # Tombol 4
         if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
+            st.session_state.manual_exploration = False
+            st.session_state.auto_exploration = False
+            st.session_state.show_analisis_lanjutan = False
             st.session_state.show_natural_language_exploration = True
 
         
@@ -686,7 +698,7 @@ def main():
             st.subheader("PyGWalker")
             # Jika tombol diklik, gunakan PyGWalker
             walker = pyg.walk(df, env='Streamlit')
-            st.experimental_rerun()
+            break
 
         if st.session_state.get('auto_exploration', False):
             st.subheader("Pandas Profiling Report")
@@ -695,7 +707,7 @@ def main():
         
             # Display the report
             st_profile_report(pr)
-            st.experimental_rerun()
+            break
 
         if st.session_state.get('show_analisis_lanjutan', False):
             st.subheader("Analisis Lanjutan")
@@ -742,7 +754,7 @@ def main():
                 show_correlation_matrix(df)
             elif analysis_option == 'Principal Component Analysis':
                 perform_pca(df)
-            st.experimental_rerun()
+            break
 
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
@@ -759,7 +771,7 @@ def main():
                 st.text(script)
                 input_pengguna = ""
 
-            st.experimental_rerun()
+            break
 
 
 if __name__ == "__main__":
