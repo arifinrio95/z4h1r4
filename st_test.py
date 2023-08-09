@@ -708,59 +708,84 @@ def perform_text_analysis(df):
 
 # Ekstrak semua deskripsi statistik data
 def analyze_dataframe(df):
-    # Analisis Data Numerik
-    numerical_columns = df.select_dtypes(include=['number']).columns
-    numerical_summary = df[numerical_columns].describe().transpose().to_dict()
-    numerical_summary['skewness'] = df[numerical_columns].skew().to_dict()
-    numerical_summary['kurtosis'] = df[numerical_columns].kurt().to_dict()
+    result = {}
+    
+    try:
+        # Analisis Data Numerik
+        numerical_columns = df.select_dtypes(include=['number']).columns
+        numerical_summary = df[numerical_columns].describe().transpose().to_dict()
+        numerical_summary['skewness'] = df[numerical_columns].skew().to_dict()
+        numerical_summary['kurtosis'] = df[numerical_columns].kurt().to_dict()
+        result['Numerical Summary'] = numerical_summary
+    except Exception as e:
+        result['Numerical Summary'] = str(e)
 
-    # Analisis Data Kategorikal
-    categorical_columns = df.select_dtypes(include=['object']).columns
-    categorical_summary = {col: {
-            'unique_categories': df[col].nunique(),
-            'mode': df[col].mode().iloc[0],
-            'frequency': df[col].value_counts().iloc[0]
-        } for col in categorical_columns}
+    try:
+        # Analisis Data Kategorikal
+        categorical_columns = df.select_dtypes(include=['object']).columns
+        categorical_summary = {col: {
+                'unique_categories': df[col].nunique(),
+                'mode': df[col].mode().iloc[0],
+                'frequency': df[col].value_counts().iloc[0]
+            } for col in categorical_columns}
+        result['Categorical Summary'] = categorical_summary
+    except Exception as e:
+        result['Categorical Summary'] = str(e)
 
-    # Analisis Missing Values
-    missing_values = df.isnull().sum().to_dict()
-    missing_percentage = {col: (missing_values[col] / len(df) * 100) for col in df.columns}
-    missing_summary = {
-        "Missing Values": missing_values,
-        "Percentage": missing_percentage
-    }
+    try:
+        # Analisis Missing Values
+        missing_values = df.isnull().sum().to_dict()
+        missing_percentage = {col: (missing_values[col] / len(df) * 100) for col in df.columns}
+        missing_summary = {
+            "Missing Values": missing_values,
+            "Percentage": missing_percentage
+        }
+        result['Missing Values'] = missing_summary
+    except Exception as e:
+        result['Missing Values'] = str(e)
+    
+    try:
+        # Analisis Korelasi
+        correlation_matrix = df.corr().to_dict()
+        result['Correlation Matrix'] = correlation_matrix
+    except Exception as e:
+        result['Correlation Matrix'] = str(e)
 
-    # Analisis Korelasi
-    correlation_matrix = df.corr().to_dict()
+    try:
+        # Analisis Outliers
+        z_scores = df[numerical_columns].apply(zscore)
+        outliers = (z_scores.abs() > 2).sum().to_dict()  # Agregat jumlah outliers
+        result['Outliers'] = outliers
+    except Exception as e:
+        result['Outliers'] = str(e)
 
-    # Analisis Outliers
-    z_scores = df[numerical_columns].apply(zscore)
-    outliers = (z_scores.abs() > 2).sum().to_dict()  # Agregat jumlah outliers
+    try:
+        # Agregasi Lengkap untuk Semua Kolom yang Mungkin
+        all_aggregations = df.agg(['mean', 'median', 'sum', 'min', 'max', 'std', 'var', 'skew', 'kurt']).transpose().to_dict()
+        result['All Possible Aggregations'] = all_aggregations
+    except Exception as e:
+        result['All Possible Aggregations'] = str(e)
+    
+    try:
+        # Kuantil
+        quantiles = df.quantile([0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99]).transpose().to_dict()
+        result['Quantiles'] = quantiles
+    except Exception as e:
+        result['Quantiles'] = str(e)
 
-    # Agregasi Lengkap untuk Semua Kolom yang Mungkin
-    all_aggregations = df.agg(['mean', 'median', 'sum', 'min', 'max', 'std', 'var', 'skew', 'kurt']).transpose().to_dict()
+    try:
+        # Agregasi Group By untuk Semua Kombinasi Kolom Kategorikal
+        groupby_aggregations = {}
+        for r in range(1, len(categorical_columns) + 1):
+            for subset in combinations(categorical_columns, r):
+                group_key = ', '.join(subset)
+                group_data = df.groupby(list(subset)).agg(['mean', 'count', 'sum', 'min', 'max'])
+                groupby_aggregations[group_key] = group_data.to_dict()
+        result['Group By Aggregations'] = groupby_aggregations
+    except Exception as e:
+        result['Group By Aggregations'] = str(e)
 
-    # Kuantil
-    quantiles = df.quantile([0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99]).transpose().to_dict()
-
-    # Agregasi Group By untuk Semua Kombinasi Kolom Kategorikal
-    groupby_aggregations = {}
-    for r in range(1, len(categorical_columns) + 1):
-        for subset in combinations(categorical_columns, r):
-            group_key = ', '.join(subset)
-            group_data = df.groupby(list(subset)).agg(['mean', 'count', 'sum', 'min', 'max'])
-            groupby_aggregations[group_key] = group_data.to_dict()
-
-    return {
-        'Numerical Summary': numerical_summary,
-        'Categorical Summary': categorical_summary,
-        'Missing Values': missing_summary,
-        'Correlation Matrix': correlation_matrix,
-        'Outliers': outliers,
-        'All Possible Aggregations': all_aggregations,
-        'Quantiles': quantiles,
-        'Group By Aggregations': groupby_aggregations
-    }
+    return result
     
 def main():
     st.set_page_config(
@@ -922,7 +947,7 @@ def main():
 
         if st.session_state.get('story_telling', False):
             st.subheader("Laporan Statistika")
-            st.write(request_story_prompt(analyze_dataframe(df)))
+            st.text(request_story_prompt(analyze_dataframe(df)))
 
 if __name__ == "__main__":
     main()
