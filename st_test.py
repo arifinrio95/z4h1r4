@@ -961,7 +961,8 @@ def main():
             """, unsafe_allow_html=True)
             dict_stats = analyze_dataframe(df)
             st.write(dict_stats)
-            st.markdown(request_story_prompt(dict_stats))
+            for i in len(dict_stats):
+                st.markdown(request_story_prompt(i))
             # st.text(request_story_prompt(analyze_dataframe(df)))
 
 if __name__ == "__main__":
