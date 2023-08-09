@@ -13,3 +13,4 @@ pandas-profiling
 scipy
 statsmodels
 pygwalker
+more-itertools
