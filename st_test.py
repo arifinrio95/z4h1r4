@@ -869,6 +869,7 @@ def main():
         
         if st.session_state.get('manual_exploration', False):
             st.subheader("PyGWalker")
+            st.write("PyGWalker adalah pustaka Python untuk analisis visual dengan stye mirip Tableau, memungkinkan eksplorasi data dengan drag and drop Tableau.")
             # Jika tombol diklik, gunakan PyGWalker
             walker = pyg.walk(df, env='Streamlit')
 
