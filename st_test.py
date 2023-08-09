@@ -85,35 +85,37 @@ def load_file_auto_delimiter(file):
     return df
 
 def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0):
-    messages = [
-        {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
-        {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-        1. Respon pertanyaan atau pernyataan ini: {input_pengguna}. 
-        2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-        3. Only respond with python scripts in streamlit version without any text. 
-        4. Start your response with “import”.
-        5. Show all your response to streamlit apps.
-        6. Use Try and Except.
-        7. Pay attention to the column type before creating the script."""}
-    ]
-
+    # versi 2 prompt
     # messages = [
     #     {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
     #     {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-    #     1. {input_pengguna}. 
+    #     1. Respon pertanyaan atau pernyataan ini: {input_pengguna}. 
     #     2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-    #     3. Respond with scripts without any text. 
-    #     4. Only code in a single cell. 
-    #     5. Don’t start your response with “Sure, here are”. 
-    #     6. Start your response with “import” inside the python block. 
-    #     7. Give and show with streamlit the title for every steps.
-    #     8. Print with st.write the explanation for every syntax.
-    #     9. Don’t give me any explanation about the script. Response only with python block.
-    #     10. Do not reload the dataframe.
-    #     11. Use Try and Except for each syntax.
-    #     12. Print and show the detail step you did.
-    #     13. Dont forget to show the steps with st.write."""}
+    #     3. Only respond with python scripts in streamlit version without any text. 
+    #     4. Start your response with “import”.
+    #     5. Show all your response to streamlit apps.
+    #     6. Use Try and Except.
+    #     7. Pay attention to the column type before creating the script."""}
     # ]
+
+    # versi 1 prompt
+    messages = [
+        {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
+        {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
+        1. {input_pengguna}. 
+        2. My dataframe already load previously, named df, use it, do not reload the dataframe.
+        3. Respond with scripts without any text. 
+        4. Only code in a single cell. 
+        5. Don’t start your response with “Sure, here are”. 
+        6. Start your response with “import” inside the python block. 
+        7. Give and show with streamlit the title for every steps.
+        8. Print with st.write the explanation for every syntax.
+        9. Don’t give me any explanation about the script. Response only with python block.
+        10. Do not reload the dataframe.
+        11. Use Try and Except for each syntax.
+        12. Print and show the detail step you did.
+        13. Dont forget to show the steps with st.write."""}
+    ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
     
     if error_message and previous_script:
@@ -374,117 +376,6 @@ def perform_shapiro_wilk_test(df):
 
     st.pyplot(plt)
 
-# Function to perform bar plot for categorical data
-# def show_bar_plot(df):
-#     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
-#     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
-#     column = st.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
-#     y_columns = st.multiselect('Select Numeric Columns for Y values (Optional):', numeric_columns)
-#     chart_type = st.selectbox('Select Chart Type:', ['Single', 'Grouped', 'Stacked', '100% Stacked'])
-#     orientation = st.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
-#     color_option = st.selectbox('Select Bar Color:', sns.color_palette().as_hex())
-#     sort_option = st.selectbox('Sort By:', ['None', 'Value', 'Category'])
-
-#     order = None
-#     if sort_option == 'Value' and y_columns:
-#         order = df.groupby(column)[y_columns].sum().sum(axis=1).sort_values(ascending=False).index
-#     elif sort_option == 'Category':
-#         order = sorted(df[column].unique())
-
-#     if chart_type == 'Single':
-#         if orientation == 'Vertical':
-#             if y_columns:
-#                 sns.barplot(x=column, y=y_columns[0] if y_columns else None, data=df, order=order, color=color_option)
-#             else:
-#                 sns.countplot(x=column, data=df, order=order, color=color_option)  # Plotting the count of categories
-#         elif orientation == 'Horizontal':
-#             if y_columns:
-#                 sns.barplot(y=column, x=y_columns[0], data=df, order=order, color=color_option)
-#             else:
-#                 sns.countplot(y=column, data=df, order=order, color=color_option)  # Plotting the count of categories
-
-
-#     elif chart_type == 'Grouped':
-#         for y_col in y_columns:
-#             sns.barplot(x=column, y=y_col, data=df, order=order, color=color_option)
-#     elif chart_type == 'Stacked':
-#         df_stacked = df.groupby(column)[y_columns].sum().reset_index()
-#         df_stacked.plot(kind='bar', x=column, y=y_columns, stacked=True, color=color_option)
-#     elif chart_type == '100% Stacked':
-#         df_stacked = df.groupby(column)[y_columns].apply(lambda x: 100 * x / x.sum()).reset_index()
-#         df_stacked.plot(kind='bar', x=column, y=y_columns, stacked=True, color=color_option)
-
-#     if orientation == 'Horizontal' and chart_type != 'Grouped':
-#         plt.gca().invert_yaxis()
-
-#     plt.title(f'Bar Plot of {column}', fontsize=16, fontweight="bold")
-#     plt.xlabel('Value' if y_columns else 'Count', fontsize=12)
-#     plt.ylabel(column, fontsize=12)
-#     sns.despine(left=True, bottom=True)
-#     st.pyplot()
-
-# def show_bar_plot(df):
-#     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
-#     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
-#     column = st.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
-#     y_column = st.selectbox('Select a Numeric Column (Optional):', [None] + numeric_columns)
-#     aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min']) if y_column else None
-#     aggregation_func = getattr(np, aggregation_method) if aggregation_method else None
-#     chart_type = st.selectbox('Select Chart Type:', ['Single', 'Grouped', 'Stacked', '100% Stacked'])
-#     orientation = st.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
-#     color_option = st.selectbox('Select Bar Color:', sns.color_palette().as_hex())
-#     sort_option = st.selectbox('Sort By:', ['None', 'Value', 'Category'])
-
-#     order = None
-#     if sort_option == 'Value' and y_column:
-#         order = df.groupby(column).agg({y_column: aggregation_method}).sort_values(by=y_column, ascending=False).index
-#     elif sort_option == 'Category':
-#         order = sorted(df[column].unique())
-        
-#     if chart_type == 'Single':
-#         if orientation == 'Vertical':
-#             if y_column:
-#                 sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option)
-#             else:
-#                 sns.countplot(x=column, data=df, order=order, color=color_option)  # Plotting the count of categories
-#         elif orientation == 'Horizontal':
-#             if y_column:
-#                 sns.barplot(y=column, x=y_column, data=df, order=order, color=color_option)
-#             else:
-#                 sns.countplot(y=column, data=df, order=order, color=color_option)  # Plotting the count of categories
-
-#     elif chart_type == 'Grouped':
-#         if not y_column:  # If no features are selected
-#             st.warning('Please select a Numerical Column for chart types other than Single.')
-#             return
-#         if orientation == 'Vertical':
-#             sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=aggregation_func)
-#         elif orientation == 'Horizontal':
-#             sns.barplot(y=column, x=y_column, data=df, order=order, color=color_option, estimator=aggregation_func)
-#     # elif chart_type == 'Grouped':
-#     #     sns.barplot(x=column, y=y_column, data=df, order=order, color=color_option, estimator=getattr(np, aggregation_method))
-#     elif chart_type == 'Stacked':
-#         if not y_column:  # If no features are selected
-#             st.warning('Please select a Numerical Column for chart types other than Single.')
-#             return
-#         df_stacked = df.groupby(column).agg({y_column: aggregation_method}).reset_index()
-#         df_stacked.plot(kind='bar', x=column, y=y_column, stacked=True, color=color_option)
-#     elif chart_type == '100% Stacked':
-#         if not y_column:  # If no features are selected
-#             st.warning('Please select a Numerical Column for chart types other than Single.')
-#             return
-#         df_stacked = df.groupby(column)[y_column].apply(lambda x: 100 * x / x.sum()).reset_index()
-#         df_stacked.plot(kind='bar', x=column, y=y_column, stacked=True, color=color_option)
-
-#     # if orientation == 'Horizontal' and chart_type != 'Grouped':
-#     #     plt.gca().invert_yaxis()
-
-#     plt.title(f'Bar Plot of {column}', fontsize=16, fontweight="bold")
-#     plt.xlabel('Value' if y_column else 'Count', fontsize=12)
-#     plt.ylabel(column, fontsize=12)
-#     sns.despine(left=True, bottom=True)
-#     st.pyplot()
-
 def show_bar_plot(df):
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
@@ -550,9 +441,6 @@ def show_bar_plot(df):
     plt.ylabel(column, fontsize=12)
     sns.despine(left=True, bottom=True)
     st.pyplot()
-
-
-
 
 # Function to perform pie chart for categorical data
 def show_pie_chart(df):
