@@ -137,8 +137,8 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
 
 def request_story_prompt(dict_stats):
     messages = [
-        {"role": "system", "content": "Aku akan membuat laporan story telling menarik."},
-        {"role": "user", "content": f"""Buatkan laporan berbentuk story telling yang menarik dari data yang detailnya sebagai berikut:  {dict_stats}. Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary."""}
+        {"role": "system", "content": "Aku akan membuat laporan menarik."},
+        {"role": "user", "content": f"""Buatkan laporan berbentuk paragraf narasi yang menarik dari data yang detailnya sebagai berikut:  {dict_stats}. Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary."""}
     ]
 
     response = openai.ChatCompletion.create(
@@ -718,7 +718,8 @@ def analyze_dataframe(df):
         numerical_summary['kurtosis'] = df[numerical_columns].kurt().to_dict()
         result['Numerical Summary'] = numerical_summary
     except Exception as e:
-        result['Numerical Summary'] = str(e)
+        # result['Numerical Summary'] = str(e)
+        pass
 
     try:
         # Analisis Data Kategorikal
@@ -730,7 +731,8 @@ def analyze_dataframe(df):
             } for col in categorical_columns}
         result['Categorical Summary'] = categorical_summary
     except Exception as e:
-        result['Categorical Summary'] = str(e)
+        # result['Categorical Summary'] = str(e)
+        pass
 
     try:
         # Analisis Missing Values
@@ -742,14 +744,16 @@ def analyze_dataframe(df):
         }
         result['Missing Values'] = missing_summary
     except Exception as e:
-        result['Missing Values'] = str(e)
+        # result['Missing Values'] = str(e)
+        pass
     
     try:
         # Analisis Korelasi
         correlation_matrix = df.corr().to_dict()
         result['Correlation Matrix'] = correlation_matrix
     except Exception as e:
-        result['Correlation Matrix'] = str(e)
+        # result['Correlation Matrix'] = str(e)
+        pass
 
     try:
         # Analisis Outliers
@@ -757,21 +761,24 @@ def analyze_dataframe(df):
         outliers = (z_scores.abs() > 2).sum().to_dict()  # Agregat jumlah outliers
         result['Outliers'] = outliers
     except Exception as e:
-        result['Outliers'] = str(e)
+        # result['Outliers'] = str(e)
+        pass
 
     try:
         # Agregasi Lengkap untuk Semua Kolom yang Mungkin
         all_aggregations = df.agg(['mean', 'median', 'sum', 'min', 'max', 'std', 'var', 'skew', 'kurt']).transpose().to_dict()
         result['All Possible Aggregations'] = all_aggregations
     except Exception as e:
-        result['All Possible Aggregations'] = str(e)
+        # result['All Possible Aggregations'] = str(e)
+        pass
     
     try:
         # Kuantil
         quantiles = df.quantile([0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99]).transpose().to_dict()
         result['Quantiles'] = quantiles
     except Exception as e:
-        result['Quantiles'] = str(e)
+        # result['Quantiles'] = str(e)
+        pass
 
     try:
         # Agregasi Group By untuk Semua Kombinasi Kolom Kategorikal
@@ -783,7 +790,8 @@ def analyze_dataframe(df):
                 groupby_aggregations[group_key] = group_data.to_dict()
         result['Group By Aggregations'] = groupby_aggregations
     except Exception as e:
-        result['Group By Aggregations'] = str(e)
+        # result['Group By Aggregations'] = str(e)
+        pass
 
     return result
     
