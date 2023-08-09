@@ -959,7 +959,9 @@ def main():
                 }
             </style>
             """, unsafe_allow_html=True)
-            st.markdown(request_story_prompt(analyze_dataframe(df)))
+            dict_stats = analyze_dataframe(df)
+            st.write(dict_stats)
+            st.markdown(request_story_prompt(dict_stats))
             # st.text(request_story_prompt(analyze_dataframe(df)))
 
 if __name__ == "__main__":
