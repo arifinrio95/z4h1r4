@@ -133,6 +133,24 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
 
     return script
 
+def request_story_prompt(dict_stats):
+    messages = [
+        {"role": "system", "content": "Aku akan membuat laporan story telling menarik yang siap disajikan."},
+        {"role": "user", "content": f"""Buatkan laporan berbentuk story telling yang menarik dari data yang deskripsinya saya berikan dalam dictionary berikut:  {dict_stats}"""}
+    ]
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-16k",
+        # model="gpt-3.5-turbo",
+        # model="gpt-4",
+        messages=messages,
+        max_tokens=10000,
+        temperature=0.9
+    )
+    script = response.choices[0].message['content']
+
+    return script
+
 # Function to display descriptive statistics
 def show_descriptive_statistics(df):
     st.write('Descriptive Statistics')
@@ -688,6 +706,62 @@ def perform_text_analysis(df):
     plt.axis("off")
     st.pyplot(plt)
 
+# Ekstrak semua deskripsi statistik data
+def analyze_dataframe(df):
+    # Analisis Data Numerik
+    numerical_columns = df.select_dtypes(include=['number']).columns
+    numerical_summary = df[numerical_columns].describe().transpose().to_dict()
+    numerical_summary['skewness'] = df[numerical_columns].skew().to_dict()
+    numerical_summary['kurtosis'] = df[numerical_columns].kurt().to_dict()
+
+    # Analisis Data Kategorikal
+    categorical_columns = df.select_dtypes(include=['object']).columns
+    categorical_summary = {col: {
+            'unique_categories': df[col].nunique(),
+            'mode': df[col].mode().iloc[0],
+            'frequency': df[col].value_counts().iloc[0]
+        } for col in categorical_columns}
+
+    # Analisis Missing Values
+    missing_values = df.isnull().sum().to_dict()
+    missing_percentage = {col: (missing_values[col] / len(df) * 100) for col in df.columns}
+    missing_summary = {
+        "Missing Values": missing_values,
+        "Percentage": missing_percentage
+    }
+
+    # Analisis Korelasi
+    correlation_matrix = df.corr().to_dict()
+
+    # Analisis Outliers
+    z_scores = df[numerical_columns].apply(zscore)
+    outliers = (z_scores.abs() > 2).sum().to_dict()  # Agregat jumlah outliers
+
+    # Agregasi Lengkap untuk Semua Kolom yang Mungkin
+    all_aggregations = df.agg(['mean', 'median', 'sum', 'min', 'max', 'std', 'var', 'skew', 'kurt']).transpose().to_dict()
+
+    # Kuantil
+    quantiles = df.quantile([0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99]).transpose().to_dict()
+
+    # Agregasi Group By untuk Semua Kombinasi Kolom Kategorikal
+    groupby_aggregations = {}
+    for r in range(1, len(categorical_columns) + 1):
+        for subset in combinations(categorical_columns, r):
+            group_key = ', '.join(subset)
+            group_data = df.groupby(list(subset)).agg(['mean', 'count', 'sum', 'min', 'max'])
+            groupby_aggregations[group_key] = group_data.to_dict()
+
+    return {
+        'Numerical Summary': numerical_summary,
+        'Categorical Summary': categorical_summary,
+        'Missing Values': missing_summary,
+        'Correlation Matrix': correlation_matrix,
+        'Outliers': outliers,
+        'All Possible Aggregations': all_aggregations,
+        'Quantiles': quantiles,
+        'Group By Aggregations': groupby_aggregations
+    }
+    
 def main():
     st.set_page_config(
     layout="wide",
@@ -732,6 +806,8 @@ def main():
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
             st.session_state.show_natural_language_exploration = False
+            st.session_state.story_telling = False
+
         
         # Tombol 2
         if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
@@ -739,6 +815,8 @@ def main():
             st.session_state.auto_exploration = True
             st.session_state.show_analisis_lanjutan = False
             st.session_state.show_natural_language_exploration = False
+            st.session_state.story_telling = False
+
         
         # Tombol 3
         if st.sidebar.button('3. Analisa tingkat lanjutan.'):
@@ -746,6 +824,8 @@ def main():
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = True
             st.session_state.show_natural_language_exploration = False
+            st.session_state.story_telling = False
+
         
         # Tombol 4
         if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
@@ -753,6 +833,15 @@ def main():
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
             st.session_state.show_natural_language_exploration = True
+            st.session_state.story_telling = False
+
+        # Tombol 5
+        if st.sidebar.button('5. Buat laporan story telling secara otomatis.'):
+            st.session_state.manual_exploration = False
+            st.session_state.auto_exploration = False
+            st.session_state.show_analisis_lanjutan = False
+            st.session_state.show_natural_language_exploration = False
+            st.session_state.story_telling = True
 
         
         if st.session_state.get('manual_exploration', False):
@@ -831,6 +920,9 @@ def main():
                 st.text(script)
                 input_pengguna = ""
 
+        if st.session_state.get('story_telling', False):
+            st.subheader("Laporan Statistika")
+            st.write(request_story_prompt(analyze_dataframe(df)))
 
 if __name__ == "__main__":
     main()
