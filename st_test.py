@@ -135,8 +135,8 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
 
 def request_story_prompt(dict_stats):
     messages = [
-        {"role": "system", "content": "Aku akan membuat laporan formal menarik yang siap disajikan."},
-        {"role": "user", "content": f"""Buatkan laporan berbentuk formal yang dijelaskan dalam sebuah narasi dari data yang detailnya saya berikan dalam dictionary berikut:  {dict_stats}. Tidak usah dijelaskan jika ada pesan error. Tidak usah dijelaskan bahwa kamu membaca dari dictionary."""}
+        {"role": "system", "content": "Aku akan membuat laporan story telling menarik yang siap disajikan."},
+        {"role": "user", "content": f"""Buatkan laporan berbentuk story telling yang formal dari data yang detailnya saya berikan dalam dictionary berikut:  {dict_stats}. Tidak usah dijelaskan jika ada pesan error. Tidak usah dijelaskan bahwa kamu membaca dari dictionary."""}
     ]
 
     response = openai.ChatCompletion.create(
@@ -945,7 +945,12 @@ def main():
 
         if st.session_state.get('story_telling', False):
             st.subheader("Laporan Statistika")
-            st.text(request_story_prompt(analyze_dataframe(df)))
+            
+            col1, col2, col3 = st.beta_columns([1,6,1])
+
+            with col2:
+                st.write(request_story_prompt(analyze_dataframe(df)))
+            # st.text(request_story_prompt(analyze_dataframe(df)))
 
 if __name__ == "__main__":
     main()
