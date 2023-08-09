@@ -945,11 +945,19 @@ def main():
 
         if st.session_state.get('story_telling', False):
             st.subheader("Laporan Statistika")
-            
-            col1, col2, col3 = st.beta_columns([1,6,1])
 
-            with col2:
-                st.write(request_story_prompt(analyze_dataframe(df)))
+            st.markdown("""
+            <style>
+                .reportview-container .markdown-text-container {
+                    font-family: monospace;
+                    background-color: #fafafa;
+                    max-width: 700px;
+                    padding-right:50px;
+                    padding-left:50px;
+                }
+            </style>
+            """, unsafe_allow_html=True)
+            st.markdown(request_story_prompt(analyze_dataframe(df)))
             # st.text(request_story_prompt(analyze_dataframe(df)))
 
 if __name__ == "__main__":
