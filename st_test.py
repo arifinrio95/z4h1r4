@@ -145,7 +145,7 @@ def request_story_prompt(dict_stats):
         model="gpt-3.5-turbo-16k",
         messages=messages,
         max_tokens=10000,
-        temperature=2
+        temperature=0
     )
     script = response.choices[0].message['content']
 
