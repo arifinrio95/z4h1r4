@@ -140,7 +140,7 @@ def request_story_prompt(dict_stats):
         {"role": "system", "content": "Aku akan membuat laporan untukmu."},
         {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. 
         Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary.
-        Tambahkan 1 paragraf kesimpulan yang mudah dipahami di akhir."""}
+        Tulis dalam 3000 kata."""}
     ]
 
     response = openai.ChatCompletion.create(
