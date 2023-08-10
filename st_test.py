@@ -135,6 +135,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
 
     return script
 
+# Jangan diubah yg ini
 def request_story_prompt(dict_stats):
     messages = [
         {"role": "system", "content": "Aku akan membuat laporan untukmu."},
@@ -708,7 +709,7 @@ def perform_text_analysis(df):
     plt.axis("off")
     st.pyplot(plt)
 
-# Ekstrak semua deskripsi statistik data
+# (Jangan diubah yg ini) Ekstrak semua deskripsi statistik data
 def analyze_dataframe(df):
     result = {}
 
@@ -855,6 +856,17 @@ def main():
     st.set_page_config(
     layout="wide",
     )
+
+    html_button = """
+    <div style="text-align:left;">
+        <a href="#" class="button-link">
+            <button style="text-align:left;">Teks Tombol</button>
+        </a>
+    </div>
+    """
+    
+    # Menyisipkan HTML ke dalam Streamlit
+    st.markdown(html_button, unsafe_allow_html=True)
 
     st.markdown(
         """
