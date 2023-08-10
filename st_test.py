@@ -138,7 +138,9 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
 def request_story_prompt(dict_stats):
     messages = [
         {"role": "system", "content": "Aku akan membuat laporan untukmu."},
-        {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary."""}
+        {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. 
+        Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary.
+        Berikan 1 paragraf kesimpulan yang mudah dipahami."""}
     ]
 
     response = openai.ChatCompletion.create(
