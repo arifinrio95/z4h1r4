@@ -728,7 +728,7 @@ def analyze_dataframe(df):
         numerical_columns = df.select_dtypes(include=['number']).columns
         numerical_summary = df[numerical_columns].describe().transpose().to_dict()
         numerical_summary['skewness'] = df[numerical_columns].skew().to_dict()
-        # numerical_summary['kurtosis'] = df[numerical_columns].kurt().to_dict()
+        numerical_summary['kurtosis'] = df[numerical_columns].kurt().to_dict()
         result['Numerical Summary'] = numerical_summary
     except Exception as e:
         pass
@@ -741,7 +741,7 @@ def analyze_dataframe(df):
                 'mode': df[col].mode().iloc[0],
                 'frequency': df[col].value_counts().iloc[0]
             } for col in categorical_columns}
-        # result['Categorical Summary'] = categorical_summary
+        result['Categorical Summary'] = categorical_summary
     except Exception as e:
         pass
 
@@ -753,7 +753,7 @@ def analyze_dataframe(df):
             "Missing Values": missing_values,
             "Percentage": missing_percentage
         }
-        result['Missing Values'] = missing_summary
+        # result['Missing Values'] = missing_summary
     except Exception as e:
         pass
     
@@ -768,7 +768,7 @@ def analyze_dataframe(df):
         # Analisis Outliers
         z_scores = df[numerical_columns].apply(zscore)
         outliers = (z_scores.abs() > 2).sum().to_dict()  # Agregat jumlah outliers
-        result['Outliers'] = outliers
+        # result['Outliers'] = outliers
     except Exception as e:
         pass
 
