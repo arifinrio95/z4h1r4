@@ -729,7 +729,7 @@ def analyze_dataframe(df):
         numerical_summary = df[numerical_columns].describe().transpose().to_dict()
         numerical_summary['skewness'] = df[numerical_columns].skew().to_dict()
         numerical_summary['kurtosis'] = df[numerical_columns].kurt().to_dict()
-        result['Numerical Summary'] = numerical_summary
+        # result['Numerical Summary'] = numerical_summary
     except Exception as e:
         pass
 
@@ -741,7 +741,7 @@ def analyze_dataframe(df):
                 'mode': df[col].mode().iloc[0],
                 'frequency': df[col].value_counts().iloc[0]
             } for col in categorical_columns}
-        result['Categorical Summary'] = categorical_summary
+        # result['Categorical Summary'] = categorical_summary
     except Exception as e:
         pass
 
@@ -782,7 +782,7 @@ def analyze_dataframe(df):
     try:
         # Kuantil
         quantiles = df.quantile([0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99]).transpose().to_dict()
-        result['Quantiles'] = quantiles
+        # result['Quantiles'] = quantiles
     except Exception as e:
         pass
 
@@ -1042,7 +1042,7 @@ def main():
             #     st.markdown(request_story_prompt(i))
             st.markdown(request_story_prompt(dict_stats))
             # st.text(request_story_prompt(analyze_dataframe(df)))
-            visualize_analysis(dict_stats)
+            # visualize_analysis(dict_stats)
 
 if __name__ == "__main__":
     main()
