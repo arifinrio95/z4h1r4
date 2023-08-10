@@ -140,7 +140,7 @@ def request_story_prompt(dict_stats):
         {"role": "system", "content": "Aku akan membuat laporan untukmu."},
         {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. 
         Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary.
-        Berikan 1 paragraf kesimpulan yang mudah dipahami."""}
+        Tambahkan 1 paragraf kesimpulan yang mudah dipahami di akhir."""}
     ]
 
     response = openai.ChatCompletion.create(
@@ -715,11 +715,11 @@ def analyze_dataframe(df):
     try:
         # Analisis Shape Dataframe
         shape_summary = {
-            # 'rows': df.shape[0],
+            'rows': df.shape[0],
             'columns': df.shape[1],
             # 'column_names': df.columns.tolist()
         }
-        result['No of Columns'] = shape_summary
+        result['Shape of Data'] = shape_summary
     except Exception as e:
         pass
 
