@@ -145,7 +145,7 @@ def request_story_prompt(dict_stats):
         model="gpt-3.5-turbo-16k",
         messages=messages,
         max_tokens=10000,
-        temperature=0
+        temperature=0.5
     )
     script = response.choices[0].message['content']
 
@@ -710,22 +710,21 @@ def perform_text_analysis(df):
 def analyze_dataframe(df):
     result = {}
 
-    # try:
-    #     # Analisis Shape Dataframe
-    #     shape_summary = {
-    #         'rows': df.shape[0],
-    #         'columns': df.shape[1],
-    #         'column_names': df.columns.tolist()
-    #     }
-    #     result['Shape Data Summary'] = shape_summary
-    # except Exception as e:
-    #     pass
+    try:
+        # Analisis Shape Dataframe
+        shape_summary = {
+            # 'rows': df.shape[0],
+            'columns': df.shape[1],
+            # 'column_names': df.columns.tolist()
+        }
+        result['No of Columns'] = shape_summary
+    except Exception as e:
+        pass
 
     try:
         # Analisis Data Numerik
         numerical_columns = df.select_dtypes(include=['number']).columns
         numerical_summary = df[numerical_columns].describe().transpose().to_dict()
-        numerical_summary['no_of_columns'] = df.shape[1]
         numerical_summary['skewness'] = df[numerical_columns].skew().to_dict()
         numerical_summary['kurtosis'] = df[numerical_columns].kurt().to_dict()
         result['Numerical Summary'] = numerical_summary
