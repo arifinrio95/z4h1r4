@@ -709,7 +709,18 @@ def perform_text_analysis(df):
 # Ekstrak semua deskripsi statistik data
 def analyze_dataframe(df):
     result = {}
-    
+
+    try:
+        # Analisis Shape Dataframe
+        shape_summary = {
+            'rows': df.shape[0],
+            'columns': df.shape[1],
+            'column_names': df.columns.tolist()
+        }
+        result['Shape Data Summary'] = shape_summary
+    except Exception as e:
+        pass
+
     try:
         # Analisis Data Numerik
         numerical_columns = df.select_dtypes(include=['number']).columns
