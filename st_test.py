@@ -857,17 +857,6 @@ def main():
     layout="wide",
     )
 
-    html_button = """
-    <div style="text-align:left;">
-        <a href="#" class="button-link">
-            <button style="text-align:left;">Teks Tombol</button>
-        </a>
-    </div>
-    """
-    
-    # Menyisipkan HTML ke dalam Streamlit
-    st.markdown(html_button, unsafe_allow_html=True)
-
     st.markdown(
         """
         <style>
