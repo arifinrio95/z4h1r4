@@ -728,8 +728,8 @@ def analyze_dataframe(df):
         numerical_columns = df.select_dtypes(include=['number']).columns
         numerical_summary = df[numerical_columns].describe().transpose().to_dict()
         numerical_summary['skewness'] = df[numerical_columns].skew().to_dict()
-        numerical_summary['kurtosis'] = df[numerical_columns].kurt().to_dict()
-        # result['Numerical Summary'] = numerical_summary
+        # numerical_summary['kurtosis'] = df[numerical_columns].kurt().to_dict()
+        result['Numerical Summary'] = numerical_summary
     except Exception as e:
         pass
 
