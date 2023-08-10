@@ -799,7 +799,58 @@ def analyze_dataframe(df):
         pass
 
     return result
-    
+
+def visualize_analysis(result):
+    # Visualisasi Shape
+    shape_data = result['Shape of Data']
+    st.write(f"Data memiliki {shape_data['rows']} baris dan {shape_data['columns']} kolom")
+
+    # Visualisasi Summary Numerik
+    if 'Numerical Summary' in result:
+        numerical_summary = result['Numerical Summary']
+        for col, stats in numerical_summary.items():
+            if col not in ['skewness', 'kurtosis']:
+                fig, ax = plt.subplots(figsize=(10,5))
+                ax.bar(stats.keys(), stats.values())
+                st.pyplot(fig)
+
+    # Visualisasi Missing Values
+    if 'Missing Values' in result:
+        missing_data = result['Missing Values']
+        fig, ax = plt.subplots(figsize=(10,5))
+        ax.bar(missing_data['Missing Values'].keys(), missing_data['Missing Values'].values())
+        st.pyplot(fig)
+
+    # Visualisasi Correlation Matrix
+    if 'Correlation Matrix' in result:
+        correlation_data = pd.DataFrame(result['Correlation Matrix'])
+        fig, ax = plt.subplots(figsize=(10,5))
+        sns.heatmap(correlation_data, ax=ax)
+        st.pyplot(fig)
+
+    # Visualisasi Outliers
+    if 'Outliers' in result:
+        outliers_data = result['Outliers']
+        fig, ax = plt.subplots(figsize=(10,5))
+        ax.bar(outliers_data.keys(), outliers_data.values())
+        st.pyplot(fig)
+
+    # Visualisasi All Possible Aggregations
+    if 'All Possible Aggregations' in result:
+        aggregations_data = result['All Possible Aggregations']
+        for col, stats in aggregations_data.items():
+            fig, ax = plt.subplots(figsize=(10,5))
+            ax.bar(stats.keys(), stats.values())
+            st.pyplot(fig)
+
+    # Visualisasi Quantiles
+    if 'Quantiles' in result:
+        quantiles_data = result['Quantiles']
+        for col, stats in quantiles_data.items():
+            fig, ax = plt.subplots(figsize=(10,5))
+            ax.bar(stats.keys(), stats.values())
+            st.pyplot(fig)
+            
 def main():
     st.set_page_config(
     layout="wide",
@@ -991,6 +1042,7 @@ def main():
             #     st.markdown(request_story_prompt(i))
             st.markdown(request_story_prompt(dict_stats))
             # st.text(request_story_prompt(analyze_dataframe(df)))
+            visualize_analysis(dict_stats)
 
 if __name__ == "__main__":
     main()
