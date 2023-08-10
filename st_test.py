@@ -138,14 +138,14 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
 def request_story_prompt(dict_stats):
     messages = [
         {"role": "system", "content": "Aku akan membuat laporan untukmu."},
-        {"role": "user", "content": f"""Buatkan paragraf naratif yang insightful dan mudah dipahami dari data berikut:  {dict_stats}. Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary."""}
+        {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary."""}
     ]
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
         messages=messages,
         max_tokens=10000,
-        temperature=0.1
+        temperature=0
     )
     script = response.choices[0].message['content']
 
