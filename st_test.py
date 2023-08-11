@@ -734,14 +734,33 @@ def analyze_dataframe(df):
     except Exception as e:
         pass
 
+    # try:
+    #     # Analisis Data Kategorikal
+    #     categorical_columns = df.select_dtypes(include=['object']).columns
+    #     categorical_summary = {col: {
+    #             'unique_categories': df[col].nunique(),
+    #             'mode': df[col].mode().iloc[0],
+    #             'frequency': df[col].value_counts().iloc[0]
+    #         } for col in categorical_columns}
+    #     result['Categorical Summary'] = categorical_summary
+    # except Exception as e:
+    #     pass
     try:
         # Analisis Data Kategorikal
         categorical_columns = df.select_dtypes(include=['object']).columns
-        categorical_summary = {col: {
-                'unique_categories': df[col].nunique(),
-                'mode': df[col].mode().iloc[0],
-                'frequency': df[col].value_counts().iloc[0]
-            } for col in categorical_columns}
+        categorical_summary = {}
+        for col in categorical_columns:
+            unique_values = df[col].nunique()
+            mode_value = df[col].mode().iloc[0]
+            frequency_value = df[col].value_counts().iloc[0]
+            summary = {
+                'unique_categories': unique_values,
+                'mode': mode_value,
+                'frequency': frequency_value
+            }
+            if unique_values > 4:
+                summary['top_5_values'] = df[col].value_counts().nlargest(5).to_dict()
+            categorical_summary[col] = summary
         result['Categorical Summary'] = categorical_summary
     except Exception as e:
         pass
@@ -773,12 +792,22 @@ def analyze_dataframe(df):
     except Exception as e:
         pass
 
+    # try:
+    #     # Agregasi Lengkap untuk Semua Kolom yang Mungkin
+    #     all_aggregations = df.agg(['mean', 'median', 'sum', 'min', 'max', 'std', 'var', 'skew', 'kurt']).transpose().to_dict()
+    #     result['All Possible Aggregations'] = all_aggregations
+    # except Exception as e:
+    #     pass
     try:
         # Agregasi Lengkap untuk Semua Kolom yang Mungkin
         all_aggregations = df.agg(['mean', 'median', 'sum', 'min', 'max', 'std', 'var', 'skew', 'kurt']).transpose().to_dict()
+        for col in categorical_columns:
+            if df[col].nunique() > 4:
+                all_aggregations[col]['top_5_values'] = df[col].value_counts().nlargest(5).to_dict()
         result['All Possible Aggregations'] = all_aggregations
     except Exception as e:
         pass
+
     
     try:
         # Kuantil
@@ -787,6 +816,18 @@ def analyze_dataframe(df):
     except Exception as e:
         pass
 
+    # try:
+    #     # Agregasi Group By untuk Semua Kombinasi Kolom Kategorikal
+    #     groupby_aggregations = {}
+    #     for r in range(1, len(categorical_columns) + 1):
+    #         for subset in combinations(categorical_columns, r):
+    #             group_key = ', '.join(subset)
+    #             group_data = df.groupby(list(subset)).agg(['mean', 'count', 'sum', 'min', 'max'])
+    #             groupby_aggregations[group_key] = group_data.to_dict()
+    #     result['Group By Aggregations'] = groupby_aggregations
+    # except Exception as e:
+    #     pass
+
     try:
         # Agregasi Group By untuk Semua Kombinasi Kolom Kategorikal
         groupby_aggregations = {}
@@ -794,10 +835,17 @@ def analyze_dataframe(df):
             for subset in combinations(categorical_columns, r):
                 group_key = ', '.join(subset)
                 group_data = df.groupby(list(subset)).agg(['mean', 'count', 'sum', 'min', 'max'])
+                
+                for col in subset:
+                    if df[col].nunique() > 4:
+                        top_5_values = df[col].value_counts().nlargest(5).index.tolist()
+                        group_data = group_data.loc[group_data.index.isin(top_5_values, level=col)]
+    
                 groupby_aggregations[group_key] = group_data.to_dict()
         result['Group By Aggregations'] = groupby_aggregations
     except Exception as e:
         pass
+
 
     return result
 
