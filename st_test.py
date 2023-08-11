@@ -141,7 +141,7 @@ def request_story_prompt(dict_stats):
         {"role": "system", "content": "Aku akan membuat laporan untukmu."},
         {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. 
         Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary.
-        Tulis dalam 3000 kata."""}
+        Tulis dalam 3000 kata. Tambahkan kesimpulan dan potensi dari data."""}
     ]
 
     response = openai.ChatCompletion.create(
@@ -945,7 +945,7 @@ def main():
 
         
         
-        st.sidebar.subheader('Ada 4 opsi untuk mengeksplorasi data:')
+        st.sidebar.subheader('Ada 5 opsi untuk mengeksplorasi data:')
         # Tombol 1
         if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
             st.session_state.manual_exploration = True
@@ -982,7 +982,7 @@ def main():
             st.session_state.story_telling = False
 
         # Tombol 5
-        if st.sidebar.button('5. Buat laporan story telling secara otomatis.'):
+        if st.sidebar.button('5. Buat laporan dari data secara otomatis.'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
