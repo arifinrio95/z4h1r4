@@ -1038,7 +1038,7 @@ def main():
             </style>
             """, unsafe_allow_html=True)
             dict_stats = analyze_dataframe(df)
-            st.text(dict_stats)
+            # st.text(dict_stats)
             # for i in dict_stats:
             #     st.markdown(request_story_prompt(i))
             st.markdown(request_story_prompt(dict_stats))
