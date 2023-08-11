@@ -753,17 +753,18 @@ def analyze_dataframe(df):
             unique_values = df[col].nunique()
             mode_value = df[col].mode().iloc[0]
             frequency_value = df[col].value_counts().iloc[0]
+            top_5_values = df[col].value_counts().nlargest(5).to_dict()  # Top 5 most frequent categories
             summary = {
                 'unique_categories': unique_values,
                 'mode': mode_value,
-                'frequency': frequency_value
+                'frequency': frequency_value,
+                'top_5_values': top_5_values
             }
-            if unique_values > 4:
-                summary['top_5_values'] = df[col].value_counts().nlargest(5).to_dict()
             categorical_summary[col] = summary
         result['Categorical Summary'] = categorical_summary
     except Exception as e:
         pass
+
 
     try:
         # Analisis Missing Values
@@ -800,21 +801,14 @@ def analyze_dataframe(df):
     #     pass
     try:
         # Agregasi Lengkap untuk Semua Kolom yang Mungkin
-        all_aggregations = df.agg(['mean', 'median', 'sum', 'min', 'max', 'std', 'var', 'skew', 'kurt']).transpose().to_dict()
-        for col in categorical_columns:
-            if df[col].nunique() > 4:
-                all_aggregations[col]['top_5_values'] = df[col].value_counts().nlargest(5).to_dict()
-        result['All Possible Aggregations'] = all_aggregations
+        all_aggregations = df.agg(['mean', 'median', 'sum', 'min', 'max', 'std', 'var', 'skew', 'kurt']).transpose()
+        top_5_values = {}
+        for metric in all_aggregations.columns:
+            top_5_values[metric] = all_aggregations.nlargest(5, metric)[metric].to_dict()
+        result['All Possible Aggregations'] = top_5_values
     except Exception as e:
         pass
 
-    
-    try:
-        # Kuantil
-        quantiles = df.quantile([0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99]).transpose().to_dict()
-        # result['Quantiles'] = quantiles
-    except Exception as e:
-        pass
 
     # try:
     #     # Agregasi Group By untuk Semua Kombinasi Kolom Kategorikal
@@ -831,20 +825,21 @@ def analyze_dataframe(df):
     try:
         # Agregasi Group By untuk Semua Kombinasi Kolom Kategorikal
         groupby_aggregations = {}
+        metrics = ['mean', 'count', 'sum', 'min', 'max']
         for r in range(1, len(categorical_columns) + 1):
             for subset in combinations(categorical_columns, r):
                 group_key = ', '.join(subset)
-                group_data = df.groupby(list(subset)).agg(['mean', 'count', 'sum', 'min', 'max'])
-                
-                for col in subset:
-                    if df[col].nunique() > 4:
-                        top_5_values = df[col].value_counts().nlargest(5).index.tolist()
-                        group_data = group_data.loc[group_data.index.isin(top_5_values, level=col)]
-    
-                groupby_aggregations[group_key] = group_data.to_dict()
+                group_data = df.groupby(list(subset)).agg(metrics)
+                top_5_group_values = {}
+                for metric in metrics:
+                    for col in group_data.columns.levels[1]:
+                        col_metric = group_data[metric][col]
+                        top_5_group_values[f'{metric}_{col}'] = col_metric.nlargest(5).to_dict()
+                groupby_aggregations[group_key] = top_5_group_values
         result['Group By Aggregations'] = groupby_aggregations
     except Exception as e:
         pass
+
 
 
     return result
