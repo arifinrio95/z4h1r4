@@ -751,9 +751,15 @@ def analyze_dataframe(df):
         categorical_summary = {}
         for col in categorical_columns:
             unique_values = df[col].nunique()
-            mode_value = df[col].mode().iloc[0]
-            frequency_value = df[col].value_counts().iloc[0]
-            top_5_values = df[col].value_counts().nlargest(5).to_dict()  # Top 5 most frequent categories
+            value_counts = df[col].value_counts()
+            if value_counts.nunique() == 1: # If all frequencies are the same
+                mode_value = 'No mode'
+                frequency_value = 'No distinct frequency'
+                top_5_values = 'No top 5 values'
+            else:
+                mode_value = df[col].mode().iloc[0]
+                frequency_value = value_counts.iloc[0]
+                top_5_values = value_counts.nlargest(5).to_dict() # Top 5 most frequent categories
             summary = {
                 'unique_categories': unique_values,
                 'mode': mode_value,
@@ -764,6 +770,7 @@ def analyze_dataframe(df):
         result['Categorical Summary'] = categorical_summary
     except Exception as e:
         pass
+
 
 
     try:
