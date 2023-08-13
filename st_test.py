@@ -972,9 +972,6 @@ def main():
     st.write('Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.')
     st.subheader('Upload your CSV / Excel data:')
     file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
-    uploaded_file_path = "file.csv"
-    with open(uploaded_file_path, "wb") as f:
-        f.write(file.read())
 
     # user_api = st.text_input("Masukkan OpenAI API Key anda: ")
     
@@ -983,6 +980,10 @@ def main():
 
     # try:
     if file is not None:
+        uploaded_file_path = "file.csv"
+        with open(uploaded_file_path, "wb") as f:
+            f.write(file.read())
+            
         df = load_file_auto_delimiter(file)
         st.dataframe(df.head())
 
