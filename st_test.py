@@ -942,9 +942,9 @@ def dtale_func(df):
     components.iframe(dtale_url, height=800)
         
 def main():
-    st.set_page_config(
-    layout="wide",
-    )
+    # st.set_page_config(
+    # layout="wide",
+    # )
 
     st.markdown(
         """
