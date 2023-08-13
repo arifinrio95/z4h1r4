@@ -929,14 +929,25 @@ def autovizz(df):
     # # Tampilkan file HTML dalam aplikasi Streamlit
     # st.components.v1.html(open(report_filename, 'r').read(), width=1000, height=600)
 
-    # Create an AutoViz object
-    av = AutoViz_Class()
+    # # Create an AutoViz object
+    # av = AutoViz_Class()
     
-    # Visualize the data
-    av.plot(df, show_layout=False)
+    # # Visualize the data
+    # av.plot(df, show_layout=False)
     
-    # Display the visualization in Streamlit
-    st.pyplot(av.viz)
+    # # Display the visualization in Streamlit
+    # st.pyplot(av.viz)
+
+    # Create an instance of AutoViz_Class
+    AV = AutoViz_Class()
+    
+    # Generate visualizations
+    report = AV.AutoViz(filename='', dfte=df, verbose=0)
+
+    # Display the AutoViz-generated images using Streamlit
+    for plot_name in report['Chart']:
+        image = Image.open(plot_name + '.png')
+        st.image(image, caption=plot_name, use_column_width=True)
 
 # Ini adalah hack untuk membiarkan kita menjalankan D-Tale dalam Streamlit
 # dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
