@@ -929,7 +929,7 @@ def autovizz(df):
 # dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
 # dtale_app.app.jinja_env = dtale_app.JINJA2_ENV
 
-def dtale(df):
+def dtale_func(df):
     st.title('D-Tale Reporting')
     # st.write("Menggunakan D-Tale untuk Analisis Data")
     st.write(df.head())
@@ -1045,7 +1045,7 @@ def main():
             # st.markdown("[Klik di sini untuk mempelajari lebih lanjut.](https://github.com/Kanaries/pygwalker)")
             # Jika tombol diklik, gunakan PyGWalker
             # walker = pyg.walk(df, env='Streamlit')
-            dtale(df)
+            dtale_func(df)
 
         if st.session_state.get('auto_exploration', False):
             # st.subheader("Pandas Profiling Report")
