@@ -932,19 +932,14 @@ def dtale_func(df):
     # dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
     # dtale_app.app.jinja_env = dtale_app.JINJA2_ENV
     st.title('D-Tale Reporting')
-    # st.write("Menggunakan D-Tale untuk Analisis Data")
-    st.write(df.head())
-
-    # Memulai D-Tale
-    # d = dtale.show(df)
-    # d.main_url()  # Ini membuka D-Tale dalam tab baru
-
-    # st.write(f'D-Tale sedang berjalan, kunjungi [link berikut]({d._main_url}) untuk melihat analisisnya.')
-    # Memulai D-Tale
+    # Menjalankan Dtale
     d = dtale.show(df)
-    # Menggunakan iframe untuk menyematkan D-Tale dalam Streamlit
-    # st.markdown(f'<iframe src="{d._main_url}" width="100%" height="500px"></iframe>', unsafe_allow_html=True)
-    st.write(f'D-Tale sedang berjalan, kunjungi [link berikut]({d._main_url}) untuk melihat analisisnya.')
+    
+    # Mendapatkan URL Dtale
+    dtale_url = d.main_url()
+    
+    # Menanamkan Dtale ke dalam Streamlit menggunakan iframe
+    components.iframe(dtale_url, height=800)
         
 def main():
     st.set_page_config(
