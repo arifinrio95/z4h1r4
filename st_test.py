@@ -554,12 +554,15 @@ def perform_linear_regression(df):
 
 # Function to perform Logistic Regression
 def perform_logistic_regression(df):
+    left_column, right_column = st.columns(2)
     st.subheader("Logistic Regression")
-    X_columns = st.multiselect('Select Feature Columns for Logistic Regression:', df.select_dtypes(include=['number']).columns.tolist())
-    y_column = st.selectbox('Select Target Column for Logistic Regression:', df.select_dtypes(include=['object']).columns.tolist())
-    test_size = st.slider('Select Test Size for Train-Test Split for Logistic Regression:', 0.1, 0.5, 0.2)
+    numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
+    X_columns = left_column.multiselect('Select Feature Columns for Logistic Regression:', numeric_columns, default=numeric_columns)
+    # X_columns = st.multiselect('Select Feature Columns for Logistic Regression:', df.select_dtypes(include=['number']).columns.tolist())
+    y_column = right_column.selectbox('Select Target Column for Logistic Regression:', df.select_dtypes(include=['object']).columns.tolist())
+    test_size = left_column.slider('Select Test Size for Train-Test Split for Logistic Regression:', 0.1, 0.5, 0.2)
 
-    penalty_option = st.selectbox('Select Penalty Type:', ['l2', 'l1'])
+    penalty_option = right_column.selectbox('Select Penalty Type:', ['l2', 'l1'])
     solver_option = 'saga' if penalty_option == 'l1' else 'newton-cg'
 
     X = df[X_columns]
