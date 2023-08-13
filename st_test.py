@@ -113,14 +113,12 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         3. Respond with scripts without any text. 
         4. Respond in plain text code. 
         5. Don’t start your response with “Sure, here are”. 
-        6. Start your response with “import”. 
-        7. Give and show with streamlit the title for every steps.
-        8. Print with st.write the explanation for every syntax.
-        9. Don’t give me any explanation about the script. Response only with python block.
-        10. Do not reload the dataframe.
-        11. Use Try and Except for each syntax.
-        12. Print and show the detail step you did.
-        13. Dont forget to show the steps with st.write."""}
+        6. Start your response with “import”.
+        7. Don’t give me any explanation about the script. Response only with python code in a plain text.
+        8. Do not reload the dataframe.
+        9. Use Try and Except for each syntax.
+        10. Print and show the detail step you did.
+        11. Dont forget to show the steps with st.write."""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
     
