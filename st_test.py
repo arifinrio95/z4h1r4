@@ -35,6 +35,7 @@ from scipy.stats import zscore
 from autoviz.AutoViz_Class import AutoViz_Class
 import dtale
 import dtale.app as dtale_app
+import streamlit.components.v1 as components
 
 hide_menu = """
 <style>
@@ -938,16 +939,10 @@ def autovizz(df):
     # # Display the visualization in Streamlit
     # st.pyplot(av.viz)
 
-    # Create an instance of AutoViz_Class
-    AV = AutoViz_Class()
-    
-    # Generate visualizations
-    report = AV.AutoViz(filename='', dfte=df, verbose=0)
-    st.write(report)
-    # Display the AutoViz-generated images using Streamlit
-    for plot_name in report['Chart']:
-        image = Image.open(plot_name + '.png')
-        st.image(image, caption=plot_name, use_column_width=True)
+    HtmlFile = open("test_report.html", 'r', encoding='utf-8')
+    source_code = HtmlFile.read() 
+    #print(source_code)
+    components.html(source_code)
 
 # Ini adalah hack untuk membiarkan kita menjalankan D-Tale dalam Streamlit
 # dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
