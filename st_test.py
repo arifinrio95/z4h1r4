@@ -926,8 +926,8 @@ def autovizz(df):
     )
 
 # Ini adalah hack untuk membiarkan kita menjalankan D-Tale dalam Streamlit
-dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
-dtale_app.app.jinja_env = dtale_app.JINJA2_ENV
+# dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
+# dtale_app.app.jinja_env = dtale_app.JINJA2_ENV
 
 def dtale(df):
     st.title('D-Tale Reporting')
