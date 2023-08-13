@@ -165,12 +165,13 @@ def show_descriptive_statistics(df):
 
 # Function to display a histogram
 def show_histogram(df):
+    left_column, right_column = st.columns(2)
     # Selecting the numeric column
     column = st.selectbox('Select a Numeric Column for Histogram:', df.select_dtypes(include=['number']).columns.tolist())
     
     # Customization options
-    bins = st.slider('Select Number of Bins:', 5, 50, 15) # Default is 15 bins
-    kde = st.checkbox('Include Kernel Density Estimate (KDE)?', value=True) # Default is to include KDE
+    bins = left_column.slider('Select Number of Bins:', 5, 50, 15) # Default is 15 bins
+    kde = right_column.checkbox('Include Kernel Density Estimate (KDE)?', value=True) # Default is to include KDE
     color = st.color_picker('Pick a color for the bars:', '#3498db') # Default is a shade of blue
     
     # Plotting the histogram using Seaborn
@@ -182,12 +183,13 @@ def show_histogram(df):
 
 # Function to display a box plot
 def show_box_plot(df):
+    left_column, middle_column, right_column = st.columns(3)
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
-    y_column = st.selectbox('Select a Numeric Column for Y-axis:', numeric_columns)
-    x_column = st.selectbox('Select a Categorical Column for X-axis (Optional):', [None] + categorical_columns)
+    y_column = left_column.selectbox('Select a Numeric Column for Y-axis:', numeric_columns)
+    x_column = middle_column.selectbox('Select a Categorical Column for X-axis (Optional):', [None] + categorical_columns)
 
-    show_swarm = st.checkbox('Show Swarm Plot?')
+    show_swarm = right_column.checkbox('Show Swarm Plot?')
     color_option = st.color_picker('Pick a Color for Box Plot')
     cat_color_option = st.color_picker('Pick a Color for Categorical Box Plot', '#95a5a6') if x_column else None
 
@@ -227,14 +229,15 @@ def show_box_plot(df):
 
 # Function to display scatter plot
 def show_scatter_plot(df):
+    left_column, middle_column, right_column = st.columns(3)
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
-    col1 = st.selectbox('Select the first Numeric Column:', numeric_columns)
-    col2 = st.selectbox('Select the second Numeric Column:', numeric_columns)
-    hue_col = st.selectbox('Select a Categorical Column for Coloring (Optional):', [None] + categorical_columns)
+    col1 = left_column.selectbox('Select the first Numeric Column:', numeric_columns)
+    col2 = middle_column.selectbox('Select the second Numeric Column:', numeric_columns)
+    hue_col = right_column.selectbox('Select a Categorical Column for Coloring (Optional):', [None] + categorical_columns)
     size_option = st.slider('Select Point Size:', min_value=1, max_value=10, value=5)
-    show_regression_line = st.checkbox('Show Regression Line?')
-    annotate_points = st.checkbox('Annotate Points?')
+    show_regression_line = left_column.checkbox('Show Regression Line?')
+    annotate_points = middle_column.checkbox('Annotate Points?')
 
     fig, ax = plt.subplots(figsize=(10, 6))
 
@@ -469,13 +472,14 @@ def show_bar_plot(df):
 
 # Function to perform pie chart for categorical data
 def show_pie_chart(df):
+    left_column, right_column = st.columns(2)
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
-    column = st.selectbox('Select a Categorical Column for Pie Chart:', categorical_columns)
-    color_palette = st.selectbox('Choose a Color Palette:', sns.palettes.SEABORN_PALETTES.keys())
-    show_percentage = st.checkbox('Show Percentage', value=True)
-    show_labels = st.checkbox('Show Labels', value=True)
-    explode_option = st.slider('Explode Segments:', 0.0, 0.5, 0.0)
-    figsize_option = st.slider('Size of Pie Chart:', 5, 20, 10)
+    column = left_column.selectbox('Select a Categorical Column for Pie Chart:', categorical_columns)
+    color_palette = right_column.selectbox('Choose a Color Palette:', sns.palettes.SEABORN_PALETTES.keys())
+    show_percentage = left_column.checkbox('Show Percentage', value=True)
+    show_labels = right_column.checkbox('Show Labels', value=True)
+    explode_option = left_column.slider('Explode Segments:', 0.0, 0.5, 0.0)
+    figsize_option = right_column.slider('Size of Pie Chart:', 5, 20, 10)
 
     labels = df[column].value_counts().index
     sizes = df[column].value_counts().values
