@@ -183,6 +183,7 @@ def show_histogram(df):
 
 # Function to display a box plot
 def show_box_plot(df):
+    st.subheader("Box Plot")
     left_column, middle_column, right_column = st.columns(3)
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
@@ -229,6 +230,7 @@ def show_box_plot(df):
 
 # Function to display scatter plot
 def show_scatter_plot(df):
+    st.subheader("Scatter Plot")
     left_column, middle_column, right_column = st.columns(3)
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
@@ -263,6 +265,7 @@ def show_scatter_plot(df):
 
 # Function to display correlation matrix
 def show_correlation_matrix(df):
+    st.subheader("Correlation Matrix")
     # Select only numerical columns
     numerical_df = df.select_dtypes(include=['number'])
 
@@ -282,6 +285,7 @@ def show_correlation_matrix(df):
 
 # Function to perform PCA
 def perform_pca(df):
+    st.subheader("Pricipal COmponent Analysis (PCA)")
     numeric_df = df.select_dtypes(include=['number'])
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
 
@@ -349,6 +353,7 @@ def show_missing_data(df):
 
 # Function to show outliers using Z-score
 def show_outliers(df):
+    st.subheader("Outliers Detection")
     column = st.selectbox('Select a Numeric Column for Outlier Detection:', df.select_dtypes(include=['number']).columns.tolist())
     values = df[column].dropna()
     z_scores = np.abs(stats.zscore(values))
@@ -379,6 +384,7 @@ def show_outliers(df):
 
 # Function to perform Shapiro-Wilk normality test
 def perform_shapiro_wilk_test(df):
+    st.subheader("Normality Test")
     column = st.selectbox('Select a Numeric Column for Normality Testing:', df.select_dtypes(include=['number']).columns.tolist())
     data = df[column].dropna()
     _, p_value = stats.shapiro(data)
@@ -405,6 +411,7 @@ def perform_shapiro_wilk_test(df):
     st.pyplot(plt)
 
 def show_bar_plot(df):
+    st.subheader("Bar Plot")
     left_column, right_column = st.columns(2)
 
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
@@ -472,6 +479,7 @@ def show_bar_plot(df):
 
 # Function to perform pie chart for categorical data
 def show_pie_chart(df):
+    st.subheader("Pie Chart")
     left_column, right_column = st.columns(2)
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
     column = left_column.selectbox('Select a Categorical Column for Pie Chart:', categorical_columns)
@@ -496,6 +504,7 @@ def show_pie_chart(df):
 
 # Function to perform Linear Regression
 def perform_linear_regression(df):
+    st.subheader("Linear Regression")
     X_columns = st.multiselect('Select Feature Columns:', df.select_dtypes(include=['number']).columns.tolist())
     if not X_columns:  # If no features are selected
         st.warning('Please select feature columns.')
@@ -537,6 +546,7 @@ def perform_linear_regression(df):
 
 # Function to perform Logistic Regression
 def perform_logistic_regression(df):
+    st.subheader("Logistic Regression")
     X_columns = st.multiselect('Select Feature Columns for Logistic Regression:', df.select_dtypes(include=['number']).columns.tolist())
     y_column = st.selectbox('Select Target Column for Logistic Regression:', df.select_dtypes(include=['object']).columns.tolist())
     test_size = st.slider('Select Test Size for Train-Test Split for Logistic Regression:', 0.1, 0.5, 0.2)
@@ -580,6 +590,7 @@ def perform_logistic_regression(df):
 
 # Function to perform K-Means Clustering
 def perform_k_means_clustering(df):
+    st.subheader("K-Means Clustering")
     # Pilih fitur numerik
     features = st.multiselect('Select features for K-Means clustering:', df.select_dtypes(include=['number']).columns.tolist())
     if not features or len(features) < 2:
@@ -669,6 +680,7 @@ def perform_k_means_clustering(df):
 
 # Function to perform Time-Series Analysis
 def perform_time_series_analysis(df):
+    st.subheader("Time Series Analysis")
     time_column = st.selectbox('Select Time Column:', df.select_dtypes(include=['datetime']).columns.tolist())
     if not time_column:  # If no features are selected
         st.warning('Please select column for time.')
@@ -688,6 +700,7 @@ def perform_time_series_analysis(df):
 
 # Function to perform Hierarchical Clustering
 def perform_hierarchical_clustering(df):
+    st.subheader("Hierarchical Clustering")
     # Select numerical columns or appropriate features
     X = df.select_dtypes(include=['number'])
     
@@ -709,6 +722,7 @@ def perform_hierarchical_clustering(df):
 
 # Function to perform Text Analysis using Word Cloud
 def perform_text_analysis(df):
+    st.subheader("Text Analysis")
     text_column = st.selectbox('Select a Text Column for Word Cloud:', df.select_dtypes(include=['object']).columns.tolist())
     text_data = " ".join(text for text in df[text_column])
     wordcloud = WordCloud().generate(text_data)
