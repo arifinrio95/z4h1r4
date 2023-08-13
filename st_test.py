@@ -905,18 +905,24 @@ def visualize_analysis(result):
             fig, ax = plt.subplots(figsize=(10,5))
             ax.bar(stats.keys(), stats.values())
             st.pyplot(fig)
-def autoviz_app(uploaded_file_path):
+def autoviz_app(df):
+    # Membaca file yang diunggah sebagai DataFrame pandas
+    # df = pd.read_csv(uploaded_file)
+    
     # Membuat objek Autoviz
     AV = AutoViz_Class()
-
-    # Membuat visualisasi; AutoViz menyimpan plot dalam file secara lokal
-    df = AV.AutoViz(uploaded_file_path)
-
-    # Menampilkan plot yang disimpan oleh Autoviz
-    for img_file in os.listdir():
-        if img_file.endswith(".png"):
-            st.image(img_file)
-            os.remove(img_file) # Menghapus file setelah ditampilkan
+    
+    # Menjalankan Autoviz pada DataFrame dan menyimpan plot dalam direktori saat ini
+    report = AV.AutoViz(
+        "",
+        dfte=df,
+        header=0,
+        verbose=0,
+        lowess=False,
+        chart_format="png",
+        max_rows_analyzed=150000,
+        max_cols_analyzed=30
+    )
 
 # Ini adalah hack untuk membiarkan kita menjalankan D-Tale dalam Streamlit
 # dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
@@ -1060,8 +1066,8 @@ def main():
             # autovizz(df)
             # AV = AutoViz_Class()
             # dft = AV.AutoViz(df)
-            autoviz_app(uploaded_file_path)
-            os.remove(uploaded_file_path) # Menghapus file sementara
+            autoviz_app(df)
+            # os.remove(uploaded_file_path) # Menghapus file sementara
 
         if st.session_state.get('show_analisis_lanjutan', False):
             st.subheader("Analisis Lanjutan")
