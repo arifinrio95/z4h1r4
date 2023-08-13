@@ -938,7 +938,7 @@ def dtale(df):
     # d = dtale.show(df)
     # d.main_url()  # Ini membuka D-Tale dalam tab baru
 
-    st.write(f'D-Tale sedang berjalan, kunjungi [link berikut]({d._main_url}) untuk melihat analisisnya.')
+    # st.write(f'D-Tale sedang berjalan, kunjungi [link berikut]({d._main_url}) untuk melihat analisisnya.')
     # Memulai D-Tale
     d = dtale.show(df)
     # Menggunakan iframe untuk menyematkan D-Tale dalam Streamlit
