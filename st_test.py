@@ -901,7 +901,29 @@ def visualize_analysis(result):
             fig, ax = plt.subplots(figsize=(10,5))
             ax.bar(stats.keys(), stats.values())
             st.pyplot(fig)
-            
+def app(df):
+    st.title('Autovizz di Streamlit')
+
+    file = st.file_uploader("Upload file CSV", type=['csv'])
+    if file:
+        st.write("Menggunakan Autovizz untuk Visualisasi Data")
+        # st.write(df.head())
+
+        AV = AutoViz_Class()
+        sep = ","
+        dft = AV.AutoViz(
+            filename='',
+            sep=sep,
+            depVar='',
+            dfte=df,
+            header=0,
+            verbose=1,
+            lowess=False,
+            chart_format='svg',
+            max_rows_analyzed=150000,
+            max_cols_analyzed=30,
+        )
+        
 def main():
     st.set_page_config(
     layout="wide",
@@ -963,7 +985,7 @@ def main():
 
         
         # Tombol 2
-        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan Pandas Profiling)'):
+        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan AutoVizz)'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = True
             st.session_state.show_analisis_lanjutan = False
@@ -1005,12 +1027,15 @@ def main():
             walker = pyg.walk(df, env='Streamlit')
 
         if st.session_state.get('auto_exploration', False):
-            st.subheader("Pandas Profiling Report")
+            # st.subheader("Pandas Profiling Report")
             # Create Pandas Profiling Report
-            pr = ProfileReport(df, explorative=True)
+            # pr = ProfileReport(df, explorative=True)
         
             # Display the report
-            st_profile_report(pr)
+            # st_profile_report(pr)
+
+            st.subheader("Auto Visualizations")
+            app(df)
 
         if st.session_state.get('show_analisis_lanjutan', False):
             st.subheader("Analisis Lanjutan")
