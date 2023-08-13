@@ -465,7 +465,7 @@ def show_bar_plot(df):
     plt.xlabel('Value' if y_column else 'Count', fontsize=12)
     plt.ylabel(column, fontsize=12)
     sns.despine(left=True, bottom=True)
-    right_column.pyplot(plt)
+    st.pyplot(plt)
 
 # Function to perform pie chart for categorical data
 def show_pie_chart(df):
