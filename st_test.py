@@ -167,12 +167,12 @@ def show_descriptive_statistics(df):
 def show_histogram(df):
     left_column, right_column = st.columns(2)
     # Selecting the numeric column
-    column = st.selectbox('Select a Numeric Column for Histogram:', df.select_dtypes(include=['number']).columns.tolist())
+    column = left_column.selectbox('Select a Numeric Column for Histogram:', df.select_dtypes(include=['number']).columns.tolist())
     
     # Customization options
-    bins = left_column.slider('Select Number of Bins:', 5, 50, 15) # Default is 15 bins
-    kde = right_column.checkbox('Include Kernel Density Estimate (KDE)?', value=True) # Default is to include KDE
-    color = st.color_picker('Pick a color for the bars:', '#3498db') # Default is a shade of blue
+    bins = right_column.slider('Select Number of Bins:', 5, 50, 15) # Default is 15 bins
+    kde = left_column.checkbox('Include Kernel Density Estimate (KDE)?', value=True) # Default is to include KDE
+    color = right_column.color_picker('Pick a color for the bars:', '#3498db') # Default is a shade of blue
     
     # Plotting the histogram using Seaborn
     plt.figure(figsize=(10, 5))
