@@ -1047,25 +1047,25 @@ def main():
         
         st.sidebar.subheader('Ada 5 opsi untuk mengeksplorasi data:')
         # Tombol 1
-        if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan D-Tale)'):
-            st.session_state.manual_exploration = True
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
+        # if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan D-Tale)'):
+        #     st.session_state.manual_exploration = True
+        #     st.session_state.auto_exploration = False
+        #     st.session_state.show_analisis_lanjutan = False
+        #     st.session_state.show_natural_language_exploration = False
+        #     st.session_state.story_telling = False
 
         
-        # Tombol 2
-        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan AutoViz)'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = True
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
+        # # Tombol 2
+        # if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan AutoViz)'):
+        #     st.session_state.manual_exploration = False
+        #     st.session_state.auto_exploration = True
+        #     st.session_state.show_analisis_lanjutan = False
+        #     st.session_state.show_natural_language_exploration = False
+        #     st.session_state.story_telling = False
 
         
         # Tombol 3
-        if st.sidebar.button('3. Analisa tingkat lanjutan.'):
+        if st.sidebar.button('3. Auto Visualization by Datasans'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = True
@@ -1090,28 +1090,28 @@ def main():
             st.session_state.story_telling = True
 
         
-        if st.session_state.get('manual_exploration', False):
-            st.subheader("D-Tale")
-            # st.write("PyGWalker adalah pustaka Python untuk analisis visual dengan stye mirip Tableau, memungkinkan eksplorasi data dengan drag and drop seperti Tableau.")
-            # st.markdown("[Klik di sini untuk mempelajari lebih lanjut.](https://github.com/Kanaries/pygwalker)")
-            # Jika tombol diklik, gunakan PyGWalker
-            # walker = pyg.walk(df, env='Streamlit')
-            dtale_func(df)
+        # if st.session_state.get('manual_exploration', False):
+        #     st.subheader("D-Tale")
+        #     # st.write("PyGWalker adalah pustaka Python untuk analisis visual dengan stye mirip Tableau, memungkinkan eksplorasi data dengan drag and drop seperti Tableau.")
+        #     # st.markdown("[Klik di sini untuk mempelajari lebih lanjut.](https://github.com/Kanaries/pygwalker)")
+        #     # Jika tombol diklik, gunakan PyGWalker
+        #     # walker = pyg.walk(df, env='Streamlit')
+        #     dtale_func(df)
 
-        if st.session_state.get('auto_exploration', False):
-            # st.subheader("Pandas Profiling Report")
-            # Create Pandas Profiling Report
-            # pr = ProfileReport(df, explorative=True)
+        # if st.session_state.get('auto_exploration', False):
+        #     # st.subheader("Pandas Profiling Report")
+        #     # Create Pandas Profiling Report
+        #     # pr = ProfileReport(df, explorative=True)
         
-            # Display the report
-            # st_profile_report(pr)
+        #     # Display the report
+        #     # st_profile_report(pr)
 
-            st.subheader("Auto Visualizations")
-            # autovizz(df)
-            # AV = AutoViz_Class()
-            # dft = AV.AutoViz(df)
-            autoviz_app(df)
-            # os.remove(uploaded_file_path) # Menghapus file sementara
+        #     st.subheader("Auto Visualizations")
+        #     # autovizz(df)
+        #     # AV = AutoViz_Class()
+        #     # dft = AV.AutoViz(df)
+        #     autoviz_app(df)
+        #     # os.remove(uploaded_file_path) # Menghapus file sementara
 
         if st.session_state.get('show_analisis_lanjutan', False):
             st.subheader("Analisis Lanjutan")
