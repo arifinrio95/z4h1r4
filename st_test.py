@@ -943,7 +943,7 @@ def autovizz(df):
     
     # Generate visualizations
     report = AV.AutoViz(filename='', dfte=df, verbose=0)
-
+    st.write(report)
     # Display the AutoViz-generated images using Streamlit
     for plot_name in report['Chart']:
         image = Image.open(plot_name + '.png')
