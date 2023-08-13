@@ -424,7 +424,7 @@ def show_bar_plot(df):
     aggregation_method = None
 
     if chart_type != 'Single':
-        y_column = left_column.selectbox('Select a Numeric Column:', numeric_columns, default=numeric_columns[0])
+        y_column = left_column.selectbox('Select a Numeric Column:', numeric_columns, index=0)
         aggregation_method = right_column.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min'])
 
     aggregation_methods = {
