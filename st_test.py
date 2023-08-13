@@ -33,7 +33,6 @@ import pygwalker as pyg
 from itertools import chain, combinations
 from scipy.stats import zscore
 from autoviz.AutoViz_Class import AutoViz_Class
-import autoviz as av
 import dtale
 import dtale.app as dtale_app
 
@@ -931,7 +930,7 @@ def autovizz(df):
     # st.components.v1.html(open(report_filename, 'r').read(), width=1000, height=600)
 
     # Create an AutoViz object
-    av = av.AutoViz_Class()
+    av = AutoViz_Class()
     
     # Visualize the data
     av.plot(df, show_layout=False)
