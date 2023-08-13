@@ -33,6 +33,7 @@ import pygwalker as pyg
 from itertools import chain, combinations
 from scipy.stats import zscore
 from autoviz.AutoViz_Class import AutoViz_Class
+import autoviz as av
 import dtale
 import dtale.app as dtale_app
 
