@@ -531,7 +531,7 @@ def show_pie_chart(df):
 # Function to perform Linear Regression
 def perform_linear_regression(df):
     st.subheader("Linear Regression")
-    X_columns = st.multiselect('Select Feature Columns:', df.select_dtypes(include=['number']).columns.tolist())
+    X_columns = st.multiselect('Select Feature Columns:', df.select_dtypes(include=['number']).columns.tolist(), default=[numeric_columns[0]])
     if not X_columns:  # If no features are selected
         st.warning('Please select feature columns.')
         return
@@ -576,7 +576,7 @@ def perform_logistic_regression(df):
     
     left_column, right_column = st.columns(2)
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
-    X_columns = left_column.multiselect('Select Feature Columns for Logistic Regression:', numeric_columns, index=0)
+    X_columns = left_column.multiselect('Select Feature Columns for Logistic Regression:', numeric_columns, default=[numeric_columns[0]])
     # X_columns = st.multiselect('Select Feature Columns for Logistic Regression:', df.select_dtypes(include=['number']).columns.tolist())
     y_column = right_column.selectbox('Select Target Column for Logistic Regression:', df.select_dtypes(include=['object']).columns.tolist())
     test_size = left_column.slider('Select Test Size for Train-Test Split for Logistic Regression:', 0.1, 0.5, 0.2)
