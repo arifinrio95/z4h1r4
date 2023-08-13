@@ -910,7 +910,7 @@ def autovizz(df):
 
     AV = AutoViz_Class()
     dft = AV.AutoViz(df)
-    # st.write(dft)
+    st.write(dft)
 
 # Ini adalah hack untuk membiarkan kita menjalankan D-Tale dalam Streamlit
 # dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
