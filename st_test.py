@@ -1077,7 +1077,7 @@ def main():
             # Display the report
             # st_profile_report(pr)
 
-            # st.subheader("Auto Visualizations")
+            st.subheader("Auto Visualizations")
             # autovizz(df)
 
         if st.session_state.get('show_analisis_lanjutan', False):
