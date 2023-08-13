@@ -942,7 +942,8 @@ def dtale_func(df):
     # Memulai D-Tale
     d = dtale.show(df)
     # Menggunakan iframe untuk menyematkan D-Tale dalam Streamlit
-    st.markdown(f'<iframe src="{d._main_url}" width="100%" height="500px"></iframe>', unsafe_allow_html=True)
+    # st.markdown(f'<iframe src="{d._main_url}" width="100%" height="500px"></iframe>', unsafe_allow_html=True)
+    st.write(f'D-Tale sedang berjalan, kunjungi [link berikut]({d._main_url}) untuk melihat analisisnya.')
         
 def main():
     st.set_page_config(
