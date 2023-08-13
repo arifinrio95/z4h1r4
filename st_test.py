@@ -1046,7 +1046,9 @@ def main():
             # st_profile_report(pr)
 
             st.subheader("Auto Visualizations")
-            autovizz(df)
+            # autovizz(df)
+            AV = AutoViz_Class()
+            dft = AV.AutoViz(df)
 
         if st.session_state.get('show_analisis_lanjutan', False):
             st.subheader("Analisis Lanjutan")
