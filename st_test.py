@@ -402,17 +402,19 @@ def perform_shapiro_wilk_test(df):
     st.pyplot(plt)
 
 def show_bar_plot(df):
+    left_column, right_column = st.beta_columns(2)
+
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
-    column = st.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
-    chart_type = st.selectbox('Select Chart Type:', ['Single', 'Grouped', 'Stacked', '100% Stacked'])
+    column = left_column.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
+    chart_type = right_column.selectbox('Select Chart Type:', ['Single', 'Grouped', 'Stacked', '100% Stacked'])
     y_column = None
     aggregation_method = None
 
     if chart_type != 'Single':
-        y_column = st.selectbox('Select a Numeric Column:', numeric_columns)
-        aggregation_method = st.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min'])
-    
+        y_column = left_column.selectbox('Select a Numeric Column:', numeric_columns)
+        aggregation_method = right_column.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min'])
+
     aggregation_methods = {
         'sum': np.sum,
         'mean': np.mean,
@@ -422,9 +424,9 @@ def show_bar_plot(df):
     }
     aggregation_func = aggregation_methods[aggregation_method] if aggregation_method else None
 
-    orientation = st.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
-    color_option = st.selectbox('Select Bar Color:', sns.color_palette().as_hex())
-    sort_option = st.selectbox('Sort By:', ['None', 'Value', 'Category'])
+    orientation = left_column.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
+    color_option = right_column.selectbox('Select Bar Color:', sns.color_palette().as_hex())
+    sort_option = left_column.selectbox('Sort By:', ['None', 'Value', 'Category'])
     order = None
     if sort_option == 'Value' and y_column:
         order = df.groupby(column).agg({y_column: aggregation_method}).sort_values(by=y_column, ascending=False).index
@@ -441,8 +443,6 @@ def show_bar_plot(df):
             sns.countplot(x=column, data=df, order=order, color=color_option)
         elif orientation == 'Horizontal':
             sns.countplot(y=column, data=df, order=order, color=color_option)
-
-    # Continue with other chart types
     else:
         if aggregation_method == 'count':
             data_to_plot = df.groupby(column).size().reset_index(name=y_column)
@@ -465,7 +465,7 @@ def show_bar_plot(df):
     plt.xlabel('Value' if y_column else 'Count', fontsize=12)
     plt.ylabel(column, fontsize=12)
     sns.despine(left=True, bottom=True)
-    st.pyplot()
+    st.pyplot(plt)
 
 # Function to perform pie chart for categorical data
 def show_pie_chart(df):
