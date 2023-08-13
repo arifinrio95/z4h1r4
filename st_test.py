@@ -907,27 +907,36 @@ def visualize_analysis(result):
 def autovizz(df):
     st.title('Autovizz Reporting')
 
-    AV = AutoViz_Class()
+    # AV = AutoViz_Class()
 
-    # Simpan grafik ke file
-    report_filename = "autovizz_report.html"
-    dft = AV.AutoViz(
-        filename='',
-        sep=',',
-        depVar='',
-        dfte=df,
-        header=0,
-        verbose=1,
-        lowess=False,
-        chart_format='svg',
-        max_rows_analyzed=150000,
-        max_cols_analyzed=30,
-        outdir=".", # Setel direktori tempat file akan disimpan
-        name=report_filename # Setel nama file
-    )
+    # # Simpan grafik ke file
+    # report_filename = "autovizz_report.html"
+    # dft = AV.AutoViz(
+    #     filename='',
+    #     sep=',',
+    #     depVar='',
+    #     dfte=df,
+    #     header=0,
+    #     verbose=1,
+    #     lowess=False,
+    #     chart_format='svg',
+    #     max_rows_analyzed=150000,
+    #     max_cols_analyzed=30,
+    #     outdir=".", # Setel direktori tempat file akan disimpan
+    #     name=report_filename # Setel nama file
+    # )
 
-    # Tampilkan file HTML dalam aplikasi Streamlit
-    st.components.v1.html(open(report_filename, 'r').read(), width=1000, height=600)
+    # # Tampilkan file HTML dalam aplikasi Streamlit
+    # st.components.v1.html(open(report_filename, 'r').read(), width=1000, height=600)
+
+    # Create an AutoViz object
+    av = av.AutoViz_Class()
+    
+    # Visualize the data
+    av.plot(df, show_layout=False)
+    
+    # Display the visualization in Streamlit
+    st.pyplot(av.viz)
 
 # Ini adalah hack untuk membiarkan kita menjalankan D-Tale dalam Streamlit
 # dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
