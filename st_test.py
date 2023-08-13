@@ -191,13 +191,17 @@ def show_box_plot(df):
     x_column = middle_column.selectbox('Select a Categorical Column for X-axis (Optional):', [None] + categorical_columns)
 
     show_swarm = right_column.checkbox('Show Swarm Plot?')
-    color_option = st.color_picker('Pick a Color for Box Plot')
-    cat_color_option = st.color_picker('Pick a Color for Categorical Box Plot', '#95a5a6') if x_column else None
+
+    if x_column:
+        cat_palette_option = st.selectbox('Choose a color palette for Categorical Box Plot:', sns.palettes.SEABORN_PALETTES)
+        cat_palette = sns.color_palette(cat_palette_option, len(df[x_column].unique()))
+    else:
+        color_option = st.color_picker('Pick a Color for Box Plot', '#add8e6') # Default light blue color
 
     fig, ax = plt.subplots(figsize=(10, 6))
 
     if x_column:
-        sns.boxplot(x=x_column, y=y_column, data=df, ax=ax, color=cat_color_option)
+        sns.boxplot(x=x_column, y=y_column, data=df, ax=ax, palette=cat_palette)
     else:
         sns.boxplot(x=x_column, y=y_column, data=df, ax=ax, color=color_option)
 
@@ -226,16 +230,14 @@ def show_box_plot(df):
 
     st.pyplot(fig)
 
-
-
 # Function to display scatter plot
 def show_scatter_plot(df):
     st.subheader("Scatter Plot")
     left_column, middle_column, right_column = st.columns(3)
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
-    col1 = left_column.selectbox('Select the first Numeric Column:', numeric_columns)
-    col2 = middle_column.selectbox('Select the second Numeric Column:', numeric_columns)
+    col1 = left_column.selectbox('Select the first Numeric Column:', numeric_columns, default=numeric_columns[0])
+    col2 = middle_column.selectbox('Select the second Numeric Column:', numeric_columns, default=numeric_columns[1])
     hue_col = right_column.selectbox('Select a Categorical Column for Coloring (Optional):', [None] + categorical_columns)
     size_option = st.slider('Select Point Size:', min_value=1, max_value=10, value=5)
     show_regression_line = left_column.checkbox('Show Regression Line?')
@@ -417,12 +419,12 @@ def show_bar_plot(df):
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     column = left_column.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
-    chart_type = right_column.selectbox('Select Chart Type:', ['Grouped', 'Single',  'Stacked', '100% Stacked'])
+    chart_type = right_column.selectbox('Select Chart Type:', ['Grouped', 'Single', 'Stacked', '100% Stacked'])
     y_column = None
     aggregation_method = None
 
     if chart_type != 'Single':
-        y_column = left_column.selectbox('Select a Numeric Column:', numeric_columns)
+        y_column = left_column.selectbox('Select a Numeric Column:', numeric_columns, default=numeric_columns[0])
         aggregation_method = right_column.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min'])
 
     aggregation_methods = {
@@ -435,7 +437,15 @@ def show_bar_plot(df):
     aggregation_func = aggregation_methods[aggregation_method] if aggregation_method else None
 
     orientation = left_column.selectbox('Select Orientation:', ['Horizontal','Vertical'])
-    color_option = right_column.selectbox('Select Bar Color:', sns.color_palette().as_hex())
+    
+    # Opsi warna yang mudah dimengerti
+    color_options = ['Blue', 'Red', 'Green', 'Yellow', 'Purple', 'Pink', 'Orange', 'Brown']
+    color_option = right_column.selectbox('Select Bar Color:', color_options)
+    color_mapping = {
+        'Blue': 'b', 'Red': 'r', 'Green': 'g', 'Yellow': 'y', 'Purple': 'm', 'Pink': 'pink', 'Orange': 'orange', 'Brown': 'brown'
+    }
+    color = color_mapping[color_option]
+
     sort_option = left_column.selectbox('Sort By:', ['None', 'Value', 'Category'])
     order = None
     if sort_option == 'Value' and y_column:
@@ -450,9 +460,9 @@ def show_bar_plot(df):
     if chart_type == 'Single':
         # Handle Single chart type
         if orientation == 'Vertical':
-            sns.countplot(x=column, data=df, order=order, color=color_option)
+            ax = sns.countplot(x=column, data=df, order=order, color=color)
         elif orientation == 'Horizontal':
-            sns.countplot(y=column, data=df, order=order, color=color_option)
+            ax = sns.countplot(y=column, data=df, order=order, color=color)
     else:
         if aggregation_method == 'count':
             data_to_plot = df.groupby(column).size().reset_index(name=y_column)
@@ -462,14 +472,22 @@ def show_bar_plot(df):
 
         if chart_type == 'Grouped':
             if orientation == 'Vertical':
-                sns.barplot(x=column, y=y_value, data=data_to_plot, order=order, color=color_option)
+                ax = sns.barplot(x=column, y=y_value, data=data_to_plot, order=order, color=color)
             elif orientation == 'Horizontal':
-                sns.barplot(y=column, x=y_value, data=data_to_plot, order=order, color=color_option)
+                ax = sns.barplot(y=column, x=y_value, data=data_to_plot, order=order, color=color)
         elif chart_type == 'Stacked':
-            data_to_plot.plot(kind='bar', x=column, y=y_value, stacked=True, color=color_option)
+            data_to_plot.plot(kind='bar', x=column, y=y_value, stacked=True, color=color)
         elif chart_type == '100% Stacked':
             df_stacked = data_to_plot.groupby(column).apply(lambda x: 100 * x / x.sum()).reset_index()
-            df_stacked.plot(kind='bar', x=column, y=y_value, stacked=True, color=color_option)
+            df_stacked.plot(kind='bar', x=column, y=y_value, stacked=True, color=color)
+
+    # Add value labels
+    if chart_type == 'Grouped':
+        for p in ax.patches:
+            if orientation == 'Vertical':
+                ax.annotate(f'{p.get_height():.2f}', (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='baseline')
+            elif orientation == 'Horizontal':
+                ax.annotate(f'{p.get_width():.2f}', (p.get_width(), p.get_y() + p.get_height() / 2.), ha='left', va='center')
 
     title = f'{chart_type} Bar Plot of {column}'
     if chart_type != 'Single':
@@ -478,7 +496,7 @@ def show_bar_plot(df):
         title += ' (Horizontal Orientation)'
     else:
         title += ' (Vertical Orientation)'
-        
+
     plt.title(title, fontsize=16, fontweight="bold")
     plt.xlabel('Value' if y_column else 'Count', fontsize=12)
     plt.ylabel(column, fontsize=12)
@@ -554,8 +572,9 @@ def perform_linear_regression(df):
 
 # Function to perform Logistic Regression
 def perform_logistic_regression(df):
-    left_column, right_column = st.columns(2)
     st.subheader("Logistic Regression")
+    
+    left_column, right_column = st.columns(2)
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     X_columns = left_column.multiselect('Select Feature Columns for Logistic Regression:', numeric_columns, default=numeric_columns[0])
     # X_columns = st.multiselect('Select Feature Columns for Logistic Regression:', df.select_dtypes(include=['number']).columns.tolist())
