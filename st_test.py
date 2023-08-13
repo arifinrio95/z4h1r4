@@ -417,7 +417,7 @@ def show_bar_plot(df):
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
     column = left_column.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
-    chart_type = right_column.selectbox('Select Chart Type:', ['Single', 'Grouped', 'Stacked', '100% Stacked'])
+    chart_type = right_column.selectbox('Select Chart Type:', ['Grouped', 'Single',  'Stacked', '100% Stacked'])
     y_column = None
     aggregation_method = None
 
