@@ -1045,7 +1045,7 @@ def main():
 
         
         
-        st.sidebar.subheader('Ada 5 opsi untuk mengeksplorasi data:')
+        st.sidebar.subheader('Pilih metode eksplorasi:')
         # Tombol 1
         # if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan D-Tale)'):
         #     st.session_state.manual_exploration = True
@@ -1074,7 +1074,7 @@ def main():
 
         
         # Tombol 4
-        if st.sidebar.button('4. Eksplorasi data dengan bahasa natural (disupport oleh ChatGPT)'):
+        if st.sidebar.button('4. Natural Language'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1082,7 +1082,7 @@ def main():
             st.session_state.story_telling = False
 
         # Tombol 5
-        if st.sidebar.button('5. Buat laporan dari data secara otomatis.'):
+        if st.sidebar.button('5. Auto Reporting'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
