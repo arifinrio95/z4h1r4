@@ -402,7 +402,7 @@ def perform_shapiro_wilk_test(df):
     st.pyplot(plt)
 
 def show_bar_plot(df):
-    left_column, right_column = st.beta_columns(2)
+    left_column, right_column = st.columns(2)
 
     categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
