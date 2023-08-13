@@ -949,6 +949,8 @@ def autovizz(df):
 # dtale_app.app.jinja_env = dtale_app.JINJA2_ENV
 
 def dtale_func(df):
+    dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
+    dtale_app.app.jinja_env = dtale_app.JINJA2_ENV
     st.title('D-Tale Reporting')
     # st.write("Menggunakan D-Tale untuk Analisis Data")
     st.write(df.head())
