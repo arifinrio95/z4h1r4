@@ -32,6 +32,9 @@ import base64
 import pygwalker as pyg
 from itertools import chain, combinations
 from scipy.stats import zscore
+from autoviz.AutoViz_Class import AutoViz_Class
+import dtale
+import dtale.app as dtale_app
 
 hide_menu = """
 <style>
@@ -901,28 +904,41 @@ def visualize_analysis(result):
             fig, ax = plt.subplots(figsize=(10,5))
             ax.bar(stats.keys(), stats.values())
             st.pyplot(fig)
-def app(df):
-    st.title('Autovizz di Streamlit')
+def autovizz(df):
+    st.title('Autovizz Reporting')
 
-    file = st.file_uploader("Upload file CSV", type=['csv'])
-    if file:
-        st.write("Menggunakan Autovizz untuk Visualisasi Data")
-        # st.write(df.head())
+    st.write("Menggunakan Autovizz untuk Visualisasi Data")
+    # st.write(df.head())
 
-        AV = AutoViz_Class()
-        sep = ","
-        dft = AV.AutoViz(
-            filename='',
-            sep=sep,
-            depVar='',
-            dfte=df,
-            header=0,
-            verbose=1,
-            lowess=False,
-            chart_format='svg',
-            max_rows_analyzed=150000,
-            max_cols_analyzed=30,
-        )
+    AV = AutoViz_Class()
+    sep = ","
+    dft = AV.AutoViz(
+        filename='',
+        sep=sep,
+        depVar='',
+        dfte=df,
+        header=0,
+        verbose=1,
+        lowess=False,
+        chart_format='svg',
+        max_rows_analyzed=150000,
+        max_cols_analyzed=30,
+    )
+
+# Ini adalah hack untuk membiarkan kita menjalankan D-Tale dalam Streamlit
+dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
+dtale_app.app.jinja_env = dtale_app.JINJA2_ENV
+
+def dtale(df):
+    st.title('D-Tale Reporting')
+    # st.write("Menggunakan D-Tale untuk Analisis Data")
+    st.write(df.head())
+
+    # Memulai D-Tale
+    # d = dtale.show(df)
+    d.main_url()  # Ini membuka D-Tale dalam tab baru
+
+    st.write(f'D-Tale sedang berjalan, kunjungi [link berikut]({d._main_url}) untuk melihat analisisnya.')
         
 def main():
     st.set_page_config(
@@ -976,7 +992,7 @@ def main():
         
         st.sidebar.subheader('Ada 5 opsi untuk mengeksplorasi data:')
         # Tombol 1
-        if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan PyGWalker)'):
+        if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan D-Tale)'):
             st.session_state.manual_exploration = True
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1020,11 +1036,12 @@ def main():
 
         
         if st.session_state.get('manual_exploration', False):
-            st.subheader("PyGWalker")
-            st.write("PyGWalker adalah pustaka Python untuk analisis visual dengan stye mirip Tableau, memungkinkan eksplorasi data dengan drag and drop seperti Tableau.")
-            st.markdown("[Klik di sini untuk mempelajari lebih lanjut.](https://github.com/Kanaries/pygwalker)")
+            st.subheader("D-Tale")
+            # st.write("PyGWalker adalah pustaka Python untuk analisis visual dengan stye mirip Tableau, memungkinkan eksplorasi data dengan drag and drop seperti Tableau.")
+            # st.markdown("[Klik di sini untuk mempelajari lebih lanjut.](https://github.com/Kanaries/pygwalker)")
             # Jika tombol diklik, gunakan PyGWalker
-            walker = pyg.walk(df, env='Streamlit')
+            # walker = pyg.walk(df, env='Streamlit')
+            dtale(df)
 
         if st.session_state.get('auto_exploration', False):
             # st.subheader("Pandas Profiling Report")
@@ -1035,7 +1052,7 @@ def main():
             # st_profile_report(pr)
 
             st.subheader("Auto Visualizations")
-            app(df)
+            autovizz(df)
 
         if st.session_state.get('show_analisis_lanjutan', False):
             st.subheader("Analisis Lanjutan")
