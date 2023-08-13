@@ -905,12 +905,22 @@ def visualize_analysis(result):
             fig, ax = plt.subplots(figsize=(10,5))
             ax.bar(stats.keys(), stats.values())
             st.pyplot(fig)
-def autovizz(df):
-    st.title('Autovizz Reporting')
-
+def autoviz_app(file):
+    # Memastikan bahwa Autoviz menyimpan plot ke folder yang sama
+    os.chdir(os.path.dirname(file))
+    
+    # Membuat objek Autoviz
     AV = AutoViz_Class()
-    dft = AV.AutoViz(df)
-    st.write(dft)
+    
+    # Membuat visualisasi; AutoViz menyimpan plot dalam file secara lokal
+    filename = os.path.basename(file)
+    df = AV.AutoViz(filename)
+    
+    # Menampilkan plot yang disimpan oleh Autoviz
+    for i, img_file in enumerate(os.listdir()):
+        if img_file.endswith(".png"):
+            st.image(img_file)
+            os.remove(img_file) # Menghapus file setelah ditampilkan
 
 # Ini adalah hack untuk membiarkan kita menjalankan D-Tale dalam Streamlit
 # dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
@@ -962,6 +972,9 @@ def main():
     st.write('Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.')
     st.subheader('Upload your CSV / Excel data:')
     file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
+    uploaded_file_path = "file.csv"
+    with open(uploaded_file_path, "wb") as f:
+        f.write(file.read())
 
     # user_api = st.text_input("Masukkan OpenAI API Key anda: ")
     
@@ -995,7 +1008,7 @@ def main():
 
         
         # Tombol 2
-        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan AutoVizz)'):
+        if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan AutoViz)'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = True
             st.session_state.show_analisis_lanjutan = False
@@ -1047,8 +1060,9 @@ def main():
 
             st.subheader("Auto Visualizations")
             # autovizz(df)
-            AV = AutoViz_Class()
-            dft = AV.AutoViz(df)
+            # AV = AutoViz_Class()
+            # dft = AV.AutoViz(df)
+            autoviz_app(uploaded_file_path)
 
         if st.session_state.get('show_analisis_lanjutan', False):
             st.subheader("Analisis Lanjutan")
