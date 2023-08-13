@@ -531,7 +531,8 @@ def show_pie_chart(df):
 # Function to perform Linear Regression
 def perform_linear_regression(df):
     st.subheader("Linear Regression")
-    X_columns = st.multiselect('Select Feature Columns:', df.select_dtypes(include=['number']).columns.tolist(), default=[numeric_columns[0]])
+    numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
+    X_columns = st.multiselect('Select Feature Columns:', numeric_columns, default=[numeric_columns[0]])
     if not X_columns:  # If no features are selected
         st.warning('Please select feature columns.')
         return
