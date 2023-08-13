@@ -905,19 +905,15 @@ def visualize_analysis(result):
             fig, ax = plt.subplots(figsize=(10,5))
             ax.bar(stats.keys(), stats.values())
             st.pyplot(fig)
-def autoviz_app(file):
-    # Memastikan bahwa Autoviz menyimpan plot ke folder yang sama
-    os.chdir(os.path.dirname(file))
-    
+def autoviz_app(uploaded_file_path):
     # Membuat objek Autoviz
     AV = AutoViz_Class()
-    
+
     # Membuat visualisasi; AutoViz menyimpan plot dalam file secara lokal
-    filename = os.path.basename(file)
-    df = AV.AutoViz(filename)
-    
+    df = AV.AutoViz(uploaded_file_path)
+
     # Menampilkan plot yang disimpan oleh Autoviz
-    for i, img_file in enumerate(os.listdir()):
+    for img_file in os.listdir():
         if img_file.endswith(".png"):
             st.image(img_file)
             os.remove(img_file) # Menghapus file setelah ditampilkan
@@ -980,9 +976,10 @@ def main():
 
     # try:
     if file is not None:
-        uploaded_file_path = "file.csv"
+        uploaded_file_path = "temp_file.csv"
         with open(uploaded_file_path, "wb") as f:
             f.write(file.read())
+        
             
         df = load_file_auto_delimiter(file)
         st.dataframe(df.head())
@@ -1064,6 +1061,7 @@ def main():
             # AV = AutoViz_Class()
             # dft = AV.AutoViz(df)
             autoviz_app(uploaded_file_path)
+            os.remove(uploaded_file_path) # Menghapus file sementara
 
         if st.session_state.get('show_analisis_lanjutan', False):
             st.subheader("Analisis Lanjutan")
