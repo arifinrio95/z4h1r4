@@ -471,7 +471,15 @@ def show_bar_plot(df):
             df_stacked = data_to_plot.groupby(column).apply(lambda x: 100 * x / x.sum()).reset_index()
             df_stacked.plot(kind='bar', x=column, y=y_value, stacked=True, color=color_option)
 
-    plt.title(f'Bar Plot of {column}', fontsize=16, fontweight="bold")
+    title = f'{chart_type} Bar Plot of {column}'
+    if chart_type != 'Single':
+        title += f' using {aggregation_method} of {y_column}'
+    if orientation == 'Horizontal':
+        title += ' (Horizontal Orientation)'
+    else:
+        title += ' (Vertical Orientation)'
+        
+    plt.title(title, fontsize=16, fontweight="bold")
     plt.xlabel('Value' if y_column else 'Count', fontsize=12)
     plt.ylabel(column, fontsize=12)
     sns.despine(left=True, bottom=True)
