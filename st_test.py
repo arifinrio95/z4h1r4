@@ -557,7 +557,7 @@ def perform_logistic_regression(df):
     left_column, right_column = st.columns(2)
     st.subheader("Logistic Regression")
     numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
-    X_columns = left_column.multiselect('Select Feature Columns for Logistic Regression:', numeric_columns, default=numeric_columns)
+    X_columns = left_column.multiselect('Select Feature Columns for Logistic Regression:', numeric_columns, default=numeric_columns[0])
     # X_columns = st.multiselect('Select Feature Columns for Logistic Regression:', df.select_dtypes(include=['number']).columns.tolist())
     y_column = right_column.selectbox('Select Target Column for Logistic Regression:', df.select_dtypes(include=['object']).columns.tolist())
     test_size = left_column.slider('Select Test Size for Train-Test Split for Logistic Regression:', 0.1, 0.5, 0.2)
