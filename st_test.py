@@ -111,9 +111,9 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         1. {input_pengguna}. 
         2. My dataframe already load previously, named df, use it, do not reload the dataframe.
         3. Respond with scripts without any text. 
-        4. Only code in a single cell. 
+        4. Respond in plain text code. 
         5. Don’t start your response with “Sure, here are”. 
-        6. Start your response with “import” inside the python block. 
+        6. Start your response with “import”. 
         7. Give and show with streamlit the title for every steps.
         8. Print with st.write the explanation for every syntax.
         9. Don’t give me any explanation about the script. Response only with python block.
