@@ -907,14 +907,13 @@ def visualize_analysis(result):
 def autovizz(df):
     st.title('Autovizz Reporting')
 
-    st.write("Menggunakan Autovizz untuk Visualisasi Data")
-    # st.write(df.head())
-
     AV = AutoViz_Class()
-    sep = ","
+
+    # Simpan grafik ke file
+    report_filename = "autovizz_report.html"
     dft = AV.AutoViz(
         filename='',
-        sep=sep,
+        sep=',',
         depVar='',
         dfte=df,
         header=0,
@@ -923,7 +922,12 @@ def autovizz(df):
         chart_format='svg',
         max_rows_analyzed=150000,
         max_cols_analyzed=30,
+        outdir=".", # Setel direktori tempat file akan disimpan
+        name=report_filename # Setel nama file
     )
+
+    # Tampilkan file HTML dalam aplikasi Streamlit
+    st.components.v1.html(open(report_filename, 'r').read(), width=1000, height=600)
 
 # Ini adalah hack untuk membiarkan kita menjalankan D-Tale dalam Streamlit
 # dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
