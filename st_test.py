@@ -411,11 +411,6 @@ def show_bar_plot(df):
     y_column = None
     aggregation_method = None
 
-    max_label_length = max(len(str(label)) for label in df[column].unique())
-    if orientation == 'Vertical' and max_label_length > 10:  # Anda bisa menyesuaikan batas ini
-        orientation = 'Horizontal'
-        st.warning('Labels are overlapping, using Horizontal orientation instead.')
-
     if chart_type != 'Single':
         y_column = left_column.selectbox('Select a Numeric Column:', numeric_columns)
         aggregation_method = right_column.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min'])
@@ -429,7 +424,7 @@ def show_bar_plot(df):
     }
     aggregation_func = aggregation_methods[aggregation_method] if aggregation_method else None
 
-    orientation = left_column.selectbox('Select Orientation:', ['Vertical', 'Horizontal'])
+    orientation = left_column.selectbox('Select Orientation:', ['Horizontal','Vertical'])
     color_option = right_column.selectbox('Select Bar Color:', sns.color_palette().as_hex())
     sort_option = left_column.selectbox('Sort By:', ['None', 'Value', 'Category'])
     order = None
