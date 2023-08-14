@@ -998,10 +998,10 @@ def main():
     # layout="wide",
     # )
 
-    # st.markdown(
-    #     hide_menu,
-    #     unsafe_allow_html=True
-    # )
+    st.markdown(
+        hide_menu,
+        unsafe_allow_html=True
+    )
    
     import warnings
     warnings.filterwarnings('ignore')
