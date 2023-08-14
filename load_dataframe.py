@@ -23,7 +23,7 @@ class LoadDataframe():
         # Get file extension
         file_extension = self.file.name.split('.')[-1]  # Assuming the file has an extension
         if file_extension == 'csv':
-            delimiter = self.detect_delimiter(self.file)
+            delimiter = self.detect_delimiter()
             self.file.seek(0)  # Reset file position to the beginning
             self.df = pd.read_csv(self.file, delimiter=delimiter)
         elif file_extension in ['xls', 'xlsx']:
