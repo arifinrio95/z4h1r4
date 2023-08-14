@@ -1080,7 +1080,7 @@ def main():
             st.session_state.story_telling = False
 
         # Tombol 5
-        if st.sidebar.button('5. Auto Reporting (Best for Data Survey)'):
+        if st.sidebar.button('5. Auto Reporting (Best for Survey Data)'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
