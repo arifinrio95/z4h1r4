@@ -44,9 +44,9 @@ class DataAnalytics():
         st.subheader("Data Information")
         st.write("Descriptive Statistics")
         
-        if self.desc_num!=None:
+        if self.desc_num is not None:
             st.dataframe(self.desc_num)
-        if self.desc_obj!=None:
+        if self.desc_obj is not None:
             st.dataframe(self.desc_obj)
             
         ## missing values
