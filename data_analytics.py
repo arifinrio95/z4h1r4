@@ -270,8 +270,8 @@ class DataAnalytics():
                 plt.yticks(range(len(order)), order)
                 
             plt.title(title, fontsize=16, fontweight="bold")
-            plt.xlabel('Value' if y_column else 'Count', fontsize=12)
-            plt.ylabel(column, fontsize=12)
+            plt.xlabel(y_column if y_column else 'Value', fontsize=12)
+            plt.ylabel(column if orientation=='Horizontal' else 'Value', fontsize=12)
             sns.despine(left=True, bottom=True)
             st.pyplot(plt)
             
