@@ -57,7 +57,22 @@ class DataAnalytics():
         self.missing_df = missing_info.loc[
             missing_info['Total missing values'] > 0]
         st.dataframe(self.missing_df)
-
+    def format_value(value):
+        if value_format == 'K':
+            value = value / 1_000
+            suffix = 'K'
+        elif value_format == 'Mn':
+            value = value / 1_000_000
+            suffix = 'Mn'
+        elif value_format == 'Bn':
+            value = value / 1_000_000_000
+            suffix = 'Bn'
+        else:
+            suffix = ''
+        
+        decimal_format = f'{{:.{decimal_places}f}}'
+        return decimal_format.format(value) + suffix
+    
     def barplot(self):
         st.subheader("Bar Plot")
         left_column, right_column = st.columns(2)
@@ -132,6 +147,12 @@ class DataAnalytics():
         
         sort_option = right_column.selectbox('Sort By:',
                                             ['Value', 'Category'])
+        value_format = left_column.selectbox(
+            'Select Value Format:',
+            ['Normal', 'K', 'Mn', 'Bn'])
+        decimal_places = right_column.selectbox(
+            'Select Number of Decimal Places:',
+            ['0', '1', '2', '3', '4'])
         
         if sort_option == 'Value':
             if chart_type!='Simple' and y_column:
@@ -204,18 +225,21 @@ class DataAnalytics():
         x_label_size = plt.xticks()[1][0].get_size()
         y_label_size = plt.yticks()[1][0].get_size()
         if chart_type == 'Grouped':
+            value = p.get_height() if orientation == 'Vertical' else p.get_width()
+            formatted_value = format_value(value)
+            
             for p in ax.patches:
                 if orientation == 'Vertical':
                     ax.annotate(
-                        f'{p.get_height():.2f}',
-                        (p.get_x() + p.get_width() / 2., p.get_height()),
+                        formatted_value,
+                        (p.get_x() + p.get_width() / 2., value),
                         ha='center',
                         va='baseline',
                         fontsize=x_label_size)
                 elif orientation == 'Horizontal':
                     ax.annotate(
-                        f'{p.get_width():.2f}',
-                        (p.get_width(), p.get_y() + p.get_height() / 2.),
+                        formatted_value,
+                        (value, p.get_y() + p.get_height() / 2.),
                         ha='left',
                         va='center',
                         fontsize=y_label_size)
