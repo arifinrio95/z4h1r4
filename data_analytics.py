@@ -47,7 +47,7 @@ class DataAnalytics():
         missing_info = pd.DataFrame({
             'Column names':
             missing_data.index,
-            'Percentage of missing values': (missing_data / self.r) * 100,
+            'Percentage of missing values': str(np.round((missing_data / self.r) * 100, 2)) + ' %',
             'Total missing values':
             missing_data
         })
@@ -133,8 +133,8 @@ class DataAnalytics():
         sort_option = right_column.selectbox('Sort By:',
                                             ['None', 'Value', 'Category'])
         order = None
-        if sort_option == 'Value' and y_column:
-            if chart_type!='Simple':
+        if sort_option == 'Value':
+            if chart_type!='Simple' and y_column:
                 order = self.df.groupby(column).agg({
                     y_column: aggregation_method
                 }).sort_values(by=y_column, ascending=False).index
