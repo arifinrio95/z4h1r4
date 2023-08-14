@@ -2,6 +2,7 @@ import openai
 import streamlit as st
 
 from load_dataframe import LoadDataframe
+from data_analytics import DataAnalytics
 
 import pandas as pd
 import numpy as np
@@ -1003,15 +1004,18 @@ def main():
         load_df = LoadDataframe(file)
         df = load_df.load_file_auto_delimiter()
         st.dataframe(df.head())
+        analytics_df = DataAnalytics(df)
 
-        # Extract df schema
-        schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
-        schema_str = json.dumps(schema_dict)
-        st.write("\nDataframe schema : ", schema_str)
+        analytics_df.info()
+        analytics_df.basic()
+        # # Extract df schema
+        # schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
+        # schema_str = json.dumps(schema_dict)
+        # st.write("\nDataframe schema : ", schema_str)
 
-        # Extract the first two rows into a dictionary
-        rows_dict = df.head(2).to_dict('records')
-        rows_str = json.dumps(rows_dict, default=str)
+        # # Extract the first two rows into a dictionary
+        # rows_dict = df.head(2).to_dict('records')
+        # rows_str = json.dumps(rows_dict, default=str)
 
         
         
@@ -1129,9 +1133,10 @@ def main():
             # elif analysis_option == 'Principal Component Analysis':
             #     perform_pca(df)
             st.subheader('Basic')
-            show_descriptive_statistics(df)
-            show_missing_data(df)
-            show_bar_plot(df)
+            # show_descriptive_statistics(df)
+            # show_missing_data(df)
+            # show_bar_plot(df)
+            analytics_df.barplot()
             show_pie_chart(df)
             show_histogram(df)
             show_box_plot(df)
