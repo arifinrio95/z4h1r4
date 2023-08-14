@@ -40,8 +40,8 @@ import streamlit.components.v1 as components
 hide_menu = """
 <style>
 
-#stActionButton {
-  visibility: hidden;
+.stActionButton {
+  visibility: hidden !important;
 }
 
 .css-ztfqz8 {
