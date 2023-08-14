@@ -266,12 +266,12 @@ class DataAnalytics():
             if orientation == 'Vertical':
                 # Rotate x-axis labels for better readability (optional)
                 plt.xticks(range(len(order)), order, rotation=90, ha="right")
-                plt.xlabel(column if chart_type=='Simple' else f'{aggregation_method} of {y_column}', fontsize=12)
-                plt.ylabel('Count' if chart_type=='Simple' else column, fontsize=12)
+                plt.xlabel(column if chart_type=='Simple' else column, fontsize=12)
+                plt.ylabel('Count' if chart_type=='Simple' else f'{aggregation_method} of {y_column}', fontsize=12)
             else:
                 plt.yticks(range(len(order)), order)
-                plt.xlabel('Count' if chart_type=='Simple' else column, fontsize=12)
-                plt.ylabel(column if chart_type=='Simple' else f'{aggregation_method} of {y_column}', fontsize=12)
+                plt.xlabel('Count' if chart_type=='Simple' else f'{aggregation_method} of {y_column}', fontsize=12)
+                plt.ylabel(column if chart_type=='Simple' else column, fontsize=12)
                 
             plt.title(title, fontsize=16, fontweight="bold")
             sns.despine(left=True, bottom=True)
