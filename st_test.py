@@ -1009,7 +1009,7 @@ def main():
         analytics_df.info()
         analytics_df.basic()
         # # Extract df schema
-        # schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
+        schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
         schema_str = json.dumps(schema_dict)
         # st.write("\nDataframe schema : ", schema_str)
 
