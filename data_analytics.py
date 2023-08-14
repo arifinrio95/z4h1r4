@@ -132,11 +132,11 @@ class DataAnalytics():
             return
 
         # Get the top 10 categories
-        top_categories = self.df['categories'].value_counts().nlargest(
+        top_categories = self.df[column].value_counts().nlargest(
             int(top_n)).index
 
         # Filter the data for the top 10 categories
-        top_categories_data = self.df.loc[self.df['categories'].isin(
+        top_categories_data = self.df.loc[self.df[column].isin(
             top_categories)]
 
         # Create a countplot using the biscuits and chocolate theme palette
