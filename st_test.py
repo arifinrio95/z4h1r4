@@ -39,8 +39,8 @@ import streamlit.components.v1 as components
 
 hide_menu = """
 <style>
-#stHeader {
-    visibility:hidden;
+.css-ztfqz8 {
+    display: none !important;
 }
 </style>
 """
