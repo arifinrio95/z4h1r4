@@ -98,7 +98,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         7. Don’t give me any explanation about the script. Response only with python code in a plain text.
         8. Do not reload the dataframe.
         9. Use Try and Except for each syntax.
-        10. Print and show the detail step you did.
+        10. Provide minimalist and aesthetic visualization.
         11. Dont forget to show the steps with st.write."""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
@@ -1167,9 +1167,11 @@ def main():
                 previous_script = None
                 retry_count = 0
                 script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
-                exec(str(script))
-                st.write("The Script:")
-                st.text(script)
+                button = st.button("Submit")
+                  if button:
+                    exec(str(script))
+                # st.write("The Script:")
+                # st.text(script)
                 input_pengguna = ""
 
         if st.session_state.get('story_telling', False):
