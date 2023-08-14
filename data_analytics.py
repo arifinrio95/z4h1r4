@@ -115,7 +115,7 @@ class DataAnalytics():
 
         color_pal = color_mapping[color_option]
 
-        sort_option = left_column.selectbox('Sort By:',
+        sort_option = right_column.selectbox('Sort By:',
                                             ['None', 'Value', 'Category'])
         order = None
         if sort_option == 'Value' and y_column:
@@ -125,7 +125,7 @@ class DataAnalytics():
         elif sort_option == 'Category':
             order = sorted(self.df[column].unique())
 
-        if not y_column and chart_type != 'Single':
+        if not y_column and chart_type != 'Simple':
             st.warning(
                 'Please select a Numerical Column for chart types other than Single.'
             )
