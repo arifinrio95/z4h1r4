@@ -67,9 +67,8 @@ class DataAnalytics():
             missing_info['Total missing values'] > 0]
         st.dataframe(self.missing_df)
         
-    
-    
     def barplot(self):
+        
         def format_value(value):
             if value_format == 'K':
                 value = value / 1_000
@@ -185,92 +184,95 @@ class DataAnalytics():
 
         # Create a countplot using the custom theme palette
         sns.set_palette(color_pal)
-
-        if chart_type == 'Simple':
-            # Handle Single chart type
-            if orientation == 'Vertical':
-                ax = sns.countplot(x=column,
-                                   data=top_categories_data,
-                                   palette=color_pal)
-            elif orientation == 'Horizontal':
-                ax = sns.countplot(y=column,
-                                   data=top_categories_data,
-                                   palette=color_pal)
-        else:
-            if aggregation_method == 'count':
-                data_to_plot = top_categories_data.groupby(column).size().reset_index(
-                    name=y_column)
+        if self.desc_obj is not None:
+            if chart_type == 'Simple':
+                # Handle Single chart type
+                if orientation == 'Vertical':
+                    ax = sns.countplot(x=column,
+                                       data=top_categories_data,
+                                       palette=color_pal)
+                elif orientation == 'Horizontal':
+                    ax = sns.countplot(y=column,
+                                       data=top_categories_data,
+                                       palette=color_pal)
             else:
-                data_to_plot = top_categories_data.groupby(column)[y_column].agg(
-                    aggregation_func).reset_index()
-            y_value = y_column
-
-            if chart_type == 'Grouped':
-                if orientation == 'Vertical':
-                    ax = sns.barplot(x=column,
-                                     y=y_value,
-                                     data=data_to_plot,
-                                     order=order,
-                                     palette=color_pal)
-                elif orientation == 'Horizontal':
-                    ax = sns.barplot(y=column,
-                                     x=y_value,
-                                     data=data_to_plot,
-                                     order=order,
-                                     palette=color_pal)
-            elif chart_type == 'Stacked':
-                data_to_plot.plot(kind='bar',
-                                  x=column,
-                                  y=y_value,
-                                  stacked=True,
-                                  palette=color_pal)
-            elif chart_type == '100% Stacked':
-                df_stacked = data_to_plot.groupby(column).apply(
-                    lambda x: 100 * x / x.sum()).reset_index()
-                df_stacked.plot(kind='bar',
-                                x=column,
-                                y=y_value,
-                                stacked=True,
-                                palette=color_pal)
-        
-        # Add value labels
-        x_label_size = plt.xticks()[1][0].get_size()
-        y_label_size = plt.yticks()[1][0].get_size()
-        if chart_type == 'Grouped':
-            for p in ax.patches:
-                value = p.get_height() if orientation == 'Vertical' else p.get_width()
-                formatted_value = format_value(value)
-                if orientation == 'Vertical':
-                    ax.annotate(
-                        formatted_value,
-                        (p.get_x() + p.get_width() / 2., value),
-                        ha='center',
-                        va='baseline',
-                        fontsize=x_label_size)
-                elif orientation == 'Horizontal':
-                    ax.annotate(
-                        formatted_value,
-                        (value, p.get_y() + p.get_height() / 2.),
-                        ha='left',
-                        va='center',
-                        fontsize=y_label_size)
-
-        title = f'{chart_type} Bar Plot of {column}'
-        if chart_type != 'Simple':
-            title += f' using {aggregation_method} of {y_column}'
-        if orientation == 'Horizontal':
-            title += ' (Horizontal Orientation)'
-        else:
-            title += ' (Vertical Orientation)'
-
-        if orientation == 'Vertical':
-            # Rotate x-axis labels for better readability (optional)
-            plt.xticks(range(len(order)), order, rotation=90, ha="right")
-        # else:
-        #     plt.xticks(range(len(order)), order)
+                if aggregation_method == 'count':
+                    data_to_plot = top_categories_data.groupby(column).size().reset_index(
+                        name=y_column)
+                else:
+                    data_to_plot = top_categories_data.groupby(column)[y_column].agg(
+                        aggregation_func).reset_index()
+                y_value = y_column
+    
+                if chart_type == 'Grouped':
+                    if orientation == 'Vertical':
+                        ax = sns.barplot(x=column,
+                                         y=y_value,
+                                         data=data_to_plot,
+                                         order=order,
+                                         palette=color_pal)
+                    elif orientation == 'Horizontal':
+                        ax = sns.barplot(y=column,
+                                         x=y_value,
+                                         data=data_to_plot,
+                                         order=order,
+                                         palette=color_pal)
+                elif chart_type == 'Stacked':
+                    data_to_plot.plot(kind='bar',
+                                      x=column,
+                                      y=y_value,
+                                      stacked=True,
+                                      palette=color_pal)
+                elif chart_type == '100% Stacked':
+                    df_stacked = data_to_plot.groupby(column).apply(
+                        lambda x: 100 * x / x.sum()).reset_index()
+                    df_stacked.plot(kind='bar',
+                                    x=column,
+                                    y=y_value,
+                                    stacked=True,
+                                    palette=color_pal)
             
-        plt.title(title, fontsize=16, fontweight="bold")
-        plt.xlabel('Value' if y_column else 'Count', fontsize=12)
-        plt.ylabel(column, fontsize=12)
-        sns.despine(left=True, bottom=True)
-        st.pyplot(plt)
+            # Add value labels
+            x_label_size = plt.xticks()[1][0].get_size()
+            y_label_size = plt.yticks()[1][0].get_size()
+            if chart_type == 'Grouped':
+                for p in ax.patches:
+                    value = p.get_height() if orientation == 'Vertical' else p.get_width()
+                    formatted_value = format_value(value)
+                    if orientation == 'Vertical':
+                        ax.annotate(
+                            formatted_value,
+                            (p.get_x() + p.get_width() / 2., value),
+                            ha='center',
+                            va='baseline',
+                            fontsize=x_label_size)
+                    elif orientation == 'Horizontal':
+                        ax.annotate(
+                            formatted_value,
+                            (value, p.get_y() + p.get_height() / 2.),
+                            ha='left',
+                            va='center',
+                            fontsize=y_label_size)
+    
+            title = f'{chart_type} Bar Plot of {column}'
+            if chart_type != 'Simple':
+                title += f' using {aggregation_method} of {y_column}'
+            if orientation == 'Horizontal':
+                title += ' (Horizontal Orientation)'
+            else:
+                title += ' (Vertical Orientation)'
+    
+            if orientation == 'Vertical':
+                # Rotate x-axis labels for better readability (optional)
+                plt.xticks(range(len(order)), order, rotation=90, ha="right")
+            else:
+                plt.yticks(range(len(order)), order)
+                
+            plt.title(title, fontsize=16, fontweight="bold")
+            plt.xlabel('Value' if y_column else 'Count', fontsize=12)
+            plt.ylabel(column, fontsize=12)
+            sns.despine(left=True, bottom=True)
+            st.pyplot(plt)
+            
+        else:
+            st.write("No categorical column to display")
