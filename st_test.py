@@ -1,23 +1,29 @@
 import openai
 import streamlit as st
+
+from load_dataframe import LoadDataframe
+
 import pandas as pd
 import numpy as np
+from scipy import stats
+import statsmodels.api as sm
+
 import requests
 import json
 import warnings
-import seaborn as sns
-import matplotlib.pyplot as plt
-import csv
-import pandas as pd
-from io import StringIO
 import os
 import time
+import base64
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+from io import StringIO
+
 from pandas_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from scipy import stats
-import statsmodels.api as sm
+
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, confusion_matrix, accuracy_score, classification_report, roc_curve, auc, silhouette_score
@@ -28,11 +34,12 @@ from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram, linkage
 from scipy.spatial.distance import cdist
 from wordcloud import WordCloud
-import base64
+
 import pygwalker as pyg
 from itertools import chain, combinations
 from scipy.stats import zscore
 from autoviz.AutoViz_Class import AutoViz_Class
+
 import dtale
 import dtale.app as dtale_app
 import streamlit.components.v1 as components
@@ -43,57 +50,25 @@ hide_menu = """
 .stActionButton {
   visibility: hidden !important;
 }
-
-.css-ztfqz8 {
-    display: none !important;
-}
 </style>
 """
+## or use this:
+# .css-ztfqz8 {
+#     display: none !important;
+# }
 
 # Fungsi untuk mengisi missing values berdasarkan pilihan pengguna
-def fill_missing_values(df, column, method):
-    if df[column].dtype == 'float64' or df[column].dtype == 'int64': # Jika numeric
-        if method == '0':
-            df[column].fillna(0, inplace=True)
-        elif method == 'Average':
-            df[column].fillna(df[column].mean(), inplace=True)
-    else: # Jika kategorikal
-        if method == 'Modus':
-            df[column].fillna(df[column].mode().iloc[0], inplace=True)
-        elif method == 'Unknown':
-            df[column].fillna('Unknown', inplace=True)
-
-
-def detect_delimiter(file):
-    file.seek(0)  # Reset file position to the beginning
-    file_content = file.read(1024).decode(errors='ignore')  # Convert bytes to string, ignoring errors
-    delimiter = ","
-    try:
-        dialect = csv.Sniffer().sniff(file_content)
-        delimiter = dialect.delimiter
-    except csv.Error:
-        pass  # keep the delimiter as ","
-    file.seek(0)  # Reset file position to the beginning after reading
-    return delimiter
-
-# def load_csv_auto_delimiter(file):
-#     delimiter = detect_delimiter(file)
-#     file.seek(0)  # Reset file position to the beginning
-#     df = pd.read_csv(file, delimiter=delimiter)
-#     return df
-
-def load_file_auto_delimiter(file):
-    # Get file extension
-    file_extension = file.name.split('.')[-1]  # Assuming the file has an extension
-    if file_extension == 'csv':
-        delimiter = detect_delimiter(file)
-        file.seek(0)  # Reset file position to the beginning
-        df = pd.read_csv(file, delimiter=delimiter)
-    elif file_extension in ['xls', 'xlsx']:
-        df = pd.read_excel(file)
-    else:
-        raise ValueError(f'Unsupported file type: {file_extension}')
-    return df
+# def fill_missing_values(df, column, method):
+#     if df[column].dtype == 'float64' or df[column].dtype == 'int64': # Jika numeric
+#         if method == '0':
+#             df[column].fillna(0, inplace=True)
+#         elif method == 'Average':
+#             df[column].fillna(df[column].mean(), inplace=True)
+#     else: # Jika kategorikal
+#         if method == 'Modus':
+#             df[column].fillna(df[column].mode().iloc[0], inplace=True)
+#         elif method == 'Unknown':
+#             df[column].fillna('Unknown', inplace=True)
 
 def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0):
     # versi 2 prompt
@@ -1025,8 +1000,8 @@ def main():
         with open(uploaded_file_path, "wb") as f:
             f.write(file.read())
         
-            
-        df = load_file_auto_delimiter(file)
+        load_df = LoadDataframe(file)
+        df = load_df.load_file_auto_delimiter()
         st.dataframe(df.head())
 
         # Extract df schema
