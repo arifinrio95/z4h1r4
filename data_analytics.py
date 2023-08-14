@@ -208,8 +208,6 @@ class DataAnalytics():
                         (p.get_x() + p.get_width() / 2., p.get_height()),
                         ha='center',
                         va='baseline')
-                    # Rotate x-axis labels for better readability (optional)
-                    plt.xticks(rotation=45, ha="right")
                 elif orientation == 'Horizontal':
                     ax.annotate(
                         f'{p.get_width():.2f}',
@@ -225,6 +223,10 @@ class DataAnalytics():
         else:
             title += ' (Vertical Orientation)'
 
+        if orientation == 'Vertical':
+            # Rotate x-axis labels for better readability (optional)
+            plt.xticks(rotation=45, ha="right")
+            
         plt.title(title, fontsize=16, fontweight="bold")
         plt.xlabel('Value' if y_column else 'Count', fontsize=12)
         plt.ylabel(column, fontsize=12)
