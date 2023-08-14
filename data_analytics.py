@@ -191,10 +191,12 @@ class DataAnalytics():
                 if orientation == 'Vertical':
                     ax = sns.countplot(x=column,
                                        data=top_categories_data,
+                                       order=order,
                                        palette=color_pal)
                 elif orientation == 'Horizontal':
                     ax = sns.countplot(y=column,
                                        data=top_categories_data,
+                                       order=order,
                                        palette=color_pal)
             else:
                 if aggregation_method == 'count':
