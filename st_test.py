@@ -45,6 +45,19 @@ hide_menu = """
 </style>
 """
 
+st.markdown(
+    """
+    <style>
+    .css-1jc7ptx, .e1ewe7hr3, .viewerBadge_container__1QSob,
+    .styles_viewerBadge__1yB5_, .viewerBadge_link__1S137,
+    .viewerBadge_text__1JaDK {
+        display: none;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Fungsi untuk mengisi missing values berdasarkan pilihan pengguna
 def fill_missing_values(df, column, method):
     if df[column].dtype == 'float64' or df[column].dtype == 'int64': # Jika numeric
