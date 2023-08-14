@@ -228,7 +228,7 @@ class DataAnalytics():
         x_label_size = plt.xticks()[1][0].get_size()
         y_label_size = plt.yticks()[1][0].get_size()
         if chart_type == 'Grouped':
-            # value = p.get_height() if orientation == 'Vertical' else p.get_width()
+            value = p.get_height() if orientation == 'Vertical' else p.get_width()
             formatted_value = format_value(value)
             
             for p in ax.patches:
