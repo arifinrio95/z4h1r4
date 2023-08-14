@@ -88,7 +88,7 @@ class DataAnalytics():
 
         # Opsi warna yang mudah dimengerti
         color_options = [
-            'Color-Blind Safe', 'Earth Tone', 'Biscuits & Chocolate'
+            'Ocean Breeze', 'Sunset Serenity', 'Enchanted Forest', 'Fruit Sorbet', 'Cosmic Nebula', 'Biscuits & Chocolate', 'Color-Blind Safe'
         ]
 
         color_option = right_column.selectbox('Select Bar Color:',
@@ -98,9 +98,13 @@ class DataAnalytics():
             "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b",
             "#e377c2", "#7f7f7f"
         ]
-        earth_tone_palette = [
-            "#8c5942", "#5c7c5d", "#a18f77", "#594c38", "#9f715b", "#7e827a",
-            "#736553", "#4c5f6b"
+        
+        ocean_breeze_palette = ['#89c4f4', '#4d8fd5', '#204a87', '#118a8b', '#00b8a9', '#70ad47', '#dbb994', '#ffffff']
+        sunset_serenity_palette = ['#ff9a8b', '#f4729a', '#b785c4', '#68a9cf', '#8cc890', '#fbd45b', '#7d7d7d', '#f0ece2']
+        enchanted_forest_palette = ['#356f3c', '#678a4c', '#147048', '#70451b', '#8e3c36', '#b3573d', '#8f9394', '#f8f2e2']
+        fruit_sorbet_palette = ['#ff5b77', '#ff9347', '#ffcc29', '#8dc63f', '#5975c9', '#835f9b', '#fff0d7', '#d8d8d8']
+        cosmic_nebula_palette = ['#190b59', '#4d0579', '#c40473', '#f72c25', '#ff8800', '#ffd100', '#f7f7f7', '#000000']
+
         ]
         biscuits_chocolate_palette = [
             "#a67a5b", "#dcb697", "#89573e", "#f0d9b5", "#4b3423", "#f5e1c7",
@@ -108,20 +112,34 @@ class DataAnalytics():
         ]
 
         color_mapping = {
-            'Color-Blind Safe': color_blind_safe_palette,
-            'Earth Tone': earth_tone_palette,
+            'Ocean Breeze': ocean_breeze_palette,
+            'Sunset Serenity': sunset_serenity_palette,
+            'Enchanted Forest': enchanted_forest_palette,
+            'Fruit Sorbet': fruit_sorbet_palette,
+            'Cosmic Nebula':cosmic_nebula_palette,
             'Biscuits & Chocolate': biscuits_chocolate_palette,
+            'Color-Blind Safe': color_blind_safe_palette,
         }
 
         color_pal = color_mapping[color_option]
+        # Get the top 10 categories
+        top_categories = self.df[column].value_counts().nlargest(
+            int(top_n)).index
 
+        # Filter the data for the top 10 categories
+        top_categories_data = self.df.loc[self.df[column].isin(
+            top_categories)]
+        
         sort_option = right_column.selectbox('Sort By:',
                                             ['None', 'Value', 'Category'])
         order = None
         if sort_option == 'Value' and y_column:
-            order = self.df.groupby(column).agg({
-                y_column: aggregation_method
-            }).sort_values(by=y_column, ascending=False).index
+            if chart_type!='Simple':
+                order = self.df.groupby(column).agg({
+                    y_column: aggregation_method
+                }).sort_values(by=y_column, ascending=False).index
+            else:
+                order = top_categories
         elif sort_option == 'Category':
             order = sorted(self.df[column].unique())
 
@@ -130,14 +148,6 @@ class DataAnalytics():
                 'Please select a Numerical Column for chart types other than Single.'
             )
             return
-
-        # Get the top 10 categories
-        top_categories = self.df[column].value_counts().nlargest(
-            int(top_n)).index
-
-        # Filter the data for the top 10 categories
-        top_categories_data = self.df.loc[self.df[column].isin(
-            top_categories)]
 
         # Create a countplot using the biscuits and chocolate theme palette
         sns.set_palette(color_pal)
@@ -198,6 +208,8 @@ class DataAnalytics():
                         (p.get_x() + p.get_width() / 2., p.get_height()),
                         ha='center',
                         va='baseline')
+                    # Rotate x-axis labels for better readability (optional)
+                    plt.xticks(rotation=45, ha="right")
                 elif orientation == 'Horizontal':
                     ax.annotate(
                         f'{p.get_width():.2f}',
