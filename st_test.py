@@ -253,11 +253,13 @@ def show_correlation_matrix(df):
     # Compute the correlation matrix
     corr = numerical_df.corr()
 
-    # You can then display the correlation matrix using Streamlit as you desire
-    # st.write(corr)
+    # Palette options
+    palette_options = ['coolwarm', 'viridis', 'plasma', 'inferno', 'magma', 'cividis']
+    selected_palette = st.selectbox('Select a color palette:', palette_options)
+
 
     plt.figure(figsize=(12, 8))
-    ax = sns.heatmap(corr, annot=False, cmap="coolwarm")  # Set annot=False temporarily
+    ax = sns.heatmap(corr, annot=False, cmap=selected_palette)  # Set annot=False temporarily
 
     # Get tick label size from the x-axis (you can also get it from y-axis if preferred)
     tick_label_size = plt.xticks()[1][0].get_size()
@@ -271,6 +273,20 @@ def show_correlation_matrix(df):
                      fontsize=tick_label_size)
 
     st.pyplot(plt)
+
+    # Button to download the correlation table as CSV
+    if st.button('Download correlation table as CSV'):
+        import csv
+        import base64
+
+        # Convert DataFrame to CSV
+        csv_file = corr.to_csv(index=False)
+        b64 = base64.b64encode(csv_file.encode()).decode()  # Bytes to string
+
+        # Create download link
+        href = f'<a href="data:file/csv;base64,{b64}" download="correlation_table.csv">Click here to download the CSV file</a>'
+        st.markdown(href, unsafe_allow_html=True)
+
 
 # Function to perform PCA
 def perform_pca(df):
