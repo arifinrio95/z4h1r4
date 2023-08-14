@@ -99,7 +99,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         8. Do not reload the dataframe.
         9. Use Try and Except for each syntax.
         10. Provide minimalist and aesthetic visualization, with flexibility of user to setting the parameter on streamlit.
-        11. Pay attention to the dataframe schema, don't get an error."""}
+        11. Pay attention to the dataframe schema, don't do any convert."""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
     
