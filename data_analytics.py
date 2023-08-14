@@ -37,9 +37,17 @@ class DataAnalytics():
         ## descriptive statistics
         st.subheader("Data Information")
         st.write("Descriptive Statistics")
-        st.dataframe(self.desc_num)
-        st.dataframe(self.desc_obj)
-
+        
+        try:
+            st.dataframe(self.desc_num)
+        except error as e:
+            st.write("No Numerical Data")
+            
+        try:
+            st.dataframe(self.desc_obj)
+        except error as e:
+            st.write("No Categorical Data")
+            
         ## missing values
         missing_data = self.df.isnull().sum()
 
@@ -47,7 +55,7 @@ class DataAnalytics():
         missing_info = pd.DataFrame({
             'Column names':
             missing_data.index,
-            'Percentage of missing values': str(np.round((missing_data / self.r) * 100, 2)) + ' %',
+            'Percentage of missing values': ((missing_data / self.r) * 100).apply(lambda x: f'{x:.2f} %'),
             'Total missing values':
             missing_data
         })
