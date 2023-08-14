@@ -31,3 +31,9 @@ class LoadDataframe():
         else:
             raise ValueError(f'Unsupported file type: {file_extension}')
         return self.df
+      
+    # def load_csv_auto_delimiter(self):
+    #     delimiter = detect_delimiter(file)
+    #     file.seek(0)  # Reset file position to the beginning
+    #     df = pd.read_csv(file, delimiter=delimiter)
+    #     return df
