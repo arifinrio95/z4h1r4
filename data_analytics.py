@@ -231,8 +231,8 @@ class DataAnalytics():
         if orientation == 'Vertical':
             # Rotate x-axis labels for better readability (optional)
             plt.xticks(range(len(order)), order, rotation=90, ha="right")
-        else:
-            plt.xticks(range(len(order)), order)
+        # else:
+        #     plt.xticks(range(len(order)), order)
             
         plt.title(title, fontsize=16, fontweight="bold")
         plt.xlabel('Value' if y_column else 'Count', fontsize=12)
