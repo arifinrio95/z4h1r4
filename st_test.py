@@ -1063,7 +1063,7 @@ def main():
 
         
         # Tombol 3
-        if st.sidebar.button('3. Auto Visualization by Datasans'):
+        if st.sidebar.button('3. Auto Visualization by Datasans (under development)'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = True
