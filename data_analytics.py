@@ -10,8 +10,14 @@ class DataAnalytics():
     def __init__(self, df):
         self.df = df
         self.missing_df = None
-        self.desc_num = self.df.describe(exclude=['object'])
-        self.desc_obj = self.df.describe(include=['object'])
+        try:
+            self.desc_num = self.df.describe(exclude=['object'])
+        except Exception as e:
+            self.desc_num = None
+        try:
+            self.desc_obj = self.df.describe(include=['object'])
+        except Exception as e:
+            self.desc_obj = None
 
         # get dataframe info
         schema_dict = self.df.dtypes.apply(lambda x: x.name).to_dict()
@@ -38,15 +44,10 @@ class DataAnalytics():
         st.subheader("Data Information")
         st.write("Descriptive Statistics")
         
-        try:
+        if self.desc_num:
             st.dataframe(self.desc_num)
-        except ValueError as e:
-            st.write("No Numerical Data")
-            
-        try:
+        if self.desc_obj:
             st.dataframe(self.desc_obj)
-        except ValueError as e:
-            st.write("No Categorical Data")
             
         ## missing values
         missing_data = self.df.isnull().sum()
