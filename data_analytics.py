@@ -105,7 +105,7 @@ class DataAnalytics():
         fruit_sorbet_palette = ['#ff5b77', '#ff9347', '#ffcc29', '#8dc63f', '#5975c9', '#835f9b', '#fff0d7', '#d8d8d8']
         cosmic_nebula_palette = ['#190b59', '#4d0579', '#c40473', '#f72c25', '#ff8800', '#ffd100', '#f7f7f7', '#000000']
 
-        ]
+        
         biscuits_chocolate_palette = [
             "#a67a5b", "#dcb697", "#89573e", "#f0d9b5", "#4b3423", "#f5e1c7",
             "#725440", "#c19a6b"
