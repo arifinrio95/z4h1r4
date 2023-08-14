@@ -99,11 +99,11 @@ class DataAnalytics():
             "#e377c2", "#7f7f7f"
         ]
         
-        ocean_breeze_palette = ['#89c4f4', '#4d8fd5', '#204a87', '#118a8b', '#00b8a9', '#70ad47', '#dbb994', '#ffffff']
-        sunset_serenity_palette = ['#ff9a8b', '#f4729a', '#b785c4', '#68a9cf', '#8cc890', '#fbd45b', '#7d7d7d', '#f0ece2']
-        enchanted_forest_palette = ['#356f3c', '#678a4c', '#147048', '#70451b', '#8e3c36', '#b3573d', '#8f9394', '#f8f2e2']
+        ocean_breeze_palette = ['#89c4f4', '#4d8fd5', '#204a87', '#118a8b', '#00b8a9', '#70ad47', '#dbb994', '#bdd9d5']
+        sunset_serenity_palette = ['#ff9a8b', '#f4729a', '#b785c4', '#68a9cf', '#8cc890', '#fbd45b', '#7d7d7d', '#e8e1d1']
+        enchanted_forest_palette = ['#356f3c', '#678a4c', '#147048', '#70451b', '#8e3c36', '#b3573d', '#8f9394', '#f2ead5']
         fruit_sorbet_palette = ['#ff5b77', '#ff9347', '#ffcc29', '#8dc63f', '#5975c9', '#835f9b', '#fff0d7', '#d8d8d8']
-        cosmic_nebula_palette = ['#190b59', '#4d0579', '#c40473', '#f72c25', '#ff8800', '#ffd100', '#f7f7f7', '#000000']
+        cosmic_nebula_palette = ['#190b59', '#4d0579', '#c40473', '#f72c25', '#ff8800', '#ffd100', '#f7dcdc', '#000000']
 
         
         biscuits_chocolate_palette = [
@@ -149,7 +149,7 @@ class DataAnalytics():
             )
             return
 
-        # Create a countplot using the biscuits and chocolate theme palette
+        # Create a countplot using the custom theme palette
         sns.set_palette(color_pal)
 
         if chart_type == 'Simple':
@@ -225,7 +225,7 @@ class DataAnalytics():
 
         if orientation == 'Vertical':
             # Rotate x-axis labels for better readability (optional)
-            plt.xticks(rotation=45, ha="right")
+            plt.xticks(rotation=90, ha="right")
             
         plt.title(title, fontsize=16, fontweight="bold")
         plt.xlabel('Value' if y_column else 'Count', fontsize=12)
