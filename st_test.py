@@ -1125,7 +1125,7 @@ def main():
         #     # os.remove(uploaded_file_path) # Menghapus file sementara
 
         if st.session_state.get('show_analisis_lanjutan', False):
-            st.subheader("Analisis Lanjutan")
+            st.subheader("Auto Visualization by Datasans")
             # analysis_option = st.sidebar.selectbox('Choose an analysis:', 
             #                                        ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
             #                                         'Principal Component Analysis', 'Outlier Detection',
