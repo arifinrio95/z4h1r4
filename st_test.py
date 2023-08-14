@@ -254,14 +254,22 @@ def show_correlation_matrix(df):
     corr = numerical_df.corr()
 
     # You can then display the correlation matrix using Streamlit as you desire
-    st.write(corr)
-
-    # Optionally, you may want to visualize it as a heatmap
-    import seaborn as sns
-    import matplotlib.pyplot as plt
+    # st.write(corr)
 
     plt.figure(figsize=(12, 8))
-    sns.heatmap(corr, annot=True, cmap="coolwarm")
+    ax = sns.heatmap(corr, annot=False, cmap="coolwarm")  # Set annot=False temporarily
+
+    # Get tick label size from the x-axis (you can also get it from y-axis if preferred)
+    tick_label_size = plt.xticks()[1][0].get_size()
+
+    # Create annotations with the desired font size
+    for i in range(len(corr.columns)):
+        for j in range(len(corr.columns)):
+            plt.text(i+0.5, j+0.5, format(corr.iloc[i, j], '.2f'),
+                     horizontalalignment='center',
+                     verticalalignment='center',
+                     fontsize=tick_label_size)
+
     st.pyplot(plt)
 
 # Function to perform PCA
