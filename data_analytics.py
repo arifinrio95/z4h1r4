@@ -40,12 +40,12 @@ class DataAnalytics():
         
         try:
             st.dataframe(self.desc_num)
-        except error as e:
+        except ValueError as e:
             st.write("No Numerical Data")
             
         try:
             st.dataframe(self.desc_obj)
-        except error as e:
+        except ValueError as e:
             st.write("No Categorical Data")
             
         ## missing values
