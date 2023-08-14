@@ -200,6 +200,7 @@ class DataAnalytics():
                                 palette=color_pal)
 
         # Add value labels
+        x_label_size = plt.xticks()[1][0].get_size()
         if chart_type == 'Grouped':
             for p in ax.patches:
                 if orientation == 'Vertical':
@@ -207,13 +208,15 @@ class DataAnalytics():
                         f'{p.get_height():.2f}',
                         (p.get_x() + p.get_width() / 2., p.get_height()),
                         ha='center',
-                        va='baseline')
+                        va='baseline',
+                        fontsize=x_label_size)
                 elif orientation == 'Horizontal':
                     ax.annotate(
                         f'{p.get_width():.2f}',
                         (p.get_width(), p.get_y() + p.get_height() / 2.),
                         ha='left',
-                        va='center')
+                        va='center',
+                        fontsize=x_label_size)
 
         title = f'{chart_type} Bar Plot of {column}'
         if chart_type != 'Simple':
