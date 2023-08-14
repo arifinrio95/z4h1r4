@@ -58,23 +58,25 @@ class DataAnalytics():
             missing_info['Total missing values'] > 0]
         st.dataframe(self.missing_df)
         
-    def format_value(value):
-        if value_format == 'K':
-            value = value / 1_000
-            suffix = 'K'
-        elif value_format == 'Mn':
-            value = value / 1_000_000
-            suffix = 'Mn'
-        elif value_format == 'Bn':
-            value = value / 1_000_000_000
-            suffix = 'Bn'
-        else:
-            suffix = ''
-        
-        decimal_format = f'{{:.{decimal_places}f}}'
-        return decimal_format.format(value) + suffix
+    
     
     def barplot(self):
+        def format_value(value):
+            if value_format == 'K':
+                value = value / 1_000
+                suffix = 'K'
+            elif value_format == 'Mn':
+                value = value / 1_000_000
+                suffix = 'Mn'
+            elif value_format == 'Bn':
+                value = value / 1_000_000_000
+                suffix = 'Bn'
+            else:
+                suffix = ''
+            
+            decimal_format = f'{{:.{decimal_places}f}}'
+            return decimal_format.format(value) + suffix
+            
         st.subheader("Bar Plot")
         left_column, right_column = st.columns(2)
         chart_type = left_column.selectbox(
