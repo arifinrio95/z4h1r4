@@ -99,7 +99,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         8. Do not reload the dataframe.
         9. Use Try and Except for each syntax.
         10. Provide minimalist and aesthetic visualization.
-        11. Review the code first, don't get an error!"""}
+        11. Pay attention to the dataframe schema, don't get an error."""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
     
@@ -1162,14 +1162,13 @@ def main():
             # input_pengguna = ""
             # User Input
             input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik' """)
-            if (input_pengguna != "") & (input_pengguna != None) :
+            button = st.button("Submit")
+            if (input_pengguna != "") & (input_pengguna != None) & button:
                 error_message = None
                 previous_script = None
                 retry_count = 0
                 script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
-                button = st.button("Submit")
-                if button:
-                  exec(str(script))
+                exec(str(script))
                 # st.write("The Script:")
                 # st.text(script)
                 input_pengguna = ""
