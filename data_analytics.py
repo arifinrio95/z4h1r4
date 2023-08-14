@@ -202,6 +202,7 @@ class DataAnalytics():
         
         # Add value labels
         x_label_size = plt.xticks()[1][0].get_size()
+        y_label_size = plt.yticks()[1][0].get_size()
         if chart_type == 'Grouped':
             for p in ax.patches:
                 if orientation == 'Vertical':
@@ -217,7 +218,7 @@ class DataAnalytics():
                         (p.get_width(), p.get_y() + p.get_height() / 2.),
                         ha='left',
                         va='center',
-                        fontsize=x_label_size)
+                        fontsize=y_label_size)
 
         title = f'{chart_type} Bar Plot of {column}'
         if chart_type != 'Simple':
