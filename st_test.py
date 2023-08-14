@@ -1080,7 +1080,7 @@ def main():
             st.session_state.story_telling = False
 
         # Tombol 5
-        if st.sidebar.button('5. Auto Reporting'):
+        if st.sidebar.button('5. Auto Reporting (Best for Data Survey)'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1211,7 +1211,7 @@ def main():
             """, unsafe_allow_html=True)
             dict_stats = analyze_dataframe(df)
             st.write("Temporary showing, under review....")
-            st.write(dict_stats)
+            # st.write(dict_stats)
             # for i in dict_stats:
             #     st.markdown(request_story_prompt(i))
             st.markdown(request_story_prompt(dict_stats))
