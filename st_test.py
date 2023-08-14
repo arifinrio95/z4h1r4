@@ -1161,7 +1161,7 @@ def main():
             st.subheader("Natural Language Exploration")
             # input_pengguna = ""
             # User Input
-            input_pengguna = st.text_input("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik' """)
+            input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik' """)
             if (input_pengguna != "") & (input_pengguna != None) :
                 error_message = None
                 previous_script = None
