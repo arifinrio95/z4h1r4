@@ -99,7 +99,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         8. Do not reload the dataframe.
         9. Use Try and Except for each syntax.
         10. Provide minimalist and aesthetic visualization.
-        11. Dont forget to show the steps with st.write."""}
+        11. Review the code first, don't get an error!"""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
     
