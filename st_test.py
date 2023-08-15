@@ -1030,7 +1030,8 @@ def main():
 
         
         # Tombol 2
-        st.sidebar.markdown('<button class="my-btn">2. Automatic EDA with Autoviz</button>', unsafe_allow_html=True):
+        st.sidebar.markdown('<button class="my-btn">2. Automatic EDA with Autoviz</button>', unsafe_allow_html=True)
+        if st.sidebar.button('2. Automatic EDA with Autoviz'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = True
             st.session_state.show_analisis_lanjutan = False
