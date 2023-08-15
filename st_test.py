@@ -988,20 +988,20 @@ def main():
         #     # walker = pyg.walk(df, env='Streamlit')
         #     dtale_func(df)
 
-        if st.session_state.get('auto_exploration', False):
-            # st.subheader("Pandas Profiling Report")
-            # Create Pandas Profiling Report
-            # pr = ProfileReport(df, explorative=True)
+        # if st.session_state.get('auto_exploration', False):
+        #     # st.subheader("Pandas Profiling Report")
+        #     # Create Pandas Profiling Report
+        #     # pr = ProfileReport(df, explorative=True)
         
-            # Display the report
-            # st_profile_report(pr)
+        #     # Display the report
+        #     # st_profile_report(pr)
 
-            st.subheader("Auto Visualizations")
-            autovizz(df)
-            AV = AutoViz_Class()
-            dft = AV.AutoViz(df)
-            autoviz_app(df)
-            os.remove(uploaded_file_path) # Menghapus file sementara
+        #     st.subheader("Auto Visualizations")
+        #     autovizz(df)
+        #     AV = AutoViz_Class()
+        #     dft = AV.AutoViz(df)
+        #     autoviz_app(df)
+        #     os.remove(uploaded_file_path) # Menghapus file sementara
 
         # if st.session_state.get('show_analisis_lanjutan', False):
         #     st.subheader("Auto Visualization by Datasans")
