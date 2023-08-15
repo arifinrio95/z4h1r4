@@ -1011,18 +1011,18 @@ def main():
         
         st.markdown("""
             <style>
-                .my-btn-style .stButton>button {
+                .stButton>button {
                     background-color: #4CAF50; 
                     border: none;
                     color: white;
                     padding: 15px 32px;
-                    text-align: left;
+                    text-align: center;
                     text-decoration: none;
                     display: inline-block;
                     font-size: 16px;
                     margin: 4px 2px;
                     cursor: pointer;
-                    width: 200px;
+                    width: 200px;  # Menyetel lebar tombol
                 }
             </style>
             """, unsafe_allow_html=True)
@@ -1039,7 +1039,7 @@ def main():
         
         # Tombol 2
         # st.sidebar.markdown('<button class="my-btn">2. Automatic EDA with Autoviz</button>', unsafe_allow_html=True)
-        if st.sidebar.button('2. Automatic EDA with Autoviz', key='my-btn1', class='my-btn-style'):
+        if st.sidebar.button('2. Automatic EDA with Autoviz', key='my-btn1'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = True
             st.session_state.show_analisis_lanjutan = False
@@ -1058,7 +1058,7 @@ def main():
         
         # Tombol 4
         # st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('4. Natural Language (Best for Data Visualization', key='my-btn2', class='my-btn-style'):
+        if st.sidebar.button('4. Natural Language (Best for Data Visualization', key='my-btn2'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1067,7 +1067,7 @@ def main():
 
         # Tombol 5
         # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('5. Auto Reporting (Best for Survey Data)', key='my-btn3', class='my-btn-style'):
+        if st.sidebar.button('5. Auto Reporting (Best for Survey Data)', key='my-btn3'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
