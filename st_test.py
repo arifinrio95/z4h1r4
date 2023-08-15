@@ -98,7 +98,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         6. Start your response with “import”.
         7. Don’t give me any explanation about the script. Response only with python code in a plain text.
         8. Do not reload the dataframe.
-        9. Use Try and Except for each syntax.
+        9. Use Try and Except for each syntax, Except with pass.
         10. Give a Title for each visualization.
         11. Use Plotly for visualization, with flexibility of user to setting the parameter on streamlit.
         12. Pay attention to the dataframe schema, don't do any convert."""}
