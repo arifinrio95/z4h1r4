@@ -43,6 +43,7 @@ from itertools import chain, combinations
 from scipy.stats import zscore
 from autoviz.AutoViz_Class import AutoViz_Class
 import os
+from IPython.display import display
 
 import dtale
 import dtale.app as dtale_app
