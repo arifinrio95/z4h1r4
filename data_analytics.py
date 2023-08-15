@@ -150,13 +150,14 @@ class DataAnalytics():
                 top_categories)]
             
             sort_option = right_column.selectbox('Sort By:', ['Value', 'Category'])
-                
-            value_format = left_column.selectbox(
-                'Select Value Format:',
-                ['Normal', 'K', 'Mn', 'Bn'])
-            decimal_places = right_column.selectbox(
-                'Select Number of Decimal Places:',
-                ['0', '1', '2', '3', '4'])
+
+            if chart_type!='100% Stacked':
+                value_format = left_column.selectbox(
+                    'Select Value Format:',
+                    ['Normal', 'K', 'Mn', 'Bn'])
+                decimal_places = right_column.selectbox(
+                    'Select Number of Decimal Places:',
+                    ['0', '1', '2', '3', '4'])
             
             if sort_option == 'Value':
                 if chart_type!='Simple' and y_column:
@@ -242,15 +243,20 @@ class DataAnalytics():
                     width, height = p.get_width(), p.get_height()
                     x, y = p.get_xy()
                     if chart_type=='100% Stacked':
-                        add = ' %'
-                    else:
-                        add = ''
-                    ax.text(x+width/2, 
+                        ax.text(x+width/2, 
                             y+height/2, 
-                            '{:.0f}'.format(height) + add, 
+                            '{:.0f} %'.format(height), 
                             horizontalalignment='center', 
                             verticalalignment='center',
                             fontsize=12)
+                    else:
+                        ax.text(x+width/2, 
+                            y+height/2, 
+                            format_value(height), 
+                            horizontalalignment='center', 
+                            verticalalignment='center',
+                            fontsize=12)
+                    
             else:
                 for p in ax.patches:
                     value = p.get_height() if orientation == 'Vertical' else p.get_width()
