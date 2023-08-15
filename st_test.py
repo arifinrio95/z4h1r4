@@ -962,7 +962,7 @@ def main():
 
         
         # Tombol 4
-        if st.sidebar.button('4. Natural Language'):
+        if st.sidebar.button('4. Natural Language (Best for Data Visualization)'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1093,7 +1093,7 @@ def main():
             input_pengguna = ""
             input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
                                          value = "Buatkan beberapa visualisasi yang insightful.")
-            style = st.selectbox('Choose a Style:', 
+            style = st.selectbox('Choose a Visualization Style:', 
                                  ('Plotly','Chartify','Bokeh','Highcharts','ChartJS','Panel'))
             button = st.button("Submit")
           
