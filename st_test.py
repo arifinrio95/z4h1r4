@@ -1091,16 +1091,16 @@ def main():
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
             input_pengguna = ""
-            style = 'Plotly'
+            style_choosen = 'Plotly'
             input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
                                          value = "Buatkan beberapa visualisasi yang insightful.")
-            style = st.selectbox('Choose a Visualization Style:', 
+            style_choosen = st.selectbox('Choose a Visualization Style:', 
                                  ('Plotly','Chartify','Bokeh','Highcharts','ChartJS','Panel'))
             button = st.button("Submit")
           
             if (input_pengguna != "") & (input_pengguna != None) & button:
               with st.spinner('Wait for it...'):
-                script = request_prompt(input_pengguna, schema_str, rows_str, None, None, 0, style)
+                script = request_prompt(input_pengguna, schema_str, rows_str, None, None, 0, style_choosen)
                 exec(str(script))
                 input_pengguna = ""
 
