@@ -59,16 +59,6 @@ def display(obj, *args, **kwargs):
 import sys
 sys.modules["__main__"].display = display
 
-button_style = """
-<style>
-    .my-btn {
-        width: 100%;
-        text-align: left;
-    }
-</style>
-"""
-
-st.markdown(button_style, unsafe_allow_html=True)
 
 hide_menu = """
 <style>
@@ -81,6 +71,17 @@ hide_menu = """
 
 # Find more emojis here: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="Datasans Analisa Otomatis!", page_icon=":tada:", layout="wide")
+
+button_style = """
+<style>
+    .my-btn {
+        width: 100%;
+        text-align: left;
+    }
+</style>
+"""
+
+st.markdown(button_style, unsafe_allow_html=True)
 
 # Use local CSS
 def local_css(file_name):
