@@ -880,253 +880,254 @@ def dtale_func(df):
     components.iframe(dtale_url, height=800)
         
 def main():
-    # st.set_page_config(
-    # layout="wide",
-    # )
-
-    st.markdown(
-        hide_menu,
-        unsafe_allow_html=True
-    )
-   
-    import warnings
-    warnings.filterwarnings('ignore')
-    st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.image('https://drive.google.com/uc?export=view&id=1dWu3kImQ11Q-M2JgLtVz9Dng0MD5S4LK', use_column_width=True)
-
-    # st.title('Personal Data Analysis by Datasans')
-    # st.write('Beta Access.')
-    st.write('Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.')
-    st.subheader('Upload your CSV / Excel data:')
-    file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
-
-    # user_api = st.text_input("Masukkan OpenAI API Key anda: ")
-    
-    # os.environ['user_api'] = st.secrets['user_api']
-    openai.api_key = st.secrets['user_api']
-
-    # try:
-    if file is not None:
-        uploaded_file_path = "temp_file.csv"
-        with open(uploaded_file_path, "wb") as f:
-            f.write(file.read())
-        
-        load_df = LoadDataframe(file)
-        df = load_df.load_file_auto_delimiter()
-        st.dataframe(df.head())
-        analytics_df = DataAnalytics(df)
-
-        st.write('---')
-        analytics_df.info()
-        st.write('---')
-        analytics_df.basic()
-        st.write('---')
-        # # Extract df schema
-        schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
-        schema_str = json.dumps(schema_dict)
-        # st.write("\nDataframe schema : ", schema_str)
-
-        # # Extract the first two rows into a dictionary
-        rows_dict = df.head(2).to_dict('records')
-        rows_str = json.dumps(rows_dict, default=str)
-
-        
-        
-        st.sidebar.subheader('Pilih metode eksplorasi:')
-        # Tombol 1
-        # if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan D-Tale)'):
-        #     st.session_state.manual_exploration = True
-        #     st.session_state.auto_exploration = False
-        #     st.session_state.show_analisis_lanjutan = False
-        #     st.session_state.show_natural_language_exploration = False
-        #     st.session_state.story_telling = False
-
-        
-        # # Tombol 2
-        # if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan AutoViz)'):
-        #     st.session_state.manual_exploration = False
-        #     st.session_state.auto_exploration = True
-        #     st.session_state.show_analisis_lanjutan = False
-        #     st.session_state.show_natural_language_exploration = False
-        #     st.session_state.story_telling = False
-
-        
-        # Tombol 3
-        if st.sidebar.button('3. Auto Visualization by Datasans (under development)'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = True
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
-
-        
-        # Tombol 4
-        if st.sidebar.button('4. Natural Language'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = True
-            st.session_state.story_telling = False
-
-        # Tombol 5
-        if st.sidebar.button('5. Auto Reporting (Best for Survey Data)'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = True
-
-        
-        # if st.session_state.get('manual_exploration', False):
-        #     st.subheader("D-Tale")
-        #     # st.write("PyGWalker adalah pustaka Python untuk analisis visual dengan stye mirip Tableau, memungkinkan eksplorasi data dengan drag and drop seperti Tableau.")
-        #     # st.markdown("[Klik di sini untuk mempelajari lebih lanjut.](https://github.com/Kanaries/pygwalker)")
-        #     # Jika tombol diklik, gunakan PyGWalker
-        #     # walker = pyg.walk(df, env='Streamlit')
-        #     dtale_func(df)
-
-        # if st.session_state.get('auto_exploration', False):
-        #     # st.subheader("Pandas Profiling Report")
-        #     # Create Pandas Profiling Report
-        #     # pr = ProfileReport(df, explorative=True)
-        
-        #     # Display the report
-        #     # st_profile_report(pr)
-
-        #     st.subheader("Auto Visualizations")
-        #     # autovizz(df)
-        #     # AV = AutoViz_Class()
-        #     # dft = AV.AutoViz(df)
-        #     autoviz_app(df)
-        #     # os.remove(uploaded_file_path) # Menghapus file sementara
-
-        if st.session_state.get('show_analisis_lanjutan', False):
-            st.subheader("Auto Visualization by Datasans")
-            # analysis_option = st.sidebar.selectbox('Choose an analysis:', 
-            #                                        ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
-            #                                         'Principal Component Analysis', 'Outlier Detection',
-            #                                         'Normality Test', 'Linear Regression', 'Logistic Regression',
-            #                                         'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
-            #                                         'Text Analysis'))
-
-            # if analysis_option == 'Hierarchical Clustering':
-            #     perform_hierarchical_clustering(df)
-            # elif analysis_option == 'Handle Imbalance Classes':
-            #     handle_imbalance_classes(df)
-            # elif analysis_option == 'Text Analysis':
-            #     perform_text_analysis(df)
-            # elif analysis_option == 'Logistic Regression':
-            #     perform_logistic_regression(df)
-            # elif analysis_option == 'K-Means Clustering':
-            #     perform_k_means_clustering(df)
-            # elif analysis_option == 'Time-Series Analysis':
-            #     perform_time_series_analysis(df)
-            # elif analysis_option == 'Bar Plot':
-            #     show_bar_plot(df)
-            # elif analysis_option == 'Pie Chart':
-            #     show_pie_chart(df)
-            # elif analysis_option == 'Linear Regression':
-            #     perform_linear_regression(df)
-            # elif analysis_option == 'Missing Data':
-            #     show_missing_data(df)
-            # elif analysis_option == 'Outlier Detection':
-            #     show_outliers(df)
-            # elif analysis_option == 'Normality Test':
-            #     perform_shapiro_wilk_test(df)
-            # elif analysis_option == 'Descriptive Statistics':
-            #     show_descriptive_statistics(df)
-            # elif analysis_option == 'Histogram':
-            #     show_histogram(df)
-            # elif analysis_option == 'Box Plot':
-            #     show_box_plot(df)
-            # elif analysis_option == 'Scatter Plot':
-            #     show_scatter_plot(df)
-            # elif analysis_option == 'Correlation Matrix':
-            #     show_correlation_matrix(df)
-            # elif analysis_option == 'Principal Component Analysis':
-            #     perform_pca(df)
-            st.subheader('Basic')
-            st.write('##')
-            analytics_df.barplot()
-            st.write('---')
-            analytics_df.piechart()
-            st.write('---')
-            # show_histogram(df)
-            # show_box_plot(df)
-            # show_scatter_plot(df)
-            # show_outliers(df)
-            show_correlation_matrix(df)
-            # st.write('')
-            # st.subheader('Intermediate')
-            # perform_linear_regression(df)
-            # perform_logistic_regression(df)
-            # perform_k_means_clustering(df)
-            # perform_text_analysis(df)
-            # handle_imbalance_classes(df)
-            # perform_time_series_analysis(df)
-            # st.write('')
-            # st.subheader('Advanced')
-            # perform_pca(df)
-            # perform_hierarchical_clustering(df)
-            # perform_shapiro_wilk_test(df)
-
-        # if st.session_state.get('show_natural_language_exploration', False):
-        #     st.subheader("Natural Language Exploration")
-        #     # input_pengguna = ""
-        #     # User Input
-        #     input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik' """)
-        #     button = st.button("Submit")
-        #     if (input_pengguna != "") & (input_pengguna != None) & button:
-        #         error_message = None
-        #         previous_script = None
-        #         retry_count = 0
-        #         script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
-        #         exec(str(script))
-        #         # st.write("The Script:")
-        #         # st.text(script)
-        #         input_pengguna = ""
-
-        if st.session_state.get('show_natural_language_exploration', False):
-            st.subheader("Natural Language Exploration")
-
-            st.session_state['input_pengguna'] = "Buatkan beberapa visualisasi insightful dari data."
-            input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
-                                          value=st.session_state['input_pengguna'])
-            button = st.button("Submit")
+    with st.spinner('Wait for it...'):
+      # st.set_page_config(
+      # layout="wide",
+      # )
+  
+      st.markdown(
+          hide_menu,
+          unsafe_allow_html=True
+      )
+     
+      import warnings
+      warnings.filterwarnings('ignore')
+      st.set_option('deprecation.showPyplotGlobalUse', False)
+      st.image('https://drive.google.com/uc?export=view&id=1dWu3kImQ11Q-M2JgLtVz9Dng0MD5S4LK', use_column_width=True)
+  
+      # st.title('Personal Data Analysis by Datasans')
+      # st.write('Beta Access.')
+      st.write('Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.')
+      st.subheader('Upload your CSV / Excel data:')
+      file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
+  
+      # user_api = st.text_input("Masukkan OpenAI API Key anda: ")
+      
+      # os.environ['user_api'] = st.secrets['user_api']
+      openai.api_key = st.secrets['user_api']
+  
+      # try:
+      if file is not None:
+          uploaded_file_path = "temp_file.csv"
+          with open(uploaded_file_path, "wb") as f:
+              f.write(file.read())
           
-            # Nilai default untuk text_area
-            default_value = st.session_state['input_pengguna']
-            script = request_prompt(default_value, schema_str, rows_str, None, None, 0)
-            exec(str(script))
-        
-            if button:
-                script = request_prompt(input_pengguna, schema_str, rows_str, None, None, 0)
-                exec(str(script))
-                st.session_state['input_pengguna'] = input_pengguna
-
-
-        if st.session_state.get('story_telling', False):
-            st.subheader("Laporan Statistika")
-
-            st.markdown("""
-            <style>
-                .reportview-container .markdown-text-container {
-                    font-family: monospace;
-                    background-color: #fafafa;
-                    max-width: 700px;
-                    padding-right:50px;
-                    padding-left:50px;
-                }
-            </style>
-            """, unsafe_allow_html=True)
-            dict_stats = analyze_dataframe(df)
-            # st.write("Temporary showing, under review....")
-            # st.write(dict_stats)
-            # for i in dict_stats:
-            #     st.markdown(request_story_prompt(i))
-            st.markdown(request_story_prompt(dict_stats))
-            # st.text(request_story_prompt(analyze_dataframe(df)))
-            # visualize_analysis(dict_stats)
+          load_df = LoadDataframe(file)
+          df = load_df.load_file_auto_delimiter()
+          st.dataframe(df.head())
+          analytics_df = DataAnalytics(df)
+  
+          st.write('---')
+          analytics_df.info()
+          st.write('---')
+          analytics_df.basic()
+          st.write('---')
+          # # Extract df schema
+          schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
+          schema_str = json.dumps(schema_dict)
+          # st.write("\nDataframe schema : ", schema_str)
+  
+          # # Extract the first two rows into a dictionary
+          rows_dict = df.head(2).to_dict('records')
+          rows_str = json.dumps(rows_dict, default=str)
+  
+          
+          
+          st.sidebar.subheader('Pilih metode eksplorasi:')
+          # Tombol 1
+          # if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan D-Tale)'):
+          #     st.session_state.manual_exploration = True
+          #     st.session_state.auto_exploration = False
+          #     st.session_state.show_analisis_lanjutan = False
+          #     st.session_state.show_natural_language_exploration = False
+          #     st.session_state.story_telling = False
+  
+          
+          # # Tombol 2
+          # if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan AutoViz)'):
+          #     st.session_state.manual_exploration = False
+          #     st.session_state.auto_exploration = True
+          #     st.session_state.show_analisis_lanjutan = False
+          #     st.session_state.show_natural_language_exploration = False
+          #     st.session_state.story_telling = False
+  
+          
+          # Tombol 3
+          if st.sidebar.button('3. Auto Visualization by Datasans (under development)'):
+              st.session_state.manual_exploration = False
+              st.session_state.auto_exploration = False
+              st.session_state.show_analisis_lanjutan = True
+              st.session_state.show_natural_language_exploration = False
+              st.session_state.story_telling = False
+  
+          
+          # Tombol 4
+          if st.sidebar.button('4. Natural Language'):
+              st.session_state.manual_exploration = False
+              st.session_state.auto_exploration = False
+              st.session_state.show_analisis_lanjutan = False
+              st.session_state.show_natural_language_exploration = True
+              st.session_state.story_telling = False
+  
+          # Tombol 5
+          if st.sidebar.button('5. Auto Reporting (Best for Survey Data)'):
+              st.session_state.manual_exploration = False
+              st.session_state.auto_exploration = False
+              st.session_state.show_analisis_lanjutan = False
+              st.session_state.show_natural_language_exploration = False
+              st.session_state.story_telling = True
+  
+          
+          # if st.session_state.get('manual_exploration', False):
+          #     st.subheader("D-Tale")
+          #     # st.write("PyGWalker adalah pustaka Python untuk analisis visual dengan stye mirip Tableau, memungkinkan eksplorasi data dengan drag and drop seperti Tableau.")
+          #     # st.markdown("[Klik di sini untuk mempelajari lebih lanjut.](https://github.com/Kanaries/pygwalker)")
+          #     # Jika tombol diklik, gunakan PyGWalker
+          #     # walker = pyg.walk(df, env='Streamlit')
+          #     dtale_func(df)
+  
+          # if st.session_state.get('auto_exploration', False):
+          #     # st.subheader("Pandas Profiling Report")
+          #     # Create Pandas Profiling Report
+          #     # pr = ProfileReport(df, explorative=True)
+          
+          #     # Display the report
+          #     # st_profile_report(pr)
+  
+          #     st.subheader("Auto Visualizations")
+          #     # autovizz(df)
+          #     # AV = AutoViz_Class()
+          #     # dft = AV.AutoViz(df)
+          #     autoviz_app(df)
+          #     # os.remove(uploaded_file_path) # Menghapus file sementara
+  
+          if st.session_state.get('show_analisis_lanjutan', False):
+              st.subheader("Auto Visualization by Datasans")
+              # analysis_option = st.sidebar.selectbox('Choose an analysis:', 
+              #                                        ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
+              #                                         'Principal Component Analysis', 'Outlier Detection',
+              #                                         'Normality Test', 'Linear Regression', 'Logistic Regression',
+              #                                         'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
+              #                                         'Text Analysis'))
+  
+              # if analysis_option == 'Hierarchical Clustering':
+              #     perform_hierarchical_clustering(df)
+              # elif analysis_option == 'Handle Imbalance Classes':
+              #     handle_imbalance_classes(df)
+              # elif analysis_option == 'Text Analysis':
+              #     perform_text_analysis(df)
+              # elif analysis_option == 'Logistic Regression':
+              #     perform_logistic_regression(df)
+              # elif analysis_option == 'K-Means Clustering':
+              #     perform_k_means_clustering(df)
+              # elif analysis_option == 'Time-Series Analysis':
+              #     perform_time_series_analysis(df)
+              # elif analysis_option == 'Bar Plot':
+              #     show_bar_plot(df)
+              # elif analysis_option == 'Pie Chart':
+              #     show_pie_chart(df)
+              # elif analysis_option == 'Linear Regression':
+              #     perform_linear_regression(df)
+              # elif analysis_option == 'Missing Data':
+              #     show_missing_data(df)
+              # elif analysis_option == 'Outlier Detection':
+              #     show_outliers(df)
+              # elif analysis_option == 'Normality Test':
+              #     perform_shapiro_wilk_test(df)
+              # elif analysis_option == 'Descriptive Statistics':
+              #     show_descriptive_statistics(df)
+              # elif analysis_option == 'Histogram':
+              #     show_histogram(df)
+              # elif analysis_option == 'Box Plot':
+              #     show_box_plot(df)
+              # elif analysis_option == 'Scatter Plot':
+              #     show_scatter_plot(df)
+              # elif analysis_option == 'Correlation Matrix':
+              #     show_correlation_matrix(df)
+              # elif analysis_option == 'Principal Component Analysis':
+              #     perform_pca(df)
+              st.subheader('Basic')
+              st.write('##')
+              analytics_df.barplot()
+              st.write('---')
+              analytics_df.piechart()
+              st.write('---')
+              # show_histogram(df)
+              # show_box_plot(df)
+              # show_scatter_plot(df)
+              # show_outliers(df)
+              show_correlation_matrix(df)
+              # st.write('')
+              # st.subheader('Intermediate')
+              # perform_linear_regression(df)
+              # perform_logistic_regression(df)
+              # perform_k_means_clustering(df)
+              # perform_text_analysis(df)
+              # handle_imbalance_classes(df)
+              # perform_time_series_analysis(df)
+              # st.write('')
+              # st.subheader('Advanced')
+              # perform_pca(df)
+              # perform_hierarchical_clustering(df)
+              # perform_shapiro_wilk_test(df)
+  
+          # if st.session_state.get('show_natural_language_exploration', False):
+          #     st.subheader("Natural Language Exploration")
+          #     # input_pengguna = ""
+          #     # User Input
+          #     input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik' """)
+          #     button = st.button("Submit")
+          #     if (input_pengguna != "") & (input_pengguna != None) & button:
+          #         error_message = None
+          #         previous_script = None
+          #         retry_count = 0
+          #         script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+          #         exec(str(script))
+          #         # st.write("The Script:")
+          #         # st.text(script)
+          #         input_pengguna = ""
+  
+          if st.session_state.get('show_natural_language_exploration', False):
+              st.subheader("Natural Language Exploration")
+  
+              st.session_state['input_pengguna'] = "Buatkan beberapa visualisasi insightful dari data."
+              input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
+                                            value=st.session_state['input_pengguna'])
+              button = st.button("Submit")
+            
+              # Nilai default untuk text_area
+              default_value = st.session_state['input_pengguna']
+              script = request_prompt(default_value, schema_str, rows_str, None, None, 0)
+              exec(str(script))
+          
+              if button:
+                  script = request_prompt(input_pengguna, schema_str, rows_str, None, None, 0)
+                  exec(str(script))
+                  st.session_state['input_pengguna'] = input_pengguna
+  
+  
+          if st.session_state.get('story_telling', False):
+              st.subheader("Laporan Statistika")
+  
+              st.markdown("""
+              <style>
+                  .reportview-container .markdown-text-container {
+                      font-family: monospace;
+                      background-color: #fafafa;
+                      max-width: 700px;
+                      padding-right:50px;
+                      padding-left:50px;
+                  }
+              </style>
+              """, unsafe_allow_html=True)
+              dict_stats = analyze_dataframe(df)
+              # st.write("Temporary showing, under review....")
+              # st.write(dict_stats)
+              # for i in dict_stats:
+              #     st.markdown(request_story_prompt(i))
+              st.markdown(request_story_prompt(dict_stats))
+              # st.text(request_story_prompt(analyze_dataframe(df)))
+              # visualize_analysis(dict_stats)
 
 if __name__ == "__main__":
     main()
