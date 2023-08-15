@@ -894,7 +894,7 @@ def main():
     import warnings
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.image('https://drive.google.com/uc?export=view&id=1dWu3kImQ11Q-M2JgLtVz9Dng0MD5S4LK', use_column_width=True)
+    st.image('https://drive.google.com/uc?export=view&id=1EIKQGaZbQG5Qw2ndq_5PLHF1GlIsZt25', use_column_width=True)
 
     # st.title('Personal Data Analysis by Datasans')
     # st.write('Beta Access.')
