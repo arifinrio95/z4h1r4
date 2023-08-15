@@ -1171,7 +1171,8 @@ def main():
                     
                     col1, col2, col3 = st.columns(3)  # Membuat 3 kolom
 
-                    with col1: 
+                    with col1:
+                        st.subheader("Visualizations")
                         exec(str(script))
                     
                     with col2:
