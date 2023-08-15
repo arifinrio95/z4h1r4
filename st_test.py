@@ -892,14 +892,23 @@ def dtale_func(df):
     # Menanamkan Dtale ke dalam Streamlit menggunakan iframe
     components.iframe(dtale_url, height=800)
 
-def convert_streamlit_to_plotly(code: str) -> str:
+def convert_streamlit_to_plotly(streamlit_code: str) -> str:
     # Menghapus baris yang berisi 'import streamlit'
-    code = code.replace("import streamlit as st", "")
+    streamlit_code = streamlit_code.replace("import streamlit as st", "")
     
-    # Mengganti 'st.plotly_chart' dengan 'fig.show'
-    code = code.replace("st.plotly_chart(", "fig.show(")
+    # Menggantikan 'st.plotly_chart(<figure_name>)' dengan '<figure_name>.show()'
+    lines = streamlit_code.split("\n")
+    converted_lines = []
     
-    return code
+    for line in lines:
+        if "st.plotly_chart" in line:
+            fig_name = line[line.find("(") + 1 : line.find(")")]
+            converted_line = f"{fig_name}.show()"
+            converted_lines.append(converted_line)
+        else:
+            converted_lines.append(line)
+
+    return "\n".join(converted_lines)
 
 def main():
     # st.set_page_config(
@@ -1172,7 +1181,6 @@ def main():
                         st.text(script)
                         st.text(convert_streamlit_to_plotly(script))
 
-            
                     input_pengguna = ""
 
         if st.session_state.get('story_telling', False):
