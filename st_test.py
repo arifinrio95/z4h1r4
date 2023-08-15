@@ -54,6 +54,17 @@ hide_menu = """
 }
 </style>
 """
+
+# Find more emojis here: https://www.webfx.com/tools/emoji-cheat-sheet/
+st.set_page_config(page_title="Datasans Analisa Otomatis!", page_icon=":tada:", layout="wide")
+
+# Use local CSS
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+local_css("style/style.css")
+
 ## or use this:
 # .css-ztfqz8 {
 #     display: none !important;
@@ -905,8 +916,11 @@ def main():
         st.dataframe(df.head())
         analytics_df = DataAnalytics(df)
 
+        st.write('---')
         analytics_df.info()
+        st.write('---')
         analytics_df.basic()
+        st.write('---')
         # # Extract df schema
         schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
         schema_str = json.dumps(schema_dict)
@@ -1032,8 +1046,11 @@ def main():
             # elif analysis_option == 'Principal Component Analysis':
             #     perform_pca(df)
             st.subheader('Basic')
+            st.write('##')
             analytics_df.barplot()
+            st.write('---')
             analytics_df.piechart()
+            st.write('---')
             # show_histogram(df)
             # show_box_plot(df)
             # show_scatter_plot(df)
