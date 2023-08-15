@@ -856,28 +856,6 @@ def visualize_analysis(result):
             fig, ax = plt.subplots(figsize=(10,5))
             ax.bar(stats.keys(), stats.values())
             st.pyplot(fig)
-def autoviz_app(df):
-    # Membaca file yang diunggah sebagai DataFrame pandas
-    # df = pd.read_csv(uploaded_file)
-    
-    # Membuat objek Autoviz
-    AV = AutoViz_Class()
-    
-    # Menjalankan Autoviz pada DataFrame dan menyimpan plot dalam direktori saat ini
-    report = AV.AutoViz(
-        "",
-        dfte=df,
-        header=0,
-        verbose=0,
-        lowess=False,
-        chart_format="png",
-        max_rows_analyzed=150000,
-        max_cols_analyzed=30
-    )
-
-# Ini adalah hack untuk membiarkan kita menjalankan D-Tale dalam Streamlit
-# dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
-# dtale_app.app.jinja_env = dtale_app.JINJA2_ENV
 
 def dtale_func(df):
     # dtale_app.JINJA2_ENV = dtale_app.JINJA2_ENV.overlay(autoescape=False)
