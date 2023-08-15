@@ -115,18 +115,19 @@ def request_prompt(input_pengguna, schema_str, rows_str, style='Plotly', error_m
         {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
         {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
         1. {input_pengguna}. 
-        2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-        3. Respond with scripts without any text. 
-        4. Respond in plain text code. 
-        5. Don’t start your response with “Sure, here are”. 
-        6. Start your response with “import”.
-        7. Don’t give me any explanation about the script. Response only with python code in a plain text.
-        8. Do not reload the dataframe.
-        9. Use Try and Except for each syntax, Except with pass.
-        10. Give a Title for each visualization with st.subheader.
-        11. Use unique streamlit widgets.
-        11. Use {style} library for visualization.
-        12. Pay attention to the dataframe schema, don't do any convert."""}
+        2. (Only for specific scenarios) where columns correspond to months or years, pivot them into a single standalone column.
+        3. My dataframe already load previously, named df, use it, do not reload the dataframe.
+        4. Respond with scripts without any text. 
+        5. Respond in plain text code. 
+        6. Don’t start your response with “Sure, here are”. 
+        7. Start your response with “import”.
+        8. Don’t give me any explanation about the script. Response only with python code in a plain text.
+        9. Do not reload the dataframe.
+        10. Use Try and Except for each syntax, Except with pass.
+        11. Give a Title for each visualization with st.subheader.
+        12. Use unique streamlit widgets.
+        13. Use {style} library for visualization.
+        14. Pay attention to the dataframe schema, don't do any convert."""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
     
