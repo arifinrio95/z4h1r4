@@ -1153,8 +1153,23 @@ def main():
 
             st.subheader("Auto Visualizations")
             # Buat instance dari AutoViz
+            def display_html_files_from_dir(directory):
+                """Recursively fetch and display HTML files from a directory and its subdirectories."""
+                for item in os.listdir(directory):
+                    full_path = os.path.join(directory, item)
+                    
+                    if os.path.isfile(full_path) and item.endswith('.html'):
+                        try:
+                            with open(full_path, "r") as f:
+                                bokeh_html = f.read()
+                                st.components.v1.html(bokeh_html, width=1000, height=600)
+                        except Exception as e:
+                            st.write(f"Error reading '{full_path}': {e}")
+                    elif os.path.isdir(full_path):
+                        display_html_files_from_dir(full_path)  # Recursively dive into subdirectories
+            
             AV = AutoViz_Class()
-
+            
             # Directory to save HTML plots
             save_dir = "saved_plots"
             os.makedirs(save_dir, exist_ok=True)
@@ -1175,20 +1190,7 @@ def main():
             )
             
             # Display all saved plots in Streamlit
-            for plot_file in os.listdir(save_dir):
-                full_path = os.path.join(save_dir, plot_file)
-                
-                # Only process files, skip directories
-                if os.path.isfile(full_path) and plot_file.endswith('.html'):
-                    try:
-                        with open(full_path, "r") as f:
-                            bokeh_html = f.read()
-                            st.components.v1.html(bokeh_html, width=1000, height=600)
-                    except Exception as e:
-                        st.write(f"Error reading '{full_path}': {e}")
-                elif os.path.isdir(full_path):
-                    # If you encounter a directory, print a diagnostic message
-                    st.write(f"'{full_path}' is a directory. Skipping it.")
+            display_html_files_from_dir(save_dir)
           
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
