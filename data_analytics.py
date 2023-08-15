@@ -247,9 +247,10 @@ class DataAnalytics():
                         add = ''
                     ax.text(x+width/2, 
                             y+height/2, 
-                            '{:.0f}' + add.format(height), 
+                            '{:.0f}'.format(height) + add, 
                             horizontalalignment='center', 
-                            verticalalignment='center')
+                            verticalalignment='center',
+                            fontsize=12)
             else:
                 for p in ax.patches:
                     value = p.get_height() if orientation == 'Vertical' else p.get_width()
