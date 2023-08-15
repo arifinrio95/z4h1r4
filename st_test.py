@@ -913,12 +913,22 @@ def convert_streamlit_to_plotly(streamlit_code: str) -> str:
     return "\n".join(converted_lines)
 
 def convert_streamlit_to_python_seaborn(streamlit_code: str) -> str:
+    # Menghapus baris yang berisi 'import streamlit'
+    streamlit_code = streamlit_code.replace("import streamlit as st", "")
+    
     # Menggantikan 'st.pyplot()' dengan 'plt.show()'
     streamlit_code = streamlit_code.replace("st.pyplot()", "plt.show()")
     
-    # Menghapus semua baris yang mengandung 'st.' kecuali 'st.pyplot()'
+    # Menggantikan 'st.title("...")' dengan komentar '# ...'
     lines = streamlit_code.split("\n")
-    converted_lines = [line for line in lines if "st." not in line or "st.pyplot()" in line]
+    converted_lines = []
+
+    for line in lines:
+        if "st.title(" in line:
+            title_content = line[line.find("(")+1:line.find(")")]
+            converted_lines.append(f"# {title_content}")
+        elif "st." not in line or "st.pyplot()" in line:
+            converted_lines.append(line)
     
     return "\n".join(converted_lines)
 
