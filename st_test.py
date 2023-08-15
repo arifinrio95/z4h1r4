@@ -1160,7 +1160,7 @@ def main():
                 with st.spinner('Wait for it...'):
                     script = request_prompt(input_pengguna, schema_str, rows_str, style_choosen, None, None, 0)
                     
-                    col1, col2 = st.beta_columns(2)  # Membuat 2 kolom
+                    col1, col2 = st.columns(2)  # Membuat 2 kolom
             
                     with col1:
                         exec(str(script))
