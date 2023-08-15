@@ -114,8 +114,8 @@ def request_prompt(input_pengguna, schema_str, rows_str, style='Plotly', error_m
     messages = [
         {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
         {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-        1. {input_pengguna}. 
-        2. (Only for specific scenarios) where columns correspond to months or years, pivot them into a single standalone column.
+        1. (Only for specific scenarios) where columns correspond to months or years, first pivot them into a single standalone column, overwrite to df.
+        2. {input_pengguna}. 
         3. My dataframe already load previously, named df, use it, do not reload the dataframe.
         4. Respond with scripts without any text. 
         5. Respond in plain text code. 
