@@ -8,9 +8,9 @@ button {
   cursor: pointer;
 }
 
-/* When moving the mouse over the submit button, add a darker green color */
+/* When moving the mouse over the submit button, add a light blue color */
 button:hover {
-  background-color: #45a049;
+  background-color: #c7f0e2;
 }
 
 /* Hide Streamlit Branding */
