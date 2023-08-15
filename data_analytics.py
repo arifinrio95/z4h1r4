@@ -301,7 +301,7 @@ class DataAnalytics():
         else:
             st.write("No categorical column to display")
 
-    def show_pie_chart(self):
+    def piechart(self):
         st.subheader("Pie Chart")
         left_column, right_column = st.columns(2)
         column = left_column.selectbox('Select a Categorical Column for Pie Chart:', self.categorical_columns)
