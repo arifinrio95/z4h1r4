@@ -1163,12 +1163,12 @@ def main():
                     col1, col2, col3 = st.columns(3)  # Membuat 3 kolom
 
                     with col1: 
-                        pass
-                    
-                    with col2:  # Menggunakan kolom kedua untuk menampilkan hasil dari exec
                         exec(str(script))
+                    
+                    with col2:
+                        pass
             
-                    with col3:  # Menggunakan kolom ketiga untuk hasil dari convert_streamlit_to_plotly
+                    with col3:
                         st.write(convert_streamlit_to_plotly(script))
 
             
