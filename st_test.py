@@ -935,6 +935,21 @@ def convert_streamlit_to_python_seaborn(streamlit_code: str) -> str:
     
     return "\n".join(converted_lines)
 
+def display_html_files_from_dir(directory):
+    """Recursively fetch and display HTML files from a directory and its subdirectories."""
+    for item in os.listdir(directory):
+        full_path = os.path.join(directory, item)
+        
+        if os.path.isfile(full_path) and item.endswith('.html'):
+            try:
+                with open(full_path, "r") as f:
+                    bokeh_html = f.read()
+                    st.components.v1.html(bokeh_html, width=1000, height=600)
+            except Exception as e:
+                st.write(f"Error reading '{full_path}': {e}")
+        elif os.path.isdir(full_path):
+            display_html_files_from_dir(full_path)  # Recursively dive into subdirectories
+                        
 def main():
     # st.set_page_config(
     # layout="wide",
@@ -1153,21 +1168,6 @@ def main():
 
             st.subheader("Auto Visualizations")
             # Buat instance dari AutoViz
-            def display_html_files_from_dir(directory):
-                """Recursively fetch and display HTML files from a directory and its subdirectories."""
-                for item in os.listdir(directory):
-                    full_path = os.path.join(directory, item)
-                    
-                    if os.path.isfile(full_path) and item.endswith('.html'):
-                        try:
-                            with open(full_path, "r") as f:
-                                bokeh_html = f.read()
-                                st.components.v1.html(bokeh_html, width=1000, height=600)
-                        except Exception as e:
-                            st.write(f"Error reading '{full_path}': {e}")
-                    elif os.path.isdir(full_path):
-                        display_html_files_from_dir(full_path)  # Recursively dive into subdirectories
-            
             AV = AutoViz_Class()
             
             # Directory to save HTML plots
