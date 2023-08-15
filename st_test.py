@@ -1022,7 +1022,7 @@ def main():
                     font-size: 16px;
                     margin: 4px 2px;
                     cursor: pointer;
-                    height: 100px;
+                    height: 50px;
                     width: 300px;
                     white-space: normal !important;
                 }
