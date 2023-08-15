@@ -1169,8 +1169,8 @@ def main():
                         pass
             
                     with col3:
-                        st.write(script)
-                        st.write(convert_streamlit_to_plotly(script))
+                        st.text(script)
+                        st.text(convert_streamlit_to_plotly(script))
 
             
                     input_pengguna = ""
