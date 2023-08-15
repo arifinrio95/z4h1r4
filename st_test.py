@@ -955,12 +955,12 @@ def main():
 
         
         # Tombol 3
-        if st.sidebar.button('3. Auto Visualization by Datasans (under development)'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = True
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
+        # if st.sidebar.button('3. Auto Visualization by Datasans (under development)'):
+        #     st.session_state.manual_exploration = False
+        #     st.session_state.auto_exploration = False
+        #     st.session_state.show_analisis_lanjutan = True
+        #     st.session_state.show_natural_language_exploration = False
+        #     st.session_state.story_telling = False
 
         
         # Tombol 4
@@ -1003,9 +1003,9 @@ def main():
         #     autoviz_app(df)
         #     # os.remove(uploaded_file_path) # Menghapus file sementara
 
-        if st.session_state.get('show_analisis_lanjutan', False):
-            st.subheader("Auto Visualization by Datasans")
-            with st.spinner('Wait for it...'):
+        # if st.session_state.get('show_analisis_lanjutan', False):
+        #     st.subheader("Auto Visualization by Datasans")
+        #     with st.spinner('Wait for it...'):
               # analysis_option = st.sidebar.selectbox('Choose an analysis:', 
               #                                        ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
               #                                         'Principal Component Analysis', 'Outlier Detection',
@@ -1049,17 +1049,17 @@ def main():
               #     show_correlation_matrix(df)
               # elif analysis_option == 'Principal Component Analysis':
               #     perform_pca(df)
-              st.subheader('Basic')
-              st.write('##')
-              analytics_df.barplot()
-              st.write('---')
-              analytics_df.piechart()
-              st.write('---')
+              # st.subheader('Basic')
+              # st.write('##')
+              # analytics_df.barplot()
+              # st.write('---')
+              # analytics_df.piechart()
+              # st.write('---')
               # show_histogram(df)
               # show_box_plot(df)
               # show_scatter_plot(df)
               # show_outliers(df)
-              show_correlation_matrix(df)
+              # show_correlation_matrix(df)
               # st.write('')
               # st.subheader('Intermediate')
               # perform_linear_regression(df)
