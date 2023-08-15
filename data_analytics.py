@@ -103,8 +103,7 @@ class DataAnalytics():
                 y_column = left_column.selectbox('Select a Numeric Column:',
                                                  self.numeric_columns,
                                                  index=0)
-                if chart_type == 'Grouped':
-                    aggregation_method = right_column.selectbox(
+                aggregation_method = right_column.selectbox(
                         'Select Aggregation Method:',
                         ['sum', 'mean', 'count', 'max', 'min'])
     
@@ -150,8 +149,8 @@ class DataAnalytics():
             top_categories_data = self.df.loc[self.df[column].isin(
                 top_categories)]
             
-            sort_option = right_column.selectbox('Sort By:',
-                                                ['Value', 'Category'])
+            sort_option = right_column.selectbox('Sort By:', ['Value', 'Category'])
+                
             value_format = left_column.selectbox(
                 'Select Value Format:',
                 ['Normal', 'K', 'Mn', 'Bn'])
@@ -198,17 +197,19 @@ class DataAnalytics():
                 elif aggregation_method is not None:
                     data_to_plot = top_categories_data.groupby(column)[y_column].agg(
                         aggregation_func).reset_index()
-                else:
+                    
+                if chart_type != 'Grouped':
                     hue = right_column.selectbox(
                         'Select Stacked Category:',
                         [x for x in self.categorical_columns if x!=column])
                     
                     # Get the top 4 stacked categories
                     top_hue_categories = top_categories_data[hue].value_counts().nlargest(4).index
-                    top_categories_data[hue] = np.where(top_categories_data[hue].isin(top_hue_categories), top_categories_data[hue], 'Others')
-                    
+                    top_categories_data.loc[~(top_categories_data[hue].isin(top_hue_categories)), hue] = 'Others'
+
                     # Pivot the data to wide format for stacking
-                    data_to_plot = top_categories_data.pivot(index=column, columns=hue, values=y_column)
+                    data_to_plot = top_categories_data.groupby([column, hue])[y_column].agg(aggregation_func).reset_index()
+                    data_to_plot = data_to_plot.pivot(index=column, columns=hue, values=y_column)
 
                     if chart_type=='100% Stacked':
                         data_to_plot = data_to_plot.div(data_to_plot.sum(axis=1), axis=0) * 100
@@ -228,30 +229,45 @@ class DataAnalytics():
                                          palette=color_pal)
                 else:
                     if orientation == 'Vertical':
-                        data_to_plot.plot(kind='bar', stacked=True, color=color_pal, order=order)
+                        ax = data_to_plot.plot(kind='bar', stacked=True, color=color_pal)
                     else:
-                        data_to_plot.plot(kind='barh', stacked=True, color=color_pal, order=order)
+                        ax = data_to_plot.plot(kind='barh', stacked=True, color=color_pal)
             
             # Add value labels
             x_label_size = plt.xticks()[1][0].get_size()
             y_label_size = plt.yticks()[1][0].get_size()
-            for p in ax.patches:
-                value = p.get_height() if orientation == 'Vertical' else p.get_width()
-                formatted_value = format_value(value)
-                if orientation == 'Vertical':
-                    ax.annotate(
-                        formatted_value,
-                        (p.get_x() + p.get_width() / 2., value),
-                        ha='center',
-                        va='baseline',
-                        fontsize=x_label_size)
-                elif orientation == 'Horizontal':
-                    ax.annotate(
-                        formatted_value,
-                        (value, p.get_y() + p.get_height() / 2.),
-                        ha='left',
-                        va='center',
-                        fontsize=y_label_size)
+
+            if chart_type not in ['Simple', 'Grouped']:
+                for p in ax.patches:
+                    width, height = p.get_width(), p.get_height()
+                    x, y = p.get_xy()
+                    if chart_type=='100% Stacked':
+                        add = ' %'
+                    else:
+                        add = ''
+                    ax.text(x+width/2, 
+                            y+height/2, 
+                            '{:.0f}' + add.format(height), 
+                            horizontalalignment='center', 
+                            verticalalignment='center')
+            else:
+                for p in ax.patches:
+                    value = p.get_height() if orientation == 'Vertical' else p.get_width()
+                    formatted_value = format_value(value)
+                    if orientation == 'Vertical':
+                        ax.annotate(
+                            formatted_value,
+                            (p.get_x() + p.get_width() / 2., value),
+                            ha='center',
+                            va='baseline',
+                            fontsize=x_label_size)
+                    elif orientation == 'Horizontal':
+                        ax.annotate(
+                            formatted_value,
+                            (value, p.get_y() + p.get_height() / 2.),
+                            ha='left',
+                            va='center',
+                            fontsize=y_label_size)
     
             title = f'{chart_type} Bar Plot of {column}'
             if chart_type != 'Simple':
