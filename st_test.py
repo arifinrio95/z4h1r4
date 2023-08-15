@@ -137,11 +137,6 @@ def request_story_prompt(dict_stats):
 
     return script
 
-# Function to display descriptive statistics
-def show_descriptive_statistics(df):
-    st.write('Descriptive Statistics')
-    st.write(df.describe())
-
 # Function to display a histogram
 def show_histogram(df):
     left_column, right_column = st.columns(2)
@@ -348,14 +343,7 @@ def perform_pca(df):
     loadings = pd.DataFrame(pca.components_.T, columns=[f'PC{i+1}' for i in range(n_components)], index=numeric_df.columns)
     st.write("Loadings:")
     st.write(loadings)
-
-
-# Function to show missing data
-def show_missing_data(df):
-    st.write('Check Missing Values')
-    missing_data = df.isnull().sum()
-    st.write(missing_data[missing_data > 0])
-
+  
 # Function to show outliers using Z-score
 def show_outliers(df):
     st.subheader("Outliers Detection")
@@ -414,122 +402,6 @@ def perform_shapiro_wilk_test(df):
     plt.ylabel('Sample Quantiles')
 
     st.pyplot(plt)
-
-def show_bar_plot(df):
-    st.subheader("Bar Plot")
-    left_column, right_column = st.columns(2)
-
-    categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
-    numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
-    column = left_column.selectbox('Select a Categorical Column for Bar Plot:', categorical_columns)
-    chart_type = right_column.selectbox('Select Chart Type:', ['Grouped', 'Single', 'Stacked', '100% Stacked'])
-    y_column = None
-    aggregation_method = None
-
-    if chart_type != 'Single':
-        y_column = left_column.selectbox('Select a Numeric Column:', numeric_columns, index=0)
-        aggregation_method = right_column.selectbox('Select Aggregation Method:', ['sum', 'mean', 'count', 'max', 'min'])
-
-    aggregation_methods = {
-        'sum': np.sum,
-        'mean': np.mean,
-        'count': 'count',
-        'max': np.max,
-        'min': np.min,
-    }
-    aggregation_func = aggregation_methods[aggregation_method] if aggregation_method else None
-
-    orientation = left_column.selectbox('Select Orientation:', ['Horizontal','Vertical'])
-    
-    # Opsi warna yang mudah dimengerti
-    color_options = ['Blue', 'Red', 'Green', 'Yellow', 'Purple', 'Pink', 'Orange', 'Brown']
-    color_option = right_column.selectbox('Select Bar Color:', color_options)
-    color_mapping = {
-        'Blue': 'b', 'Red': 'r', 'Green': 'g', 'Yellow': 'y', 'Purple': 'm', 'Pink': 'pink', 'Orange': 'orange', 'Brown': 'brown'
-    }
-    color = color_mapping[color_option]
-
-    sort_option = left_column.selectbox('Sort By:', ['None', 'Value', 'Category'])
-    order = None
-    if sort_option == 'Value' and y_column:
-        order = df.groupby(column).agg({y_column: aggregation_method}).sort_values(by=y_column, ascending=False).index
-    elif sort_option == 'Category':
-        order = sorted(df[column].unique())
-
-    if not y_column and chart_type != 'Single':
-        st.warning('Please select a Numerical Column for chart types other than Single.')
-        return
-
-    if chart_type == 'Single':
-        # Handle Single chart type
-        if orientation == 'Vertical':
-            ax = sns.countplot(x=column, data=df, order=order, color=color)
-        elif orientation == 'Horizontal':
-            ax = sns.countplot(y=column, data=df, order=order, color=color)
-    else:
-        if aggregation_method == 'count':
-            data_to_plot = df.groupby(column).size().reset_index(name=y_column)
-        else:
-            data_to_plot = df.groupby(column)[y_column].agg(aggregation_func).reset_index()
-        y_value = y_column
-
-        if chart_type == 'Grouped':
-            if orientation == 'Vertical':
-                ax = sns.barplot(x=column, y=y_value, data=data_to_plot, order=order, color=color)
-            elif orientation == 'Horizontal':
-                ax = sns.barplot(y=column, x=y_value, data=data_to_plot, order=order, color=color)
-        elif chart_type == 'Stacked':
-            data_to_plot.plot(kind='bar', x=column, y=y_value, stacked=True, color=color)
-        elif chart_type == '100% Stacked':
-            df_stacked = data_to_plot.groupby(column).apply(lambda x: 100 * x / x.sum()).reset_index()
-            df_stacked.plot(kind='bar', x=column, y=y_value, stacked=True, color=color)
-
-    # Add value labels
-    if chart_type == 'Grouped':
-        for p in ax.patches:
-            if orientation == 'Vertical':
-                ax.annotate(f'{p.get_height():.2f}', (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='baseline')
-            elif orientation == 'Horizontal':
-                ax.annotate(f'{p.get_width():.2f}', (p.get_width(), p.get_y() + p.get_height() / 2.), ha='left', va='center')
-
-    title = f'{chart_type} Bar Plot of {column}'
-    if chart_type != 'Single':
-        title += f' using {aggregation_method} of {y_column}'
-    if orientation == 'Horizontal':
-        title += ' (Horizontal Orientation)'
-    else:
-        title += ' (Vertical Orientation)'
-
-    plt.title(title, fontsize=16, fontweight="bold")
-    plt.xlabel('Value' if y_column else 'Count', fontsize=12)
-    plt.ylabel(column, fontsize=12)
-    sns.despine(left=True, bottom=True)
-    st.pyplot(plt)
-
-# Function to perform pie chart for categorical data
-def show_pie_chart(df):
-    st.subheader("Pie Chart")
-    left_column, right_column = st.columns(2)
-    categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
-    column = left_column.selectbox('Select a Categorical Column for Pie Chart:', categorical_columns)
-    color_palette = right_column.selectbox('Choose a Color Palette:', sns.palettes.SEABORN_PALETTES.keys())
-    show_percentage = left_column.checkbox('Show Percentage', value=True)
-    show_labels = right_column.checkbox('Show Labels', value=True)
-    explode_option = left_column.slider('Explode Segments:', 0.0, 0.5, 0.0)
-    figsize_option = right_column.slider('Size of Pie Chart:', 5, 20, 10)
-
-    labels = df[column].value_counts().index
-    sizes = df[column].value_counts().values
-    colors = sns.color_palette(color_palette, len(labels))
-    explode = [explode_option] * len(labels)
-    autopct = '%1.1f%%' if show_percentage else None
-
-    fig, ax = plt.subplots(figsize=(figsize_option, figsize_option))
-    ax.pie(sizes, explode=explode, labels=labels if show_labels else None, colors=colors, autopct=autopct, shadow=True, startangle=90)
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-    st.pyplot(fig)
-
 
 # Function to perform Linear Regression
 def perform_linear_regression(df):
