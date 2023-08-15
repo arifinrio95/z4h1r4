@@ -916,11 +916,12 @@ def main():
         st.dataframe(df.head())
         analytics_df = DataAnalytics(df)
 
-        st.write('---')
-        analytics_df.info()
-        st.write('---')
-        analytics_df.basic()
-        st.write('---')
+        # Hide dulu karna kayanya makan tempat banget.
+        # st.write('---')
+        # analytics_df.info()
+        # st.write('---')
+        # analytics_df.basic()
+        # st.write('---')
         # # Extract df schema
         schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
         schema_str = json.dumps(schema_dict)
