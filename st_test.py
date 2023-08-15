@@ -1012,19 +1012,25 @@ def main():
         st.markdown("""
             <style>
                 .stButton>button {
-                    background-color: #04AA6D; 
-                    border: none;
-                    color: white;
-                    padding: 15px 32px;
-                    text-align: left;
+                    background-color: #E8E8E8;   /* Warna abu-abu muda */
+                    border: 2px solid #C0C0C0;   /* Border abu-abu */
+                    color: #333;                 /* Warna teks gelap */
+                    padding: 8px 20px;           /* Padding lebih sedikit */
+                    text-align: center;          /* Teks tengah */
                     text-decoration: none;
                     display: inline-block;
                     font-size: 16px;
                     margin: 4px 2px;
                     cursor: pointer;
-                    height: 50px;
                     width: 300px;
                     white-space: normal !important;
+                    border-radius: 5px;          /* Border radius */
+                    transition: background-color 0.3s, color 0.3s;  /* Transisi warna saat di-hover */
+                }
+        
+                .stButton>button:hover {
+                    background-color: #C0C0C0;   /* Warna saat tombol di-hover */
+                    color: #FFF;                /* Warna teks saat tombol di-hover */
                 }
             </style>
             """, unsafe_allow_html=True)
