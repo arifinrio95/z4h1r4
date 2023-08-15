@@ -1173,12 +1173,15 @@ def main():
                 max_cols_analyzed=30,
                 save_plot_dir=save_dir
             )
-            
+
             # Tampilkan semua plot yang disimpan di Streamlit
             for plot_file in os.listdir(save_dir):
-                with open(f"{save_dir}/{plot_file}", "r") as f:
-                    bokeh_html = f.read()
-                    st.components.v1.html(bokeh_html, width=1000, height=600)
+                try:
+                    with open(f"{save_dir}/{plot_file}", "r") as f:
+                        bokeh_html = f.read()
+                        st.components.v1.html(bokeh_html, width=1000, height=600)
+                except IsADirectoryError:
+                    print(f"'{save_dir}/{plot_file}' is a directory, not a file.")
           
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
