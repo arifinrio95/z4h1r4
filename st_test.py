@@ -1053,21 +1053,43 @@ def main():
             # perform_hierarchical_clustering(df)
             # perform_shapiro_wilk_test(df)
 
+        # if st.session_state.get('show_natural_language_exploration', False):
+        #     st.subheader("Natural Language Exploration")
+        #     # input_pengguna = ""
+        #     # User Input
+        #     input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik' """)
+        #     button = st.button("Submit")
+        #     if (input_pengguna != "") & (input_pengguna != None) & button:
+        #         error_message = None
+        #         previous_script = None
+        #         retry_count = 0
+        #         script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+        #         exec(str(script))
+        #         # st.write("The Script:")
+        #         # st.text(script)
+        #         input_pengguna = ""
+
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
-            # input_pengguna = ""
-            # User Input
-            input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik' """)
-            button = st.button("Submit")
-            if (input_pengguna != "") & (input_pengguna != None) & button:
-                error_message = None
-                previous_script = None
-                retry_count = 0
-                script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+        
+            # Nilai default untuk text_area
+            default_value = "Buatkan beberapa visualisasi insightful dari data."
+        
+            # Jika session state belum diset, set nilai default dan eksekusi script
+            if 'input_pengguna' not in st.session_state:
+                st.session_state['input_pengguna'] = default_value
+                script = request_prompt(st.session_state['input_pengguna'], schema_str, rows_str, None, None, 0)
                 exec(str(script))
-                # st.write("The Script:")
-                # st.text(script)
-                input_pengguna = ""
+        
+            input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
+                                          value=st.session_state['input_pengguna'])
+            button = st.button("Submit")
+        
+            if button:
+                script = request_prompt(input_pengguna, schema_str, rows_str, None, None, 0)
+                exec(str(script))
+                st.session_state['input_pengguna'] = input_pengguna
+
 
         if st.session_state.get('story_telling', False):
             st.subheader("Laporan Statistika")
