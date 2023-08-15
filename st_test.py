@@ -1012,9 +1012,9 @@ def main():
         st.markdown("""
             <style>
                 .stButton>button {
-                    background-color: #FFFFFF; 
+                    background-color: #04AA6D; 
                     border: none;
-                    color: black;
+                    color: white;
                     padding: 15px 32px;
                     text-align: left;
                     text-decoration: none;
@@ -1026,7 +1026,7 @@ def main():
                 }
             </style>
             """, unsafe_allow_html=True)
-        
+
         st.sidebar.subheader('Pilih metode eksplorasi:')
         # Tombol 1
         # if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan D-Tale)'):
