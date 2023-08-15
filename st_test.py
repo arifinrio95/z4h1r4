@@ -83,7 +83,7 @@ local_css("style.css")
 #         elif method == 'Unknown':
 #             df[column].fillna('Unknown', inplace=True)
 
-def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0):
+def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0, style=style):
     # versi 2 prompt
     # messages = [
     #     {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
@@ -112,7 +112,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         9. Use Try and Except for each syntax, Except with pass.
         10. Give a Title for each visualization.
         11. Use unique streamlit widgets.
-        11. Use Plotly for visualization, use earth tone color style.
+        11. Use {style} library for visualization.
         12. Pay attention to the dataframe schema, don't do any convert."""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
@@ -1093,11 +1093,13 @@ def main():
             input_pengguna = ""
             input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
                                          value = "Buatkan beberapa visualisasi yang insightful.")
+            style = st.selectbox('Choose a Style:', 
+                                 ('Plotly','Chartify','Bokeh','Highcharts','ChartJS','Panel'))
             button = st.button("Submit")
           
             if (input_pengguna != "") & (input_pengguna != None) & button:
               with st.spinner('Wait for it...'):
-                script = request_prompt(input_pengguna, schema_str, rows_str, None, None, 0)
+                script = request_prompt(input_pengguna, schema_str, rows_str, None, None, 0, style)
                 exec(str(script))
                 input_pengguna = ""
 
