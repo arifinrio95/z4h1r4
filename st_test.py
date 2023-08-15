@@ -1022,7 +1022,9 @@ def main():
                     font-size: 16px;
                     margin: 4px 2px;
                     cursor: pointer;
-                    width: 300px;  # Menyetel lebar tombol
+                    height: 100px;
+                    width: 300px;
+                    white-space: normal !important;
                 }
             </style>
             """, unsafe_allow_html=True)
