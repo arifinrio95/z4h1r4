@@ -1089,23 +1089,15 @@ def main():
 
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
-
-            st.session_state['input_pengguna'] = "Buatkan beberapa visualisasi insightful dari data."
-            input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
-                                          value=st.session_state['input_pengguna'])
+            input_pengguna = ""
+            input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""")
             button = st.button("Submit")
           
-            # Nilai default untuk text_area
-            with st.spinner('Wait for it...'):
-              default_value = st.session_state['input_pengguna']
-              script = request_prompt(default_value, schema_str, rows_str, None, None, 0)
-              exec(str(script))
-        
-            if button:
+            if (input_pengguna != "") & (input_pengguna != None) & button:
               with st.spinner('Wait for it...'):
                 script = request_prompt(input_pengguna, schema_str, rows_str, None, None, 0)
                 exec(str(script))
-                st.session_state['input_pengguna'] = input_pengguna
+                input_pengguna = ""
 
 
         if st.session_state.get('story_telling', False):
