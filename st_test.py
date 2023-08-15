@@ -912,6 +912,16 @@ def convert_streamlit_to_plotly(streamlit_code: str) -> str:
 
     return "\n".join(converted_lines)
 
+def convert_streamlit_to_python_seaborn(streamlit_code: str) -> str:
+    # Menggantikan 'st.pyplot()' dengan 'plt.show()'
+    streamlit_code = streamlit_code.replace("st.pyplot()", "plt.show()")
+    
+    # Menghapus semua baris yang mengandung 'st.' kecuali 'st.pyplot()'
+    lines = streamlit_code.split("\n")
+    converted_lines = [line for line in lines if "st." not in line or "st.pyplot()" in line]
+    
+    return "\n".join(converted_lines)
+
 def main():
     # st.set_page_config(
     # layout="wide",
@@ -1184,8 +1194,10 @@ def main():
                         st.subheader("Streamlit Script")
                         st.text(script)
                         st.subheader("Converted Script")
-                        st.text(convert_streamlit_to_plotly(script))
-
+                        if style_choosen == 'Plotly':
+                            st.text(convert_streamlit_to_plotly(script))
+                        elif style_choosen == 'Plotly':    
+                            st.text(convert_streamlit_to_python_seaborn(script))
                     input_pengguna = ""
 
         if st.session_state.get('story_telling', False):
