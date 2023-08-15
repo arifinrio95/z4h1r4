@@ -1181,7 +1181,9 @@ def main():
                         pass
             
                     with col3:
-                        st.subheader("Script")
+                        st.subheader("Streamlit Script")
+                        st.text(script)
+                        st.subheader("Converted Script")
                         st.text(convert_streamlit_to_plotly(script))
 
                     input_pengguna = ""
