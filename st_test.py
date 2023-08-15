@@ -1166,7 +1166,7 @@ def main():
             # show_box_plot(df)
             # show_scatter_plot(df)
             # show_outliers(df)
-            show_correlation_matrix(df)
+            # show_correlation_matrix(df)
             # st.write('')
             # st.subheader('Intermediate')
             # perform_linear_regression(df)
