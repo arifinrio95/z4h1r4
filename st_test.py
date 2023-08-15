@@ -123,7 +123,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, style='Plotly', error_m
         7. Don’t give me any explanation about the script. Response only with python code in a plain text.
         8. Do not reload the dataframe.
         9. Use Try and Except for each syntax, Except with pass.
-        10. Give a Title for each visualization with st.subheader inside try syntax.
+        10. Give a Title for each visualization with st.subheader inside try syntax after the syntax for visualization generated, don't show the Title if try block is error.
         11. Use unique streamlit widgets.
         12. Use {style} library for visualization.
         13. Pay attention to the dataframe schema, don't do any convert."""}
