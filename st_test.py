@@ -1123,7 +1123,7 @@ def main():
                 header=0,
                 verbose=1,
                 lowess=False,
-                chart_format="bokeh",
+                chart_format="html",
                 max_rows_analyzed=150000,
                 max_cols_analyzed=30,
                 save_plot_dir=save_dir
