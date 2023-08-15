@@ -43,16 +43,18 @@ from itertools import chain, combinations
 from scipy.stats import zscore
 from autoviz.AutoViz_Class import AutoViz_Class
 import os
-from IPython.display import display
+# from IPython.display import display
 
 import dtale
 import dtale.app as dtale_app
 import streamlit.components.v1 as components
 
-def display(*args, **kwargs):
-    """Mock the Jupyter display function."""
-    for arg in args:
-        st.write(arg)
+def display(obj, *args, **kwargs):
+    """Mock the Jupyter display function to use show() instead."""
+    try:
+        obj.show()
+    except AttributeError:
+        st.write("Object does not have a show() method.")
 
 import sys
 sys.modules["__main__"].display = display
