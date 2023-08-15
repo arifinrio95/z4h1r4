@@ -300,3 +300,30 @@ class DataAnalytics():
             
         else:
             st.write("No categorical column to display")
+
+    def show_pie_chart(self):
+        st.subheader("Pie Chart")
+        left_column, right_column = st.columns(2)
+        column = left_column.selectbox('Select a Categorical Column for Pie Chart:', self.categorical_columns)
+        color_palette = right_column.selectbox('Choose a Color Palette:', sns.palettes.SEABORN_PALETTES.keys())
+        show_percentage = left_column.checkbox('Show Percentage', value=True)
+        show_labels = right_column.checkbox('Show Labels', value=True)
+        explode_option = left_column.slider('Explode Segments:', 0.0, 0.5, 0.0)
+        figsize_option = right_column.slider('Size of Pie Chart:', 5, 20, 10)
+        
+        # Get the top 3 categories
+        top_categories = self.df[column].value_counts().nlargest(3).index
+        new_df = self.df.copy()
+        new_df.loc[~(new_df[column].isin(top_categories)), column] = 'Others'
+    
+        labels = new_df[column].value_counts().index
+        sizes = new_df[column].value_counts().values
+        colors = sns.color_palette(color_palette, len(labels))
+        explode = [explode_option] * len(labels)
+        autopct = '%1.1f%%' if show_percentage else None
+    
+        fig, ax = plt.subplots(figsize=(figsize_option, figsize_option))
+        ax.pie(sizes, explode=explode, labels=labels if show_labels else None, colors=colors, autopct=autopct, shadow=True, startangle=90)
+        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    
+        st.pyplot(fig)
