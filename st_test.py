@@ -49,6 +49,14 @@ import dtale
 import dtale.app as dtale_app
 import streamlit.components.v1 as components
 
+def display(*args, **kwargs):
+    """Mock the Jupyter display function."""
+    for arg in args:
+        st.write(arg)
+
+import sys
+sys.modules["__main__"].display = display
+
 hide_menu = """
 <style>
 
