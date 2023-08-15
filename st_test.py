@@ -1181,7 +1181,7 @@ def main():
                         bokeh_html = f.read()
                         st.components.v1.html(bokeh_html, width=1000, height=600)
                 except IsADirectoryError:
-                    print(f"'{save_dir}/{plot_file}' is a directory, not a file.")
+                    st.write(f"'{save_dir}/{plot_file}' is a directory, not a file.")
           
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
