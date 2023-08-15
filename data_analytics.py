@@ -103,9 +103,10 @@ class DataAnalytics():
                 y_column = left_column.selectbox('Select a Numeric Column:',
                                                  self.numeric_columns,
                                                  index=0)
-                aggregation_method = right_column.selectbox(
-                    'Select Aggregation Method:',
-                    ['sum', 'mean', 'count', 'max', 'min'])
+                if chart_type == 'Grouped':
+                    aggregation_method = right_column.selectbox(
+                        'Select Aggregation Method:',
+                        ['sum', 'mean', 'count', 'max', 'min'])
     
             aggregation_func = self.aggregation_methods[
                 aggregation_method] if aggregation_method else None
@@ -121,22 +122,13 @@ class DataAnalytics():
             color_option = right_column.selectbox('Select Bar Color:',
                                                   color_options)
     
-            color_blind_safe_palette = [
-                "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b",
-                "#e377c2", "#7f7f7f"
-            ]
-            
+            color_blind_safe_palette = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f"]
             ocean_breeze_palette = ['#89c4f4', '#4d8fd5', '#204a87', '#118a8b', '#00b8a9', '#70ad47', '#dbb994', '#bdd9d5']
             sunset_serenity_palette = ['#ff9a8b', '#f4729a', '#b785c4', '#68a9cf', '#8cc890', '#fbd45b', '#7d7d7d', '#e8e1d1']
             enchanted_forest_palette = ['#356f3c', '#678a4c', '#147048', '#70451b', '#8e3c36', '#b3573d', '#8f9394', '#f2ead5']
             fruit_sorbet_palette = ['#ff5b77', '#ff9347', '#ffcc29', '#8dc63f', '#5975c9', '#835f9b', '#fff0d7', '#d8d8d8']
             cosmic_nebula_palette = ['#190b59', '#4d0579', '#c40473', '#f72c25', '#ff8800', '#ffd100', '#f7dcdc', '#000000']
-    
-            
-            biscuits_chocolate_palette = [
-                "#a67a5b", "#dcb697", "#89573e", "#f0d9b5", "#4b3423", "#f5e1c7",
-                "#725440", "#c19a6b"
-            ]
+            biscuits_chocolate_palette = ["#a67a5b", "#dcb697", "#89573e", "#f0d9b5", "#4b3423", "#f5e1c7", "#725440", "#c19a6b"]
     
             color_mapping = {
                 'Ocean Breeze': ocean_breeze_palette,
@@ -149,7 +141,8 @@ class DataAnalytics():
             }
     
             color_pal = color_mapping[color_option]
-            # Get the top 10 categories
+
+            # Get the top N categories
             top_categories = self.df[column].value_counts().nlargest(
                 int(top_n)).index
     
@@ -202,60 +195,63 @@ class DataAnalytics():
                 if aggregation_method == 'count':
                     data_to_plot = top_categories_data.groupby(column).size().reset_index(
                         name=y_column)
-                else:
+                elif aggregation_method is not None:
                     data_to_plot = top_categories_data.groupby(column)[y_column].agg(
                         aggregation_func).reset_index()
-                y_value = y_column
-    
+                else:
+                    hue = right_column.selectbox(
+                        'Select Stacked Category:',
+                        [x for x in self.categorical_columns if x!=column])
+                    
+                    # Get the top 4 stacked categories
+                    top_hue_categories = top_categories_data[hue].value_counts().nlargest(4).index
+                    top_categories_data[hue] = np.where(top_categories_data[hue].isin(top_hue_categories), top_categories_data[hue], 'Others')
+                    
+                    # Pivot the data to wide format for stacking
+                    data_to_plot = top_categories_data.pivot(index=column, columns=hue, values=y_column)
+
+                    if chart_type=='100% Stacked':
+                        data_to_plot = data_to_plot.div(data_to_plot.sum(axis=1), axis=0) * 100
+
                 if chart_type == 'Grouped':
                     if orientation == 'Vertical':
                         ax = sns.barplot(x=column,
-                                         y=y_value,
+                                         y=y_column,
                                          data=data_to_plot,
                                          order=order,
                                          palette=color_pal)
-                    elif orientation == 'Horizontal':
+                    else:
                         ax = sns.barplot(y=column,
-                                         x=y_value,
+                                         x=y_column,
                                          data=data_to_plot,
                                          order=order,
                                          palette=color_pal)
-                elif chart_type == 'Stacked':
-                    data_to_plot.plot(kind='bar',
-                                      x=column,
-                                      y=y_value,
-                                      stacked=True,
-                                      palette=color_pal)
-                elif chart_type == '100% Stacked':
-                    df_stacked = data_to_plot.groupby(column).apply(
-                        lambda x: 100 * x / x.sum()).reset_index()
-                    df_stacked.plot(kind='bar',
-                                    x=column,
-                                    y=y_value,
-                                    stacked=True,
-                                    palette=color_pal)
+                else:
+                    if orientation == 'Vertical':
+                        data_to_plot.plot(kind='bar', stacked=True, color=color_pal, order=order)
+                    else:
+                        data_to_plot.plot(kind='barh', stacked=True, color=color_pal, order=order)
             
             # Add value labels
             x_label_size = plt.xticks()[1][0].get_size()
             y_label_size = plt.yticks()[1][0].get_size()
-            if chart_type in ['Simple', 'Grouped']:
-                for p in ax.patches:
-                    value = p.get_height() if orientation == 'Vertical' else p.get_width()
-                    formatted_value = format_value(value)
-                    if orientation == 'Vertical':
-                        ax.annotate(
-                            formatted_value,
-                            (p.get_x() + p.get_width() / 2., value),
-                            ha='center',
-                            va='baseline',
-                            fontsize=x_label_size)
-                    elif orientation == 'Horizontal':
-                        ax.annotate(
-                            formatted_value,
-                            (value, p.get_y() + p.get_height() / 2.),
-                            ha='left',
-                            va='center',
-                            fontsize=y_label_size)
+            for p in ax.patches:
+                value = p.get_height() if orientation == 'Vertical' else p.get_width()
+                formatted_value = format_value(value)
+                if orientation == 'Vertical':
+                    ax.annotate(
+                        formatted_value,
+                        (p.get_x() + p.get_width() / 2., value),
+                        ha='center',
+                        va='baseline',
+                        fontsize=x_label_size)
+                elif orientation == 'Horizontal':
+                    ax.annotate(
+                        formatted_value,
+                        (value, p.get_y() + p.get_height() / 2.),
+                        ha='left',
+                        va='center',
+                        fontsize=y_label_size)
     
             title = f'{chart_type} Bar Plot of {column}'
             if chart_type != 'Simple':
