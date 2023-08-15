@@ -1097,7 +1097,7 @@ def main():
             input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
                                          value = "Buatkan beberapa visualisasi yang insightful.")
             style_choosen = st.selectbox('Choose a Visualization Style:', 
-                                 ('Plotly','Highcharts', 'Seaborn', 'Altair', 'Bokeh', 'Dash by Plotly'))
+                                 ('Plotly', 'Seaborn', 'Matplotlib'))
             button = st.button("Submit")
           
             if (input_pengguna != "") & (input_pengguna != None) & button:
