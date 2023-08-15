@@ -59,6 +59,17 @@ def display(obj, *args, **kwargs):
 import sys
 sys.modules["__main__"].display = display
 
+button_style = """
+<style>
+    .my-btn {
+        width: 100%;
+        text-align: left;
+    }
+</style>
+"""
+
+st.markdown(button_style, unsafe_allow_html=True)
+
 hide_menu = """
 <style>
 
@@ -1019,7 +1030,7 @@ def main():
 
         
         # Tombol 2
-        if st.sidebar.button('2. Automatic EDA with Autoviz'):
+        st.sidebar.markdown('<button class="my-btn">2. Automatic EDA with Autoviz</button>', unsafe_allow_html=True):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = True
             st.session_state.show_analisis_lanjutan = False
@@ -1037,7 +1048,7 @@ def main():
 
         
         # Tombol 4
-        if st.sidebar.button('4. Natural Language (Best for Data Visualization)'):
+        st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization</button>', unsafe_allow_html=True):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1045,7 +1056,7 @@ def main():
             st.session_state.story_telling = False
 
         # Tombol 5
-        if st.sidebar.button('5. Auto Reporting (Best for Survey Data)'):
+        st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
