@@ -19,6 +19,7 @@ import base64
 import seaborn as sns
 import matplotlib.pyplot as plt
 from io import StringIO
+import plotly.express as px
 
 from pandas_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
@@ -98,7 +99,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         7. Don’t give me any explanation about the script. Response only with python code in a plain text.
         8. Do not reload the dataframe.
         9. Use Try and Except for each syntax.
-        10. Use Vega for visualization, with flexibility of user to setting the parameter on streamlit.
+        10. Use Plotly for visualization, with flexibility of user to setting the parameter on streamlit.
         11. Pay attention to the dataframe schema, don't do any convert."""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
