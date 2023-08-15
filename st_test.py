@@ -20,6 +20,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from io import StringIO
 import plotly.express as px
+from bokeh.plotting import figure
+import altair as alt
 
 from pandas_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
