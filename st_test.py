@@ -897,14 +897,16 @@ def convert_streamlit_to_plotly(streamlit_code: str) -> str:
     streamlit_code = streamlit_code.replace("import streamlit as st", "")
     
     # Menggantikan 'st.plotly_chart(<figure_name>)' dengan '<figure_name>.show()'
+    # dan menghapus semua baris yang mengandung 'st.' kecuali 'st.plotly_chart'
     lines = streamlit_code.split("\n")
     converted_lines = []
     
     for line in lines:
-        if "st.plotly_chart" in line:
-            fig_name = line[line.find("(") + 1 : line.find(")")]
-            converted_line = f"{fig_name}.show()"
-            converted_lines.append(converted_line)
+        if "st." in line:
+            if "st.plotly_chart" in line:
+                fig_name = line[line.find("(") + 1 : line.find(")")]
+                converted_line = f"{fig_name}.show()"
+                converted_lines.append(converted_line)
         else:
             converted_lines.append(line)
 
