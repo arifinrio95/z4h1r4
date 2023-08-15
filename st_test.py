@@ -1193,17 +1193,18 @@ def main():
             if (input_pengguna != "") & (input_pengguna != None) & button:
                 with st.spinner('Wait for it...'):
                     script = request_prompt(input_pengguna, schema_str, rows_str, style_choosen, None, None, 0)
-                    
-                    col1, col2, col3 = st.columns(3)  # Membuat 3 kolom
 
-                    with col1:
+                    # Membuat 2 kolom utama
+                    main_col1, main_col3 = st.columns([2,1])  # kolom pertama memiliki lebar 2x kolom kedua
+                    
+                    # Membuat 2 sub-kolom di dalam main_col1
+                    sub_col1, sub_col2 = main_col1.columns(2)
+                    
+                    with main_col1:  # Gunakan kolom utama pertama
                         st.subheader("Visualizations")
                         exec(str(script))
                     
-                    with col2:
-                        pass
-            
-                    with col3:
+                    with main_col3:
                         st.subheader("Streamlit Script")
                         st.text(script)
                         st.subheader(f"{style_choosen} Script")
