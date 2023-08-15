@@ -927,6 +927,32 @@ def display_html_files_from_dir(directory):
                 st.write(f"Error reading '{full_path}': {e}")
         elif os.path.isdir(full_path):
             display_html_files_from_dir(full_path)  # Recursively dive into subdirectories
+
+def autoviz_app(df):
+    # Buat instance dari AutoViz
+    AV = AutoViz_Class()
+    
+    # Directory to save HTML plots
+    save_dir = "saved_plots"
+    os.makedirs(save_dir, exist_ok=True)
+    
+    # Assuming you have df (your DataFrame) here
+    AV.AutoViz(
+        "",
+        sep=",",
+        depVar="",
+        dfte=df,
+        header=0,
+        verbose=1,
+        lowess=False,
+        chart_format="html",
+        max_rows_analyzed=150000,
+        max_cols_analyzed=30,
+        save_plot_dir=save_dir
+    )
+    
+    # Display all saved plots in Streamlit
+    display_html_files_from_dir(save_dir)
                         
 def main():
     # st.set_page_config(
@@ -1145,30 +1171,8 @@ def main():
             # st_profile_report(pr)
 
             st.subheader("Auto Visualizations")
-            # Buat instance dari AutoViz
-            AV = AutoViz_Class()
-            
-            # Directory to save HTML plots
-            save_dir = "saved_plots"
-            os.makedirs(save_dir, exist_ok=True)
-            
-            # Assuming you have df (your DataFrame) here
-            AV.AutoViz(
-                "",
-                sep=",",
-                depVar="",
-                dfte=df,
-                header=0,
-                verbose=1,
-                lowess=False,
-                chart_format="html",
-                max_rows_analyzed=150000,
-                max_cols_analyzed=30,
-                save_plot_dir=save_dir
-            )
-            
-            # Display all saved plots in Streamlit
-            display_html_files_from_dir(save_dir)
+            with st.spinner('Generating Visualizations...'):
+                autoviz_app(df)
           
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
