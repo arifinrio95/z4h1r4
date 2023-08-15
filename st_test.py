@@ -1154,12 +1154,12 @@ def main():
             st.subheader("Auto Visualizations")
             # Buat instance dari AutoViz
             AV = AutoViz_Class()
-            
-            # Direktori tempat menyimpan plot HTML
+
+            # Directory to save HTML plots
             save_dir = "saved_plots"
             os.makedirs(save_dir, exist_ok=True)
-
-            # Asumsi Anda memiliki df (DataFrame Anda) di sini
+            
+            # Assuming you have df (your DataFrame) here
             AV.AutoViz(
                 "",
                 sep=",",
@@ -1173,15 +1173,20 @@ def main():
                 max_cols_analyzed=30,
                 save_plot_dir=save_dir
             )
-
-            # Tampilkan semua plot yang disimpan di Streamlit
+            
+            # Display all saved plots in Streamlit
             for plot_file in os.listdir(save_dir):
-                try:
-                    with open(f"{save_dir}/{plot_file}", "r") as f:
-                        bokeh_html = f.read()
-                        st.components.v1.html(bokeh_html, width=1000, height=600)
-                except IsADirectoryError:
-                    st.write(f"'{save_dir}/{plot_file}' is a directory, not a file.")
+                full_path = os.path.join(save_dir, plot_file)
+                
+                if os.path.isfile(full_path) and plot_file.endswith('.html'):
+                    try:
+                        with open(full_path, "r") as f:
+                            bokeh_html = f.read()
+                            st.components.v1.html(bokeh_html, width=1000, height=600)
+                    except Exception as e:
+                        print(f"Error reading '{full_path}': {e}")
+                elif os.path.isdir(full_path):
+                    print(f"'{full_path}' is a directory, not a file.")
           
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
