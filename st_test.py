@@ -12,7 +12,6 @@ import statsmodels.api as sm
 import requests
 import json
 import warnings
-import os
 import time
 import base64
 
@@ -43,6 +42,7 @@ import pygwalker as pyg
 from itertools import chain, combinations
 from scipy.stats import zscore
 from autoviz.AutoViz_Class import AutoViz_Class
+import os
 
 import dtale
 import dtale.app as dtale_app
@@ -945,13 +945,13 @@ def main():
         #     st.session_state.story_telling = False
 
         
-        # # Tombol 2
-        # if st.sidebar.button('2. Eksplorasi data otomatis (menggunakan AutoViz)'):
-        #     st.session_state.manual_exploration = False
-        #     st.session_state.auto_exploration = True
-        #     st.session_state.show_analisis_lanjutan = False
-        #     st.session_state.show_natural_language_exploration = False
-        #     st.session_state.story_telling = False
+        # Tombol 2
+        if st.sidebar.button('2. Automatic EDA with Autoviz'):
+            st.session_state.manual_exploration = False
+            st.session_state.auto_exploration = True
+            st.session_state.show_analisis_lanjutan = False
+            st.session_state.show_natural_language_exploration = False
+            st.session_state.story_telling = False
 
         
         # Tombol 3
@@ -988,20 +988,20 @@ def main():
         #     # walker = pyg.walk(df, env='Streamlit')
         #     dtale_func(df)
 
-        # if st.session_state.get('auto_exploration', False):
-        #     # st.subheader("Pandas Profiling Report")
-        #     # Create Pandas Profiling Report
-        #     # pr = ProfileReport(df, explorative=True)
+        if st.session_state.get('auto_exploration', False):
+            # st.subheader("Pandas Profiling Report")
+            # Create Pandas Profiling Report
+            # pr = ProfileReport(df, explorative=True)
         
-        #     # Display the report
-        #     # st_profile_report(pr)
+            # Display the report
+            # st_profile_report(pr)
 
-        #     st.subheader("Auto Visualizations")
-        #     # autovizz(df)
-        #     # AV = AutoViz_Class()
-        #     # dft = AV.AutoViz(df)
-        #     autoviz_app(df)
-        #     # os.remove(uploaded_file_path) # Menghapus file sementara
+            st.subheader("Auto Visualizations")
+            autovizz(df)
+            AV = AutoViz_Class()
+            dft = AV.AutoViz(df)
+            autoviz_app(df)
+            os.remove(uploaded_file_path) # Menghapus file sementara
 
         # if st.session_state.get('show_analisis_lanjutan', False):
         #     st.subheader("Auto Visualization by Datasans")
@@ -1089,7 +1089,43 @@ def main():
         #         # st.write("The Script:")
         #         # st.text(script)
         #         input_pengguna = ""
+        if st.session_state.get('auto_exploration', False):
+            # st.subheader("Pandas Profiling Report")
+            # Create Pandas Profiling Report
+            # pr = ProfileReport(df, explorative=True)
+        
+            # Display the report
+            # st_profile_report(pr)
 
+            st.subheader("Auto Visualizations")
+            # Buat instance dari AutoViz
+            AV = AutoViz_Class()
+            
+            # Direktori tempat menyimpan plot HTML
+            save_dir = "saved_plots"
+            os.makedirs(save_dir, exist_ok=True)
+
+            # Asumsi Anda memiliki df (DataFrame Anda) di sini
+            AV.AutoViz(
+                "",
+                sep=",",
+                depVar="",
+                dfte=df,
+                header=0,
+                verbose=1,
+                lowess=False,
+                chart_format="bokeh",
+                max_rows_analyzed=150000,
+                max_cols_analyzed=30,
+                save_plot_dir=save_dir
+            )
+            
+            # Tampilkan semua plot yang disimpan di Streamlit
+            for plot_file in os.listdir(save_dir):
+                with open(f"{save_dir}/{plot_file}", "r") as f:
+                    bokeh_html = f.read()
+                    st.components.v1.html(bokeh_html, width=1000, height=600)
+          
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
             input_pengguna = ""
