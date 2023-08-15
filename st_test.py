@@ -1174,6 +1174,10 @@ def main():
                 save_plot_dir=save_dir
             )
             
+            # Check if the directory has any files
+            if not os.listdir(save_dir):
+                st.write("No files found in the directory.")
+            
             # Display all saved plots in Streamlit
             for plot_file in os.listdir(save_dir):
                 full_path = os.path.join(save_dir, plot_file)
@@ -1182,11 +1186,13 @@ def main():
                     try:
                         with open(full_path, "r") as f:
                             bokeh_html = f.read()
+                            # Check the content of bokeh_html
+                            st.text(bokeh_html[:100])  # Display the first 100 characters
                             st.components.v1.html(bokeh_html, width=1000, height=600)
                     except Exception as e:
-                        print(f"Error reading '{full_path}': {e}")
+                        st.write(f"Error reading '{full_path}': {e}")
                 elif os.path.isdir(full_path):
-                    print(f"'{full_path}' is a directory, not a file.")
+                    st.write(f"'{full_path}' is a directory, not a file.")
           
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
