@@ -1196,7 +1196,7 @@ def main():
                         st.subheader("Converted Script")
                         if style_choosen == 'Plotly':
                             st.text(convert_streamlit_to_plotly(script))
-                        elif style_choosen == 'Plotly':    
+                        elif style_choosen == 'Seaborn':    
                             st.text(convert_streamlit_to_python_seaborn(script))
                     input_pengguna = ""
 
