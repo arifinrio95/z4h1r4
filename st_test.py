@@ -905,7 +905,7 @@ def convert_streamlit_to_plotly(streamlit_code: str) -> str:
         if "st." in line:
             if "st.plotly_chart" in line:
                 fig_name = line[line.find("(") + 1 : line.find(")")]
-                converted_line = f"{fig_name}.show()"
+                converted_line = f"    {fig_name}.show()"
                 converted_lines.append(converted_line)
         else:
             converted_lines.append(line)
