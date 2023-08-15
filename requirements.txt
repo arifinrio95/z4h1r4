@@ -17,3 +17,8 @@ more-itertools
 autoviz
 dtale
 plotly
+chartify
+bokeh
+python-highcharts
+chartjs
+panel
