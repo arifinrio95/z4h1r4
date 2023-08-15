@@ -1091,16 +1091,18 @@ def main():
         
             # Nilai default untuk text_area
             default_value = "Buatkan beberapa visualisasi insightful dari data."
-        
+            
+            input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
+                                          value=st.session_state['input_pengguna'])
+            button = st.button("Submit")
+          
             # Jika session state belum diset, set nilai default dan eksekusi script
             if 'input_pengguna' not in st.session_state:
                 st.session_state['input_pengguna'] = default_value
                 script = request_prompt(st.session_state['input_pengguna'], schema_str, rows_str, None, None, 0)
                 exec(str(script))
         
-            input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
-                                          value=st.session_state['input_pengguna'])
-            button = st.button("Submit")
+            
         
             if button:
                 script = request_prompt(input_pengguna, schema_str, rows_str, None, None, 0)
