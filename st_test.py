@@ -891,7 +891,16 @@ def dtale_func(df):
     
     # Menanamkan Dtale ke dalam Streamlit menggunakan iframe
     components.iframe(dtale_url, height=800)
-        
+
+def convert_streamlit_to_plotly(code: str) -> str:
+    # Menghapus baris yang berisi 'import streamlit'
+    code = code.replace("import streamlit as st", "")
+    
+    # Mengganti 'st.plotly_chart' dengan 'fig.show'
+    code = code.replace("st.plotly_chart(", "fig.show(")
+    
+    return code
+
 def main():
     # st.set_page_config(
     # layout="wide",
@@ -1148,11 +1157,17 @@ def main():
             button = st.button("Submit")
           
             if (input_pengguna != "") & (input_pengguna != None) & button:
-              with st.spinner('Wait for it...'):
-                script = request_prompt(input_pengguna, schema_str, rows_str, style_choosen, None, None, 0)
-                exec(str(script))
-                input_pengguna = ""
-
+                with st.spinner('Wait for it...'):
+                    script = request_prompt(input_pengguna, schema_str, rows_str, style_choosen, None, None, 0)
+                    
+                    col1, col2 = st.beta_columns(2)  # Membuat 2 kolom
+            
+                    with col1:
+                        exec(str(script))
+                    with col2:
+                        st.write(convert_streamlit_to_plotly(script))
+            
+                    input_pengguna = ""
 
         if st.session_state.get('story_telling', False):
             st.subheader("Laporan Statistika")
