@@ -16,3 +16,4 @@ pygwalker
 more-itertools
 autoviz
 dtale
+plotly
