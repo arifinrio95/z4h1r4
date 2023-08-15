@@ -108,8 +108,8 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         messages.append({"role": "user", "content": f"Solve this error: {error_message} in previous Script : {previous_script} to "})
 
     response = openai.ChatCompletion.create(
-        # model="gpt-3.5-turbo-16k",
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo-16k",
+        # model="gpt-3.5-turbo",
         # model="gpt-4",
         messages=messages,
         max_tokens=3000,
