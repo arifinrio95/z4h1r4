@@ -1090,7 +1090,8 @@ def main():
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
             input_pengguna = ""
-            input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""")
+            input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
+                                         value = "Buatkan beberapa visualisasi yang insightful.")
             button = st.button("Submit")
           
             if (input_pengguna != "") & (input_pengguna != None) & button:
