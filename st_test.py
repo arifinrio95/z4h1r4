@@ -83,7 +83,7 @@ local_css("style.css")
 #         elif method == 'Unknown':
 #             df[column].fillna('Unknown', inplace=True)
 
-def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0, style):
+def request_prompt(input_pengguna, schema_str, rows_str, style='Plotly', error_message=None, previous_script=None, retry_count=0):
     # versi 2 prompt
     # messages = [
     #     {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
@@ -1100,7 +1100,7 @@ def main():
           
             if (input_pengguna != "") & (input_pengguna != None) & button:
               with st.spinner('Wait for it...'):
-                script = request_prompt(input_pengguna, schema_str, rows_str, None, None, 0, style_choosen)
+                script = request_prompt(input_pengguna, schema_str, rows_str, style_choosen, None, None, 0)
                 exec(str(script))
                 input_pengguna = ""
 
