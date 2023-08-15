@@ -1012,17 +1012,17 @@ def main():
         st.markdown("""
             <style>
                 .stButton>button {
-                    background-color: #4CAF50; 
+                    background-color: #FFFFFF; 
                     border: none;
-                    color: white;
+                    color: black;
                     padding: 15px 32px;
-                    text-align: center;
+                    text-align: left;
                     text-decoration: none;
                     display: inline-block;
                     font-size: 16px;
                     margin: 4px 2px;
                     cursor: pointer;
-                    width: 200px;  # Menyetel lebar tombol
+                    width: 300px;  # Menyetel lebar tombol
                 }
             </style>
             """, unsafe_allow_html=True)
@@ -1058,7 +1058,7 @@ def main():
         
         # Tombol 4
         # st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('4. Natural Language (Best for Data Visualization', key='my-btn2'):
+        if st.sidebar.button('4. Natural Language (Best for Data Visualization)', key='my-btn2'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
