@@ -101,7 +101,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, pre
         9. Use Try and Except for each syntax, Except with pass.
         10. Give a Title for each visualization.
         11. Use unique streamlit widgets.
-        11. Use Plotly for visualization, with flexibility of user to setting the parameter on streamlit.
+        11. Use Bokeh for visualization, with flexibility of user to setting the parameter on streamlit.
         12. Pay attention to the dataframe schema, don't do any convert."""}
     ]
     # Give and show with streamlit the title for every steps. Give an explanation for every syntax. 
