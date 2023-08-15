@@ -83,7 +83,7 @@ local_css("style.css")
 #         elif method == 'Unknown':
 #             df[column].fillna('Unknown', inplace=True)
 
-def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0, style=style):
+def request_prompt(input_pengguna, schema_str, rows_str, error_message=None, previous_script=None, retry_count=0, style):
     # versi 2 prompt
     # messages = [
     #     {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
@@ -1091,6 +1091,7 @@ def main():
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
             input_pengguna = ""
+            style = 'Plotly'
             input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
                                          value = "Buatkan beberapa visualisasi yang insightful.")
             style = st.selectbox('Choose a Visualization Style:', 
