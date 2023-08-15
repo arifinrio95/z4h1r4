@@ -1049,7 +1049,8 @@ def main():
 
         
         # Tombol 4
-        st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization</button>', unsafe_allow_html=True):
+        st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization)</button>', unsafe_allow_html=True)
+        if st.sidebar.button('4. Natural Language (Best for Data Visualization'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1057,7 +1058,8 @@ def main():
             st.session_state.story_telling = False
 
         # Tombol 5
-        st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True):
+        st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
+        if st.sidebar.button('5. Auto Reporting (Best for Survey Data)'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
