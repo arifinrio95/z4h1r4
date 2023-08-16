@@ -1249,16 +1249,16 @@ def main():
                         st.subheader("Visualizations")
                         exec(str(script))
                         
-                    button = st.button("Print Code")
-                    if button:
-                        # st.subheader("Streamlit Script")
-                        # st.text(script)
-                        st.subheader(f"{style_choosen} Script")
-                        if style_choosen == 'Plotly':
-                            st.text(convert_streamlit_to_plotly(script))
-                        elif style_choosen == 'Seaborn':    
-                            st.text(convert_streamlit_to_python_seaborn(script))
-                    input_pengguna = ""
+                        button = st.button("Print Code")
+                        if button:
+                            # st.subheader("Streamlit Script")
+                            # st.text(script)
+                            st.subheader(f"{style_choosen} Script")
+                            if style_choosen == 'Plotly':
+                                st.text(convert_streamlit_to_plotly(script))
+                            elif style_choosen == 'Seaborn':    
+                                st.text(convert_streamlit_to_python_seaborn(script))
+                        input_pengguna = ""
 
         if st.session_state.get('story_telling', False):
             # st.title("Automatic Insights")
