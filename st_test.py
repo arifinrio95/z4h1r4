@@ -1249,15 +1249,24 @@ def main():
                         st.subheader("Visualizations")
                         exec(str(script))
                         
+                    if 'button_clicked' not in st.session_state:
+                        st.session_state.button_clicked = False
+                    
                     button = st.button("Print Code")
+                    
                     if button:
+                        st.session_state.button_clicked = True
+
                         # st.subheader("Streamlit Script")
                         # st.text(script)
                         st.subheader(f"{style_choosen} Script")
-                        if style_choosen == 'Plotly':
-                            st.text(convert_streamlit_to_plotly(st.session_state['script']))
-                        elif style_choosen == 'Seaborn':    
-                            st.text(convert_streamlit_to_python_seaborn(st.session_state['script']))
+                        if st.session_state.button_clicked:
+                            st.subheader(f"{style_choosen} Script")
+                            if style_choosen == 'Plotly':
+                                st.text(convert_streamlit_to_plotly(st.session_state['script']))
+                            elif style_choosen == 'Seaborn':    
+                                st.text(convert_streamlit_to_python_seaborn(st.session_state['script']))
+
                     input_pengguna = ""
 
         if st.session_state.get('story_telling', False):
