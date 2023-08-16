@@ -1239,7 +1239,7 @@ def main():
                     input_pengguna = ""
 
         if st.session_state.get('story_telling', False):
-            st.title("Automatic Insights")
+            # st.title("Automatic Insights")
             
             st.markdown("""
             <style>
@@ -1260,7 +1260,7 @@ def main():
             with st.spinner('Generating visualizations...'):
                 input_pengguna = "Buatkan semua visualisasi secara detail untuk semua case (distribusi, korelasi, group by agregasi) yang insightful secara bisnis."
                 script = request_prompt(input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
-                st.subheader("Visualizations")
+                # st.subheader("Visualizations")
                 exec(str(script))
             st.subheader("Insights")
             with st.spinner('Generating insights...'):
