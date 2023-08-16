@@ -1233,11 +1233,13 @@ def main():
                                          value = "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan.")
             style_choosen = st.selectbox('Choose a Visualization Style:', 
                                  ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
-            button = st.button("Submit")
-
-
+            
             if 'button_clicked' not in st.session_state:
                 st.session_state.button_clicked = False
+            
+            button = st.button("Submit")
+            if button:
+                st.session_state.button_clicked = True
                 
             if (input_pengguna != "") & (input_pengguna != None) & st.session_state.button_clicked:
                 st.session_state.button_clicked = True
