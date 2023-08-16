@@ -1336,8 +1336,8 @@ def main():
                 with st.spinner('Classifying sentiments...(takes 5-10 minutes, please wait).'):
                     df['Sentiment_by_BART'] = classify_with_progress(df, column)
             
-            # Display output
-            st.write(df[[column, 'Sentiment_by_BART']])
+                # Display output
+                st.write(df[[column, 'Sentiment_by_BART']])
             
             # Download the output as CSV
             st.download_button("Download CSV with sentiments", df.to_csv(index=False), "sentiments.csv", "text/csv")
