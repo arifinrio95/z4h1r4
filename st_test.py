@@ -1262,8 +1262,9 @@ def main():
                 script = request_prompt(input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
                 st.subheader("Visualizations")
                 exec(str(script))
+            st.subheader("Insights")
             with st.spinner('Generating insights...'):
-                st.subheader("Insights")
+                
                 st.markdown(request_story_prompt(dict_stats))
                 
             # st.text(request_story_prompt(analyze_dataframe(df)))
