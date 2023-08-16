@@ -1248,10 +1248,11 @@ def main():
                     with main_col1:  # Gunakan kolom utama pertama
                         st.subheader("Visualizations")
                         exec(str(script))
-                    
-                    with main_col3:
-                        st.subheader("Streamlit Script")
-                        st.text(script)
+                        
+                    button = st.button("Print Code")
+                    if button:
+                        # st.subheader("Streamlit Script")
+                        # st.text(script)
                         st.subheader(f"{style_choosen} Script")
                         if style_choosen == 'Plotly':
                             st.text(convert_streamlit_to_plotly(script))
