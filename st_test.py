@@ -1095,7 +1095,7 @@ def main():
 
         # Tombol 6
         # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('6. Sentiment Classifications (Zero Shot)', key='my-btn3'):
+        if st.sidebar.button('6. Sentiment Classifications (Zero Shot)', key='my-btn4'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
