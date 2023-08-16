@@ -1257,11 +1257,12 @@ def main():
             # st.write(dict_stats)
             # for i in dict_stats:
             #     st.markdown(request_story_prompt(i))
-            with st.spinner('Wait for it...'):
+            with st.spinner('Generating visualizations...'):
                 input_pengguna = "Buatkan beberapa visualisasi yang insightful secara bisnis."
                 script = request_prompt(input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
                 st.subheader("Visualizations")
                 exec(str(script))
+            with st.spinner('Generating insights...'):
                 st.subheader("Insights")
                 st.markdown(request_story_prompt(dict_stats))
                 
