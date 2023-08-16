@@ -1095,13 +1095,13 @@ def main():
 
         # Tombol 6
         # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('6. Sentiment Classifications (Zero Shot)', key='my-btn4'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
-            st.session_state.sentiment = True
+        # if st.sidebar.button('6. Sentiment Classifications (Zero Shot)', key='my-btn4'):
+        #     st.session_state.manual_exploration = False
+        #     st.session_state.auto_exploration = False
+        #     st.session_state.show_analisis_lanjutan = False
+        #     st.session_state.show_natural_language_exploration = False
+        #     st.session_state.story_telling = False
+        #     st.session_state.sentiment = True
 
         
         # if st.session_state.get('manual_exploration', False):
@@ -1291,56 +1291,56 @@ def main():
             # st.text(request_story_prompt(analyze_dataframe(df)))
             # visualize_analysis(dict_stats)
 
-        if st.session_state.get('sentiment', False):
-            with st.spinner('Downloading the pretrained model...'):
-                # Load BART model (Pastikan Anda memiliki model yang sesuai untuk sentiment analysis)
-                tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
-                model = BartForSequenceClassification.from_pretrained('facebook/bart-large')
+        # if st.session_state.get('sentiment', False):
+        #     with st.spinner('Downloading the pretrained model...'):
+        #         # Load BART model (Pastikan Anda memiliki model yang sesuai untuk sentiment analysis)
+        #         tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
+        #         model = BartForSequenceClassification.from_pretrained('facebook/bart-large')
             
-            def classify_sentiment(text):
-                inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
-                outputs = model(**inputs)
-                sentiment_id = outputs.logits.argmax(-1).item()
+        #     def classify_sentiment(text):
+        #         inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+        #         outputs = model(**inputs)
+        #         sentiment_id = outputs.logits.argmax(-1).item()
                 
-                if sentiment_id == 0:
-                    return "Negative"
-                elif sentiment_id == 1:
-                    return "Neutral"
-                else:
-                    return "Positive"
+        #         if sentiment_id == 0:
+        #             return "Negative"
+        #         elif sentiment_id == 1:
+        #             return "Neutral"
+        #         else:
+        #             return "Positive"
 
-            def classify_with_progress(df, column):
-                # Inisialisasi progress bar
-                progress_bar = st.progress(0)
-                total = len(df)
-                sentiments = []
+        #     def classify_with_progress(df, column):
+        #         # Inisialisasi progress bar
+        #         progress_bar = st.progress(0)
+        #         total = len(df)
+        #         sentiments = []
                 
-                for index, row in df.iterrows():
-                    sentiment = classify_sentiment(row[column])
-                    sentiments.append(sentiment)
+        #         for index, row in df.iterrows():
+        #             sentiment = classify_sentiment(row[column])
+        #             sentiments.append(sentiment)
                     
-                    # Perbarui progress bar
-                    progress = (index + 1) / total
-                    progress_bar.progress(progress)
+        #             # Perbarui progress bar
+        #             progress = (index + 1) / total
+        #             progress_bar.progress(progress)
                 
-                # Selesai
-                st.write("Classification complete!")
-                return sentiments
+        #         # Selesai
+        #         st.write("Classification complete!")
+        #         return sentiments
             
-            st.title('Sentiment Analysis with BART')
-            # Choose a column
-            column = st.selectbox('Select a column for sentiment analysis', df.columns)
-            button = st.button("Submit")
-            if button:
-                # Classify sentiment
-                with st.spinner('Classifying sentiments...(takes 5-10 minutes, please wait).'):
-                    df['Sentiment_by_BART'] = classify_with_progress(df, column)
+        #     st.title('Sentiment Analysis with BART')
+        #     # Choose a column
+        #     column = st.selectbox('Select a column for sentiment analysis', df.columns)
+        #     button = st.button("Submit")
+        #     if button:
+        #         # Classify sentiment
+        #         with st.spinner('Classifying sentiments...(takes 5-10 minutes, please wait).'):
+        #             df['Sentiment_by_BART'] = classify_with_progress(df, column)
             
-                # Display output
-                st.write(df[[column, 'Sentiment_by_BART']])
+        #         # Display output
+        #         st.write(df[[column, 'Sentiment_by_BART']])
             
-            # Download the output as CSV
-            st.download_button("Download CSV with sentiments", df.to_csv(index=False), "sentiments.csv", "text/csv")
+        #     # Download the output as CSV
+        #     st.download_button("Download CSV with sentiments", df.to_csv(index=False), "sentiments.csv", "text/csv")
 
 if __name__ == "__main__":
     main()
