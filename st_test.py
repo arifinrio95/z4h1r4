@@ -1313,8 +1313,8 @@ def main():
             column = st.selectbox('Select a column for sentiment analysis', df.columns)
 
             # Classify sentiment
-            st.write("Classifying sentiments...")
-            df['Sentiment'] = df[column].apply(classify_sentiment)
+            with st.spinner('Classifying sentiments...'):
+                df['Sentiment'] = df[column].apply(classify_sentiment)
             
             # Display output
             st.write(df[[column, 'Sentiment']])
