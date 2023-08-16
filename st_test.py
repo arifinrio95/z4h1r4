@@ -48,6 +48,8 @@ import os
 import dtale
 import dtale.app as dtale_app
 import streamlit.components.v1 as components
+from transformers import BartTokenizer, BartForSequenceClassification
+
 
 def display(obj, *args, **kwargs):
     """Mock the Jupyter display function to use show() instead."""
