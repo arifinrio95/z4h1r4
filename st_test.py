@@ -1279,7 +1279,7 @@ def main():
             # for i in dict_stats:
             #     st.markdown(request_story_prompt(i))
             with st.spinner('Generating visualizations...'):
-                input_pengguna = "Buatkan semua visualisasi secara detail untuk semua case yang relevan (distribusi, korelasi, atau group by agregasi)."
+                input_pengguna = "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
                 script = request_prompt(input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
                 # st.subheader("Visualizations")
                 exec(str(script))
