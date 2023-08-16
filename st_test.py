@@ -1239,8 +1239,8 @@ def main():
                     input_pengguna = ""
 
         if st.session_state.get('story_telling', False):
-            st.subheader("Laporan Statistika")
-
+            st.title("Automatic Insights")
+            
             st.markdown("""
             <style>
                 .reportview-container .markdown-text-container {
@@ -1258,7 +1258,13 @@ def main():
             # for i in dict_stats:
             #     st.markdown(request_story_prompt(i))
             with st.spinner('Wait for it...'):
-              st.markdown(request_story_prompt(dict_stats))
+                input_pengguna = "Buatkan beberapa visualisasi yang insightful secara bisnis."
+                script = request_prompt(input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
+                st.subheader("Visualizations")
+                exec(str(script))
+                st.subheader("Insights")
+                st.markdown(request_story_prompt(dict_stats))
+                
             # st.text(request_story_prompt(analyze_dataframe(df)))
             # visualize_analysis(dict_stats)
 
