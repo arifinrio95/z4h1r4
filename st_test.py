@@ -1237,7 +1237,7 @@ def main():
 
 
             if 'button_clicked' not in st.session_state:
-                        st.session_state.button_clicked = False
+                st.session_state.button_clicked = False
                 
             if (input_pengguna != "") & (input_pengguna != None) & st.session_state.button_clicked:
                 st.session_state.button_clicked = True
