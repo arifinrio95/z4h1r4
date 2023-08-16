@@ -1238,7 +1238,7 @@ def main():
             if (input_pengguna != "") & (input_pengguna != None) & button:
                 with st.spinner('Wait for it...'):
                     script = request_prompt(input_pengguna, schema_str, rows_str, style_choosen, None, None, 0)
-                    st.session_state.script = script
+                    st.session_state['script'] = script
                     # Membuat 2 kolom utama
                     main_col1, main_col3 = st.columns([2,1])  # kolom pertama memiliki lebar 2x kolom kedua
                     
@@ -1249,16 +1249,16 @@ def main():
                         st.subheader("Visualizations")
                         exec(str(script))
                         
-                        button = st.button("Print Code")
-                        if button:
-                            # st.subheader("Streamlit Script")
-                            # st.text(script)
-                            st.subheader(f"{style_choosen} Script")
-                            if style_choosen == 'Plotly':
-                                st.text(convert_streamlit_to_plotly(st.session_state.script ))
-                            elif style_choosen == 'Seaborn':    
-                                st.text(convert_streamlit_to_python_seaborn(st.session_state.script ))
-                        input_pengguna = ""
+                    button = st.button("Print Code")
+                    if button:
+                        # st.subheader("Streamlit Script")
+                        # st.text(script)
+                        st.subheader(f"{style_choosen} Script")
+                        if style_choosen == 'Plotly':
+                            st.text(convert_streamlit_to_plotly(st.session_state['script']))
+                        elif style_choosen == 'Seaborn':    
+                            st.text(convert_streamlit_to_python_seaborn(st.session_state['script']))
+                    input_pengguna = ""
 
         if st.session_state.get('story_telling', False):
             # st.title("Automatic Insights")
