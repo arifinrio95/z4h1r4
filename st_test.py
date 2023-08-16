@@ -1234,8 +1234,13 @@ def main():
             style_choosen = st.selectbox('Choose a Visualization Style:', 
                                  ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
             button = st.button("Submit")
-          
-            if (input_pengguna != "") & (input_pengguna != None) & button:
+
+
+            if 'button_clicked' not in st.session_state:
+                        st.session_state.button_clicked = False
+                
+            if (input_pengguna != "") & (input_pengguna != None) & st.session_state.button_clicked:
+                st.session_state.button_clicked = True
                 with st.spinner('Wait for it...'):
                     script = request_prompt(input_pengguna, schema_str, rows_str, style_choosen, None, None, 0)
                     st.session_state['script'] = script
@@ -1249,23 +1254,18 @@ def main():
                         st.subheader("Visualizations")
                         exec(str(script))
                         
-                    if 'button_clicked' not in st.session_state:
-                        st.session_state.button_clicked = False
+                    
                     
                     button = st.button("Print Code")
                     
                     if button:
-                        st.session_state.button_clicked = True
-
                         # st.subheader("Streamlit Script")
                         # st.text(script)
                         st.subheader(f"{style_choosen} Script")
-                        if st.session_state.button_clicked:
-                            st.subheader(f"{style_choosen} Script")
-                            if style_choosen == 'Plotly':
-                                st.text(convert_streamlit_to_plotly(st.session_state['script']))
-                            elif style_choosen == 'Seaborn':    
-                                st.text(convert_streamlit_to_python_seaborn(st.session_state['script']))
+                        if style_choosen == 'Plotly':
+                            st.text(convert_streamlit_to_plotly(st.session_state['script']))
+                        elif style_choosen == 'Seaborn':    
+                            st.text(convert_streamlit_to_python_seaborn(st.session_state['script']))
 
                     input_pengguna = ""
 
