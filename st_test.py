@@ -125,7 +125,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, style='Plotly', error_m
         7. Don’t give me any explanation about the script. Response only with python code in a plain text.
         8. Do not reload the dataframe.
         9. Use Try and Except for each syntax, Except with pass.
-        10. Give a Title inside the chart for each visualization.
+        10. Give a Title inside the chart for each visualization. Don't use st.title.
         11. Use unique streamlit widgets.
         12. Use {style} library for visualization.
         13. Pay attention to the dataframe schema, don't do any convert."""}
