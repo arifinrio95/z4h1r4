@@ -23,3 +23,4 @@ python-highcharts
 chartjs
 panel
 altair
+transformers
