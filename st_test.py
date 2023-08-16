@@ -1292,9 +1292,10 @@ def main():
             # visualize_analysis(dict_stats)
 
         if st.session_state.get('sentiment', False):
-            # Load BART model (Pastikan Anda memiliki model yang sesuai untuk sentiment analysis)
-            tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
-            model = BartForSequenceClassification.from_pretrained('facebook/bart-large')
+            with st.spinner('Downloading the pretrained model...'):
+                # Load BART model (Pastikan Anda memiliki model yang sesuai untuk sentiment analysis)
+                tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
+                model = BartForSequenceClassification.from_pretrained('facebook/bart-large')
             
             def classify_sentiment(text):
                 inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
@@ -1307,14 +1308,33 @@ def main():
                     return "Neutral"
                 else:
                     return "Positive"
+
+            def classify_with_progress(df, column):
+                # Inisialisasi progress bar
+                progress_bar = st.progress(0)
+                total = len(df)
+                sentiments = []
+                
+                for index, row in df.iterrows():
+                    sentiment = classify_sentiment(row[column])
+                    sentiments.append(sentiment)
+                    
+                    # Perbarui progress bar
+                    progress = (index + 1) / total
+                    progress_bar.progress(progress)
+                
+                # Selesai
+                st.write("Classification complete!")
+                return sentiments
             
             st.title('Sentiment Analysis with BART')
             # Choose a column
             column = st.selectbox('Select a column for sentiment analysis', df.columns)
-
-            # Classify sentiment
-            with st.spinner('Classifying sentiments...'):
-                df['Sentiment'] = df[column].apply(classify_sentiment)
+            button = st.button("Submit")
+            if button:
+                # Classify sentiment
+                with st.spinner('Classifying sentiments...(takes 5-10 minutes, please wait).'):
+                    df['Sentiment_by_BART'] = classify_with_progress(df, column)
             
             # Display output
             st.write(df[[column, 'Sentiment']])
