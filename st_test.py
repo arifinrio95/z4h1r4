@@ -1059,6 +1059,7 @@ def main():
             st.session_state.show_analisis_lanjutan = False
             st.session_state.show_natural_language_exploration = False
             st.session_state.story_telling = False
+            st.session_state.sentiment = False
 
         
         # Tombol 3
@@ -1078,6 +1079,7 @@ def main():
             st.session_state.show_analisis_lanjutan = False
             st.session_state.show_natural_language_exploration = True
             st.session_state.story_telling = False
+            st.session_state.sentiment = False
 
         # Tombol 5
         # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
@@ -1087,6 +1089,17 @@ def main():
             st.session_state.show_analisis_lanjutan = False
             st.session_state.show_natural_language_exploration = False
             st.session_state.story_telling = True
+            st.session_state.sentiment = False
+
+        # Tombol 6
+        # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
+        if st.sidebar.button('6. Sentiment Classifications (Zero Shot)', key='my-btn3'):
+            st.session_state.manual_exploration = False
+            st.session_state.auto_exploration = False
+            st.session_state.show_analisis_lanjutan = False
+            st.session_state.show_natural_language_exploration = False
+            st.session_state.story_telling = False
+            st.session_state.sentiment = True
 
         
         # if st.session_state.get('manual_exploration', False):
@@ -1275,6 +1288,37 @@ def main():
                 
             # st.text(request_story_prompt(analyze_dataframe(df)))
             # visualize_analysis(dict_stats)
+
+        if st.session_state.get('sentiment', False):
+            # Load BART model (Pastikan Anda memiliki model yang sesuai untuk sentiment analysis)
+            tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
+            model = BartForSequenceClassification.from_pretrained('facebook/bart-large')
+            
+            def classify_sentiment(text):
+                inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+                outputs = model(**inputs)
+                sentiment_id = outputs.logits.argmax(-1).item()
+                
+                if sentiment_id == 0:
+                    return "Negative"
+                elif sentiment_id == 1:
+                    return "Neutral"
+                else:
+                    return "Positive"
+            
+            st.title('Sentiment Analysis with BART')
+            # Choose a column
+            column = st.selectbox('Select a column for sentiment analysis', df.columns)
+
+            # Classify sentiment
+            st.write("Classifying sentiments...")
+            df['Sentiment'] = df[column].apply(classify_sentiment)
+            
+            # Display output
+            st.write(df[[column, 'Sentiment']])
+            
+            # Download the output as CSV
+            st.download_button("Download CSV with sentiments", df.to_csv(index=False), "sentiments.csv", "text/csv")
 
 if __name__ == "__main__":
     main()
