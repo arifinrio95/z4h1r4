@@ -979,7 +979,7 @@ def main():
                 making the process both efficient and intuitive for the end user.""")
     st.write('')
     st.write('')
-    st.write('Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.')
+    st.write('*Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.*')
     st.subheader('Upload your CSV / Excel data:')
     file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
 
