@@ -973,9 +973,9 @@ def main():
 
     # st.title('Personal Data Analysis by Datasans')
     # st.write('Beta Access.')
-    st.write("""Our web app offers a cutting-edge solution for automatic data exploration, allowing users to dive into their data using natural language commands. 
+    st.subheader("""Our web app offers a cutting-edge solution for automatic data exploration, allowing users to dive into their data using natural language commands. 
                 Through integrated Natural Language Processing (NLP) capabilities, users can easily query and analyze their data as if chatting with a data expert.""")
-    st.write("""Beyond manual exploration, the app autonomously identifies and presents valuable insights from the data, 
+    st.subheader("""Beyond manual exploration, the app autonomously identifies and presents valuable insights from the data, 
                 making the process both efficient and intuitive for the end user.""")
     st.write('')
     st.write('')
