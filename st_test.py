@@ -1103,7 +1103,7 @@ def main():
 
         # Tombol 5
         # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('5. Automatic EDA (by Ulikdata x GPT)', key='my-btn3'):
+        if st.sidebar.button('5. Automatic EDA (by Ulikdata x GPT) - Under Maintenance', key='my-btn3'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1326,7 +1326,7 @@ def main():
                 with st.spinner('Generating insights...'):
                     
                     response = request_story_prompt(schema_str, rows_str, min_viz)
-
+                    st.write('response : ',response)
                     # Extracting the introductions
                     pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
                     introductions = re.findall(pattern, response)
@@ -1337,7 +1337,7 @@ def main():
                     
                     # Saving the introductions to a list
                     introduction_list = list(introductions)
-
+                    st.write('introduction_list : ',introduction_list)
                     # for query in introduction_list:
                     #     st.write(get_answer_csv(df, query))
 
@@ -1370,15 +1370,15 @@ def main():
                             explanation = segment[code_end + len("END_CODE"):].strip()
                     
                             # Coba eksekusi kode
-                            try:
+                            # try:
                                 # st.code(code)  # Tampilkan kode dalam format kode
-                                execute_streamlit_code_with_explanations(code, introduction_list) #exec(code)
+                            execute_streamlit_code_with_explanations(code, introduction_list) #exec(code)
                                 
                                 # st.write("Hasil eksekusi kode:")
                                 # st.write(output)
-                            except Exception as e:
-                                st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
-                                st.write(str(e))
+                            # except Exception as e:
+                            #     st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
+                            #     st.write(str(e))
                                 # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
                                 # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
                     
