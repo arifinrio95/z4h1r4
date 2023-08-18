@@ -1358,7 +1358,7 @@ def main():
                         # Eksekusi kode yang telah dimodifikasi
                         exec(modified_code)
 
-                    execute_streamlit_code_with_explanations(code, introduction_list)
+                    execute_streamlit_code_with_explanations(response, introduction_list)
 
                     # for segment in segment_iterator:
                     #     # Jika ada kode dalam segmen ini
