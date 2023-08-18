@@ -50,6 +50,8 @@ import dtale.app as dtale_app
 import streamlit.components.v1 as components
 from transformers import BartTokenizer, BartForSequenceClassification
 
+from utils import get_answer_csv
+
 
 def display(obj, *args, **kwargs):
     """Mock the Jupyter display function to use show() instead."""
@@ -1324,7 +1326,40 @@ def main():
                     response = request_story_prompt(schema_str, rows_str, min_viz)
                     segments = response.split("BEGIN_CODE")
                     segment_iterator = iter(segments)
-    
+
+                    # Extracting the introductions
+                    pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
+                    introductions = re.findall(pattern, code)
+                    
+                    # Printing the extracted introductions
+                    # for intro in introductions:
+                    #     print(intro)
+                    
+                    # Saving the introductions to a list
+                    introduction_list = list(introductions)
+
+                    for query in introduction_list:
+                        # st.write(get_answer_csv(uploaded_file, query))
+                        st.write(get_answer_csv(df, query))
+
+                    def execute_streamlit_code_with_explanations(response, introduction_list):
+                        # Split kode berdasarkan st.plotly_chart()
+                        code_segments = original_code.split('st.plotly_chart(')
+                    
+                        modified_code = code_segments[0]  # Bagian kode sebelum plot pertama
+                        
+                        for index, segment in enumerate(code_segments[1:]):
+                            # Tambahkan st.plotly_chart kembali dan tambahkan penjelasan setelahnya
+                            modified_code += 'st.plotly_chart(' + segment
+                            if index < len(introduction_list):
+                                explanation = get_answer_csv(df, introduction_list[index])
+                                modified_code += f'\nst.write("{explanation}")\n'
+                        
+                        # Eksekusi kode yang telah dimodifikasi
+                        exec(modified_code)
+
+                    
+
                     for segment in segment_iterator:
                         # Jika ada kode dalam segmen ini
                         if "END_CODE" in segment:
@@ -1334,8 +1369,8 @@ def main():
                     
                             # Coba eksekusi kode
                             try:
-                                output = exec(code)
-                                st.code(code)  # Tampilkan kode dalam format kode
+                                output = execute_streamlit_code_with_explanations(original_code, introduction_list) #exec(code)
+                                #st.code(code)  # Tampilkan kode dalam format kode
                                 # st.write("Hasil eksekusi kode:")
                                 # st.write(output)
                             except Exception as e:
