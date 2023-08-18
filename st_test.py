@@ -1356,7 +1356,7 @@ def main():
                         # Eksekusi kode yang telah dimodifikasi
                         exec(modified_code)
 
-                    st.code(code)
+                    st.code(response)
                     execute_streamlit_code_with_explanations(response, introduction_list)
 
                     # segments = response.split("BEGIN_CODE")
