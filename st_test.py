@@ -1325,8 +1325,6 @@ def main():
                 with st.spinner('Generating insights...'):
                     
                     response = request_story_prompt(schema_str, rows_str, min_viz)
-                    segments = response.split("BEGIN_CODE")
-                    segment_iterator = iter(segments)
 
                     # Extracting the introductions
                     pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
@@ -1358,8 +1356,11 @@ def main():
                         # Eksekusi kode yang telah dimodifikasi
                         exec(modified_code)
 
+                    st.code(code)
                     execute_streamlit_code_with_explanations(response, introduction_list)
 
+                    # segments = response.split("BEGIN_CODE")
+                    # segment_iterator = iter(segments)
                     # for segment in segment_iterator:
                     #     # Jika ada kode dalam segmen ini
                     #     if "END_CODE" in segment:
