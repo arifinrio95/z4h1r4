@@ -172,6 +172,7 @@ def request_story_prompt(schema_str, rows_str, min_viz):
         Display in order: introductory, introduction for insight 1, visualization for insight 1, introduction for insight 2, visualization for insight 2, and so on.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
+        Give a clear Plotly title.
         Provide minimum {min_viz} numbers of insights."""}
     ]
     # Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
