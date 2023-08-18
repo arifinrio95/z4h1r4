@@ -1010,13 +1010,17 @@ def main():
 
     # try:
     if file is not None:
-        uploaded_file_path = "temp_file.csv"
-        with open(uploaded_file_path, "wb") as f:
-            f.write(file.read())
+        # uploaded_file_path = "temp_file.csv"
+        # with open(uploaded_file_path, "wb") as f:
+        #     f.write(file.read())
         
         load_df = LoadDataframe(file)
         global df
         df = load_df.load_file_auto_delimiter()
+        
+        df.to_csv("temp_file.csv", index=False)
+        uploaded_file_path = "temp_file.csv"
+    
         st.dataframe(df.head())
         analytics_df = DataAnalytics(df)
 
