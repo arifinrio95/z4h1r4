@@ -101,7 +101,7 @@ local_css("style.css")
 #             df[column].fillna('Unknown', inplace=True)
 
 def request_prompt(input_pengguna, schema_str, rows_str, style='Plotly', error_message=None, previous_script=None, retry_count=0):
-    # versi 2 prompt
+    # versi code + penjelasan prompt
     # messages = [
     #     {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
     #     {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
@@ -150,12 +150,23 @@ def request_prompt(input_pengguna, schema_str, rows_str, style='Plotly', error_m
     return script
 
 # Jangan diubah yg ini
-def request_story_prompt(dict_stats):
+def request_story_prompt(schema_str, rows_str):
+    # messages = [
+    #     {"role": "system", "content": "Aku akan membuat laporan untukmu."},
+    #     {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. 
+    #     Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary.
+    #     Tulis dalam 3000 kata. Tambahkan kesimpulan dan insights yang aplikatif dalam bisnis. Jelaskan dalam bentuk poin-poin."""}
+    # ]
+
+    # Versi penjelasan dan code
     messages = [
-        {"role": "system", "content": "Aku akan membuat laporan untukmu."},
-        {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. 
-        Jika ada pesan error, skip saja tidak usah dijelaskan. Tidak usah dijelaskan bahwa kamu membaca dari dictionary.
-        Tulis dalam 3000 kata. Tambahkan kesimpulan dan insights yang aplikatif dalam bisnis. Jelaskan dalam bentuk poin-poin."""}
+        {"role": "system", "content": "Aku akan membuat artikel untukmu dalam bentuk analisis dan script visualisasi yang ditampilkan di streamlit. Setiap script dimulai dengan 'BEGIN_CODE' dan ditutup dengan 'END_CODE'."},
+        {"role": "user", "content": f"""Buatkan artikel berbentuk insights yang insightful dari data dengan skema berikut: {schema_str), {rows_str}. 
+        Artikel dimulai dengan pendahuluan, lalu disusul dengan visualisasi dari insight pertama dalam versi seaborn streamlit.
+        Lalu dilanjutkan lagi dengan penjelasan, lalu disisil dengan visualisasi dari insight kedua dalam versi seaborn streamlit.
+        Dan seterusnya sampai minimal 5 visualisasi.
+        Setiap script dimulai dengan 'BEGIN_CODE' dan ditutup dengan 'END_CODE'.
+        """}
     ]
 
     response = openai.ChatCompletion.create(
@@ -1292,13 +1303,43 @@ def main():
             #     st.markdown(request_story_prompt(i))
             with st.spinner('Generating visualizations...'):
                 input_pengguna = "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
-                script = request_prompt(input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
+                script = (input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
                 # st.subheader("Visualizations")
                 exec(str(script))
             st.subheader("Insights")
             with st.spinner('Generating insights...'):
                 
                 st.markdown(request_story_prompt(dict_stats))
+
+            
+            # Membagi respons berdasarkan tanda awal dan akhir kode
+            with st.spinner('Generating insights...'):
+                
+                response = request_story_prompt(schema_str, rows_str)
+                segments = response.split("BEGIN_CODE")
+                for segment in segments:
+                    # Jika ada kode dalam segmen ini
+                    if "END_CODE" in segment:
+                        code_end = segment.index("END_CODE")
+                        code = segment[:code_end].strip()
+                        explanation = segment[code_end + len("END_CODE"):].strip()
+                
+                        # Eksekusi kode dan tampilkan hasil
+                        try:
+                            output = exec(code)
+                            st.code(code)  # Tampilkan kode dalam format kode
+                            st.write("Hasil eksekusi kode:")
+                            st.write(output)
+                        except Exception as e:
+                            st.write("Terjadi kesalahan saat mengeksekusi kode:")
+                            st.write(str(e))
+                
+                        # Tampilkan teks penjelasan
+                        if explanation:
+                            st.write(explanation)
+                    else:
+                        # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                        st.write(segment)
                 
             # st.text(request_story_prompt(analyze_dataframe(df)))
             # visualize_analysis(dict_stats)
