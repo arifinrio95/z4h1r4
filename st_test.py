@@ -167,10 +167,9 @@ def request_story_prompt(schema_str, rows_str, min_viz):
         Then continue with an introduction paragraph in for insight 2, followed by the visualization of the second with Plotly library for visualization and show in streamlit.
         And so on, up to a minimum of {min_viz} insights, do not provide under {min_viz} insights, the minimum is {min_viz}.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
-        Display in order: introductory, introduction insight 1, visualization 1, introduction insight 2, visualization 2, and so on.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df."""}
     ]
-
+    # Display in order: introductory, introduction insight 1, visualization 1, introduction insight 2, visualization 2, and so on.
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
         messages=messages,
