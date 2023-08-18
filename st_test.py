@@ -165,8 +165,7 @@ def request_story_prompt(schema_str, rows_str):
         Artikel dimulai dengan pendahuluan, lalu disusul dengan visualisasi dari insight pertama dalam versi seaborn streamlit.
         Lalu dilanjutkan lagi dengan penjelasan, lalu disisil dengan visualisasi dari insight kedua dalam versi seaborn streamlit.
         Dan seterusnya sampai minimal 5 visualisasi.
-        Setiap script dimulai dengan 'BEGIN_CODE' dan ditutup dengan 'END_CODE'.
-        """}
+        Setiap script dimulai dengan 'BEGIN_CODE' dan ditutup dengan 'END_CODE'."""}
     ]
 
     response = openai.ChatCompletion.create(
