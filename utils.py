@@ -8,7 +8,7 @@ import streamlit as st
 from langchain.agents import create_csv_agent, create_pandas_dataframe_agent
 from langchain.llms import OpenAI
 
-openai.api_key = st.secrets['user_api']
+openai.api_key = st.secrets['OPENAI_API_KEY']
 
 
 def get_answer_csv(file: TextIO, query: str) -> str:
