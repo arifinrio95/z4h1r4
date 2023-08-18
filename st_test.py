@@ -160,7 +160,7 @@ def request_story_prompt(schema_str, rows_str):
 
     # Versi penjelasan dan code
     messages = [
-        {"role": "system", "content": "Aku akan membuat artikel untukmu dalam bentuk analisis dan script visualisasi yang ditampilkan di streamlit. Setiap script dimulai dengan 'BEGIN_CODE' dan ditutup dengan 'END_CODE'."},
+        {"role": "system", "content": "I will create a 3000-word article for you in the form of analysis and visualization scripts to be displayed in Streamlit. Each script starts with 'BEGIN_CODE' and ends with 'END_CODE'."},
         {"role": "user", "content": f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
         The article should start with an introductory paragraph, followed by the visualization of the first insight using the Streamlit's pyplot version.
@@ -1330,11 +1330,11 @@ def main():
                         try:
                             output = exec(code)
                             # st.code(code)  # Tampilkan kode dalam format kode
-                            # st.write("Hasil eksekusi kode:")
-                            # st.write(output)
+                            st.write("Hasil eksekusi kode:")
+                            st.write(output)
                         except Exception as e:
-                            # st.write("Terjadi kesalahan saat mengeksekusi kode:")
-                            st.write(str(e))
+                            st.write("Terjadi kesalahan saat mengeksekusi kode:")
+                            # st.write(str(e))
                             next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
                             continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
                 
