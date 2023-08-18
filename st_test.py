@@ -1329,12 +1329,12 @@ def main():
                         # Coba eksekusi kode
                         try:
                             output = exec(code)
-                            # st.code(code)  # Tampilkan kode dalam format kode
+                            st.code(code)  # Tampilkan kode dalam format kode
                             st.write("Hasil eksekusi kode:")
                             st.write(output)
                         except Exception as e:
                             st.write("Terjadi kesalahan saat mengeksekusi kode:")
-                            # st.write(str(e))
+                            st.write(str(e))
                             next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
                             continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
                 
