@@ -150,7 +150,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, style='Plotly', error_m
     return script
 
 # Jangan diubah yg ini
-def request_story_prompt(schema_str, rows_str, min_viz=3, ):
+def request_story_prompt(schema_str, rows_str, min_viz):
     # messages = [
     #     {"role": "system", "content": "Aku akan membuat laporan untukmu."},
     #     {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. 
