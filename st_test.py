@@ -161,11 +161,12 @@ def request_story_prompt(schema_str, rows_str):
     # Versi penjelasan dan code
     messages = [
         {"role": "system", "content": "Aku akan membuat artikel untukmu dalam bentuk analisis dan script visualisasi yang ditampilkan di streamlit. Setiap script dimulai dengan 'BEGIN_CODE' dan ditutup dengan 'END_CODE'."},
-        {"role": "user", "content": f"""Buatkan artikel berbentuk insights yang insightful dari data dengan skema: {schema_str}, dan sample 2 rows pertama sebagai gambaran saja: {rows_str}. 
-        Artikel dimulai dengan pendahuluan 1 paragraf, lalu disusul dengan visualisasi dari insight pertama dalam versi pyplot streamlit.
-        Lalu dilanjutkan lagi dengan penjelasan 1 paragraf, lalu disusul dengan visualisasi dari insight kedua dalam versi pyplot streamlit.
-        Dan seterusnya sampai minimal 5 visualisasi dan penjelasannya dalam bentuk paragraf panjang.
-        Setiap script dimulai dengan 'BEGIN_CODE' dan ditutup dengan 'END_CODE'."""}
+        {"role": "user", "content": f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
+        My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
+        The article should start with an introductory paragraph, followed by the visualization of the first insight using the Streamlit's pyplot version.
+        Then continue with an explanatory paragraph, followed by the visualization of the second insight using the Streamlit's pyplot version.
+        And so on, up to a minimum of 5 visualizations and their explanations in the form of long paragraphs.
+        Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."""}
     ]
 
     response = openai.ChatCompletion.create(
