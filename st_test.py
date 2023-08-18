@@ -164,10 +164,10 @@ def request_story_prompt(schema_str, rows_str, min_viz):
         {"role": "user", "content": f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
         The article should start with an introductory paragraph in plain text, followed by the visualization of the first insight with Plotly library for visualization and show in streamlit.
-        Then continue with an explanatory paragraph in plain text, followed by the visualization of the second with Plotly library for visualization and show in streamlit.
+        Then continue with an introduction paragraph in plain text for insight 2, followed by the visualization of the second with Plotly library for visualization and show in streamlit.
         And so on, up to a minimum of {min_viz} visualizations and their explanations in the form of long paragraphs, do not provide under {min_viz} insights, the minimum is {min_viz}.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
-        Display in order: introductory, introduction insight 1, visualization 1, explanation 1, introduction insight 2, visualization 2, explanation 2, and so on.
+        Display in order: introductory, introduction insight 1, visualization 1, introduction insight 2, visualization 2, and so on.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df."""}
     ]
 
