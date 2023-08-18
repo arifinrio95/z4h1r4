@@ -1340,7 +1340,6 @@ def main():
                     introduction_list = list(introductions)
 
                     for query in introduction_list:
-                        # st.write(get_answer_csv(uploaded_file, query))
                         st.write(get_answer_csv(df, query))
 
                     def execute_streamlit_code_with_explanations(response, introduction_list):
@@ -1359,34 +1358,34 @@ def main():
                         # Eksekusi kode yang telah dimodifikasi
                         exec(modified_code)
 
-                    
+                    execute_streamlit_code_with_explanations(code, introduction_list)
 
-                    for segment in segment_iterator:
-                        # Jika ada kode dalam segmen ini
-                        if "END_CODE" in segment:
-                            code_end = segment.index("END_CODE")
-                            code = segment[:code_end].strip()
-                            explanation = segment[code_end + len("END_CODE"):].strip()
+                    # for segment in segment_iterator:
+                    #     # Jika ada kode dalam segmen ini
+                    #     if "END_CODE" in segment:
+                    #         code_end = segment.index("END_CODE")
+                    #         code = segment[:code_end].strip()
+                    #         explanation = segment[code_end + len("END_CODE"):].strip()
                     
-                            # Coba eksekusi kode
-                            try:
-                                st.code(code)  # Tampilkan kode dalam format kode
-                                execute_streamlit_code_with_explanations(code, introduction_list) #exec(code)
+                    #         # Coba eksekusi kode
+                    #         try:
+                    #             st.code(code)  # Tampilkan kode dalam format kode
+                    #             execute_streamlit_code_with_explanations(code, introduction_list) #exec(code)
                                 
-                                # st.write("Hasil eksekusi kode:")
-                                # st.write(output)
-                            except Exception as e:
-                                st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
-                                st.write(str(e))
-                                # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
-                                # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
+                    #             # st.write("Hasil eksekusi kode:")
+                    #             # st.write(output)
+                    #         except Exception as e:
+                    #             st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
+                    #             st.write(str(e))
+                    #             # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
+                    #             # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
                     
-                            # Tampilkan teks penjelasan
-                            if explanation:
-                                st.write(explanation)
-                        else:
-                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                            st.write(segment)
+                    #         # Tampilkan teks penjelasan
+                    #         if explanation:
+                    #             st.write(explanation)
+                    #     else:
+                    #         # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                    #         st.write(segment)
                 
             # st.text(request_story_prompt(analyze_dataframe(df)))
             # visualize_analysis(dict_stats)
