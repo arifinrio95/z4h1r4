@@ -1337,7 +1337,7 @@ def main():
                     
                     # Saving the introductions to a list
                     introduction_list = list(introductions)
-                    st.write('introduction_list : ',introduction_list)
+                    st.text('introduction_list : ',introduction_list)
                     # for query in introduction_list:
                     #     st.write(get_answer_csv(df, query))
 
