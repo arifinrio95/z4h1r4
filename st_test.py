@@ -1317,22 +1317,26 @@ def main():
                 
                 response = request_story_prompt(schema_str, rows_str)
                 segments = response.split("BEGIN_CODE")
-                for segment in segments:
+                segment_iterator = iter(segments)
+
+                for segment in segment_iterator:
                     # Jika ada kode dalam segmen ini
                     if "END_CODE" in segment:
                         code_end = segment.index("END_CODE")
                         code = segment[:code_end].strip()
                         explanation = segment[code_end + len("END_CODE"):].strip()
                 
-                        # Eksekusi kode dan tampilkan hasil
+                        # Coba eksekusi kode
                         try:
                             output = exec(code)
-                            st.code(code)  # Tampilkan kode dalam format kode
-                            st.write("Hasil eksekusi kode:")
-                            st.write(output)
+                            # st.code(code)  # Tampilkan kode dalam format kode
+                            # st.write("Hasil eksekusi kode:")
+                            # st.write(output)
                         except Exception as e:
-                            st.write("Terjadi kesalahan saat mengeksekusi kode:")
+                            # st.write("Terjadi kesalahan saat mengeksekusi kode:")
                             st.write(str(e))
+                            next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
+                            continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
                 
                         # Tampilkan teks penjelasan
                         if explanation:
