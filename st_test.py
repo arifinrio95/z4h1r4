@@ -1338,8 +1338,8 @@ def main():
                     # Saving the introductions to a list
                     introduction_list = list(introductions)
 
-                    for query in introduction_list:
-                        st.write(get_answer_csv(file, query))
+                    # for query in introduction_list:
+                    #     st.write(get_answer_csv(df, query))
 
                     def execute_streamlit_code_with_explanations(response, introduction_list):
                         # Split kode berdasarkan st.plotly_chart()
