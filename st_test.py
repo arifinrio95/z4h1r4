@@ -1370,8 +1370,9 @@ def main():
                     
                             # Coba eksekusi kode
                             try:
-                                output = execute_streamlit_code_with_explanations(code, introduction_list) #exec(code)
-                                #st.code(code)  # Tampilkan kode dalam format kode
+                                st.code(code)  # Tampilkan kode dalam format kode
+                                execute_streamlit_code_with_explanations(code, introduction_list) #exec(code)
+                                
                                 # st.write("Hasil eksekusi kode:")
                                 # st.write(output)
                             except Exception as e:
