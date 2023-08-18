@@ -1362,7 +1362,7 @@ def main():
                                 explanation = get_answer_csv(uploaded_file_path, introduction_list[index])
                                 modified_code += f'\nst.write("{explanation}")\n'
                             # Update progress bar
-                            progress_percentage = (index + 1) / len(code_segments[1:]) * 100
+                            progress_percentage = (index + 1) / len(code_segments[1:])
                             progress_bar.progress(progress_percentage)
 
                         # st.code(modified_code)
