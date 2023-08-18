@@ -150,7 +150,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, style='Plotly', error_m
     return script
 
 # Jangan diubah yg ini
-def request_story_prompt(schema_str, rows_str):
+def request_story_prompt(schema_str, rows_str, min_viz=3, ):
     # messages = [
     #     {"role": "system", "content": "Aku akan membuat laporan untukmu."},
     #     {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. 
@@ -160,12 +160,12 @@ def request_story_prompt(schema_str, rows_str):
 
     # Versi penjelasan dan code
     messages = [
-        {"role": "system", "content": "I will create a 3000-word article for you in the form of analysis and visualization in Plotly scripts to be displayed in Streamlit. Each script starts with 'BEGIN_CODE' and ends with 'END_CODE'."},
+        {"role": "system", "content": "I will create a long article for you in the form of analysis and visualization in Plotly scripts to be displayed in Streamlit. Each script starts with 'BEGIN_CODE' and ends with 'END_CODE'."},
         {"role": "user", "content": f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
         The article should start with an introductory paragraph in plain text, followed by the visualization of the first insight with Plotly library for visualization and show in streamlit.
         Then continue with an explanatory paragraph in plain text, followed by the visualization of the second with Plotly library for visualization and show in streamlit.
-        And so on, up to a minimum of 5 visualizations and their explanations in the form of long paragraphs.
+        And so on, up to a minimum of {min_viz} visualizations and their explanations in the form of long paragraphs, do not provide under {min_viz} insights, the minimum is {min_viz}.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df."""}
     ]
@@ -1312,7 +1312,7 @@ def main():
                 
             #     st.markdown(request_story_prompt(dict_stats))
 
-            
+            st.selectbox('Expected number of insights:', [1,2,3,4,5,6,7,8,9,10])
             # Membagi respons berdasarkan tanda awal dan akhir kode
             with st.spinner('Generating insights...'):
                 
