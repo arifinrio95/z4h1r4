@@ -1330,7 +1330,7 @@ def main():
 
                     # Extracting the introductions
                     pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
-                    introductions = re.findall(pattern, code)
+                    introductions = re.findall(pattern, response)
                     
                     # Printing the extracted introductions
                     # for intro in introductions:
@@ -1345,7 +1345,7 @@ def main():
 
                     def execute_streamlit_code_with_explanations(response, introduction_list):
                         # Split kode berdasarkan st.plotly_chart()
-                        code_segments = original_code.split('st.plotly_chart(')
+                        code_segments = response.split('st.plotly_chart(')
                     
                         modified_code = code_segments[0]  # Bagian kode sebelum plot pertama
                         
