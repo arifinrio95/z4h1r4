@@ -1317,7 +1317,7 @@ def main():
                 
                 response = request_story_prompt(schema_str, rows_str)
                 segments = response.split("BEGIN_CODE")
-                for segment in segments[:-1]:
+                for segment in segments:
                     # Jika ada kode dalam segmen ini
                     if "END_CODE" in segment:
                         code_end = segment.index("END_CODE")
