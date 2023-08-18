@@ -1295,20 +1295,20 @@ def main():
                 }
             </style>
             """, unsafe_allow_html=True)
-            dict_stats = analyze_dataframe(df)
-            # st.write("Temporary showing, under review....")
-            # st.write(dict_stats)
-            # for i in dict_stats:
-            #     st.markdown(request_story_prompt(i))
-            with st.spinner('Generating visualizations...'):
-                input_pengguna = "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
-                script = (input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
-                # st.subheader("Visualizations")
-                exec(str(script))
-            st.subheader("Insights")
-            with st.spinner('Generating insights...'):
+            # dict_stats = analyze_dataframe(df)
+            # # st.write("Temporary showing, under review....")
+            # # st.write(dict_stats)
+            # # for i in dict_stats:
+            # #     st.markdown(request_story_prompt(i))
+            # with st.spinner('Generating visualizations...'):
+            #     input_pengguna = "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
+            #     script = (input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
+            #     # st.subheader("Visualizations")
+            #     exec(str(script))
+            # st.subheader("Insights")
+            # with st.spinner('Generating insights...'):
                 
-                st.markdown(request_story_prompt(dict_stats))
+            #     st.markdown(request_story_prompt(dict_stats))
 
             
             # Membagi respons berdasarkan tanda awal dan akhir kode
