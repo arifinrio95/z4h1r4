@@ -163,13 +163,14 @@ def request_story_prompt(schema_str, rows_str, min_viz):
 
     # Versi penjelasan dan code
     messages = [
-        {"role": "system", "content": "I will create a long article for you in the form of analysis and visualization in Plotly scripts to be displayed in Streamlit."},
+        {"role": "system", "content": "I will create a long article for you in the form of analysis and visualization in Plotly scripts to be displayed in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."},
         {"role": "user", "content": f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
         The article should start with an introductory paragraph in plain text, followed by introduction for the first insight and the visualization of the first insight with Plotly library for visualization and show in streamlit.
         Then continue with an introduction paragraph in for insight 2, followed by the visualization of the second with Plotly library for visualization and show in streamlit.
         And so on, up to a minimum of {min_viz} insights, do not provide under {min_viz} number of insights, the minimum is {min_viz}.
         Display in order: introductory, introduction for insight 1, visualization for insight 1, introduction for insight 2, visualization for insight 2, and so on.
+        Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
         Provide minimum {min_viz} numbers of insights."""}
     ]
@@ -1357,36 +1358,36 @@ def main():
                         exec(modified_code)
 
                     
-                    execute_streamlit_code_with_explanations(response, introduction_list)
+                    # execute_streamlit_code_with_explanations(response, introduction_list)
 
-                    # segments = response.split("BEGIN_CODE")
-                    # segment_iterator = iter(segments)
-                    # for segment in segment_iterator:
-                    #     # Jika ada kode dalam segmen ini
-                    #     if "END_CODE" in segment:
-                    #         code_end = segment.index("END_CODE")
-                    #         code = segment[:code_end].strip()
-                    #         explanation = segment[code_end + len("END_CODE"):].strip()
+                    segments = response.split("BEGIN_CODE")
+                    segment_iterator = iter(segments)
+                    for segment in segment_iterator:
+                        # Jika ada kode dalam segmen ini
+                        if "END_CODE" in segment:
+                            code_end = segment.index("END_CODE")
+                            code = segment[:code_end].strip()
+                            explanation = segment[code_end + len("END_CODE"):].strip()
                     
-                    #         # Coba eksekusi kode
-                    #         try:
-                    #             st.code(code)  # Tampilkan kode dalam format kode
-                    #             execute_streamlit_code_with_explanations(code, introduction_list) #exec(code)
+                            # Coba eksekusi kode
+                            try:
+                                # st.code(code)  # Tampilkan kode dalam format kode
+                                execute_streamlit_code_with_explanations(code, introduction_list) #exec(code)
                                 
-                    #             # st.write("Hasil eksekusi kode:")
-                    #             # st.write(output)
-                    #         except Exception as e:
-                    #             st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
-                    #             st.write(str(e))
-                    #             # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
-                    #             # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
+                                # st.write("Hasil eksekusi kode:")
+                                # st.write(output)
+                            except Exception as e:
+                                st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
+                                st.write(str(e))
+                                # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
+                                # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
                     
-                    #         # Tampilkan teks penjelasan
-                    #         if explanation:
-                    #             st.write(explanation)
-                    #     else:
-                    #         # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                    #         st.write(segment)
+                            # Tampilkan teks penjelasan
+                            if explanation:
+                                st.write(explanation)
+                        else:
+                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                            st.write(segment)
                 
             # st.text(request_story_prompt(analyze_dataframe(df)))
             # visualize_analysis(dict_stats)
