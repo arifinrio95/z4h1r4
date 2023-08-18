@@ -1339,10 +1339,10 @@ def main():
                                 # st.write("Hasil eksekusi kode:")
                                 # st.write(output)
                             except Exception as e:
-                                st.write("Terjadi kesalahan saat mengeksekusi kode:")
+                                st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
                                 st.write(str(e))
-                                next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
-                                continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
+                                # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
+                                # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
                     
                             # Tampilkan teks penjelasan
                             if explanation:
