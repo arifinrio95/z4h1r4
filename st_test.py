@@ -72,7 +72,7 @@ hide_menu = """
 """
 
 # Find more emojis here: https://www.webfx.com/tools/emoji-cheat-sheet/
-st.set_page_config(page_title="Datasans Analisa Otomatis!", page_icon=":tada:", layout="wide")
+st.set_page_config(page_title="Ulikdata", page_icon=":tada:", layout="wide")
 
 
 # Use local CSS
@@ -971,7 +971,7 @@ def main():
     import warnings
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.image('https://drive.google.com/uc?export=view&id=1EIKQGaZbQG5Qw2ndq_5PLHF1GlIsZt25', use_column_width=True)
+    st.image('https://drive.google.com/uc?export=view&id=1cgBcbwB7uTAJHaoe80XHQWuPdIyqj38v', use_column_width=True)
 
     # st.title('Personal Data Analysis by Datasans')
     # st.write('Beta Access.')
