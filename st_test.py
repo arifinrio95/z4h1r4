@@ -166,7 +166,7 @@ def request_story_prompt(schema_str, rows_str, min_viz):
         The article should start with an introductory paragraph in plain text, followed by introduction for the first insight and the visualization of the first insight with Plotly library for visualization and show in streamlit.
         Then continue with an introduction paragraph in for insight 2, followed by the visualization of the second with Plotly library for visualization and show in streamlit.
         And so on, up to a minimum of {min_viz} insights, do not provide under {min_viz} number of insights, the minimum is {min_viz}.
-        Display in order: introductory, introduction insight 1, visualization 1, introduction insight 2, visualization 2, and so on.
+        Display in order: introductory, introduction for insight 1, visualization for insight 1, introduction for insight 2, visualization for insight 2, and so on.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df."""}
     ]
