@@ -160,7 +160,7 @@ def request_story_prompt(schema_str, rows_str):
 
     # Versi penjelasan dan code
     messages = [
-        {"role": "system", "content": "I will create a 3000-word article for you in the form of analysis and visualization in Pyplot scripts to be displayed in Streamlit. Each script starts with 'BEGIN_CODE' and ends with 'END_CODE'."},
+        {"role": "system", "content": "I will create a 3000-word article for you in the form of analysis and visualization in Plotly scripts to be displayed in Streamlit. Each script starts with 'BEGIN_CODE' and ends with 'END_CODE'."},
         {"role": "user", "content": f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
         The article should start with an introductory paragraph in plain text, followed by the visualization of the first insight with Plotly library for visualization and show in streamlit.
@@ -1284,7 +1284,7 @@ def main():
                     input_pengguna = ""
 
         if st.session_state.get('story_telling', False):
-            # st.title("Automatic Insights")
+            st.title("Automated Insights by Ulikdata")
             
             st.markdown("""
             <style>
