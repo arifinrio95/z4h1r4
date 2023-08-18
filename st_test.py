@@ -163,7 +163,7 @@ def request_story_prompt(schema_str, rows_str):
         {"role": "system", "content": "Aku akan membuat artikel untukmu dalam bentuk analisis dan script visualisasi yang ditampilkan di streamlit. Setiap script dimulai dengan 'BEGIN_CODE' dan ditutup dengan 'END_CODE'."},
         {"role": "user", "content": f"""Buatkan artikel berbentuk insights yang insightful dari data dengan skema: {schema_str}, dan sample 2 rows pertama sebagai gambaran saja: {rows_str}. 
         Artikel dimulai dengan pendahuluan 1 paragraf, lalu disusul dengan visualisasi dari insight pertama dalam versi pyplot streamlit.
-        Lalu dilanjutkan lagi dengan penjelasan 1 paragraf, lalu disisil dengan visualisasi dari insight kedua dalam versi pyplot streamlit.
+        Lalu dilanjutkan lagi dengan penjelasan 1 paragraf, lalu disusul dengan visualisasi dari insight kedua dalam versi pyplot streamlit.
         Dan seterusnya sampai minimal 5 visualisasi dan penjelasannya dalam bentuk paragraf panjang.
         Setiap script dimulai dengan 'BEGIN_CODE' dan ditutup dengan 'END_CODE'."""}
     ]
