@@ -1392,8 +1392,8 @@ def main():
                             # Coba eksekusi kode
                             # try:
                                 # st.code(code)  # Tampilkan kode dalam format kode
-                            execute_streamlit_code_with_explanations(code, introduction_list) #exec(code)
-                                
+                            # execute_streamlit_code_with_explanations(code, introduction_list) 
+                            exec(code)
                                 # st.write("Hasil eksekusi kode:")
                                 # st.write(output)
                             # except Exception as e:
@@ -1408,9 +1408,9 @@ def main():
                         else:
                             # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
                             st.write(segment)
-                    st.write("For Developer Maintenance Purposed (will remove)")
-                    st.text(response)
-                    st.text(introduction_list)
+                    # st.write("For Developer Maintenance Purposed (will remove)")
+                    # st.text(response)
+                    # st.text(introduction_list)
                 
             # st.text(request_story_prompt(analyze_dataframe(df)))
             # visualize_analysis(dict_stats)
