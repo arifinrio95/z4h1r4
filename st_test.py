@@ -1404,6 +1404,8 @@ def main():
                         else:
                             # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
                             st.write(segment)
+                    st.write("For Developer Maintenance Purposed (will remove)")
+                    st.text(response)
                 
             # st.text(request_story_prompt(analyze_dataframe(df)))
             # visualize_analysis(dict_stats)
