@@ -1351,23 +1351,27 @@ def main():
                     def execute_streamlit_code_with_explanations(response, introduction_list):
                         # Split kode berdasarkan st.plotly_chart()
                         code_segments = response.split('st.plotly_chart(')
-                    
+                        
                         modified_code = code_segments[0]  # Bagian kode sebelum plot pertama
                         
                         progress_bar = st.progress(0)
                         for index, segment in enumerate(code_segments[1:]):
-                            # Tambahkan st.plotly_chart kembali dan tambahkan penjelasan setelahnya
-                            modified_code += 'st.plotly_chart(' + segment
+                            # Dapatkan penjelasan untuk segment ini
                             if index < len(introduction_list):
                                 explanation = get_answer_csv(uploaded_file_path, introduction_list[index])
                                 modified_code += f'\nst.write("{explanation}")\n'
+                            
+                            # Tambahkan st.plotly_chart kembali
+                            modified_code += 'st.plotly_chart(' + segment
+                    
                             # Update progress bar
                             progress_percentage = (index + 1) / len(code_segments[1:])
                             progress_bar.progress(progress_percentage)
-
+                    
                         # st.code(modified_code)
                         # Eksekusi kode yang telah dimodifikasi
                         exec(modified_code)
+
 
                     
                     # execute_streamlit_code_with_explanations(response, introduction_list)
