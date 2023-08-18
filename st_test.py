@@ -1326,7 +1326,7 @@ def main():
                 with st.spinner('Generating insights...'):
                     
                     response = request_story_prompt(schema_str, rows_str, min_viz)
-                    st.text('response : ',response)
+                    st.text(response)
                     # Extracting the introductions
                     pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
                     introductions = re.findall(pattern, response)
