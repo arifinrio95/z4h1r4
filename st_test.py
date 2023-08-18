@@ -163,8 +163,8 @@ def request_story_prompt(schema_str, rows_str):
         {"role": "system", "content": "I will create a 3000-word article for you in the form of analysis and visualization scripts to be displayed in Streamlit. Each script starts with 'BEGIN_CODE' and ends with 'END_CODE'."},
         {"role": "user", "content": f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
-        The article should start with an introductory paragraph in plain text, followed by the visualization of the first insight in Streamlit's Pyplot.
-        Then continue with an explanatory paragraph in plain text, followed by the visualization of the second insight uin Streamlit's Pyplot.
+        The article should start with an introductory paragraph in plain text, followed by the visualization of the first insight with Pyplot library for visualization and show in streamlit.
+        Then continue with an explanatory paragraph in plain text, followed by the visualization of the second with Pyplot library for visualization and show in streamlit.
         And so on, up to a minimum of 5 visualizations and their explanations in the form of long paragraphs.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df."""}
