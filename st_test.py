@@ -166,7 +166,8 @@ def request_story_prompt(schema_str, rows_str):
         The article should start with an introductory paragraph in plain text, followed by the visualization of the first insight in Streamlit's Pyplot.
         Then continue with an explanatory paragraph in plain text, followed by the visualization of the second insight uin Streamlit's Pyplot.
         And so on, up to a minimum of 5 visualizations and their explanations in the form of long paragraphs.
-        Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."""}
+        Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
+        Use df directly; it's been loaded before, do not reload the df, and do not redefine the df."""}
     ]
 
     response = openai.ChatCompletion.create(
