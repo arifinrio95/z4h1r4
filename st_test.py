@@ -167,6 +167,7 @@ def request_story_prompt(schema_str, rows_str, min_viz):
         Then continue with an explanatory paragraph in plain text, followed by the visualization of the second with Plotly library for visualization and show in streamlit.
         And so on, up to a minimum of {min_viz} visualizations and their explanations in the form of long paragraphs, do not provide under {min_viz} insights, the minimum is {min_viz}.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
+        Display in order: introductory, insight 1, explanation 1, insight 2, explanation 2, and so on.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df."""}
     ]
 
