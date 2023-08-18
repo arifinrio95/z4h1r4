@@ -1336,7 +1336,7 @@ def main():
                     # Extracting the introductions
                     # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
                     # pattern = r'st.write\("Insight \d+: (.+?)"\)'
-                    pattern = r'Insight \d+: (.+?)\n'
+                    pattern = r'# Insight \d+: (.+?)\n'
 
                     introductions = re.findall(pattern, response)
                     
