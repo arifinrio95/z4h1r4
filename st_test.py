@@ -1330,6 +1330,7 @@ def main():
                     st.text(response)
                     # Extracting the introductions
                     pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
+                    pattern = r'st.write\("Insight \d+: (.+?)"\)'
                     introductions = re.findall(pattern, response)
                     
                     # Printing the extracted introductions
@@ -1338,6 +1339,8 @@ def main():
                     
                     # Saving the introductions to a list
                     introduction_list = list(introductions)
+                    introduction_list = ["Analyze the " + s for s in introduction_list]
+                    
                     st.text(introduction_list)
                     # for query in introduction_list:
                     #     st.write(get_answer_csv(df, query))
