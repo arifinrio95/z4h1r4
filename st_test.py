@@ -163,8 +163,8 @@ def request_story_prompt(schema_str, rows_str):
         {"role": "system", "content": "I will create a 3000-word article for you in the form of analysis and visualization scripts to be displayed in Streamlit. Each script starts with 'BEGIN_CODE' and ends with 'END_CODE'."},
         {"role": "user", "content": f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
-        The article should start with an introductory paragraph, followed by the visualization of the first insight using the Streamlit's pyplot version.
-        Then continue with an explanatory paragraph, followed by the visualization of the second insight using the Streamlit's pyplot version.
+        The article should start with an introductory paragraph in plain text, followed by the visualization of the first insight in Streamlit's Pyplot.
+        Then continue with an explanatory paragraph in plain text, followed by the visualization of the second insight uin Streamlit's Pyplot.
         And so on, up to a minimum of 5 visualizations and their explanations in the form of long paragraphs.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."""}
     ]
@@ -1329,9 +1329,9 @@ def main():
                         # Coba eksekusi kode
                         try:
                             output = exec(code)
-                            st.code(code)  # Tampilkan kode dalam format kode
-                            st.write("Hasil eksekusi kode:")
-                            st.write(output)
+                            # st.code(code)  # Tampilkan kode dalam format kode
+                            # st.write("Hasil eksekusi kode:")
+                            # st.write(output)
                         except Exception as e:
                             st.write("Terjadi kesalahan saat mengeksekusi kode:")
                             st.write(str(e))
