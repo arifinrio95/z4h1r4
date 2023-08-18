@@ -163,18 +163,18 @@ def request_story_prompt(schema_str, rows_str, min_viz):
 
     # Versi penjelasan dan code
     messages = [
-        {"role": "system", "content": "I will create a long article for you in the form of analysis and visualization in Plotly scripts to be displayed in Streamlit. Each script starts with 'BEGIN_CODE' and ends with 'END_CODE'."},
+        {"role": "system", "content": "I will create a long article for you in the form of analysis and visualization in Plotly scripts to be displayed in Streamlit."},
         {"role": "user", "content": f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
         The article should start with an introductory paragraph in plain text, followed by introduction for the first insight and the visualization of the first insight with Plotly library for visualization and show in streamlit.
         Then continue with an introduction paragraph in for insight 2, followed by the visualization of the second with Plotly library for visualization and show in streamlit.
         And so on, up to a minimum of {min_viz} insights, do not provide under {min_viz} number of insights, the minimum is {min_viz}.
         Display in order: introductory, introduction for insight 1, visualization for insight 1, introduction for insight 2, visualization for insight 2, and so on.
-        Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
         Provide minimum {min_viz} numbers of insights."""}
     ]
-    # 
+    # Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
+    #
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
         messages=messages,
@@ -1352,11 +1352,11 @@ def main():
                             if index < len(introduction_list):
                                 explanation = get_answer_csv(df, introduction_list[index])
                                 modified_code += f'\nst.write("{explanation}")\n'
-                        
+                        st.code(modified_code)
                         # Eksekusi kode yang telah dimodifikasi
                         exec(modified_code)
 
-                    st.code(response)
+                    
                     execute_streamlit_code_with_explanations(response, introduction_list)
 
                     # segments = response.split("BEGIN_CODE")
