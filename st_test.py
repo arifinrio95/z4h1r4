@@ -1312,39 +1312,42 @@ def main():
                 
             #     st.markdown(request_story_prompt(dict_stats))
 
-            st.selectbox('Expected number of insights:', [1,2,3,4,5,6,7,8,9,10])
-            # Membagi respons berdasarkan tanda awal dan akhir kode
-            with st.spinner('Generating insights...'):
-                
-                response = request_story_prompt(schema_str, rows_str)
-                segments = response.split("BEGIN_CODE")
-                segment_iterator = iter(segments)
+            st.selectbox('Expected number of insights:', [3,4,5,6,7,8,9,10])
 
-                for segment in segment_iterator:
-                    # Jika ada kode dalam segmen ini
-                    if "END_CODE" in segment:
-                        code_end = segment.index("END_CODE")
-                        code = segment[:code_end].strip()
-                        explanation = segment[code_end + len("END_CODE"):].strip()
-                
-                        # Coba eksekusi kode
-                        try:
-                            output = exec(code)
-                            st.code(code)  # Tampilkan kode dalam format kode
-                            # st.write("Hasil eksekusi kode:")
-                            # st.write(output)
-                        except Exception as e:
-                            st.write("Terjadi kesalahan saat mengeksekusi kode:")
-                            st.write(str(e))
-                            next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
-                            continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
-                
-                        # Tampilkan teks penjelasan
-                        if explanation:
-                            st.write(explanation)
-                    else:
-                        # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                        st.write(segment)
+            button = st.button("Submit")
+            if button:
+                # Membagi respons berdasarkan tanda awal dan akhir kode
+                with st.spinner('Generating insights...'):
+                    
+                    response = request_story_prompt(schema_str, rows_str)
+                    segments = response.split("BEGIN_CODE")
+                    segment_iterator = iter(segments)
+    
+                    for segment in segment_iterator:
+                        # Jika ada kode dalam segmen ini
+                        if "END_CODE" in segment:
+                            code_end = segment.index("END_CODE")
+                            code = segment[:code_end].strip()
+                            explanation = segment[code_end + len("END_CODE"):].strip()
+                    
+                            # Coba eksekusi kode
+                            try:
+                                output = exec(code)
+                                st.code(code)  # Tampilkan kode dalam format kode
+                                # st.write("Hasil eksekusi kode:")
+                                # st.write(output)
+                            except Exception as e:
+                                st.write("Terjadi kesalahan saat mengeksekusi kode:")
+                                st.write(str(e))
+                                next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
+                                continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
+                    
+                            # Tampilkan teks penjelasan
+                            if explanation:
+                                st.write(explanation)
+                        else:
+                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                            st.write(segment)
                 
             # st.text(request_story_prompt(analyze_dataframe(df)))
             # visualize_analysis(dict_stats)
