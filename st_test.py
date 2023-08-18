@@ -1312,14 +1312,14 @@ def main():
                 
             #     st.markdown(request_story_prompt(dict_stats))
 
-            st.selectbox('Expected number of insights:', [3,4,5,6,7,8,9,10])
+            min_viz = st.selectbox('Expected number of insights:', [3,4,5,6,7,8,9,10])
 
             button = st.button("Submit")
             if button:
                 # Membagi respons berdasarkan tanda awal dan akhir kode
                 with st.spinner('Generating insights...'):
                     
-                    response = request_story_prompt(schema_str, rows_str)
+                    response = request_story_prompt(schema_str, rows_str, min_viz)
                     segments = response.split("BEGIN_CODE")
                     segment_iterator = iter(segments)
     
