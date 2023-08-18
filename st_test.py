@@ -1,5 +1,6 @@
 import openai
 import streamlit as st
+import re
 
 from load_dataframe import LoadDataframe
 from data_analytics import DataAnalytics
