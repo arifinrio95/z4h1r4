@@ -1015,6 +1015,7 @@ def main():
             f.write(file.read())
         
         load_df = LoadDataframe(file)
+        global df
         df = load_df.load_file_auto_delimiter()
         st.dataframe(df.head())
         analytics_df = DataAnalytics(df)
