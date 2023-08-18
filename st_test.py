@@ -1332,8 +1332,10 @@ def main():
                     response = request_story_prompt(schema_str, rows_str, min_viz)
                     # st.text(response)
                     # Extracting the introductions
-                    pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
-                    pattern = r'st.write\("Insight \d+: (.+?)"\)'
+                    # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
+                    # pattern = r'st.write\("Insight \d+: (.+?)"\)'
+                    pattern = r'Insight \d+: (.+?)\n'
+
                     introductions = re.findall(pattern, response)
                     
                     # Printing the extracted introductions
