@@ -1328,10 +1328,9 @@ def main():
             button = st.button("Submit")
             if button:
                 # Membagi respons berdasarkan tanda awal dan akhir kode
-                with st.spinner('Generating insights...'):
-                    
+                with st.spinner('Generating insights...'):  
                     response = request_story_prompt(schema_str, rows_str, min_viz)
-                    st.text(response)
+                    # st.text(response)
                     # Extracting the introductions
                     pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
                     pattern = r'st.write\("Insight \d+: (.+?)"\)'
@@ -1345,7 +1344,7 @@ def main():
                     introduction_list = list(introductions)
                     introduction_list = ["Analyze the " + s for s in introduction_list]
                     
-                    st.text(introduction_list)
+                    # st.text(introduction_list)
                     # for query in introduction_list:
                     #     st.write(get_answer_csv(df, query))
 
@@ -1355,13 +1354,18 @@ def main():
                     
                         modified_code = code_segments[0]  # Bagian kode sebelum plot pertama
                         
+                        progress_bar = st.progress(0)
                         for index, segment in enumerate(code_segments[1:]):
                             # Tambahkan st.plotly_chart kembali dan tambahkan penjelasan setelahnya
                             modified_code += 'st.plotly_chart(' + segment
                             if index < len(introduction_list):
                                 explanation = get_answer_csv(uploaded_file_path, introduction_list[index])
                                 modified_code += f'\nst.write("{explanation}")\n'
-                        st.code(modified_code)
+                            # Update progress bar
+                            progress_percentage = (index + 1) / len(code_segments[1:]) * 100
+                            progress_bar.progress(progress_percentage)
+
+                        # st.code(modified_code)
                         # Eksekusi kode yang telah dimodifikasi
                         exec(modified_code)
 
