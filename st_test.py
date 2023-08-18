@@ -1351,7 +1351,7 @@ def main():
                             # Tambahkan st.plotly_chart kembali dan tambahkan penjelasan setelahnya
                             modified_code += 'st.plotly_chart(' + segment
                             if index < len(introduction_list):
-                                explanation = get_answer_csv(file, introduction_list[index])
+                                explanation = get_answer_csv(uploaded_file_path, introduction_list[index])
                                 modified_code += f'\nst.write("{explanation}")\n'
                         st.code(modified_code)
                         # Eksekusi kode yang telah dimodifikasi
