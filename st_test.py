@@ -174,7 +174,7 @@ def request_story_prompt(schema_str, rows_str, min_viz):
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
         Give a clear Plotly title.
         Provide minimum {min_viz} numbers of insights.
-        If there is a column suspected to be a date column, first change its format to a valid Python date format, sometimes the format is really unstructured, use yout ituition to convert it. If there is no date column, proceed. Check again the value of the column in the sample data {rows_str}."""}
+        Ubah format value du kolom Tanggal dari yang seperti ini '12 Agustus 2023 23:04 WIB', menjadi format date python yang valid."""}
     ]
     # Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
     #
