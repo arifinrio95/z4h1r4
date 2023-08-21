@@ -153,7 +153,7 @@ def request_prompt(input_pengguna, schema_str, rows_str, style='Plotly', error_m
     return script
 
 # Jangan diubah yg ini
-def request_story_prompt(schema_str, rows_str, min_viz):
+def request_story_prompt(schema_str, rows_str, min_viz, style='Plotly'):
     # messages = [
     #     {"role": "system", "content": "Aku akan membuat laporan untukmu."},
     #     {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}. 
@@ -163,16 +163,16 @@ def request_story_prompt(schema_str, rows_str, min_viz):
 
     # Versi penjelasan dan code
     messages = [
-        {"role": "system", "content": "I will create a long article for you in the form of analysis and visualization in Plotly scripts to be displayed in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."},
+        {"role": "system", "content": "I will create a long article for you in the form of analysis and visualization in {style} scripts to be displayed in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."},
         {"role": "user", "content": f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
-        The article should start with an introductory paragraph in plain text, followed by introduction for the first insight and the visualization of the first insight with Plotly library for visualization and show in streamlit.
-        Then continue with an introduction paragraph in for insight 2, followed by the visualization of the second with Plotly library for visualization and show in streamlit.
+        The article should start with an introductory paragraph in plain text, followed by introduction for the first insight and the visualization of the first insight with {style} library for visualization and show in streamlit.
+        Then continue with an introduction paragraph in for insight 2, followed by the visualization of the second with {style} library for visualization and show in streamlit.
         And so on, up to a minimum of {min_viz} insights, do not provide under {min_viz} number of insights, the minimum is {min_viz}.
         Display in order: introductory, introduction for insight 1, visualization for insight 1, introduction for insight 2, visualization for insight 2, and so on.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
-        Give a clear Plotly title.
+        Give a clear {style} title.
         Provide minimum {min_viz} numbers of insights."""}
     ]
     # Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
@@ -1325,12 +1325,15 @@ def main():
             #     st.markdown(request_story_prompt(dict_stats))
 
             min_viz = st.selectbox('Expected number of insights:', [3,4,5,6,7,8,9,10])
-
+            style_choosen = 'Plotly'
+            style_choosen = st.selectbox('Choose a Visualization Style:', 
+                                 ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
+            
             button = st.button("Submit")
             if button:
                 # Membagi respons berdasarkan tanda awal dan akhir kode
                 with st.spinner('Generating insights...'):  
-                    response = request_story_prompt(schema_str, rows_str, min_viz)
+                    response = request_story_prompt(schema_str, rows_str, min_viz, style_choosen)
                     # st.text(response)
                     # Extracting the introductions
                     # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
