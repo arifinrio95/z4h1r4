@@ -1529,7 +1529,7 @@ def main():
             # Run LazyPredict
             if st.button("Run LazyPredict"):
                 with st.spinner('Running LazyPredict...'):
-                    results = run_lazy_predict(X_train, X_test, y_train, y_test)
+                    results = run_lazy_predict(X_train, X_test, y_train, y_test, selected_classifiers)
                     st.write(results)
 
 
