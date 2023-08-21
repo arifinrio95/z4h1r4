@@ -1504,7 +1504,8 @@ def main():
             target_column = st.selectbox("Select the target column", df.columns)
             
             # Select feature columns
-            feature_columns = st.multiselect("Select the feature columns", df.columns, default=df.columns[df.columns != target_column].tolist())
+            numerical_cols = df.select_dtypes(include=['int64', 'float64']).columns
+            feature_columns = st.multiselect("Select the feature columns", numerical_cols, default=numerical_cols[numerical_cols != target_column].tolist())
             features = df[feature_columns]
             target = df[target_column]
         
