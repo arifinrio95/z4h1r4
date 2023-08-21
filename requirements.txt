@@ -31,4 +31,4 @@ altair
 torch==1.9.1 -f https://download.pytorch.org/whl/cpu/torch_stable.html
 torchvision==0.10.1 -f https://download.pytorch.org/whl/cpu/torch_stable.html
 torchaudio==0.9.1 -f https://download.pytorch.org/whl/cpu/torch_stable.html
-transformers
+lazypredict
