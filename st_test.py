@@ -978,8 +978,8 @@ def autoviz_app(df):
     # Display all saved plots in Streamlit
     display_html_files_from_dir(save_dir)
 
-def run_lazy_predict(X_train, X_test, y_train, y_test):
-    clf = LazyClassifier(verbose=0, ignore_warnings=True, custom_metric=None)
+def run_lazy_predict(X_train, X_test, y_train, y_test, selected_classifiers):
+    clf = LazyClassifier(verbose=0, ignore_warnings=True, custom_metric=None, classifiers=selected_classifiers)
     models, predictions = clf.fit(X_train, X_test, y_train, y_test)
     return models
                         
@@ -1512,7 +1512,11 @@ def main():
             # Split dataset
             test_size = st.slider("Select test size (fraction)", 0.1, 0.9, 0.25, 0.05)
             X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=test_size, random_state=42)
-        
+
+            # Select models for LazyPredict
+            available_classifiers = LazyClassifier().available_classifiers()
+            selected_classifiers = st.multiselect("Select classification models:", options=available_classifiers, default=available_classifiers)
+
             # Run LazyPredict
             if st.button("Run LazyPredict"):
                 with st.spinner('Running LazyPredict...'):
