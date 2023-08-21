@@ -1441,22 +1441,41 @@ def main():
         if st.session_state.get('classification', False):
             st.title("Machine Learning Modeling")
             # Data cleansing options
-            st.subheader("Data Cleansing Options")
+            # Check for missing values
+            if df.isnull().sum().sum() > 0:
+                st.warning("Warning: Dataset contains missing values!")
+                missing_stats = pd.DataFrame(df.isnull().sum(), columns=["Missing Values"])
+                missing_stats["Percentage"] = (missing_stats["Missing Values"] / len(df)) * 100
+                st.write(missing_stats[missing_stats["Missing Values"] > 0])
         
-            # Handling missing values
-            missing_option = st.selectbox("How to handle missing values?", ["Do Nothing", "Drop Columns", "Drop Rows", "Fill with Mean", "Fill with Median", "Fill with Mode"])
-            if missing_option == "Drop Columns":
-                threshold = st.slider("Drop columns with missing value percentage greater than:", 0, 100, 50)
-                cols_to_drop = df.columns[df.isnull().mean() > threshold/100].tolist()
-                df.drop(columns=cols_to_drop, inplace=True)
-            elif missing_option == "Drop Rows":
-                df.dropna(inplace=True)
-            elif missing_option == "Fill with Mean":
-                df.fillna(df.mean(), inplace=True)
-            elif missing_option == "Fill with Median":
-                df.fillna(df.median(), inplace=True)
-            elif missing_option == "Fill with Mode":
-                df.fillna(df.mode().iloc[0], inplace=True)
+                # Data cleansing options for each column
+                st.subheader("Data Cleansing Options for Each Column")
+        
+                for col in df.columns:
+                    if df[col].isnull().sum() > 0:
+                        st.markdown(f"### {col}")
+        
+                        if df[col].dtype in ['int64', 'float64']:
+                            # Numerical column
+                            missing_option = st.selectbox(f"How to handle missing values for {col}?", ["Do Nothing", "Drop Rows", "Fill with Mean", "Fill with Median", "Fill with Mode"])
+                            if missing_option == "Drop Rows":
+                                df.dropna(subset=[col], inplace=True)
+                            elif missing_option == "Fill with Mean":
+                                df[col].fillna(df[col].mean(), inplace=True)
+                            elif missing_option == "Fill with Median":
+                                df[col].fillna(df[col].median(), inplace=True)
+                            elif missing_option == "Fill with Mode":
+                                df[col].fillna(df[col].mode().iloc[0], inplace=True)
+                        else:
+                            # Categorical column
+                            missing_option = st.selectbox(f"How to handle missing values for {col}?", ["Do Nothing", "Drop Rows", "Fill with Mode"])
+                            if missing_option == "Drop Rows":
+                                df.dropna(subset=[col], inplace=True)
+                            elif missing_option == "Fill with Mode":
+                                df[col].fillna(df[col].mode().iloc[0], inplace=True)
+        
+            else:
+                st.success("Data tidak mengandung missing values.")
         
             # One-hot encoding for categorical columns
             one_hot_encode = st.checkbox("One-hot encode categorical columns?")
@@ -1468,6 +1487,8 @@ def main():
             if normalize:
                 scaler = MinMaxScaler()
                 df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+        
+            st.write(df.head())
         
             # Select target column
             target_column = st.selectbox("Select the target column", df.columns)
