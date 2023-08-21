@@ -978,13 +978,10 @@ def autoviz_app(df):
     # Display all saved plots in Streamlit
     display_html_files_from_dir(save_dir)
 
-def run_lazy_predict(X_train, X_test, y_train, y_test, selected_classifiers):
-    results = pd.DataFrame()
-    for classifier_name in selected_classifiers:
-        clf = LazyClassifier(verbose=0, ignore_warnings=True, custom_metric=None, classifiers=[classifier_name])
-        model_result, _ = clf.fit(X_train, X_test, y_train, y_test)
-        results = pd.concat([results, model_result])
-    return results
+def run_lazy_predict(X_train, X_test, y_train, y_test):
+    clf = LazyClassifier(verbose=0, ignore_warnings=True, custom_metric=None)
+    models, predictions = clf.fit(X_train, X_test, y_train, y_test)
+    return models
 
                         
 def main():
@@ -1518,22 +1515,22 @@ def main():
             X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=test_size, random_state=42)
 
             # Select models for LazyPredict
-            available_classifiers = [
-                "LinearSVC", "SGDClassifier", "MLPClassifier", "Perceptron", "LogisticRegression", 
-                "LogisticRegressionCV", "SVC", "CalibratedClassifierCV", "PassiveAggressiveClassifier", 
-                "LabelPropagation", "LabelSpreading", "RandomForestClassifier", "GradientBoostingClassifier", 
-                "QuadraticDiscriminantAnalysis", "HistGradientBoostingClassifier", "RidgeClassifierCV", 
-                "RidgeClassifier", "AdaBoostClassifier", "ExtraTreesClassifier", "KNeighborsClassifier", 
-                "BaggingClassifier", "BernoulliNB", "LinearDiscriminantAnalysis", "GaussianNB", "NuSVC", 
-                "DecisionTreeClassifier", "NearestCentroid", "ExtraTreeClassifier", "CheckingClassifier", "DummyClassifier"
-            ]
+            # available_classifiers = [
+            #     "LinearSVC", "SGDClassifier", "MLPClassifier", "Perceptron", "LogisticRegression", 
+            #     "LogisticRegressionCV", "SVC", "CalibratedClassifierCV", "PassiveAggressiveClassifier", 
+            #     "LabelPropagation", "LabelSpreading", "RandomForestClassifier", "GradientBoostingClassifier", 
+            #     "QuadraticDiscriminantAnalysis", "HistGradientBoostingClassifier", "RidgeClassifierCV", 
+            #     "RidgeClassifier", "AdaBoostClassifier", "ExtraTreesClassifier", "KNeighborsClassifier", 
+            #     "BaggingClassifier", "BernoulliNB", "LinearDiscriminantAnalysis", "GaussianNB", "NuSVC", 
+            #     "DecisionTreeClassifier", "NearestCentroid", "ExtraTreeClassifier", "CheckingClassifier", "DummyClassifier"
+            # ]
 
-            selected_classifiers = st.multiselect("Select classification models to compare:", options=available_classifiers, default=['GaussianNB','LogisticRegression','DecisionTreeClassifier','RandomForestClassifier','GradientBoostingClassifier','AdaBoostClassifier'])
+            # selected_classifiers = st.multiselect("Select classification models to compare:", options=available_classifiers, default=['GaussianNB','LogisticRegression','DecisionTreeClassifier','RandomForestClassifier','GradientBoostingClassifier','AdaBoostClassifier'])
 
             # Run LazyPredict
             if st.button("Run LazyPredict"):
                 with st.spinner('Running LazyPredict...'):
-                    results = run_lazy_predict(X_train, X_test, y_train, y_test, selected_classifiers)
+                    results = run_lazy_predict(X_train, X_test, y_train, y_test)
                     st.write(results)
 
 
