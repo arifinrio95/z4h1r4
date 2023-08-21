@@ -49,7 +49,7 @@ import os
 import dtale
 import dtale.app as dtale_app
 import streamlit.components.v1 as components
-from transformers import BartTokenizer, BartForSequenceClassification
+# from transformers import BartTokenizer, BartForSequenceClassification
 
 from utils import get_answer_csv
 from lazypredict.Supervised import LazyClassifier
