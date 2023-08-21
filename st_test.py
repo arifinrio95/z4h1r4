@@ -1086,6 +1086,7 @@ def main():
             st.session_state.show_natural_language_exploration = False
             st.session_state.story_telling = False
             st.session_state.sentiment = False
+            st.session_state.classification = False
 
         
         # Tombol 3
@@ -1106,6 +1107,7 @@ def main():
             st.session_state.show_natural_language_exploration = True
             st.session_state.story_telling = False
             st.session_state.sentiment = False
+            st.session_state.classification = False
 
         # Tombol 5
         # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
@@ -1116,6 +1118,7 @@ def main():
             st.session_state.show_natural_language_exploration = False
             st.session_state.story_telling = True
             st.session_state.sentiment = False
+            st.session_state.classification = False
 
         # Tombol 6
         # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
@@ -1126,6 +1129,17 @@ def main():
         #     st.session_state.show_natural_language_exploration = False
         #     st.session_state.story_telling = False
         #     st.session_state.sentiment = True
+
+        # Tombol 7
+        st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
+        if st.sidebar.button('7. Machine Learning (Classification Model)', key='my-btn7'):
+            st.session_state.manual_exploration = False
+            st.session_state.auto_exploration = False
+            st.session_state.show_analisis_lanjutan = False
+            st.session_state.show_natural_language_exploration = False
+            st.session_state.story_telling = False
+            st.session_state.sentiment = False
+            st.session_state.classification = True
 
         
         # if st.session_state.get('manual_exploration', False):
@@ -1417,6 +1431,24 @@ def main():
                 
             # st.text(request_story_prompt(analyze_dataframe(df)))
             # visualize_analysis(dict_stats)
+
+        if st.session_state.get('classification', False):
+            st.title("Machine Learning Modeling")
+            # Select target column
+            target_column = st.selectbox("Select the target column", df.columns)
+            features = df.drop(columns=[target_column])
+            target = df[target_column]
+        
+            # Split dataset
+            test_size = st.slider("Select test size (fraction)", 0.1, 0.9, 0.25, 0.05)
+            X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=test_size, random_state=42)
+        
+            # Run LazyPredict
+            if st.button("Run LazyPredict"):
+                with st.spinner('Running LazyPredict...'):
+                    results = run_lazy_predict(X_train, X_test, y_train, y_test)
+                    st.write(results)
+
 
         # if st.session_state.get('sentiment', False):
         #     with st.spinner('Downloading the pretrained model...'):
