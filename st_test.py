@@ -1085,7 +1085,7 @@ def main():
         
         # Tombol 2
         # st.sidebar.markdown('<button class="my-btn">2. Automatic EDA with Autoviz</button>', unsafe_allow_html=True)
-        if st.sidebar.button('2. Automatic EDA with Autoviz', key='my-btn1'):
+        if st.sidebar.button('🔍 Automatic EDA with Autoviz', key='my-btn1'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = True
             st.session_state.show_analisis_lanjutan = False
@@ -1106,7 +1106,7 @@ def main():
         
         # Tombol 4
         # st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('4. Natural Language\n(Best for Data Visualization)', key='my-btn2'):
+        if st.sidebar.button('💬 Explore with Natural Language (Best for Data Visualization)', key='my-btn2'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1117,7 +1117,7 @@ def main():
 
         # Tombol 5
         # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('5. Automatic EDA (by Ulikdata x GPT) - Under Maintenance', key='my-btn3'):
+        if st.sidebar.button('🤖 Automatic Insight Generations (by Ulikdata x GPT) - Under Maintenance', key='my-btn3'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1138,7 +1138,7 @@ def main():
 
         # Tombol 7
         # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('7. Machine Learning (Classification Model)', key='my-btn7'):
+        if st.sidebar.button('🧠 Machine Learning (Classification Model)', key='my-btn7'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
