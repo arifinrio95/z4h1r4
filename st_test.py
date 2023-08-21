@@ -25,7 +25,7 @@ import altair as alt
 
 from pandas_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.decomposition import PCA
 
 from sklearn.linear_model import LinearRegression
@@ -52,6 +52,7 @@ import streamlit.components.v1 as components
 from transformers import BartTokenizer, BartForSequenceClassification
 
 from utils import get_answer_csv
+from lazypredict.Supervised import LazyClassifier
 
 
 def display(obj, *args, **kwargs):
@@ -976,6 +977,11 @@ def autoviz_app(df):
     
     # Display all saved plots in Streamlit
     display_html_files_from_dir(save_dir)
+
+def run_lazy_predict(X_train, X_test, y_train, y_test):
+    clf = LazyClassifier(verbose=0, ignore_warnings=True, custom_metric=None)
+    models, predictions = clf.fit(X_train, X_test, y_train, y_test)
+    return models
                         
 def main():
     # st.set_page_config(
@@ -1131,7 +1137,7 @@ def main():
         #     st.session_state.sentiment = True
 
         # Tombol 7
-        st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
+        # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
         if st.sidebar.button('7. Machine Learning (Classification Model)', key='my-btn7'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
@@ -1434,9 +1440,41 @@ def main():
 
         if st.session_state.get('classification', False):
             st.title("Machine Learning Modeling")
+            # Data cleansing options
+            st.subheader("Data Cleansing Options")
+        
+            # Handling missing values
+            missing_option = st.selectbox("How to handle missing values?", ["Do Nothing", "Drop Columns", "Drop Rows", "Fill with Mean", "Fill with Median", "Fill with Mode"])
+            if missing_option == "Drop Columns":
+                threshold = st.slider("Drop columns with missing value percentage greater than:", 0, 100, 50)
+                cols_to_drop = df.columns[df.isnull().mean() > threshold/100].tolist()
+                df.drop(columns=cols_to_drop, inplace=True)
+            elif missing_option == "Drop Rows":
+                df.dropna(inplace=True)
+            elif missing_option == "Fill with Mean":
+                df.fillna(df.mean(), inplace=True)
+            elif missing_option == "Fill with Median":
+                df.fillna(df.median(), inplace=True)
+            elif missing_option == "Fill with Mode":
+                df.fillna(df.mode().iloc[0], inplace=True)
+        
+            # One-hot encoding for categorical columns
+            one_hot_encode = st.checkbox("One-hot encode categorical columns?")
+            if one_hot_encode:
+                df = pd.get_dummies(df, drop_first=True)
+        
+            # Normalize data
+            normalize = st.checkbox("Normalize data?")
+            if normalize:
+                scaler = MinMaxScaler()
+                df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+        
             # Select target column
             target_column = st.selectbox("Select the target column", df.columns)
-            features = df.drop(columns=[target_column])
+            
+            # Select feature columns
+            feature_columns = st.multiselect("Select the feature columns", df.columns, default=df.columns[df.columns != target_column].tolist())
+            features = df[feature_columns]
             target = df[target_column]
         
             # Split dataset
