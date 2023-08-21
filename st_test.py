@@ -979,9 +979,13 @@ def autoviz_app(df):
     display_html_files_from_dir(save_dir)
 
 def run_lazy_predict(X_train, X_test, y_train, y_test, selected_classifiers):
-    clf = LazyClassifier(verbose=0, ignore_warnings=True, custom_metric=None, classifiers=selected_classifiers)
-    models, predictions = clf.fit(X_train, X_test, y_train, y_test)
-    return models
+    results = pd.DataFrame()
+    for classifier_name in selected_classifiers:
+        clf = LazyClassifier(verbose=0, ignore_warnings=True, custom_metric=None, classifiers=[classifier_name])
+        model_result, _ = clf.fit(X_train, X_test, y_train, y_test)
+        results = pd.concat([results, model_result])
+    return results
+
                         
 def main():
     # st.set_page_config(
