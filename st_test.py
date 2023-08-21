@@ -1514,7 +1514,16 @@ def main():
             X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=test_size, random_state=42)
 
             # Select models for LazyPredict
-            available_classifiers = LazyClassifier().available_classifiers()
+            available_classifiers = [
+                "LinearSVC", "SGDClassifier", "MLPClassifier", "Perceptron", "LogisticRegression", 
+                "LogisticRegressionCV", "SVC", "CalibratedClassifierCV", "PassiveAggressiveClassifier", 
+                "LabelPropagation", "LabelSpreading", "RandomForestClassifier", "GradientBoostingClassifier", 
+                "QuadraticDiscriminantAnalysis", "HistGradientBoostingClassifier", "RidgeClassifierCV", 
+                "RidgeClassifier", "AdaBoostClassifier", "ExtraTreesClassifier", "KNeighborsClassifier", 
+                "BaggingClassifier", "BernoulliNB", "LinearDiscriminantAnalysis", "GaussianNB", "NuSVC", 
+                "DecisionTreeClassifier", "NearestCentroid", "ExtraTreeClassifier", "CheckingClassifier", "DummyClassifier"
+            ]
+
             selected_classifiers = st.multiselect("Select classification models:", options=available_classifiers, default=available_classifiers)
 
             # Run LazyPredict
