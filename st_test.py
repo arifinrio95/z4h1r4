@@ -1485,8 +1485,18 @@ def main():
             # Normalize data
             normalize = st.checkbox("Normalize data?")
             if normalize:
-                scaler = MinMaxScaler()
-                df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+                normalization_method = st.selectbox("Choose normalization method:", ["Min-Max Scaling", "Z-score Normalization"])
+                
+                numerical_cols = df.select_dtypes(include=['int64', 'float64']).columns
+                cols_to_normalize = st.multiselect("Select numerical columns to normalize:", options=numerical_cols, default=list(numerical_cols))
+                
+                if normalization_method == "Min-Max Scaling":
+                    scaler = MinMaxScaler()
+                    df[cols_to_normalize] = scaler.fit_transform(df[cols_to_normalize])
+                elif normalization_method == "Z-score Normalization":
+                    mean = df[cols_to_normalize].mean()
+                    std = df[cols_to_normalize].std()
+                    df[cols_to_normalize] = (df[cols_to_normalize] - mean) / std
         
             st.write(df.head())
         
