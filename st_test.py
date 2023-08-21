@@ -1524,7 +1524,7 @@ def main():
                 "DecisionTreeClassifier", "NearestCentroid", "ExtraTreeClassifier", "CheckingClassifier", "DummyClassifier"
             ]
 
-            selected_classifiers = st.multiselect("Select classification models:", options=available_classifiers, default=available_classifiers)
+            selected_classifiers = st.multiselect("Select classification models to compare:", options=available_classifiers, default=['GaussianNB','LogisticRegression','DecisionTreeClassifier','RandomForestClassifier','GradientBoostingClassifier','AdaBoostClassifier'])
 
             # Run LazyPredict
             if st.button("Run LazyPredict"):
