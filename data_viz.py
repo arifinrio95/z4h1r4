@@ -1150,16 +1150,23 @@ class DataViz():
 
             # Box plot
             st.write("## Box Plot")
-            selected_column = st.selectbox('Choose numeric column for box plot', self.numeric_cols)
-            selected_category = st.selectbox('Choose category for x-axis', self.categorical_cols)
+            
+            # Filter the numeric columns based on unique value criteria
+            valid_numeric_cols_for_box = [col for col in self.numeric_cols if self.df[col].nunique() > 20]
+            
+            # Filter the categorical columns based on unique value criteria
+            valid_categorical_cols_for_box = [col for col in self.categorical_cols if self.df[col].nunique() < 10]
+            
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
             
-            
-            fig = px.box(self.df, x=selected_category, y=selected_column, title=f'Box Plot of {selected_column} grouped by {selected_category}', width=chart_width, height=chart_height)
-            columns[chart_col_idx % 3].plotly_chart(fig)
-            chart_col_idx += 1
+            for num_col in valid_numeric_cols_for_box:
+                for cat_col in valid_categorical_cols_for_box:
+                    fig = px.box(self.df, x=cat_col, y=num_col, title=f'Box Plot of {num_col} grouped by {cat_col}', width=chart_width, height=chart_height)
+                    columns[chart_col_idx % 3].plotly_chart(fig)
+                    chart_col_idx += 1
+
 
             # Pairplot
             st.write("## Pairplot")
