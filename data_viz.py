@@ -951,23 +951,22 @@ class DataViz():
 
             # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
-            scatter_color = 'Sage'
-            line_color = 'Beige'
-            scatter_color_choice = st.selectbox("Choose color for scatter points:", list(color_map.keys()))
-            line_color_choice = st.selectbox("Choose color for regression line:", list(color_map.keys()))
+            
+            # Membiarkan pengguna memilih warna dengan default pilihan
+            scatter_color_choice = st.selectbox(
+                "Choose color for scatter points:", 
+                list(color_map.keys()), 
+                index=list(color_map.keys()).index("Terracotta")  # Default ke "Terracotta"
+            )
+            
+            line_color_choice = st.selectbox(
+                "Choose color for regression line:", 
+                list(color_map.keys()), 
+                index=list(color_map.keys()).index("Umber")  # Default ke "Umber"
+            )
+            
             scatter_color = color_map[scatter_color_choice]
             line_color = color_map[line_color_choice]
-
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0
-            
-            # Filter kolom numerik yang uniq valuenya di atas 10
-            filtered_cols = [col for col in self.numeric_cols if self.df[col].nunique() > 10]
-            
-            # Membuat semua kombinasi dari kolom numerik yang telah difilter
-            from itertools import combinations
-            combinations_list = list(combinations(filtered_cols, 2))
             
             for col1, col2 in combinations_list:
                 fig = px.scatter(
@@ -975,13 +974,15 @@ class DataViz():
                     x=col1, 
                     y=col2, 
                     trendline="ols", 
-                    color_discrete_sequence=[scatter_color],
+                    color_discrete_sequence=[scatter_color],  
                     title=f'Scatter plot of {col1} vs {col2}', 
                     width=chart_width, 
                     height=chart_height
                 )
-                fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
                 
+                # Mengatur warna garis regresi
+                fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
+            
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
