@@ -1059,7 +1059,8 @@ class DataViz():
             title_placeholder = st.empty()
             correlation_methods = ["pearson", "kendall", "spearman"]
             selected_method = st.selectbox("Choose a correlation method:", correlation_methods)
-            selected_palette = st.selectbox("Choose a heatmap color palette:", list(color_palettes.keys()))
+            default_palette_idx = list(color_palettes.keys()).index("Cool")
+            selected_palette = st.selectbox("Choose a heatmap color palette:", list(color_palettes.keys()), index=default_palette_idx)
             title_placeholder.write(f"## Heatmap of {selected_method.capitalize()} Correlation")
             corr = self.df[self.numeric_cols].corr(method=selected_method)
             fig = ff.create_annotated_heatmap(
