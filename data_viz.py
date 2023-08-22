@@ -952,6 +952,9 @@ class DataViz():
             st.write("## Scatter plot with Regression Line")
             scatter_color_choice = st.selectbox("Choose color for scatter points:", list(color_map.keys()))
             line_color_choice = st.selectbox("Choose color for regression line:", list(color_map.keys()))
+            scatter_color = color_map[scatter_color_choice]
+            line_color = color_map[line_color_choice]
+
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
