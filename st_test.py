@@ -1030,7 +1030,7 @@ def main():
         uploaded_file_path = "temp_file.csv"
     
         st.dataframe(df.head())
-        analytics_df = DataAnalytics(df)
+        dataviz = DataViz(df)
 
         # Hide dulu karna kayanya makan tempat banget.
         # st.write('---')
