@@ -1090,14 +1090,14 @@ def main():
         
         # Tombol 2
         # st.sidebar.markdown('<button class="my-btn">2. Automatic EDA with Autoviz</button>', unsafe_allow_html=True)
-        if st.sidebar.button('🔍 Automatic EDA with Autoviz', key='my-btn1'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = True
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
-            st.session_state.sentiment = False
-            st.session_state.classification = False
+        # if st.sidebar.button('🔍 Automatic EDA with Autoviz', key='my-btn1'):
+        #     st.session_state.manual_exploration = False
+        #     st.session_state.auto_exploration = True
+        #     st.session_state.show_analisis_lanjutan = False
+        #     st.session_state.show_natural_language_exploration = False
+        #     st.session_state.story_telling = False
+        #     st.session_state.sentiment = False
+        #     st.session_state.classification = False
 
         
         # Tombol 3
@@ -1266,17 +1266,17 @@ def main():
         if st.session_state.get('manual_exploration', False):
             dataviz.visualization()
              
-        if st.session_state.get('auto_exploration', False):
-            # st.subheader("Pandas Profiling Report")
-            # Create Pandas Profiling Report
-            # pr = ProfileReport(df, explorative=True)
+        # if st.session_state.get('auto_exploration', False):
+        #     # st.subheader("Pandas Profiling Report")
+        #     # Create Pandas Profiling Report
+        #     # pr = ProfileReport(df, explorative=True)
         
-            # Display the report
-            # st_profile_report(pr)
+        #     # Display the report
+        #     # st_profile_report(pr)
 
-            st.subheader("Auto Visualizations")
-            with st.spinner('Generating Visualizations...'):
-                autoviz_app(df)
+        #     st.subheader("Auto Visualizations")
+        #     with st.spinner('Generating Visualizations...'):
+        #         autoviz_app(df)
           
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
