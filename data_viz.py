@@ -848,7 +848,7 @@ class DataViz():
         with tab4:
             st.write("Under Construct !")
             # Initialize the columns
-            left_col, center_col, right_col = st.beta_columns(3)
+            left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0  # counter to keep track of columns
     
