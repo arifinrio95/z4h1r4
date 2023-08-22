@@ -58,6 +58,38 @@ class DataViz():
             ]
 
         return " ".join(words)
+
+    def create_empty_chart(width, height):
+        """
+        Membuat dan mengembalikan sebuah figure kosong dengan lebar dan tinggi yang ditentukan.
+    
+        Args:
+        - width (int): Lebar dari chart.
+        - height (int): Tinggi dari chart.
+    
+        Returns:
+        - go.Figure: Sebuah figure kosong dengan judul berupa string kosong.
+        """
+        
+        # Membuat figure kosong
+        fig = go.Figure()
+    
+        # Menonaktifkan sumbu x dan y
+        fig.update_layout(
+            title="",  # Judul berupa string kosong
+            showlegend=False, 
+            xaxis_showgrid=False, 
+            yaxis_showgrid=False,
+            xaxis_zeroline=False, 
+            yaxis_zeroline=False,
+            xaxis_visible=False, 
+            yaxis_visible=False
+        )
+    
+        # Mengatur ukuran
+        fig.update_layout(width=width, height=height)
+    
+        return fig
                             
     def visualization(self):
         st.title("Auto Data Viz & Insight by Ulik Data")
@@ -923,8 +955,10 @@ class DataViz():
             img = Image.new('RGB', (300, 400), color = (255, 255, 255))
             def fill_empty_columns(chart_col_idx, columns):
                 while chart_col_idx % 3 != 0:
-                    columns[chart_col_idx % 3].image(img)  # Mengisi dengan konten kosong
-                    chart_col_idx += 1
+                    # columns[chart_col_idx % 3].image(img)  # Mengisi dengan konten kosong
+                    # chart_col_idx += 1
+                    empty_chart = create_empty_chart(300, 400)
+                    st.plotly_chart(empty_chart)
             
     
             # Histogram
@@ -959,7 +993,7 @@ class DataViz():
             st.write('Garis batas histogram (testing)')
             chart_col_idx = 0
             # Scatter plot with regression line
-            columns[chart_col_idx % 3].write("## Scatter plot with Regression Line")
+            st.write("## Scatter plot with Regression Line")
             col1, col2 = st.selectbox('Select first column', self.numeric_cols), st.selectbox('Select second column', self.numeric_cols, index=1)
             if col1 and col2:
                 fig = px.scatter(self.df, x=col1, y=col2, trendline="ols", title=f'Scatter plot of {col1} vs {col2}', width=chart_width, height=chart_height)
@@ -981,7 +1015,7 @@ class DataViz():
             #         chart_col_idx += 1
             chart_col_idx = 0
             # Bar chart
-            columns[chart_col_idx % 3].write("## Bar Chart")
+            st.write("## Bar Chart")
             selected_numeric_col = st.selectbox('Choose numeric column for aggregation', self.numeric_cols)
             selected_categorical_hue = st.selectbox('Choose categorical column for hue', self.categorical_cols)
             for col in self.categorical_cols:
@@ -1004,7 +1038,7 @@ class DataViz():
             #         chart_col_idx += 1
             chart_col_idx = 0
             # Heatmap of correlation
-            columns[chart_col_idx % 3].write("## Heatmap of Correlation")
+            st.write("## Heatmap of Correlation")
             corr = self.df[self.numeric_cols].corr()
             fig = ff.create_annotated_heatmap(z=corr.values, x=list(corr.columns), y=list(corr.index), annotation_text=corr.round(2).values, width=chart_width, height=chart_height)
             columns[chart_col_idx % 3].plotly_chart(fig)
@@ -1025,7 +1059,7 @@ class DataViz():
             #         chart_col_idx += 1
             chart_col_idx = 0
             # Chi square for Categorical Columns
-            columns[chart_col_idx % 3].write("## Chi Square for Categorical Columns")
+            st.write("## Chi Square for Categorical Columns")
             results = []
             for col1 in self.categorical_cols:
                 for col2 in self.categorical_cols:
@@ -1051,7 +1085,7 @@ class DataViz():
             #         chart_col_idx += 1
             chart_col_idx = 0
             # Box plot
-            columns[chart_col_idx % 3].write("## Box Plot")
+            st.write("## Box Plot")
             selected_column = st.selectbox('Choose numeric column for box plot', self.numeric_cols)
             selected_category = st.selectbox('Choose category for x-axis', self.categorical_cols)
             fig = px.box(self.df, x=selected_category, y=selected_column, title=f'Box Plot of {selected_column} grouped by {selected_category}', width=chart_width, height=chart_height)
@@ -1073,7 +1107,7 @@ class DataViz():
             #         chart_col_idx += 1
             chart_col_idx = 0
             # Pairplot
-            columns[chart_col_idx % 3].write("## Pairplot")
+            st.write("## Pairplot")
             selected_columns = st.multiselect('Choose columns for pairplot', self.numeric_cols, default=self.numeric_cols[:3])
             if selected_columns:
                 fig = px.scatter_matrix(self.df[selected_columns], width=chart_width, height=chart_height)
@@ -1095,7 +1129,7 @@ class DataViz():
             #         chart_col_idx += 1
             chart_col_idx = 0
             # Pie chart
-            columns[chart_col_idx % 3].write("## Pie Chart")
+            st.write("## Pie Chart")
             selected_category = st.selectbox('Choose category for pie chart', self.categorical_cols, index=1)
             fig = px.pie(self.df, names=selected_category, title=f'Pie Chart of {selected_category}', width=chart_width, height=chart_height)
             columns[chart_col_idx % 3].plotly_chart(fig)
