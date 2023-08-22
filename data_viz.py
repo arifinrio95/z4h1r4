@@ -992,8 +992,7 @@ class DataViz():
                     width=chart_width, 
                     height=chart_height
                 )
-                # Menambahkan garis tepi ke setiap bar histogram
-                # Menambahkan garis tepi ke setiap bar histogram dengan warna yang dipilih
+
                 fig.update_traces(marker=dict(color=hist_color, line=dict(color=edge_color, width=1)))
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 
@@ -1122,14 +1121,36 @@ class DataViz():
             chart_col_idx = 0
             
             results = []
+            
             for col1 in self.categorical_cols:
                 for col2 in self.categorical_cols:
                     if col1 != col2:
                         contingency = pd.crosstab(self.df[col1], self.df[col2])
                         chi2, p, _, _ = chi2_contingency(contingency)
-                        results.append((col1, col2, chi2, p))
-            columns[chart_col_idx % 3].table(pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value"]))
+                        
+                        if p < 0.05:
+                            correlation_strength = "Tinggi"
+                            explanation = "Signifikan secara statistik"
+                        else:
+                            correlation_strength = "Rendah"
+                            explanation = "Tidak signifikan secara statistik"
+                        
+                        results.append((col1, col2, chi2, p, correlation_strength, explanation))
+            
+            results_df = pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value", "Kekuatan Korelasi", "Penjelasan"])
+            
+            # Color the cells with high correlation
+            def color_cells(val):
+                if val == "Tinggi":
+                    return 'background-color: yellow'
+                else:
+                    return ''
+            
+            styled_df = results_df.style.applymap(color_cells, subset=["Kekuatan Korelasi"])
+            
+            columns[chart_col_idx % 3].write(styled_df)
             chart_col_idx += 1
+
 
             # Box plot
             st.write("## Box Plot")
