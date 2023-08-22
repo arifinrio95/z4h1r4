@@ -104,7 +104,9 @@ def login():
     col1, col2 = st.columns(2)
     
     # Tambahkan gambar dari Google Drive di kolom pertama (col1)
-    # col1.image('LINK_GAMBAR_GOOGLE_DRIVE', use_column_width=True)
+    col1.image('https://drive.google.com/uc?export=view&id=1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL', use_column_width=True)
+    # st.image('https://drive.google.com/uc?export=view&id=1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL', use_column_width=True)
+    # https://drive.google.com/file/d/1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL/view?usp=sharing
     
     # Gunakan kelas CSS di dalam kolom kedua untuk background dan warna font
     with col2:
