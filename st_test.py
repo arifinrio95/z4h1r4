@@ -76,15 +76,15 @@ def login():
     st.markdown("---")
 
     # Kolom dengan rasio 1:2 untuk gambar dan input form
-    col1, col2 = st.columns((1,2))
+    col1, col2 = st.columns(2)
 
     # Tambahkan gambar dari Google Drive di kolom pertama (col1)
     # col1.image('LINK_GAMBAR_GOOGLE_DRIVE', use_column_width=True)
 
     with col2:
         st.subheader("Halaman Login UlikData")
-        username = st.text_input("User Name", width=250) # width untuk mengatur lebar input
-        password = st.text_input("Password", type='password', width=250)
+        username = st.text_input("User Name")
+        password = st.text_input("Password", type='password')
     
         hashed_pswd = make_hashes("test")
 
