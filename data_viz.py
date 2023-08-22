@@ -956,10 +956,13 @@ class DataViz():
                     x=col1, 
                     y=col2, 
                     trendline="ols", 
+                    color_discrete_sequence=['gray'],
                     title=f'Scatter plot of {col1} vs {col2}', 
                     width=chart_width, 
                     height=chart_height
                 )
+                fig.update_traces(line=dict(color='red'), selector=dict(type='scatter', mode='lines'))
+                
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
