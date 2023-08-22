@@ -856,8 +856,9 @@ class DataViz():
 
             def fill_empty_columns(chart_col_idx, columns):
                 while chart_col_idx % 3 != 2:
-                    columns[chart_col_idx % 3].write("")  # Mengisi dengan konten kosong
                     chart_col_idx += 1
+                    columns[chart_col_idx % 3].write("")  # Mengisi dengan konten kosong
+                    
 
     
             # Histogram
