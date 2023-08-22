@@ -54,6 +54,10 @@ import streamlit.components.v1 as components
 from utils import get_answer_csv
 from lazypredict.Supervised import LazyClassifier
 
+import nltk
+nltk.download("punkt")
+nltk.download("stopwords")
+nltk.download("wordnet")
 
 def display(obj, *args, **kwargs):
     """Mock the Jupyter display function to use show() instead."""
