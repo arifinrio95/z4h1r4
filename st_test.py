@@ -93,6 +93,7 @@ def login():
             .login-bg {
                 background-color: #6a5acd;  /* Biru keunguan */
                 color: white;  /* Warna font putih */
+                padding: 20px;
             }
         </style>
     """, unsafe_allow_html=True)
@@ -106,9 +107,10 @@ def login():
     # Tambahkan gambar dari Google Drive di kolom pertama (col1)
     # col1.image('LINK_GAMBAR_GOOGLE_DRIVE', use_column_width=True)
     
+    # Gunakan kelas CSS di dalam kolom kedua untuk background dan warna font
     with col2:
-        # Menggunakan kelas CSS untuk background dan warna font
         st.markdown('<div class="login-bg">', unsafe_allow_html=True)
+        
         st.subheader("Halaman Login UlikData")
         username = st.text_input("User Name")
         password = st.text_input("Password", type='password')
@@ -127,6 +129,7 @@ def login():
             else:
                 st.session_state.button_clicked = True
                 st.experimental_rerun()
+    
         st.markdown('</div>', unsafe_allow_html=True)
 
 # CSS untuk tombol
