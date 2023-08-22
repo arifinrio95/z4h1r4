@@ -1116,7 +1116,7 @@ def main():
             df = load_df.load_file_auto_delimiter()
             # df = pd.read_csv(file)
     else:
-        df = get_sample_data(option.lower())
+        df = get_sample_data(option)
     
     openai.api_key = st.secrets['user_api']
 
