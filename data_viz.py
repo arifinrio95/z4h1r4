@@ -5,6 +5,8 @@ import plotly.figure_factory as ff
 
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 from scipy.stats import chi2_contingency
 from wordcloud import WordCloud, STOPWORDS
 # from nltk.corpus import stopwords
@@ -1170,16 +1172,8 @@ class DataViz():
 
             # Pairplot
             st.write("## Pairplot")
-            selected_columns = st.multiselect('Choose columns for pairplot', list(self.numeric_cols), default=list(self.numeric_cols[:3]))
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0
-            
-            
-            if selected_columns:
-                fig = px.scatter_matrix(self.df[selected_columns], width=chart_width, height=chart_height)
-                columns[chart_col_idx % 3].plotly_chart(fig)
-                chart_col_idx += 1
+            sns.pairplot(self.df)
+            st.pyplot(plt)
 
             # Pie chart
             st.write("## Pie Chart")
