@@ -102,17 +102,17 @@ def login():
                 st.experimental_rerun()
 
 # CSS untuk tombol
-st.markdown("""
-    <style>
-        .stButton>button {
-            background-color: lightblue;
-            color: white;
-        }
-        .stButton:hover>button {
-            background-color: pink;
-        }
-    </style>
-""", unsafe_allow_html=True)
+# st.markdown("""
+#     <style>
+#         .stButton>button {
+#             background-color: lightblue;
+#             color: white;
+#         }
+#         .stButton:hover>button {
+#             background-color: pink;
+#         }
+#     </style>
+# """, unsafe_allow_html=True)
 
 def display(obj, *args, **kwargs):
     """Mock the Jupyter display function to use show() instead."""
