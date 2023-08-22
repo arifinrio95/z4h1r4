@@ -956,7 +956,7 @@ class DataViz():
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
             #         chart_col_idx += 1
-            st.write('----------------------------------')
+            st.write('Garis batas histogram (testing)')
             chart_col_idx = 0
             # Scatter plot with regression line
             columns[chart_col_idx % 3].write("## Scatter plot with Regression Line")
