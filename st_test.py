@@ -66,7 +66,7 @@ def make_hashes(password):
     return hashlib.sha256(str.encode(password)).hexdigest()
 
 # Fungsi untuk memeriksa password yang di-hash
-def check_hashes(password,hashed_text):
+def check_hashes(password, hashed_text):
     if make_hashes(password) == hashed_text:
         return hashed_text
     return False
@@ -81,10 +81,8 @@ def login():
     hashed_pswd = make_hashes("test")
         
     if st.button("Login"):
-        if check_hashes(password,hashed_pswd):
-            st.success("Logged In as {}".format(username))
-            st.session_state.logged = True
-            st.experimental_rerun()  # Rerun the app
+        if check_hashes(password, hashed_pswd):
+            st.session_state.login_button_pressed = True
         else:
             st.warning("Incorrect Username/Password")
 
@@ -1620,6 +1618,11 @@ if __name__ == '__main__':
     # Cek apakah user sudah login atau belum
     if 'logged' not in st.session_state:
         st.session_state.logged = False
+
+    if 'login_button_pressed' in st.session_state and st.session_state.login_button_pressed:
+        st.session_state.logged = True
+        del st.session_state['login_button_pressed']
+        st.experimental_rerun()
     
     if st.session_state.logged:
         main()
