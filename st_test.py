@@ -93,7 +93,6 @@ def login():
             .login-bg {
                 background-color: #6a5acd;  /* Biru keunguan */
                 color: white;  /* Warna font putih */
-                padding: 20px;
             }
         </style>
     """, unsafe_allow_html=True)
@@ -111,7 +110,7 @@ def login():
     with col2:
         st.markdown('<div class="login-bg">', unsafe_allow_html=True)
         
-        st.subheader("Halaman Login UlikData")
+        st.subheader("Welcome Back!")
         username = st.text_input("User Name")
         password = st.text_input("Password", type='password')
     
