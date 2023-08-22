@@ -1207,4 +1207,5 @@ class DataViz():
                 else:
                     fig = px.pie(aggregated_data, names=col, values=selected_numeric, title=f'Pie Chart of {col} (Aggregated by {aggregation_method} of {selected_numeric})', width=chart_width, height=chart_height)
                 columns[chart_col_idx % 3].plotly_chart(fig)
+                chart_col_idx += 1
 
