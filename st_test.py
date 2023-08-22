@@ -72,27 +72,47 @@ def check_hashes(password, hashed_text):
     return False
 
 def login():
-    st.title("Halaman Login UlikData")
-    username = st.text_input("User Name")
-    password = st.text_input("Password", type='password')
+    st.markdown("### **_Ulikdata_**")
+    st.markdown("---")
+
+    # Kolom dengan rasio 1:2 untuk gambar dan input form
+    col1, col2 = st.beta_columns((1,2))
+
+    # Tambahkan gambar dari Google Drive di kolom pertama (col1)
+    col1.image('LINK_GAMBAR_GOOGLE_DRIVE', use_column_width=True)
+
+    with col2:
+        st.subheader("Halaman Login UlikData")
+        username = st.text_input("User Name", width=250) # width untuk mengatur lebar input
+        password = st.text_input("Password", type='password', width=250)
     
-    # Anda bisa menyimpan hashed_password di suatu tempat yang aman atau database.
-    # Untuk contoh ini, saya akan menggunakan password sederhana "test".
-    hashed_pswd = make_hashes("test")
+        hashed_pswd = make_hashes("test")
 
-    if check_hashes(password, hashed_pswd):
-        st.session_state.logged = True
-        st.experimental_rerun()
-
-    # Ketika tombol diklik
-    if st.button("Login", key='login_button'):
-        if 'button_clicked' in st.session_state and st.session_state.button_clicked:
-            if check_hashes(password, hashed_pswd):
-                st.session_state.logged = True
-                st.experimental_rerun()
-        else:
-            st.session_state.button_clicked = True
+        if check_hashes(password, hashed_pswd):
+            st.session_state.logged = True
             st.experimental_rerun()
+
+        if st.button("Login", key='login_button'):
+            if 'button_clicked' in st.session_state and st.session_state.button_clicked:
+                if check_hashes(password, hashed_pswd):
+                    st.session_state.logged = True
+                    st.experimental_rerun()
+            else:
+                st.session_state.button_clicked = True
+                st.experimental_rerun()
+
+# CSS untuk tombol
+st.markdown("""
+    <style>
+        .stButton>button {
+            background-color: lightblue;
+            color: white;
+        }
+        .stButton:hover>button {
+            background-color: pink;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 def display(obj, *args, **kwargs):
     """Mock the Jupyter display function to use show() instead."""
