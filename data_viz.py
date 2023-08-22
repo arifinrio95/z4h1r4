@@ -956,6 +956,7 @@ class DataViz():
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
             #         chart_col_idx += 1
+            st.write('----------------------------------')
             chart_col_idx = 0
             # Scatter plot with regression line
             columns[chart_col_idx % 3].write("## Scatter plot with Regression Line")
@@ -974,6 +975,7 @@ class DataViz():
             #     columns[chart_col_idx % 3].write('intentionally left blank')
             #     chart_col_idx += 1
             fill_empty_columns(chart_col_idx, columns)
+            st.write('----------------------------------')
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
             #         chart_col_idx += 1
@@ -996,6 +998,7 @@ class DataViz():
             #     columns[chart_col_idx % 3].write('intentionally left blank')
             #     chart_col_idx += 1
             fill_empty_columns(chart_col_idx, columns)
+            st.write('----------------------------------')
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
             #         chart_col_idx += 1
@@ -1016,6 +1019,7 @@ class DataViz():
             #     columns[chart_col_idx % 3].write('intentionally left blank')
             #     chart_col_idx += 1
             fill_empty_columns(chart_col_idx, columns)
+            st.write('----------------------------------')
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
             #         chart_col_idx += 1
@@ -1041,6 +1045,7 @@ class DataViz():
             #     columns[chart_col_idx % 3].write('intentionally left blank')
             #     chart_col_idx += 1
             fill_empty_columns(chart_col_idx, columns)
+            st.write('----------------------------------')
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
             #         chart_col_idx += 1
@@ -1062,6 +1067,7 @@ class DataViz():
             #     columns[chart_col_idx % 3].write('intentionally left blank')
             #     chart_col_idx += 1
             fill_empty_columns(chart_col_idx, columns)
+            st.write('----------------------------------')
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
             #         chart_col_idx += 1
@@ -1083,6 +1089,7 @@ class DataViz():
             #     columns[chart_col_idx % 3].write('intentionally left blank')
             #     chart_col_idx += 1
             fill_empty_columns(chart_col_idx, columns)
+            st.write('----------------------------------')
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
             #         chart_col_idx += 1
