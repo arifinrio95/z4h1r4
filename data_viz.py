@@ -922,7 +922,7 @@ class DataViz():
             chart_height = 400  # height of the chart
             img = Image.new('RGB', (300, 400), color = (255, 255, 255))
             def fill_empty_columns(chart_col_idx, columns):
-                while chart_col_idx % 3 != 3:
+                while chart_col_idx % 3 != 0:
                     columns[chart_col_idx % 3].image(img)  # Mengisi dengan konten kosong
                     chart_col_idx += 1
             
