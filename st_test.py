@@ -1107,7 +1107,8 @@ def main():
         'Pilih sumber data:',
         ('Upload Your File', 'Iris (Dummy Data)', 'Tips (Dummy Data)', 'Titanic (Dummy Data)')
     )
-
+    
+    df = pd.DataFrame()
     if option == 'Upload Your File':
         file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
         if file:
