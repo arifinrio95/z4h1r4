@@ -72,26 +72,53 @@ def check_hashes(password, hashed_text):
     return False
 
 def login():
-    st.markdown("### **_Ulikdata_**")
+    # CSS untuk menyesuaikan posisi "Ulikdata", gaya tombol, dan gaya kolom
+    st.markdown("""
+        <style>
+            #ulikdata {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                font-weight: bold;
+                font-style: italic;
+                z-index: 999;
+            }
+            .stButton>button {
+                background-color: lightblue;
+                color: white;
+            }
+            .stButton:hover>button {
+                background-color: pink;
+            }
+            .login-bg {
+                background-color: #6a5acd;  /* Biru keunguan */
+                color: white;  /* Warna font putih */
+            }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    # Tulisan "Ulikdata" dengan ID yang kita definisikan di CSS
+    st.markdown('<div id="ulikdata">Ulikdata</div>', unsafe_allow_html=True)
     st.markdown("---")
-
-    # Kolom dengan rasio 1:2 untuk gambar dan input form
-    col1, col2 = st.columns(2)
-
+    
+    col1, col2 = st.beta_columns((1,2))
+    
     # Tambahkan gambar dari Google Drive di kolom pertama (col1)
-    # col1.image('LINK_GAMBAR_GOOGLE_DRIVE', use_column_width=True)
-
+    col1.image('LINK_GAMBAR_GOOGLE_DRIVE', use_column_width=True)
+    
     with col2:
+        # Menggunakan kelas CSS untuk background dan warna font
+        st.markdown('<div class="login-bg">', unsafe_allow_html=True)
         st.subheader("Halaman Login UlikData")
         username = st.text_input("User Name")
         password = st.text_input("Password", type='password')
     
         hashed_pswd = make_hashes("test")
-
+    
         if check_hashes(password, hashed_pswd):
             st.session_state.logged = True
             st.experimental_rerun()
-
+    
         if st.button("Login", key='login_button'):
             if 'button_clicked' in st.session_state and st.session_state.button_clicked:
                 if check_hashes(password, hashed_pswd):
@@ -100,6 +127,7 @@ def login():
             else:
                 st.session_state.button_clicked = True
                 st.experimental_rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # CSS untuk tombol
 # st.markdown("""
