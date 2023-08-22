@@ -373,11 +373,15 @@ class DataViz():
                         pivot_table = pd.crosstab(
                             index=self.df[selected_rows],
                             columns=self.df[selected_columns])
+
+                        column_totals = pivot_table.sum(axis=0)
+
                         # Calculate percentages by columns
-                        pivot_table = pivot_table.div(pivot_table.sum(axis=0),
+                        pivot_table = pivot_table.div(column_totals,
                                                       axis=1) * 100
-                        # Calculate row and column totals
-                        row_totals = pivot_table.sum(axis=1)
+
+                        sum_all = pivot_table.sum().sum()
+
                         column_totals = pivot_table.sum(axis=0)
 
                         # Create a DataFrame for the column totals
@@ -386,13 +390,17 @@ class DataViz():
                             columns=pivot_table.columns,
                             index=['All'])
 
+                        pivot_table = pd.concat(
+                            [pivot_table, column_totals_df])
+
+                        # Calculate row and column totals
+                        row_totals = pivot_table.sum(axis=1) * 100 / sum_all
+
                         # Create a DataFrame for the row totals
                         row_totals_df = pd.DataFrame(row_totals,
                                                      columns=['All'])
 
                         # Concatenate the crosstab table, row totals, and column totals
-                        pivot_table = pd.concat(
-                            [pivot_table, column_totals_df])
                         pivot_table = pd.concat([pivot_table, row_totals_df],
                                                 axis=1)
                         pivot_table = pivot_table.applymap(
@@ -401,12 +409,26 @@ class DataViz():
                         pivot_table = pd.crosstab(
                             index=self.df[selected_rows],
                             columns=self.df[selected_columns])
+
+                        row_totals = pivot_table.sum(axis=1)
+
                         # Calculate percentages by rows
                         pivot_table = pivot_table.div(pivot_table.sum(axis=1),
                                                       axis=0) * 100
-                        # Calculate row and column totals
+
+                        sum_all = pivot_table.sum().sum()
+
                         row_totals = pivot_table.sum(axis=1)
-                        column_totals = pivot_table.sum(axis=0)
+
+                        # Create a DataFrame for the row totals
+                        row_totals_df = pd.DataFrame(row_totals,
+                                                     columns=['All'])
+                        pivot_table = pd.concat([pivot_table, row_totals_df],
+                                                axis=1)
+
+                        # Calculate row and column totals
+
+                        column_totals = pivot_table.sum(axis=0) * 100 / sum_all
 
                         # Create a DataFrame for the column totals
                         column_totals_df = pd.DataFrame(
@@ -414,15 +436,10 @@ class DataViz():
                             columns=pivot_table.columns,
                             index=['All'])
 
-                        # Create a DataFrame for the row totals
-                        row_totals_df = pd.DataFrame(row_totals,
-                                                     columns=['All'])
-
                         # Concatenate the crosstab table, row totals, and column totals
                         pivot_table = pd.concat(
                             [pivot_table, column_totals_df])
-                        pivot_table = pd.concat([pivot_table, row_totals_df],
-                                                axis=1)
+
                         pivot_table = pivot_table.applymap(
                             lambda x: f"{x:.2f}%" if not np.isnan(x) else "-")
                     elif selected_value_adjustment == 'percentage by all':
