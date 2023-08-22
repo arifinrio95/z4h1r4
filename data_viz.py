@@ -964,7 +964,7 @@ class DataViz():
             hist_color_choice = col1.selectbox(
                 "Choose color for histogram bars:", 
                 list(color_map.keys()), 
-                index=list(color_map.keys()).index("Terracotta")  # Default ke "Terracotta"
+                index=list(color_map.keys()).index("Sage")  # Default ke "Terracotta"
             )
             
             edge_color_choice = col2.selectbox(
@@ -1170,7 +1170,7 @@ class DataViz():
 
             # Pairplot
             st.write("## Pairplot")
-            selected_columns = st.multiselect('Choose columns for pairplot', self.numeric_cols, default=self.numeric_cols[:3])
+            selected_columns = st.multiselect('Choose columns for pairplot', list(self.numeric_cols), default=list(self.numeric_cols[:3]))
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
