@@ -1111,7 +1111,9 @@ def main():
     if option == 'Upload Your File':
         file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
         if file:
-            df = pd.read_csv(file)
+            load_df = LoadDataframe(file)
+            df = load_df.load_file_auto_delimiter()
+            # df = pd.read_csv(file)
     else:
         df = get_sample_data(option.lower())
     
@@ -1119,9 +1121,9 @@ def main():
 
     # try:
     if df is not None:
-        load_df = LoadDataframe(df)
-        # global df
-        df = load_df.load_file_auto_delimiter()
+        # load_df = LoadDataframe(df)
+        # # global df
+        # df = load_df.load_file_auto_delimiter()
         
         df.to_csv("temp_file.csv", index=False)
         uploaded_file_path = "temp_file.csv"
