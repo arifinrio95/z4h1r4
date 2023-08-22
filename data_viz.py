@@ -340,26 +340,34 @@ class DataViz():
                         "Select Values:", [None])
                 if selected_values is None:
                     selected_value_adjustment = desc_col.selectbox(
-                        "Select Value Adjustment:",
-                        [None, 'percentage by rows', 'percentage by columns'])
+                        "Select Value Adjustment:", [
+                            None, 'percentage by rows',
+                            'percentage by columns', 'percentage by all'
+                        ])
                 else:
                     selected_value_adjustment = desc_col.selectbox(
                         "Select Value Adjustment:", [
                             'sum', 'average', 'percentage by rows',
-                            'percentage by columns'
+                            'percentage by columns', 'percentage by all'
                         ])
 
                 # Create a custom pivot table using pandas
                 if selected_rows is None and selected_columns is None:
                     pivot_table = pd.DataFrame({'Count': [self.df.shape[0]]})
+                    pivot_table['Count'] = pivot_table['Count'].map(
+                        self.format_value)
                 elif selected_rows is not None and selected_columns is None:
                     pivot_table = self.df[selected_rows].value_counts(
                     ).reset_index()
                     pivot_table.columns = [selected_rows, 'Count']
+                    pivot_table['Count'] = pivot_table['Count'].map(
+                        self.format_value)
                 elif selected_rows is None and selected_columns is not None:
                     pivot_table = self.df[selected_columns].value_counts(
                     ).reset_index()
                     pivot_table.columns = [selected_columns, 'Count']
+                    pivot_table['Count'] = pivot_table['Count'].map(
+                        self.format_value)
                 elif selected_rows is not None and selected_columns is not None and selected_values is None:
                     if selected_value_adjustment == 'percentage by columns':
                         pivot_table = pd.crosstab(
@@ -417,6 +425,37 @@ class DataViz():
                                                 axis=1)
                         pivot_table = pivot_table.applymap(
                             lambda x: f"{x:.2f}%" if not np.isnan(x) else "-")
+                    elif selected_value_adjustment == 'percentage by all':
+                        pivot_table = pd.crosstab(
+                            index=self.df[selected_rows],
+                            columns=self.df[selected_columns])
+
+                        all_values = pivot_table.values.sum()
+
+                        # Calculate row and column totals
+                        row_totals = pivot_table.sum(axis=1)
+                        column_totals = pivot_table.sum(axis=0)
+
+                        # Create a DataFrame for the column totals
+                        column_totals_df = pd.DataFrame(
+                            [column_totals],
+                            columns=pivot_table.columns,
+                            index=['All'])
+
+                        # Create a DataFrame for the row totals
+                        row_totals_df = pd.DataFrame(row_totals,
+                                                     columns=['All'])
+
+                        # Concatenate the crosstab table, row totals, and column totals
+                        crosstab_with_totals = pd.concat(
+                            [pivot_table, column_totals_df])
+                        crosstab_with_totals = pd.concat(
+                            [crosstab_with_totals, row_totals_df], axis=1)
+                        crosstab_with_totals = crosstab_with_totals / all_values * 100
+
+                        # Format the percentages
+                        pivot_table = crosstab_with_totals.applymap(
+                            lambda x: f"{x:.2f}%" if not np.isnan(x) else "-")
                     else:
                         pivot_table = pd.crosstab(
                             index=self.df[selected_rows],
@@ -431,6 +470,7 @@ class DataViz():
                                                      aggfunc='sum',
                                                      fill_value=0,
                                                      margins=True)
+                        pivot_table = pivot_table.applymap(self.format_value)
                     elif selected_value_adjustment == 'average':
                         pivot_table = pd.pivot_table(self.df,
                                                      index=selected_rows,
@@ -439,6 +479,7 @@ class DataViz():
                                                      aggfunc='mean',
                                                      fill_value=0,
                                                      margins=True)
+                        pivot_table = pivot_table.applymap(self.format_value)
                     elif selected_value_adjustment == 'percentage by rows':
                         pivot_table = pd.pivot_table(self.df,
                                                      index=selected_rows,
@@ -463,9 +504,20 @@ class DataViz():
                                                       axis=1) * 100
                         pivot_table = pivot_table.applymap(
                             lambda x: f"{x:.2f}%" if not np.isnan(x) else "-")
+                    else:
+                        pivot_table = pd.pivot_table(self.df,
+                                                     index=selected_rows,
+                                                     columns=selected_columns,
+                                                     values=selected_values,
+                                                     aggfunc='sum',
+                                                     fill_value=0,
+                                                     margins=True)
+                        pivot_table = pivot_table / pivot_table.iloc[
+                            -1, :-1].sum() * 100
+                        pivot_table = pivot_table.applymap(
+                            lambda x: f"{x:.2f}%" if not np.isnan(x) else "-")
 
                 # Display the pivot table using Streamlit
-                img_col.write("Custom Pivot Table:")
                 img_col.dataframe(pivot_table, use_container_width=True)
 
         with tab2:
