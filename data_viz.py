@@ -1190,6 +1190,10 @@ class DataViz():
             if aggregation_method != 'count':
                 selected_numeric = st.selectbox('Choose a numeric column for aggregation', filtered_numeric_cols)
             
+            left_col, center_col, right_col = st.columns(3)
+            columns = [left_col, center_col, right_col]
+            chart_col_idx = 0
+            
             # Aggregate the data
             if aggregation_method == 'count':
                 aggregated_data = self.df[filtered_categorical_cols].groupby(filtered_categorical_cols).size().reset_index(name='count')
@@ -1202,5 +1206,5 @@ class DataViz():
                     fig = px.pie(aggregated_data, names=col, values='count', title=f'Pie Chart of {col} (Aggregated by count)', width=chart_width, height=chart_height)
                 else:
                     fig = px.pie(aggregated_data, names=col, values=selected_numeric, title=f'Pie Chart of {col} (Aggregated by {aggregation_method} of {selected_numeric})', width=chart_width, height=chart_height)
-                st.plotly_chart(fig)
+                columns[chart_col_idx % 3]..plotly_chart(fig)
 
