@@ -982,21 +982,7 @@ class DataViz():
             chart_col_idx = 0  # counter to keep track of columns
 
             for col in self.numeric_cols:
-                fig = px.histogram(
-                    self.df, 
-                    x=col, 
-                    marginal="box", 
-                    nbins=40, 
-                    title=f'Histogram of {col}', 
-                    color_discrete_sequence=[hist_color],
-                    width=chart_width, 
-                    height=chart_height
-                )
-                # Menambahkan garis tepi ke setiap bar histogram
-                # Menambahkan garis tepi ke setiap bar histogram dengan warna yang dipilih
-                fig.update_traces(marker=dict(color=hist_color, line=dict(color=edge_color, width=1)))
-                columns[chart_col_idx % 3].plotly_chart(fig)
-
+            
                 # Calculate skewness and kurtosis
                 col_skewness = skew(self.df[col])
                 col_kurtosis = kurtosis(self.df[col])
@@ -1012,6 +998,21 @@ class DataViz():
                     distribution_type = "moderately skewed"
             
                 columns[chart_col_idx % 3].markdown(f"<sub>The distribution of {col} is {distribution_type}.</sub>", unsafe_allow_html=True)
+
+                fig = px.histogram(
+                    self.df, 
+                    x=col, 
+                    marginal="box", 
+                    nbins=40, 
+                    title=f'Histogram of {col}', 
+                    color_discrete_sequence=[hist_color],
+                    width=chart_width, 
+                    height=chart_height
+                )
+                # Menambahkan garis tepi ke setiap bar histogram
+                # Menambahkan garis tepi ke setiap bar histogram dengan warna yang dipilih
+                fig.update_traces(marker=dict(color=hist_color, line=dict(color=edge_color, width=1)))
+                columns[chart_col_idx % 3].plotly_chart(fig)
     
                 chart_col_idx += 1
 
