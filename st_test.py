@@ -1074,6 +1074,17 @@ def run_lazy_predict(X_train, X_test, y_train, y_test):
     models, predictions = clf.fit(X_train, X_test, y_train, y_test)
     return models
 
+def get_sample_data(dataset_name):
+    """Mendapatkan sample dataset dari seaborn."""
+    if dataset_name == 'iris':
+        return sns.load_dataset('iris')
+    elif dataset_name == 'tips':
+        return sns.load_dataset('tips')
+    elif dataset_name == 'titanic':
+        return sns.load_dataset('titanic')
+    # Tambahkan dataset lainnya sesuai kebutuhan
+    else:
+        return None
                         
 def main():
     import warnings
@@ -1091,20 +1102,24 @@ def main():
     st.write('')
     st.write('*Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.*')
     st.subheader('Upload your CSV / Excel data:')
-    file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
-
-    # user_api = st.text_input("Masukkan OpenAI API Key anda: ")
     
-    # os.environ['user_api'] = st.secrets['user_api']
+    option = st.selectbox(
+        'Pilih sumber data:',
+        ('Upload Your File', 'Iris (Dummy Data)', 'Tips (Dummy Data)', 'Titanic (Dummy Data)')
+    )
+
+    if option == 'Upload Your File':
+        file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
+        if file:
+            df = pd.read_csv(file)
+    else:
+        df = get_sample_data(option.lower())
+    
     openai.api_key = st.secrets['user_api']
 
     # try:
-    if file is not None:
-        # uploaded_file_path = "temp_file.csv"
-        # with open(uploaded_file_path, "wb") as f:
-        #     f.write(file.read())
-        
-        load_df = LoadDataframe(file)
+    if df is not None:
+        load_df = LoadDataframe(df)
         global df
         df = load_df.load_file_auto_delimiter()
         
