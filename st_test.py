@@ -4,6 +4,7 @@ import re
 
 from load_dataframe import LoadDataframe
 from data_viz import DataViz
+from auto_viz_manual import auto_viz_manual
 
 import pandas as pd
 import numpy as np
