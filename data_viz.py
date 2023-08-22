@@ -931,14 +931,16 @@ class DataViz():
             chart_height = 400  # height of the chart
 
             # Histogram
+            col1, col2, col3, col4 = st.columns(4)
+            
             # Membiarkan pengguna memilih warna dengan default pilihan
-            hist_color_choice = st.selectbox(
+            hist_color_choice = col1.selectbox(
                 "Choose color for histogram bars:", 
                 list(color_map.keys()), 
                 index=list(color_map.keys()).index("Terracotta")  # Default ke "Terracotta"
             )
             
-            edge_color_choice = st.selectbox(
+            edge_color_choice = col2.selectbox(
                 "Choose color for histogram bar edges:", 
                 list(color_map.keys()), 
                 index=list(color_map.keys()).index("Umber")  # Default ke "Umber"
