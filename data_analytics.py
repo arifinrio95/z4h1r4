@@ -1,329 +1,623 @@
-import json
 import streamlit as st
-import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 
-class DataAnalytics():
-    def __init__(self, df):
-        self.df = df
-        self.missing_df = None
-        try:
-            self.desc_num = self.df.describe(exclude=['object'])
-        except Exception as e:
-            self.desc_num = None
-        try:
-            self.desc_obj = self.df.describe(include=['object'])
-        except Exception as e:
-            self.desc_obj = None
+class DataViz():
+    def __init__(self, dataloader):
+        self.df = dataloader
+        # self.df = pd.read_csv('train.csv')
+        self.num_df = self.df.select_dtypes(include='number')
+        self.cat_df = self.df.select_dtypes(exclude='number')
 
-        # get dataframe info
-        schema_dict = self.df.dtypes.apply(lambda x: x.name).to_dict()
-        self.schema_str = json.dumps(schema_dict)
-        self.r, self.c = self.df.shape
-        self.categorical_columns = self.df.select_dtypes(
-            include=['object']).columns.tolist()
-        self.numeric_columns = self.df.select_dtypes(
-            include=['number']).columns.tolist()
-        self.aggregation_methods = {
-            'sum': np.sum,
-            'mean': np.mean,
-            'count': 'count',
-            'max': np.max,
-            'min': np.min,
-        }
-
-    def info(self):
-        st.write(self.schema_str)
-        st.write(f"Number of Rows : {self.r}, Number of Columns : {self.c}")
-
-    def basic(self):
-        ## descriptive statistics
-        st.subheader("Data Information")
-        st.write("Descriptive Statistics")
-        
-        if self.desc_num is not None:
-            st.dataframe(self.desc_num)
-        if self.desc_obj is not None:
-            st.dataframe(self.desc_obj)
-            
-        ## missing values
-        missing_data = self.df.isnull().sum()
-
-        # Create a new DataFrame with required information
-        missing_info = pd.DataFrame({
-            'Column names':
-            missing_data.index,
-            'Percentage of missing values': ((missing_data / self.r) * 100).apply(lambda x: f'{x:.2f} %'),
-            'Total missing values':
-            missing_data
-        })
-
-        # Filter out columns with no missing values
-        st.write("Missing Values")
-        self.missing_df = missing_info.loc[
-            missing_info['Total missing values'] > 0]
-        st.dataframe(self.missing_df)
-        
-    def barplot(self):
-        
-        def format_value(value):
-            if value_format == 'K':
-                value = value / 1_000
-                suffix = 'K'
-            elif value_format == 'Mn':
-                value = value / 1_000_000
-                suffix = 'Mn'
-            elif value_format == 'Bn':
-                value = value / 1_000_000_000
-                suffix = 'Bn'
-            else:
-                suffix = ''
-            
-            decimal_format = f'{{:.{decimal_places}f}}'
-            return decimal_format.format(value) + suffix
-
-        if self.desc_obj is not None:
-            st.subheader("Bar Plot")
-            left_column, right_column = st.columns(2)
-            chart_type = left_column.selectbox(
-                'Select Chart Type:',
-                ['Simple', 'Grouped', 'Stacked', '100% Stacked'])
-            column = right_column.selectbox(
-                'Select a Categorical Column for Grouping Bar Plot:',
-                self.categorical_columns)
-            top_n = left_column.selectbox('Select Top N Categories:',
-                                          ['5', '10', '20'])
-            y_column = None
-            aggregation_method = None
-    
-            if chart_type != 'Simple':
-                y_column = left_column.selectbox('Select a Numeric Column:',
-                                                 self.numeric_columns,
-                                                 index=0)
-                aggregation_method = right_column.selectbox(
-                        'Select Aggregation Method:',
-                        ['sum', 'mean', 'count', 'max', 'min'])
-    
-            aggregation_func = self.aggregation_methods[
-                aggregation_method] if aggregation_method else None
-    
-            orientation = left_column.selectbox('Select Orientation:',
-                                                ['Horizontal', 'Vertical'])
-    
-            # Opsi warna yang mudah dimengerti
-            color_options = [
-                'Ocean Breeze', 'Sunset Serenity', 'Enchanted Forest', 'Fruit Sorbet', 'Cosmic Nebula', 'Biscuits & Chocolate', 'Color-Blind Safe'
-            ]
-    
-            color_option = right_column.selectbox('Select Bar Color:',
-                                                  color_options)
-    
-            color_blind_safe_palette = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f"]
-            ocean_breeze_palette = ['#89c4f4', '#4d8fd5', '#204a87', '#118a8b', '#00b8a9', '#70ad47', '#dbb994', '#bdd9d5']
-            sunset_serenity_palette = ['#ff9a8b', '#f4729a', '#b785c4', '#68a9cf', '#8cc890', '#fbd45b', '#7d7d7d', '#e8e1d1']
-            enchanted_forest_palette = ['#356f3c', '#678a4c', '#147048', '#70451b', '#8e3c36', '#b3573d', '#8f9394', '#f2ead5']
-            fruit_sorbet_palette = ['#ff5b77', '#ff9347', '#ffcc29', '#8dc63f', '#5975c9', '#835f9b', '#fff0d7', '#d8d8d8']
-            cosmic_nebula_palette = ['#190b59', '#4d0579', '#c40473', '#f72c25', '#ff8800', '#ffd100', '#f7dcdc', '#000000']
-            biscuits_chocolate_palette = ["#a67a5b", "#dcb697", "#89573e", "#f0d9b5", "#4b3423", "#f5e1c7", "#725440", "#c19a6b"]
-    
-            color_mapping = {
-                'Ocean Breeze': ocean_breeze_palette,
-                'Sunset Serenity': sunset_serenity_palette,
-                'Enchanted Forest': enchanted_forest_palette,
-                'Fruit Sorbet': fruit_sorbet_palette,
-                'Cosmic Nebula':cosmic_nebula_palette,
-                'Biscuits & Chocolate': biscuits_chocolate_palette,
-                'Color-Blind Safe': color_blind_safe_palette,
-            }
-    
-            color_pal = color_mapping[color_option]
-
-            # Get the top N categories
-            top_categories = self.df[column].value_counts().nlargest(
-                int(top_n)).index
-    
-            # Filter the data for the top 10 categories
-            top_categories_data = self.df.loc[self.df[column].isin(
-                top_categories)]
-            
-            sort_option = right_column.selectbox('Sort By:', ['Value', 'Category'])
-
-            if chart_type!='100% Stacked':
-                value_format = left_column.selectbox(
-                    'Select Value Format:',
-                    ['Normal', 'K', 'Mn', 'Bn'])
-                decimal_places = right_column.selectbox(
-                    'Select Number of Decimal Places:',
-                    ['0', '1', '2', '3', '4'])
-            
-            if sort_option == 'Value':
-                if chart_type!='Simple' and y_column:
-                    order = top_categories_data.groupby(column).agg({
-                        y_column: aggregation_method
-                    }).sort_values(by=y_column, ascending=False).index
-                else:
-                    order = top_categories
-                    
-            elif sort_option == 'Category':
-                order = sorted(top_categories_data[column].unique())
-    
-            if not y_column and chart_type != 'Simple':
-                st.warning(
-                    'Please select a Numerical Column for chart types other than Single.'
-                )
-                return
-    
-            # Create a countplot using the custom theme palette
-            sns.set_palette(color_pal)
-        
-            if chart_type == 'Simple':
-                # Handle Single chart type
-                if orientation == 'Vertical':
-                    ax = sns.countplot(x=column,
-                                       data=top_categories_data,
-                                       order=order,
-                                       palette=color_pal)
-                elif orientation == 'Horizontal':
-                    ax = sns.countplot(y=column,
-                                       data=top_categories_data,
-                                       order=order,
-                                       palette=color_pal)
-            else:
-                if aggregation_method == 'count':
-                    data_to_plot = top_categories_data.groupby(column).size().reset_index(
-                        name=y_column)
-                elif aggregation_method is not None:
-                    data_to_plot = top_categories_data.groupby(column)[y_column].agg(
-                        aggregation_func).reset_index()
-                    
-                if chart_type != 'Grouped':
-                    hue = right_column.selectbox(
-                        'Select Stacked Category:',
-                        [x for x in self.categorical_columns if x!=column])
-                    
-                    # Get the top 4 stacked categories
-                    top_hue_categories = top_categories_data[hue].value_counts().nlargest(4).index
-                    top_categories_data.loc[~(top_categories_data[hue].isin(top_hue_categories)), hue] = 'Others'
-
-                    # Pivot the data to wide format for stacking
-                    data_to_plot = top_categories_data.groupby([column, hue])[y_column].agg(aggregation_func).reset_index()
-                    data_to_plot = data_to_plot.pivot(index=column, columns=hue, values=y_column)
-
-                    if chart_type=='100% Stacked':
-                        data_to_plot = data_to_plot.div(data_to_plot.sum(axis=1), axis=0) * 100
-
-                if chart_type == 'Grouped':
-                    if orientation == 'Vertical':
-                        ax = sns.barplot(x=column,
-                                         y=y_column,
-                                         data=data_to_plot,
-                                         order=order,
-                                         palette=color_pal)
-                    else:
-                        ax = sns.barplot(y=column,
-                                         x=y_column,
-                                         data=data_to_plot,
-                                         order=order,
-                                         palette=color_pal)
-                else:
-                    if orientation == 'Vertical':
-                        ax = data_to_plot.plot(kind='bar', stacked=True, color=color_pal)
-                    else:
-                        ax = data_to_plot.plot(kind='barh', stacked=True, color=color_pal)
-            
-            # Add value labels
-            x_label_size = plt.xticks()[1][0].get_size()
-            y_label_size = plt.yticks()[1][0].get_size()
-
-            if chart_type not in ['Simple', 'Grouped']:
-                for p in ax.patches:
-                    width, height = p.get_width(), p.get_height()
-                    x, y = p.get_xy()
-                    if chart_type=='100% Stacked':
-                        ax.text(x+width/2, 
-                            y+height/2, 
-                            '{:.0f} %'.format(height), 
-                            horizontalalignment='center', 
-                            verticalalignment='center',
-                            fontsize=12)
-                    else:
-                        ax.text(x+width/2, 
-                            y+height/2, 
-                            format_value(height), 
-                            horizontalalignment='center', 
-                            verticalalignment='center',
-                            fontsize=12)
-                    
-            else:
-                for p in ax.patches:
-                    value = p.get_height() if orientation == 'Vertical' else p.get_width()
-                    formatted_value = format_value(value)
-                    if orientation == 'Vertical':
-                        ax.annotate(
-                            formatted_value,
-                            (p.get_x() + p.get_width() / 2., value),
-                            ha='center',
-                            va='baseline',
-                            fontsize=x_label_size)
-                    elif orientation == 'Horizontal':
-                        ax.annotate(
-                            formatted_value,
-                            (value, p.get_y() + p.get_height() / 2.),
-                            ha='left',
-                            va='center',
-                            fontsize=y_label_size)
-    
-            title = f'{chart_type} Bar Plot of {column}'
-            if chart_type != 'Simple':
-                title += f' using {aggregation_method} of {y_column}'
-            if orientation == 'Horizontal':
-                title += ' (Horizontal Orientation)'
-            else:
-                title += ' (Vertical Orientation)'
-    
-            if orientation == 'Vertical':
-                # Rotate x-axis labels for better readability (optional)
-                plt.xticks(range(len(order)), order, rotation=90, ha="right")
-                plt.xlabel(column if chart_type=='Simple' else column, fontsize=12)
-                plt.ylabel('Count' if chart_type=='Simple' else f'{aggregation_method} of {y_column}', fontsize=12)
-            else:
-                plt.yticks(range(len(order)), order)
-                plt.xlabel('Count' if chart_type=='Simple' else f'{aggregation_method} of {y_column}', fontsize=12)
-                plt.ylabel(column if chart_type=='Simple' else column, fontsize=12)
-                
-            plt.title(title, fontsize=16, fontweight="bold")
-            sns.despine(left=True, bottom=True)
-            st.pyplot(plt)
-            
+    def format_value(self, valu):
+        '''
+        This Code is used for formating Number Value
+        '''
+        if valu >= 1e9:
+            return f"{valu/1e9:.1f} Bn"
+        elif valu >= 1e6:
+            return f"{valu/1e6:.1f} Mn"
+        elif valu >= 1e3:
+            return f"{valu/1e3:.1f} K"
         else:
-            st.write("No categorical column to display")
+            return f"{valu:.1f}"
 
-    def piechart(self):
-        st.subheader("Pie Chart")
-        left_column, right_column = st.columns(2)
-        column = left_column.selectbox('Select a Categorical Column for Pie Chart:', self.categorical_columns)
-        color_palette = right_column.selectbox('Choose a Color Palette:', sns.palettes.SEABORN_PALETTES.keys())
-        show_percentage = left_column.checkbox('Show Percentage', value=True)
-        show_labels = right_column.checkbox('Show Labels', value=True)
-        explode_option = left_column.slider('Explode Segments:', 0.0, 0.5, 0.0)
-        figsize_option = right_column.slider('Size of Pie Chart:', 5, 20, 10)
-        
-        # Get the top 3 categories
-        top_categories = self.df[column].value_counts().nlargest(3).index
-        new_df = self.df.copy()
-        new_df.loc[~(new_df[column].isin(top_categories)), column] = 'Others'
-    
-        labels = new_df[column].value_counts().index
-        sizes = new_df[column].value_counts().values
-        colors = sns.color_palette(color_palette, len(labels))
-        explode = [explode_option] * len(labels)
-        autopct = '%1.1f%%' if show_percentage else None
-    
-        fig, ax = plt.subplots(figsize=(figsize_option, figsize_option))
-        ax.pie(sizes, explode=explode, labels=labels if show_labels else None, colors=colors, autopct=autopct, shadow=True, startangle=90)
-        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    
-        st.pyplot(fig)
+    def visualization(self):
+        st.title("Auto Data Viz & Insight by Ulik Data")
+
+        tab1, tab2, tab3, tab4 = st.tabs([
+            'Simple Business Viz', 'Simple Statistical Viz', 'Advanced Plot',
+            'Auto Insight!'
+        ])
+
+        with tab1:
+            if len(self.cat_df.columns) < 1:
+                st.write("Your Data do not have any Categorical Values")
+            else:
+                ## BAR PLOT
+                c1 = st.container()
+                desc_col, img_col = c1.columns(2)
+
+                desc_col.subheader("Bar Plot")
+
+                # Widget selection for user input
+                VAR = desc_col.selectbox('Bar Plot variable:',
+                                         self.cat_df.columns.tolist())
+
+                dc1, dc2 = desc_col.columns(2)
+
+                selected_aggregator = dc1.selectbox(
+                    "Select Aggregator:",
+                    ['None'] + self.num_df.columns.tolist())
+                aggregation_options = [
+                    'sum', 'mean', 'median', 'No Aggregation'
+                ]
+                selected_aggregation = dc2.selectbox(
+                    "Select Aggregation Function:", aggregation_options
+                    if selected_aggregator != 'None' else ['No Aggregation'])
+                selected_total_category = dc1.selectbox(
+                    "Select # of Top Categories:", ['5', '10', '20'])
+                sorting_options = [
+                    'Ascending', 'Descending', 'None (Alphabetical Order)'
+                ]
+                selected_sorting = dc2.selectbox(
+                    "Select Bar Plot Sorting Order:", sorting_options)
+
+                # Check if the number of unique categories is greater than N
+                if self.df[VAR].nunique() > int(selected_total_category):
+                    # Get the top N categories
+                    top_categories = self.df[VAR].value_counts().nlargest(
+                        int(selected_total_category)).index.tolist()
+                    # Create a new categorical variable that groups top N categories and labels the rest as 'Others'
+                    self.df[f'{VAR}NEW'] = self.df[VAR].apply(
+                        lambda x: x if x in top_categories else 'Others')
+                else:
+                    self.df[f'{VAR}NEW'] = self.df[VAR]
+
+                # Apply selected aggregation function or counting
+                if selected_aggregation == 'sum':
+                    aggregated_data = self.df.groupby(
+                        f'{VAR}NEW')[selected_aggregator].sum()
+                    LABEL_PLOT = f'Sum of {selected_aggregator} by {VAR}'
+                elif selected_aggregation == 'mean':
+                    aggregated_data = self.df.groupby(
+                        f'{VAR}NEW')[selected_aggregator].mean()
+                    LABEL_PLOT = f'Mean of {selected_aggregator} by {VAR}'
+                elif selected_aggregation == 'median':
+                    aggregated_data = self.df.groupby(
+                        f'{VAR}NEW')[selected_aggregator].median()
+                    LABEL_PLOT = f'Median of {selected_aggregator} by {VAR}'
+                else:
+                    aggregated_data = self.df[f'{VAR}NEW'].value_counts()
+                    LABEL_PLOT = f'Count of {VAR}'
+
+                # Sort the data based on the selected sorting order
+                if selected_sorting == 'Ascending':
+                    aggregated_data = aggregated_data.sort_values(
+                        ascending=True)
+                elif selected_sorting == 'Descending':
+                    aggregated_data = aggregated_data.sort_values(
+                        ascending=False)
+                else:
+                    aggregated_data = aggregated_data.sort_index()
+
+                # Insight 1: Identify the category with the highest value
+                max_category = aggregated_data.idxmax()
+                max_value = aggregated_data.max()
+
+                # Create an aggregated bar plot using Plotly Express
+                fig = px.bar(x=aggregated_data.index.astype(str),
+                             y=aggregated_data,
+                             labels={
+                                 'y': LABEL_PLOT.replace(f' by {VAR}', ''),
+                                 'x': VAR
+                             },
+                             title=LABEL_PLOT)
+
+                with desc_col:
+                    desc_col.write('##')
+                    desc_col.markdown("#### :blue[Insight!]")
+                    desc_col.write(
+                        f"The category with the highest value is '{max_category}' with a value of {max_value:.2f}."
+                    )
+
+                with img_col:
+                    # Create a plot using Plotly
+                    img_col.plotly_chart(fig)
+
+                st.write('---')
+
+                ## PIE PLOT
+                c2 = st.container()
+                desc_col, img_col = c2.columns(2)
+
+                desc_col.subheader("Pie Chart")
+                # Widget selection for user input
+                VAR2 = desc_col.selectbox('Pie Chart variable:',
+                                          self.cat_df.columns.tolist())
+                selected_style = desc_col.selectbox("Select Pie Chart Style:",
+                                                    ['Pie', 'Doughnut'])
+
+                dc1, dc2 = desc_col.columns(2)
+                selected_aggregator = dc1.selectbox(
+                    "Select Aggregator for Pie Chart:",
+                    ['None'] + self.num_df.columns.tolist())
+                aggregation_options = ['Sum', 'No Aggregation']
+                selected_aggregation = dc2.selectbox(
+                    "Select Aggregation Function  for Pie Chart:",
+                    aggregation_options
+                    if selected_aggregator != 'None' else ['No Aggregation'])
+
+                # selected_total_category = dc1.selectbox(
+                #     "Select # of Top Categories for Pie Chart:", ['5', '10', '20'])
+
+                # Check if the number of unique categories is greater than 3
+                if self.df[VAR2].nunique() > 3:
+                    # Get the top N categories
+                    top_categories = self.df[VAR2].value_counts().nlargest(
+                        3).index.tolist()
+                    # Create a new categorical variable that groups top N categories and labels the rest as 'Others'
+                    self.df[f'{VAR2}NEW'] = self.df[VAR2].apply(
+                        lambda x: x if x in top_categories else 'Others')
+                else:
+                    self.df[f'{VAR2}NEW'] = self.df[VAR2]
+
+                # Apply selected aggregation function or counting
+                if selected_aggregation == 'Sum':
+                    aggregated_data = self.df.groupby(
+                        f'{VAR2}NEW')[selected_aggregator].sum()
+                    LABEL_PLOT = f'Sum of {selected_aggregator} by {VAR2}'
+                else:
+                    aggregated_data = self.df[f'{VAR2}NEW'].value_counts()
+                    LABEL_PLOT = f'Percent Count of {VAR2}'
+
+                # Calculate the total aggregated value
+                total_aggregated_value = aggregated_data.sum()
+
+                # Create an aggregated bar plot using Plotly Express
+                if selected_style == 'Pie':
+                    fig = px.pie(values=aggregated_data,
+                                 names=aggregated_data.index.astype(str),
+                                 title=LABEL_PLOT)
+                else:
+                    fig = px.pie(values=aggregated_data,
+                                 names=aggregated_data.index.astype(str),
+                                 hole=0.45,
+                                 title=LABEL_PLOT)
+                    # Add annotation for the total value in the center of the donut chart
+                    fig.add_annotation(
+                        text=
+                        f"Total: {self.format_value(total_aggregated_value)}",
+                        x=0.5,
+                        y=0.5,
+                        showarrow=False,
+                        font=dict(size=20))
+
+                with desc_col:
+                    desc_col.write('##')
+                    desc_col.markdown("#### :blue[Insight!]")
+                    # Insight 1: Aggregated value of each category
+                    desc_col.write("Aggregated Value of Each Category:")
+                    for category, value in aggregated_data.items():
+                        percentage = (value / total_aggregated_value) * 100
+                        desc_col.write(
+                            f"- Category '{category}': {value:.2f} ({percentage:.2f}%)"
+                        )
+
+                with img_col:
+                    # Create a plot using Plotly
+                    img_col.plotly_chart(fig)
+
+                st.write('---')
+
+                ## LINE CHART
+                c3 = st.container()
+                desc_col, img_col = c3.columns(2)
+
+                desc_col.subheader("Line Chart")
+                # Widget selection for user input
+                VAR3 = desc_col.selectbox(
+                    'Line Chart Horizontal Variable (Date / Category):',
+                    self.cat_df.columns.tolist())
+                VAR4 = desc_col.selectbox(
+                    'Line Chart Vertical Variable (Value):',
+                    self.num_df.columns.tolist())
+                VAR5 = desc_col.selectbox(
+                    'Line Chart Categorical Variable (Hue):', ['None'] +
+                    [x for x in self.cat_df.columns.tolist() if x != VAR3])
+
+                dc1, dc2 = desc_col.columns(2)
+                # Streamlit checkbox for smooth line option
+                smooth_line = dc1.checkbox("Smooth Line")
+
+                # Streamlit checkbox for wide format data
+                wide_format = dc2.checkbox("Wide Format Data")
+
+                if VAR5 != 'None':
+                    data = self.df[[VAR3, VAR4, VAR5]].copy()
+                    # Check if the number of unique categories is greater than 3
+                    if data[VAR5].nunique() > 3:
+                        # Get the top N categories
+                        top_categories = data[VAR5].value_counts().nlargest(
+                            3).index.tolist()
+                        # Create a new categorical variable that groups top N categories and labels the rest as 'Others'
+                        data[VAR5] = data[VAR5].apply(
+                            lambda x: x if x in top_categories else 'Others')
+                else:
+                    data = self.df[[VAR3, VAR4]].copy()
+
+                df_to_plot = data.sort_values(
+                    by=VAR4,
+                    ascending=True).reset_index().drop(columns=['index'])
+
+                if wide_format:
+                    # Reshape the data for Plotly Express
+                    df_to_plot = df_to_plot.stack().reset_index()
+
+                try:
+                    # Calculate insights
+                    max_value = df_to_plot[VAR4].max()
+                    min_value = df_to_plot[VAR4].min()
+                    max_date = df_to_plot.loc[df_to_plot[VAR4] ==
+                                              max_value][VAR3].values[0]
+                    min_date = df_to_plot.loc[df_to_plot[VAR4] ==
+                                              min_value][VAR3].values[0]
+
+                    # Create a line chart to visualize monthly transaction trends
+                    if VAR5 != 'None':
+                        fig = px.line(
+                            df_to_plot,
+                            x=VAR3,
+                            y=VAR4,
+                            color=VAR5,
+                            title=f"{VAR4} Trends by {VAR3}",
+                            line_shape='spline' if smooth_line else 'linear')
+                    else:
+                        fig = px.line(
+                            df_to_plot,
+                            x=VAR3,
+                            y=VAR4,
+                            title=f"{VAR4} Trends by {VAR3}",
+                            line_shape='spline' if smooth_line else 'linear')
+
+                    with desc_col:
+                        desc_col.write('##')
+                        desc_col.markdown("#### :blue[Insight!]")
+                        # Display insights
+                        desc_col.write(
+                            f"Maximum Value: {max_value} on {max_date}")
+                        desc_col.write(
+                            f"Minimum Value: {min_value} on {min_date}")
+
+                        # Calculate trend direction
+                        last_value = df_to_plot.iloc[-1][VAR4]
+                        first_value = df_to_plot.iloc[0][VAR4]
+                        TREND = "Stagnant"
+                        if last_value > first_value:
+                            TREND = "Positive"
+                        elif last_value < first_value:
+                            TREND = "Negative"
+
+                        # Display trend direction insight
+                        desc_col.write(
+                            f"Trend Direction: {TREND.capitalize()} trend")
+
+                    with img_col:
+                        # Create a plot using Plotly
+                        img_col.plotly_chart(fig)
+
+                except (ValueError, KeyError) as e:
+                    print(e)
+                    with desc_col:
+                        desc_col.write('##')
+                        desc_col.markdown(
+                            "Seems your data is not in a correct format, please uncheck Wide Data Format or crosscheck your data format"
+                        )
+
+        with tab2:
+            if len(self.num_df.columns) < 1:
+                st.write("Your Data do not have any Numerical Values")
+            else:
+                ## HISTOGRAM / DENSITY PLOT
+                c1 = st.container()
+                desc_col, img_col = c1.columns(2)
+
+                desc_col.subheader("Histogram/Density Plot")
+
+                # Widget selection for user input
+                VAR = desc_col.selectbox('Histogram/density variable:',
+                                         self.num_df.columns.tolist())
+                BIN = desc_col.selectbox('Number of Bins:', ['10', '25', '50'])
+                TYPE = desc_col.selectbox('Type:', ['Histogram', 'Density'])
+
+                NORM = None if TYPE == 'Histogram' else 'probability density'
+                DENSITY = False if TYPE == 'Histogram' else True
+
+                # Create Plot using user input
+                fig = px.histogram(self.num_df[VAR],
+                                   nbins=int(BIN),
+                                   histnorm=NORM)
+                f = fig.full_figure_for_development(warn=False)
+
+                xbins = f.data[0].xbins
+                plotbins = list(
+                    np.arange(start=xbins['start'],
+                              stop=xbins['end'] + xbins['size'],
+                              step=xbins['size']))
+                data_for_hist = [val for val in f.data[0].x if val is not None]
+                counts, bins = np.histogram(data_for_hist,
+                                            bins=plotbins,
+                                            density=DENSITY)
+                IDX = np.argmax(counts)
+                s, e = bins[IDX], bins[IDX + 1]
+                COUNTS = max(counts)
+                with desc_col:
+                    desc_col.write('##')
+                    desc_col.markdown("#### :blue[Insight!]")
+                    desc_col.markdown(
+                        f"**Highest Bins**\t: {s:.2f} to {e-0.1:.2f}")
+                    desc_col.markdown(
+                        f"**Highest Values**\t\t: {counts[IDX]:.2f}")
+
+                with img_col:
+                    # Create a plot using Plotly
+                    img_col.plotly_chart(fig)
+
+                st.write('---')
+
+                ## BOX PLOT
+                c2 = st.container()
+                desc_col, img_col = c2.columns(2)
+
+                desc_col.subheader("Box Plot")
+
+                # Widget selection for user input
+                VAR2 = desc_col.selectbox('Box Plot Variable:',
+                                          self.num_df.columns)
+
+                # Create Plot using user input
+                fig = px.box(self.num_df[VAR2])
+
+                # Calculate outliers using the Interquartile Range (IQR) method
+                q1 = np.percentile(self.num_df[VAR2].dropna(), 25)
+                q3 = np.percentile(self.num_df[VAR2].dropna(), 75)
+                iqr = q3 - q1
+
+                lower_bound = q1 - 1.5 * iqr
+                upper_bound = q3 + 1.5 * iqr
+                stats_table = self.num_df[VAR2].describe()
+                stats_table['Lower Bound'] = lower_bound
+                stats_table['Upper Bound'] = upper_bound
+
+                selected_indexes = [
+                    'Lower Bound', '25%', '50%', '75%', 'Upper Bound'
+                ]
+                selected_desc_stats = stats_table.loc[selected_indexes]
+
+                upper_outliers = [
+                    val for val in self.num_df[VAR2] if val > upper_bound
+                ]
+                lower_outliers = [
+                    val for val in self.num_df[VAR2] if val < lower_bound
+                ]
+
+                with desc_col:
+                    desc_col.write('##')
+                    desc_col.markdown("#### :blue[Insight!]")
+                    table, outlier_desc = st.columns([1, 2])
+                    table.dataframe(selected_desc_stats)
+                    if len(upper_outliers) > 1:
+                        outlier_desc.markdown(
+                            f"**Variables {VAR2} have {len(upper_outliers)} upper outliers ranged from:**\n {min(upper_outliers)} to {max(upper_outliers)}"
+                        )
+                    elif len(upper_outliers) == 1:
+                        outlier_desc.markdown(
+                            f"**Variables {VAR2} have {len(upper_outliers)} upper outlier:**\n {min(upper_outliers)}"
+                        )
+                    if len(lower_outliers) > 1:
+                        outlier_desc.markdown(
+                            f"**Variables {VAR2} have {len(lower_outliers)} upper outliers ranged from:**\n {min(lower_outliers)} to {max(lower_outliers)}"
+                        )
+                    elif len(lower_outliers) == 1:
+                        outlier_desc.markdown(
+                            f"**Variables {VAR2} have {len(lower_outliers)} upper outlier:**\n {min(lower_outliers)}"
+                        )
+                    if len(upper_outliers) == 0 and len(lower_outliers) == 0:
+                        outlier_desc.markdown("No outliers found.")
+
+                with img_col:
+                    # Create a plot using Plotly
+                    img_col.plotly_chart(fig)
+
+                st.write('---')
+
+                ## Percentile PLOT
+                c3 = st.container()
+                desc_col, img_col = c3.columns(2)
+                # Create a Streamlit app
+                desc_col.subheader("Percentile Plot")
+
+                # Widget selection for user input
+                VAR3 = desc_col.selectbox('Percentile Variable:',
+                                          self.num_df.columns)
+
+                # Select a percentile for analysis
+                selected_percentile = desc_col.slider("Select Percentile:", 1,
+                                                      99, 80)
+                percentile_value = np.percentile(self.num_df[VAR3].dropna(),
+                                                 selected_percentile)
+                percentiles = np.arange(1, 101)
+                percentile_values = np.percentile(self.num_df[VAR3].dropna(),
+                                                  percentiles)
+
+                # Create a line plot using Plotly
+                fig = px.line(x=percentiles,
+                              y=percentile_values,
+                              labels={
+                                  'x': 'Percentile',
+                                  'y': 'Value'
+                              })
+
+                # Add horizontal and vertical cross indicators with semi-transparent color
+                fig.add_shape(type="line",
+                              x0=selected_percentile,
+                              x1=selected_percentile,
+                              y0=0,
+                              y1=max(self.num_df[VAR3].dropna()),
+                              line=dict(color="rgba(255, 0, 0, 0.4)",
+                                        width=2,
+                                        dash='dash'))
+
+                fig.add_shape(type="line",
+                              x0=1,
+                              x1=100,
+                              y0=percentile_value,
+                              y1=percentile_value,
+                              line=dict(color="rgba(255, 0, 0, 0.4)",
+                                        width=2,
+                                        dash='dash'))
+
+                with desc_col:
+                    desc_col.write('##')
+                    desc_col.markdown("#### :blue[Insight!]")
+                    desc_col.markdown(
+                        f"{selected_percentile}th Percentile Value: {percentile_value:.2f}, this mean that {selected_percentile}% of data in {VAR3} are more than {percentile_value:.2f}"
+                    )
+
+                with img_col:
+                    # Display the line plot using Streamlit
+                    img_col.plotly_chart(fig)
+
+                st.write('---')
+
+            if len(self.num_df.columns) < 2:
+                st.write("Your Data only have Single Numerical Values")
+            else:
+                ## Scatter PLOT
+                c1 = st.container()
+                desc_col, img_col = c1.columns(2)
+                # Create a Streamlit app
+                desc_col.subheader("Scatter Plot")
+
+                # Widget selection for user input
+                VARX = desc_col.selectbox('Scatter Variable X:',
+                                          self.num_df.columns)
+                VARY = desc_col.selectbox(
+                    'Scatter Variable Y:',
+                    [x for x in self.num_df.columns if x != VARX])
+
+                # Calculate correlation coefficient
+                x_data = self.num_df[VARX].dropna()
+                y_data = self.num_df[VARY].dropna()
+                min_length = min(len(x_data), len(y_data))
+                x_data = x_data[:min_length]
+                y_data = y_data[:min_length]
+                correlation = np.corrcoef(x_data, y_data)[0, 1]
+
+                # Create a scatter plot using Plotly Express
+                fig = px.scatter(x=self.num_df[VARX],
+                                 y=self.num_df[VARY],
+                                 labels={
+                                     'x': VARX,
+                                     'y': VARY
+                                 })
+
+                # Annotate the scatter plot with correlation value
+                fig.update_layout(annotations=[
+                    dict(x=0.5,
+                         y=1.15,
+                         showarrow=False,
+                         text=f'Correlation: {correlation:.2f}',
+                         xref="paper",
+                         yref="paper")
+                ])
+
+                with desc_col:
+                    # Determine the strength and direction of the correlation
+                    if correlation > 0.7:
+                        RELATION = 'Strong Positive'
+                    elif correlation > 0.5 and correlation <= 0.7:
+                        RELATION = 'Relatively Positive'
+                    elif correlation < -0.5 and correlation >= -0.7:
+                        RELATION = 'Relatively Negative'
+                    elif correlation < -0.7:
+                        RELATION = 'Strong Negative'
+                    else:
+                        RELATION = 'Weak'
+
+                    desc_col.write('##')
+                    desc_col.markdown("#### :blue[Insight!]")
+                    desc_col.markdown(
+                        f"Linear Correlation between {VARX} and {VARY} is {RELATION}"
+                    )
+
+                with img_col:
+                    # Display the line plot using Streamlit
+                    img_col.plotly_chart(fig)
+
+                st.write('---')
+
+                ## Heatmap Correlation PLOT
+                c2 = st.container()
+                desc_col, img_col = c2.columns(2)
+                # Create a Streamlit app
+                desc_col.subheader("Correlation Plot")
+
+                # Selectbox for correlation method
+                selected_corr_method = desc_col.selectbox(
+                    "Select Correlation Method:",
+                    ['pearson', 'kendall', 'spearman'])
+
+                # Selectbox to choose target variable
+                selected_target = desc_col.selectbox(
+                    "Select Target Variable for Correlation Insight:",
+                    self.num_df.columns)
+                selected_colorscale = desc_col.selectbox(
+                    "Select Colorscale:",
+                    ['Viridis', 'Plasma', 'Inferno', 'Magma', 'Cividis'])
+
+                # Calculate the correlation matrix
+                corr_matrix = self.num_df.corr(method=selected_corr_method)
+
+                # Create a heatmap using Plotly
+                fig = go.Figure(data=go.Heatmap(z=corr_matrix.values,
+                                                x=corr_matrix.columns,
+                                                y=corr_matrix.index,
+                                                colorscale=selected_colorscale,
+                                                text=corr_matrix.round(2)))
+
+                # Customize the heatmap layout
+                fig.update_layout(title="Correlation Heatmap",
+                                  xaxis_title="Features",
+                                  yaxis_title="Features",
+                                  width=600,
+                                  height=600)
+                with desc_col:
+                    # Write insights about strong correlations with the selected target variable
+                    desc_col.write('##')
+                    desc_col.markdown("#### :blue[Insight!]")
+                    NO_INSIGHT = True
+                    THRESHOLD = 0.7
+                    for variable in self.num_df.columns:
+                        if variable != selected_target and abs(
+                                corr_matrix.loc[selected_target,
+                                                variable]) > THRESHOLD:
+                            NO_INSIGHT = False
+                            desc_col.write(
+                                f"Strong correlation between {selected_target} and {variable}: {corr_matrix.loc[selected_target, variable]:.2f}"
+                            )
+                    if NO_INSIGHT:
+                        desc_col.write(
+                            f"No variables have strong correlation with {selected_target}"
+                        )
+                with img_col:
+                    # Display the heatmap using Streamlit
+                    img_col.plotly_chart(fig)
+
+        with tab3:
+            st.write("Under Construct !")
+
+        with tab4:
+            st.write("Under Construct !")
