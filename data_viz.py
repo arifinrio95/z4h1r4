@@ -965,12 +965,12 @@ class DataViz():
                 chart_col_idx += 1
 
             if chart_col_idx % 3 == 1:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             if chart_col_idx % 3 == 2:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
@@ -987,12 +987,12 @@ class DataViz():
                 chart_col_idx += 1
 
             if chart_col_idx % 3 == 1:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             if chart_col_idx % 3 == 2:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
@@ -1007,12 +1007,12 @@ class DataViz():
             chart_col_idx += 1
 
             if chart_col_idx % 3 == 1:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             if chart_col_idx % 3 == 2:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
@@ -1032,12 +1032,12 @@ class DataViz():
             chart_col_idx += 1
 
             if chart_col_idx % 3 == 1:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             if chart_col_idx % 3 == 2:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
@@ -1053,12 +1053,12 @@ class DataViz():
             chart_col_idx += 1
 
             if chart_col_idx % 3 == 1:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             if chart_col_idx % 3 == 2:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
@@ -1074,12 +1074,12 @@ class DataViz():
                 chart_col_idx += 1
 
             if chart_col_idx % 3 == 1:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             if chart_col_idx % 3 == 2:
-                columns[chart_col_idx % 3].write(" ")
+                columns[chart_col_idx % 3].empty()
                 chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
