@@ -54,10 +54,38 @@ import streamlit.components.v1 as components
 from utils import get_answer_csv
 from lazypredict.Supervised import LazyClassifier
 
+import hashlib
+
 # import nltk
 # nltk.download("punkt")
 # nltk.download("stopwords")
 # nltk.download("wordnet")
+
+# Fungsi untuk mengenkripsi password
+def make_hashes(password):
+    return hashlib.sha256(str.encode(password)).hexdigest()
+
+# Fungsi untuk memeriksa password yang di-hash
+def check_hashes(password,hashed_text):
+    if make_hashes(password) == hashed_text:
+        return hashed_text
+    return False
+
+def login():
+    st.title("Halaman Login UlikData")
+    username = st.text_input("User Name")
+    password = st.text_input("Password", type='password')
+    
+    # Anda bisa menyimpan hashed_password di suatu tempat yang aman atau database.
+    # Untuk contoh ini, saya akan menggunakan password sederhana "test".
+    hashed_pswd = make_hashes("test")
+        
+    if st.button("Login"):
+        if check_hashes(password,hashed_pswd):
+            st.success("Logged In as {}".format(username))
+            st.session_state.logged = True
+        else:
+            st.warning("Incorrect Username/Password")
 
 def display(obj, *args, **kwargs):
     """Mock the Jupyter display function to use show() instead."""
@@ -1584,5 +1612,15 @@ def main():
         #     # Download the output as CSV
         #     st.download_button("Download CSV with sentiments", df.to_csv(index=False), "sentiments.csv", "text/csv")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
+
+if __name__ == '__main__':
+    # Cek apakah user sudah login atau belum
+    if 'logged' not in st.session_state:
+        st.session_state.logged = False
+    
+    if st.session_state.logged:
+        main()
+    else:
+        login()
