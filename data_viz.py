@@ -33,7 +33,31 @@ class DataViz():
             return f"{valu/1e3:.1f} K"
         else:
             return f"{valu:.1f}"
+            
+    # Preprocess the text data
+    def preprocess_text(self,
+                        text,
+                        standardize_text=False,
+                        lemmatize_text=False,
+                        remove_stopwords=False):
+        if standardize_text:
+            text = text.lower()
 
+        words = word_tokenize(text)
+
+        if lemmatize_text:
+            lemmatizer = WordNetLemmatizer()
+            words = [lemmatizer.lemmatize(word) for word in words]
+
+        if remove_stopwords:
+            custom_stopwords = set(stopwords.words("english"))
+            words = [
+                word for word in words
+                if word not in custom_stopwords and word not in STOPWORDS
+            ]
+
+        return " ".join(words)
+                            
     def visualization(self):
         st.title("Auto Data Viz & Insight by Ulik Data")
 
