@@ -1022,30 +1022,30 @@ class DataViz():
             # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
             col1, col2, col3, col4 = st.columns(4)
-
+            
             # Membiarkan pengguna memilih warna dengan default pilihan
             scatter_color_choice = col1.selectbox(
                 "Choose color for scatter points:", 
                 list(color_map.keys()), 
                 index=list(color_map.keys()).index("Sage")  # Default ke "Terracotta"
             )
-            
+                        
             line_color_choice = col2.selectbox(
                 "Choose color for regression line:", 
                 list(color_map.keys()), 
                 index=list(color_map.keys()).index("Umber")  # Default ke "Umber"
             )
-            
+                        
             scatter_color = color_map[scatter_color_choice]
             line_color = color_map[line_color_choice]
-
+            
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
-
+            
             # Filter kolom numerik yang uniq valuenya di atas 10
             filtered_cols = [col for col in self.numeric_cols if self.df[col].nunique() > 10]
-            
+                        
             # Membuat semua kombinasi dari kolom numerik yang telah difilter
             from itertools import combinations
             combinations_list = list(combinations(filtered_cols, 2))
@@ -1060,12 +1060,14 @@ class DataViz():
                     width=chart_width, 
                     height=chart_height
                 )
-                
-                # Mengatur warna garis regresi
+                            
+                # Mengatur warna garis regresi dan ukuran titik scatter
                 fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
+                fig.update_traces(marker=dict(size=5, color=scatter_color), selector=dict(mode='markers'))
             
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
+
 
             # Bar chart
             st.write("## Bar Chart")
@@ -1203,9 +1205,14 @@ class DataViz():
             # Create pie charts for all filtered categorical columns
             for col in filtered_categorical_cols:
                 if aggregation_method == 'count':
-                    fig = px.pie(aggregated_data, names=col, values='count', title=f'Pie Chart of {col} (Aggregated by count)', width=chart_width, height=chart_height)
+                    fig = px.pie(aggregated_data, names=col, values='count', 
+                                 title=f'Pie Chart of {col}<br>(Aggregated by count)', 
+                                 width=chart_width, height=chart_height)
                 else:
-                    fig = px.pie(aggregated_data, names=col, values=selected_numeric, title=f'Pie Chart of {col} (Aggregated by {aggregation_method} of {selected_numeric})', width=chart_width, height=chart_height)
+                    fig = px.pie(aggregated_data, names=col, values=selected_numeric, 
+                                 title=f'Pie Chart of {col}<br>(Aggregated by {aggregation_method} of {selected_numeric})', 
+                                 width=chart_width, height=chart_height)
+
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
