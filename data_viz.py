@@ -915,15 +915,16 @@ class DataViz():
         with tab4:      
             # Membuat peta warna
             color_map = {
-                "Red": "red",
-                "Blue": "blue",
-                "Green": "green",
-                "Yellow": "yellow",
-                "Black": "black",
-                "Gray": "gray",
-                "Purple": "purple",
-                "Orange": "orange"
+                "Olive Green": "#808000",
+                "Moss Green": "#8A9A5B",
+                "Sage": "#B2AC88",
+                "Taupe": "#483C32",
+                "Beige": "#F5F5DC",
+                "Burnt Sienna": "#E97451",
+                "Terracotta": "#E2725B",
+                "Umber": "#635147"
             }
+            
             st.title("Under Construct !")
             # Initialize the columns
             left_col, center_col, right_col = st.columns(3)
@@ -950,6 +951,8 @@ class DataViz():
 
             # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
+            scatter_color = 'Sage'
+            line_color = 'Beige'
             scatter_color_choice = st.selectbox("Choose color for scatter points:", list(color_map.keys()))
             line_color_choice = st.selectbox("Choose color for regression line:", list(color_map.keys()))
             scatter_color = color_map[scatter_color_choice]
