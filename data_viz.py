@@ -65,7 +65,7 @@ class DataViz():
         return " ".join(words)
                             
     def visualization(self):
-        st.title("Auto Data Viz & Insight by Ulik Data")
+        st.markdown("<h1 style='text-align: center; color: black;'>Automated Data Visualizations (by Ulikdata)</h1>", unsafe_allow_html=True)
 
         tab1, tab2, tab3, tab4 = st.tabs([
             'Simple Business Viz', 'Simple Statistical Viz', 'Advanced Plot',
@@ -953,8 +953,6 @@ class DataViz():
                 "Monochrome": ["#2F4F4F", "#708090", "#778899", "#B0C4DE", "#F5F5F5"],
                 # ... you can further expand and add more palettes as needed
             }
-            
-            st.title("Under Construct !")
             
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
