@@ -857,7 +857,8 @@ class DataViz():
                 fig = px.histogram(self.df, x=column, marginal="box", nbins=40, title=f'Histogram of {column}')
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
-    
+
+            chart_col_idx = 0
             # Scatter plot with regression line
             columns[chart_col_idx % 3].write("## Scatter plot with Regression Line")
             col1, col2 = st.selectbox('Select first column', self.numeric_cols), st.selectbox('Select second column', self.numeric_cols, index=1)
@@ -865,7 +866,8 @@ class DataViz():
                 fig = px.scatter(self.df, x=col1, y=col2, trendline="ols", title=f'Scatter plot of {col1} vs {col2}')
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
-    
+
+            chart_col_idx = 0
             # Bar chart
             columns[chart_col_idx % 3].write("## Bar Chart")
             selected_numeric_col = st.selectbox('Choose numeric column for aggregation', self.numeric_cols)
@@ -874,14 +876,16 @@ class DataViz():
                 fig = px.bar(self.df, x=col, y=selected_numeric_col, color=selected_categorical_hue, title=f'Bar Chart of {col} grouped by {selected_categorical_hue}')
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
-    
+
+            chart_col_idx = 0
             # Heatmap of correlation
             columns[chart_col_idx % 3].write("## Heatmap of Correlation")
             corr = self.df[self.numeric_cols].corr()
             fig = ff.create_annotated_heatmap(z=corr.values, x=list(corr.columns), y=list(corr.index), annotation_text=corr.round(2).values, colorscale='Viridis')
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
-    
+
+            chart_col_idx = 0
             # Chi square for Categorical Columns
             columns[chart_col_idx % 3].write("## Chi Square for Categorical Columns")
             results = []
@@ -893,7 +897,8 @@ class DataViz():
                         results.append((col1, col2, chi2, p))
             columns[chart_col_idx % 3].table(pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value"]))
             chart_col_idx += 1
-    
+
+            chart_col_idx = 0
             # Box plot
             columns[chart_col_idx % 3].write("## Box Plot")
             selected_column = st.selectbox('Choose numeric column for box plot', self.numeric_cols)
@@ -901,7 +906,8 @@ class DataViz():
             fig = px.box(self.df, x=selected_category, y=selected_column, title=f'Box Plot of {selected_column} grouped by {selected_category}')
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
-    
+
+            chart_col_idx = 0
             # Pairplot
             columns[chart_col_idx % 3].write("## Pairplot")
             selected_columns = st.multiselect('Choose columns for pairplot', self.numeric_cols, default=self.numeric_cols[:3])
@@ -909,7 +915,8 @@ class DataViz():
                 fig = px.scatter_matrix(self.df[selected_columns])
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
-    
+
+            chart_col_idx = 0
             # Pie chart
             columns[chart_col_idx % 3].write("## Pie Chart")
             selected_category = st.selectbox('Choose category for pie chart', self.categorical_cols, index=1)
