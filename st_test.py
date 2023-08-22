@@ -83,6 +83,7 @@ def login():
     if st.button("Login"):
         if check_hashes(password, hashed_pswd):
             st.session_state.login_button_pressed = True
+            st.button("Login") == True
         else:
             st.warning("Incorrect Username/Password")
 
