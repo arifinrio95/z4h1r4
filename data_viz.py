@@ -1040,14 +1040,14 @@ class DataViz():
 
             # Heatmap of correlation
             st.write("## Heatmap of Correlation")
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0
+            # left_col, center_col, right_col = st.columns(3)
+            # columns = [left_col, center_col, right_col]
+            # chart_col_idx = 0
             
             corr = self.df[self.numeric_cols].corr()
-            fig = ff.create_annotated_heatmap(z=corr.values, x=list(corr.columns), y=list(corr.index), annotation_text=corr.round(2).values, width=chart_width, height=chart_height)
-            columns[chart_col_idx % 3].plotly_chart(fig)
-            chart_col_idx += 1
+            fig = ff.create_annotated_heatmap(z=corr.values, x=list(corr.columns), y=list(corr.index), annotation_text=corr.round(2).values)
+            # columns[chart_col_idx % 3].plotly_chart(fig)
+            # chart_col_idx += 1
 
             # Chi square for Categorical Columns
             st.write("## Chi Square for Categorical Columns")
