@@ -84,6 +84,7 @@ def login():
         if check_hashes(password,hashed_pswd):
             st.success("Logged In as {}".format(username))
             st.session_state.logged = True
+            st.experimental_rerun()  # Rerun the app
         else:
             st.warning("Incorrect Username/Password")
 
