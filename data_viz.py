@@ -927,6 +927,17 @@ class DataViz():
                 "Terracotta": "#E2725B",
                 "Umber": "#635147"
             }
+            color_palettes = {
+                "Blue Shades": "Blues",
+                "Red Shades": "Reds",
+                "Green Shades": "Greens",
+                "Grayscale": "Greys",
+                "Hot (Red-Yellow-Black)": "hot",
+                "Cool (Blue-Cyan-Purple)": "YlGnBu",
+                "Picnic (Green-Yellow-Red)": "Picnic",
+                "Portland (Blue-Purple-Red)": "Portland",
+                "Jet (Blue-Cyan-Yellow-Red)": "Jet",
+            }
             
             st.title("Under Construct !")
             
@@ -1045,16 +1056,19 @@ class DataViz():
                 chart_col_idx += 1
 
             # Heatmap of correlation
-            st.write("## Heatmap of Correlation")
-            # left_col, center_col, right_col = st.columns(3)
-            # columns = [left_col, center_col, right_col]
-            # chart_col_idx = 0
-            
-            corr = self.df[self.numeric_cols].corr()
-            fig = ff.create_annotated_heatmap(z=corr.values, x=list(corr.columns), y=list(corr.index), annotation_text=corr.round(2).values)
+            correlation_methods = ["pearson", "kendall", "spearman"]
+            selected_method = st.selectbox("Choose a correlation method:", correlation_methods)
+            selected_palette = st.selectbox("Choose a heatmap color palette:", list(color_palettes.keys()))
+            st.write(f"## Heatmap of {selected_method.capitalize()} Correlation")
+            corr = self.df[self.numeric_cols].corr(method=selected_method)
+            fig = ff.create_annotated_heatmap(
+                z=corr.values, 
+                x=list(corr.columns), 
+                y=list(corr.index), 
+                annotation_text=corr.round(2).values,
+                colorscale=color_palettes[selected_palette]
+            )
             st.plotly_chart(fig)
-            # columns[chart_col_idx % 3].plotly_chart(fig)
-            # chart_col_idx += 1
 
             # Chi square for Categorical Columns
             st.write("## Chi Square for Categorical Columns")
