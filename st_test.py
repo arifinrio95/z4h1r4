@@ -989,10 +989,26 @@ def run_lazy_predict(X_train, X_test, y_train, y_test):
 
                         
 def main():
-    # st.set_page_config(
-    # layout="wide",
-    # )
-
+    theme_choice = st.radio("Choose Theme", ["light", "dark"])
+    if theme_choice == "dark":
+        st.markdown("""
+        <style>
+            body {
+                background-color: black;
+                color: white;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <style>
+            body {
+                background-color: white;
+                color: black;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+    
     st.markdown(
         hide_menu,
         unsafe_allow_html=True
