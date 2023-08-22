@@ -79,13 +79,16 @@ def login():
     # Anda bisa menyimpan hashed_password di suatu tempat yang aman atau database.
     # Untuk contoh ini, saya akan menggunakan password sederhana "test".
     hashed_pswd = make_hashes("test")
-        
+
+    # Ketika tombol diklik
     if st.button("Login"):
-        if check_hashes(password, hashed_pswd):
-            st.session_state.login_button_pressed = True
-            st.button("Login") == True
+        if 'button_clicked' in st.session_state and st.session_state.button_clicked:
+            if check_hashes(password, hashed_pswd):
+                st.session_state.logged = True
+                st.experimental_rerun()
         else:
-            st.warning("Incorrect Username/Password")
+            st.session_state.button_clicked = True
+            st.experimental_rerun()
 
 def display(obj, *args, **kwargs):
     """Mock the Jupyter display function to use show() instead."""
@@ -1620,11 +1623,6 @@ if __name__ == '__main__':
     if 'logged' not in st.session_state:
         st.session_state.logged = False
 
-    if 'login_button_pressed' in st.session_state and st.session_state.login_button_pressed:
-        st.session_state.logged = True
-        del st.session_state['login_button_pressed']
-        st.experimental_rerun()
-    
     if st.session_state.logged:
         main()
     else:
