@@ -1125,24 +1125,24 @@ class DataViz():
                         chi2, p, _, _ = chi2_contingency(contingency)
                         
                         if p < 0.05:
-                            correlation_strength = "Tinggi"
-                            explanation = "Signifikan secara statistik"
+                            correlation_strength = "High"
+                            explanation = "Statistically Significant"
                         else:
-                            correlation_strength = "Rendah"
-                            explanation = "Tidak signifikan secara statistik"
+                            correlation_strength = "Low"
+                            explanation = "Not Statistically Significantk"
                         
                         results.append((col1, col2, chi2, p, correlation_strength, explanation))
             
-            results_df = pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value", "Kekuatan Korelasi", "Penjelasan"])
+            results_df = pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value", "Correlation Streght", "Description"])
             
             # Color the cells with high correlation
             def color_cells(val):
-                if val == "Tinggi":
+                if val == "High":
                     return 'background-color: yellow'
                 else:
                     return ''
             
-            styled_df = results_df.style.applymap(color_cells, subset=["Kekuatan Korelasi"])
+            styled_df = results_df.style.applymap(color_cells, subset=["Correlation Streght"])
             
             st.write(styled_df)
 
