@@ -1052,6 +1052,7 @@ class DataViz():
             
             corr = self.df[self.numeric_cols].corr()
             fig = ff.create_annotated_heatmap(z=corr.values, x=list(corr.columns), y=list(corr.index), annotation_text=corr.round(2).values)
+            st.plotly_chart(fig)
             # columns[chart_col_idx % 3].plotly_chart(fig)
             # chart_col_idx += 1
 
