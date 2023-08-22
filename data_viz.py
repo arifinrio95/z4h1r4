@@ -926,14 +926,32 @@ class DataViz():
             }
             
             st.title("Under Construct !")
-            # Initialize the columns
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0  # counter to keep track of columns
+            
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
 
             # Histogram
+            # Membiarkan pengguna memilih warna dengan default pilihan
+            hist_color_choice = st.selectbox(
+                "Choose color for histogram bars:", 
+                list(color_map.keys()), 
+                index=list(color_map.keys()).index("Terracotta")  # Default ke "Terracotta"
+            )
+            
+            edge_color_choice = st.selectbox(
+                "Choose color for histogram bar edges:", 
+                list(color_map.keys()), 
+                index=list(color_map.keys()).index("Umber")  # Default ke "Umber"
+            )
+            
+            hist_color = color_map[hist_color_choice]
+            edge_color = color_map[edge_color_choice]
+
+            # Initialize the columns
+            left_col, center_col, right_col = st.columns(3)
+            columns = [left_col, center_col, right_col]
+            chart_col_idx = 0  # counter to keep track of columns
+
             for col in self.numeric_cols:
                 fig = px.histogram(
                     self.df, 
@@ -941,23 +959,24 @@ class DataViz():
                     marginal="box", 
                     nbins=40, 
                     title=f'Histogram of {col}', 
+                    color_discrete_sequence=[hist_color],
                     width=chart_width, 
                     height=chart_height
                 )
                 # Menambahkan garis tepi ke setiap bar histogram
-                fig.update_traces(marker=dict(line=dict(color='black', width=1)))
+                # Menambahkan garis tepi ke setiap bar histogram dengan warna yang dipilih
+                fig.update_traces(marker=dict(color=hist_color, line=dict(color=edge_color, width=1)))
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
             # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
 
-            
             # Membiarkan pengguna memilih warna dengan default pilihan
             scatter_color_choice = st.selectbox(
                 "Choose color for scatter points:", 
                 list(color_map.keys()), 
-                index=list(color_map.keys()).index("Terracotta")  # Default ke "Terracotta"
+                index=list(color_map.keys()).index("Sage")  # Default ke "Terracotta"
             )
             
             line_color_choice = st.selectbox(
