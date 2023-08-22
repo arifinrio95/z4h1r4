@@ -1040,20 +1040,29 @@ class DataViz():
             valid_numeric_cols = [col for col in self.numeric_cols]
             valid_categorical_cols = [col for col in self.categorical_cols if self.df[col].nunique() <= 20]
             
-            col1, col2, col3 = st.columns(3)
+            col1, col2, col3, col4 = st.columns(4)
             
-            # Tampilkan hanya kolom numerik dengan jumlah nilai unik tidak lebih dari 20
+            # Pilih kolom numerik dan kategorikal
             selected_numeric_col = col1.selectbox('Choose numeric column for aggregation', valid_numeric_cols)
             selected_categorical_hue = col2.selectbox('Choose categorical column for hue', valid_categorical_cols)
+            
+            # Pilih palet warna
             selected_palette = col3.selectbox("Choose a bar chart color palette:", list(color_palettes.keys()))
-
             
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
             
             for col in valid_categorical_cols:
-                fig = px.bar(self.df, x=col, y=selected_numeric_col, color=selected_categorical_hue, title=f'Bar Chart of {col} grouped by {selected_categorical_hue}', width=chart_width, height=chart_height, color_discrete_sequence=color_palettes[selected_palette])
+                fig = px.bar(self.df, 
+                             x=col, 
+                             y=selected_numeric_col, 
+                             color=selected_categorical_hue, 
+                             title=f'Bar Chart of {col} grouped by {selected_categorical_hue}', 
+                             width=chart_width, 
+                             height=chart_height,
+                             color_discrete_sequence=color_palettes[selected_palette]) # Gunakan palet warna yang terpilih
+                
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
             
