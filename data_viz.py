@@ -996,11 +996,12 @@ class DataViz():
             
             # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
+            col1, col2 = st.selectbox('Select first column', self.numeric_cols), st.selectbox('Select second column', self.numeric_cols, index=1)
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
             
-            col1, col2 = st.selectbox('Select first column', self.numeric_cols), st.selectbox('Select second column', self.numeric_cols, index=1)
+            
             if col1 and col2:
                 fig = px.scatter(self.df, x=col1, y=col2, trendline="ols", title=f'Scatter plot of {col1} vs {col2}', width=chart_width, height=chart_height)
                 columns[chart_col_idx % 3].plotly_chart(fig)
@@ -1022,12 +1023,14 @@ class DataViz():
             # chart_col_idx = 0
             # Bar chart
             st.write("## Bar Chart")
+            selected_numeric_col = st.selectbox('Choose numeric column for aggregation', self.numeric_cols)
+            selected_categorical_hue = st.selectbox('Choose categorical column for hue', self.categorical_cols)
+            
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
             
-            selected_numeric_col = st.selectbox('Choose numeric column for aggregation', self.numeric_cols)
-            selected_categorical_hue = st.selectbox('Choose categorical column for hue', self.categorical_cols)
+            
             for col in self.categorical_cols:
                 fig = px.bar(self.df, x=col, y=selected_numeric_col, color=selected_categorical_hue, title=f'Bar Chart of {col} grouped by {selected_categorical_hue}', width=chart_width, height=chart_height)
                 columns[chart_col_idx % 3].plotly_chart(fig)
@@ -1104,12 +1107,13 @@ class DataViz():
             # chart_col_idx = 0
             # Box plot
             st.write("## Box Plot")
+            selected_column = st.selectbox('Choose numeric column for box plot', self.numeric_cols)
+            selected_category = st.selectbox('Choose category for x-axis', self.categorical_cols)
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
             
-            selected_column = st.selectbox('Choose numeric column for box plot', self.numeric_cols)
-            selected_category = st.selectbox('Choose category for x-axis', self.categorical_cols)
+            
             fig = px.box(self.df, x=selected_category, y=selected_column, title=f'Box Plot of {selected_column} grouped by {selected_category}', width=chart_width, height=chart_height)
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
@@ -1130,11 +1134,12 @@ class DataViz():
             # chart_col_idx = 0
             # Pairplot
             st.write("## Pairplot")
+            selected_columns = st.multiselect('Choose columns for pairplot', self.numeric_cols, default=self.numeric_cols[:3])
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
             
-            selected_columns = st.multiselect('Choose columns for pairplot', self.numeric_cols, default=self.numeric_cols[:3])
+            
             if selected_columns:
                 fig = px.scatter_matrix(self.df[selected_columns], width=chart_width, height=chart_height)
                 columns[chart_col_idx % 3].plotly_chart(fig)
@@ -1156,9 +1161,10 @@ class DataViz():
             # chart_col_idx = 0
             # Pie chart
             st.write("## Pie Chart")
+            selected_category = st.selectbox('Choose category for pie chart', self.categorical_cols, index=1)
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
-            selected_category = st.selectbox('Choose category for pie chart', self.categorical_cols, index=1)
+            
             fig = px.pie(self.df, names=selected_category, title=f'Pie Chart of {selected_category}', width=chart_width, height=chart_height)
             columns[chart_col_idx % 3].plotly_chart(fig)
