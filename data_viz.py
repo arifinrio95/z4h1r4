@@ -846,7 +846,7 @@ class DataViz():
             st.write("Under Construct !")
 
         with tab4:
-            st.write("Under Construct !")
+            st.title("Under Construct !")
             # Initialize the columns
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
@@ -856,9 +856,8 @@ class DataViz():
 
             def fill_empty_columns(chart_col_idx, columns):
                 while chart_col_idx % 3 != 3:
-                    chart_col_idx += 1
                     columns[chart_col_idx % 3].write("")  # Mengisi dengan konten kosong
-                    
+                    chart_col_idx += 1
 
     
             # Histogram
