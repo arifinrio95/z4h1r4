@@ -1,6 +1,8 @@
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
+import plotly.figure_factory as ff
+
 import pandas as pd
 import numpy as np
 from scipy.stats import chi2_contingency
@@ -10,6 +12,7 @@ from wordcloud import WordCloud, STOPWORDS
 # from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer
 from PIL import Image, ImageDraw
+
 
 class DataViz():
     def __init__(self, dataloader):
