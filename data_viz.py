@@ -926,10 +926,10 @@ class DataViz():
 
     
             # Histogram
-            for column in self.numeric_cols:
+            for col in self.numeric_cols:
                 fig = px.histogram(
                     self.df, 
-                    x=column, 
+                    x=col, 
                     marginal="box", 
                     nbins=40, 
                     title=f'Histogram of {column}', 
