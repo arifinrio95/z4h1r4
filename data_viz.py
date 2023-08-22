@@ -913,6 +913,17 @@ class DataViz():
             # st.write('---')
 
         with tab4:      
+            # Membuat peta warna
+            color_map = {
+                "Red": "red",
+                "Blue": "blue",
+                "Green": "green",
+                "Yellow": "yellow",
+                "Black": "black",
+                "Gray": "gray",
+                "Purple": "purple",
+                "Orange": "orange"
+            }
             st.title("Under Construct !")
             # Initialize the columns
             left_col, center_col, right_col = st.columns(3)
@@ -939,6 +950,8 @@ class DataViz():
 
             # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
+            scatter_color_choice = st.selectbox("Choose color for scatter points:", list(color_map.keys()))
+            line_color_choice = st.selectbox("Choose color for regression line:", list(color_map.keys()))
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
@@ -956,12 +969,12 @@ class DataViz():
                     x=col1, 
                     y=col2, 
                     trendline="ols", 
-                    color_discrete_sequence=['gray'],
+                    color_discrete_sequence=[scatter_color],
                     title=f'Scatter plot of {col1} vs {col2}', 
                     width=chart_width, 
                     height=chart_height
                 )
-                fig.update_traces(line=dict(color='red'), selector=dict(type='scatter', mode='lines'))
+                fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
                 
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
