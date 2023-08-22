@@ -80,6 +80,10 @@ def login():
     # Untuk contoh ini, saya akan menggunakan password sederhana "test".
     hashed_pswd = make_hashes("test")
 
+    if check_hashes(password, hashed_pswd):
+        st.session_state.logged = True
+        st.experimental_rerun()
+
     # Ketika tombol diklik
     if st.button("Login", key='login_button'):
         if 'button_clicked' in st.session_state and st.session_state.button_clicked:
