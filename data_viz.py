@@ -924,7 +924,7 @@ class DataViz():
             #     while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
             #         chart_col_idx += 1
-
+            
     
             # Histogram
             for col in self.numeric_cols:
@@ -942,6 +942,15 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
+            if chart_col_idx % 3 == 1:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+            if chart_col_idx % 3 == 2:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+            
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
@@ -955,6 +964,14 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
+            if chart_col_idx % 3 == 1:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+            if chart_col_idx % 3 == 2:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
@@ -969,6 +986,14 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
+            if chart_col_idx % 3 == 1:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+            if chart_col_idx % 3 == 2:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
@@ -981,6 +1006,14 @@ class DataViz():
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
 
+            if chart_col_idx % 3 == 1:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+            if chart_col_idx % 3 == 2:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
@@ -998,6 +1031,14 @@ class DataViz():
             columns[chart_col_idx % 3].table(pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value"]))
             chart_col_idx += 1
 
+            if chart_col_idx % 3 == 1:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+            if chart_col_idx % 3 == 2:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
@@ -1011,6 +1052,14 @@ class DataViz():
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
 
+            if chart_col_idx % 3 == 1:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+            if chart_col_idx % 3 == 2:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
@@ -1024,6 +1073,14 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
+            if chart_col_idx % 3 == 1:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
+            if chart_col_idx % 3 == 2:
+                columns[chart_col_idx % 3].write(" ")
+                chart_col_idx += 1
             # fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
