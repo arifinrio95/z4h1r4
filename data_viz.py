@@ -938,6 +938,19 @@ class DataViz():
                 "Portland (Blue-Purple-Red)": "Portland",
                 "Jet (Blue-Cyan-Yellow-Red)": "Jet",
             }
+            color_palettes_dicrete = {
+                "Earth Tones": ["#a52a2a", "#654321", "#c2b280", "#808000", "#6a5acd"],
+                "Cool": ["#99e6e6", "#e6e6ff", "#a3d1ff"],
+                "Warm": ["#ffdb58", "#ffb366", "#ff7f50"],
+                "Sunset": ["#FF4500", "#FF6347", "#FF7F50", "#FF8C00", "#FFA500"],
+                "Ocean": ["#1E90FF", "#20B2AA", "#4682B4", "#5F9EA0", "#00CED1"],
+                "Forest": ["#228B22", "#006400", "#2E8B57", "#3CB371", "#32CD32"],
+                "Berry": ["#8B0000", "#B22222", "#DC143C", "#FF0000", "#FF4500"],
+                "Pastel": ["#FFDAB9", "#E6E6FA", "#FFFACD", "#D8BFD8", "#F0E68C"],
+                "Neon": ["#FF1493", "#00FF00", "#FFD700", "#FF69B4", "#00BFFF"],
+                "Monochrome": ["#2F4F4F", "#708090", "#778899", "#B0C4DE", "#F5F5F5"],
+                # ... you can further expand and add more palettes as needed
+            }
             
             st.title("Under Construct !")
             
@@ -1047,7 +1060,7 @@ class DataViz():
             selected_categorical_hue = col2.selectbox('Choose categorical column for hue', valid_categorical_cols)
             
             # Pilih palet warna
-            selected_palette = col3.selectbox("Choose a bar chart color palette:", list(color_palettes.keys()))
+            selected_palette = col3.selectbox("Choose a bar chart color palette:", list(color_palettes_dicrete.keys()))
             
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
@@ -1061,7 +1074,7 @@ class DataViz():
                              title=f'Bar Chart of {col} grouped by {selected_categorical_hue}', 
                              width=chart_width, 
                              height=chart_height,
-                             color_discrete_sequence=color_palettes[selected_palette]) # Gunakan palet warna yang terpilih
+                             color_discrete_sequence=color_palettes_dicrete[selected_palette]) # Gunakan palet warna yang terpilih
                 
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
