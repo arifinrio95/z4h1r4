@@ -1076,11 +1076,11 @@ def run_lazy_predict(X_train, X_test, y_train, y_test):
 
 def get_sample_data(dataset_name):
     """Mendapatkan sample dataset dari seaborn."""
-    if dataset_name == 'iris':
+    if dataset_name == 'Iris (Dummy Data)':
         return sns.load_dataset('iris')
-    elif dataset_name == 'tips':
+    elif dataset_name == 'Tips (Dummy Data)':
         return sns.load_dataset('tips')
-    elif dataset_name == 'titanic':
+    elif dataset_name == 'Titanic (Dummy Data)':
         return sns.load_dataset('titanic')
     # Tambahkan dataset lainnya sesuai kebutuhan
     else:
