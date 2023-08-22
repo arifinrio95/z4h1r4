@@ -853,6 +853,12 @@ class DataViz():
             chart_col_idx = 0  # counter to keep track of columns
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
+
+            def adjust_col_idx(chart_col_idx):
+                """Ensure the next set of graphs start from a new row"""
+                if chart_col_idx % 3 != 0:
+                    chart_col_idx = ((chart_col_idx // 3) + 1) * 3
+                return chart_col_idx
     
             # Histogram
             for column in self.numeric_cols:
@@ -860,7 +866,7 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            chart_col_idx = 0
+            chart_col_idx = adjust_col_idx(chart_col_idx)
             # Scatter plot with regression line
             columns[chart_col_idx % 3].write("## Scatter plot with Regression Line")
             col1, col2 = st.selectbox('Select first column', self.numeric_cols), st.selectbox('Select second column', self.numeric_cols, index=1)
@@ -869,7 +875,7 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            chart_col_idx = 0
+            chart_col_idx = adjust_col_idx(chart_col_idx)
             # Bar chart
             columns[chart_col_idx % 3].write("## Bar Chart")
             selected_numeric_col = st.selectbox('Choose numeric column for aggregation', self.numeric_cols)
@@ -879,7 +885,7 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            chart_col_idx = 0
+            chart_col_idx = adjust_col_idx(chart_col_idx)
             # Heatmap of correlation
             columns[chart_col_idx % 3].write("## Heatmap of Correlation")
             corr = self.df[self.numeric_cols].corr()
@@ -887,7 +893,7 @@ class DataViz():
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
 
-            chart_col_idx = 0
+            chart_col_idx = adjust_col_idx(chart_col_idx)
             # Chi square for Categorical Columns
             columns[chart_col_idx % 3].write("## Chi Square for Categorical Columns")
             results = []
@@ -900,7 +906,7 @@ class DataViz():
             columns[chart_col_idx % 3].table(pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value"]))
             chart_col_idx += 1
 
-            chart_col_idx = 0
+            chart_col_idx = adjust_col_idx(chart_col_idx)
             # Box plot
             columns[chart_col_idx % 3].write("## Box Plot")
             selected_column = st.selectbox('Choose numeric column for box plot', self.numeric_cols)
@@ -909,7 +915,7 @@ class DataViz():
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
 
-            chart_col_idx = 0
+            chart_col_idx = adjust_col_idx(chart_col_idx)
             # Pairplot
             columns[chart_col_idx % 3].write("## Pairplot")
             selected_columns = st.multiselect('Choose columns for pairplot', self.numeric_cols, default=self.numeric_cols[:3])
@@ -918,7 +924,7 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            chart_col_idx = 0
+            chart_col_idx = adjust_col_idx(chart_col_idx)
             # Pie chart
             columns[chart_col_idx % 3].write("## Pie Chart")
             selected_category = st.selectbox('Choose category for pie chart', self.categorical_cols, index=1)
