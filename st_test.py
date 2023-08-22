@@ -76,7 +76,7 @@ def login():
     st.markdown("---")
 
     # Kolom dengan rasio 1:2 untuk gambar dan input form
-    col1, col2 = st.beta_columns((1,2))
+    col1, col2 = st.columns((1,2))
 
     # Tambahkan gambar dari Google Drive di kolom pertama (col1)
     col1.image('LINK_GAMBAR_GOOGLE_DRIVE', use_column_width=True)
