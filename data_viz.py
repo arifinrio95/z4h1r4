@@ -11,7 +11,7 @@ from wordcloud import WordCloud, STOPWORDS
 # from nltk.tokenize import word_tokenize
 # from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer
-from PIL import Image, ImageDraw
+from scipy.stats import skew, kurtosis
 
 
 class DataViz():
@@ -996,6 +996,23 @@ class DataViz():
                 # Menambahkan garis tepi ke setiap bar histogram dengan warna yang dipilih
                 fig.update_traces(marker=dict(color=hist_color, line=dict(color=edge_color, width=1)))
                 columns[chart_col_idx % 3].plotly_chart(fig)
+
+                # Calculate skewness and kurtosis
+                col_skewness = skew(self.df[col])
+                col_kurtosis = kurtosis(self.df[col])
+            
+                # Determine the distribution type based on skewness and kurtosis
+                if abs(col_skewness) < 0.5 and abs(col_kurtosis) < 0.5:
+                    distribution_type = "approximately normal"
+                elif abs(col_skewness) > 1:
+                    distribution_type = "highly skewed"
+                elif abs(col_kurtosis) > 0.5:
+                    distribution_type = "has heavier tails than a normal distribution"
+                else:
+                    distribution_type = "moderately skewed"
+            
+                columns[chart_col_idx % 3].write(f"The distribution of {col} is {distribution_type}.")
+    
                 chart_col_idx += 1
 
             # Scatter plot with regression line
