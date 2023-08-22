@@ -3,6 +3,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+from scipy.stats import chi2_contingency
 
 
 class DataViz():
@@ -842,3 +843,74 @@ class DataViz():
 
         with tab4:
             st.write("Under Construct !")
+            # Histogram dengan density plot
+            numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+            numeric_cols = self.df.select_dtypes(include=numerics).columns
+            st.write("## Histogram and Density Plots")
+            
+            for column in numeric_cols:
+                fig, ax = plt.subplots()
+                sns.histplot(self.df[column], kde=True)
+                st.pyplot(fig)
+            
+            # Scatter plot dengan garis regresi
+            st.write("## Scatter plot with Regression Line")
+            col1, col2 = st.selectbox('Select first column', numeric_cols), st.selectbox('Select second column', numeric_cols, index=1)
+            if col1 and col2:
+                fig, ax = plt.subplots()
+                sns.regplot(x=col1, y=col2, data=self.df)
+                st.pyplot(fig)
+            
+            # Bar chart
+            categorical_cols = self.df.select_dtypes(exclude=numerics).columns
+            st.write("## Bar Chart")
+            selected_numeric_col = st.selectbox('Choose numeric column for aggregation', numeric_cols)
+            selected_categorical_hue = st.selectbox('Choose categorical column for hue', categorical_cols)
+            for col in categorical_cols:
+                fig, ax = plt.subplots()
+                sns.barplot(x=col, y=selected_numeric_col, hue=selected_categorical_hue, data=self.df)
+                st.pyplot(fig)
+            
+            # Heatmap korelasi
+            st.write("## Heatmap of Correlation")
+            corr = self.df[numeric_cols].corr()
+            fig, ax = plt.subplots(figsize=(10, 8))
+            sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm')
+            st.pyplot(fig)
+            
+            # Chi square
+            st.write("## Chi Square for Categorical Columns")
+            results = []
+            for col1 in categorical_cols:
+                for col2 in categorical_cols:
+                    if col1 != col2:
+                        contingency = pd.crosstab(self.df[col1], self.df[col2])
+                        chi2, p, _, _ = chi2_contingency(contingency)
+                        results.append((col1, col2, chi2, p))
+            st.write(pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value"]))
+            
+            # Box plot
+            st.write("## Box Plot")
+            selected_column = st.selectbox('Choose numeric column for box plot', numeric_cols)
+            selected_category = st.selectbox('Choose category for x-axis', categorical_cols)
+            fig, ax = plt.subplots()
+            sns.boxplot(x=selected_category, y=selected_column, data=self.df)
+            st.pyplot(fig)
+            
+            # Pairplot
+            st.write("## Pairplot")
+            selected_columns = st.multiselect('Choose columns for pairplot', numeric_cols, default=numeric_cols[:3])
+            if selected_columns:
+                fig = sns.pairplot(self.df[selected_columns])
+                st.pyplot(fig)
+            
+            # Pie chart
+            st.write("## Pie Chart")
+            selected_category = st.selectbox('Choose category for pie chart', categorical_cols, index=1)
+            fig, ax = plt.subplots()
+            self.df[selected_category].value_counts().plot.pie(autopct='%1.1f%%')
+            st.pyplot(fig)
+            
+            # Interactive table
+            st.write("## Interactive Table")
+            st.write(self.df)
