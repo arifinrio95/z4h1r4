@@ -973,15 +973,16 @@ class DataViz():
 
             # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
+            col1, col2, col3, col4 = st.columns(4)
 
             # Membiarkan pengguna memilih warna dengan default pilihan
-            scatter_color_choice = st.selectbox(
+            scatter_color_choice = col1.selectbox(
                 "Choose color for scatter points:", 
                 list(color_map.keys()), 
                 index=list(color_map.keys()).index("Sage")  # Default ke "Terracotta"
             )
             
-            line_color_choice = st.selectbox(
+            line_color_choice = col2.selectbox(
                 "Choose color for regression line:", 
                 list(color_map.keys()), 
                 index=list(color_map.keys()).index("Umber")  # Default ke "Umber"
@@ -1020,8 +1021,9 @@ class DataViz():
 
             # Bar chart
             st.write("## Bar Chart")
-            selected_numeric_col = st.selectbox('Choose numeric column for aggregation', self.numeric_cols)
-            selected_categorical_hue = st.selectbox('Choose categorical column for hue', self.categorical_cols)
+            col1, col2, col3, col4 = st.columns(4)
+            selected_numeric_col = col1.selectbox('Choose numeric column for aggregation', self.numeric_cols)
+            selected_categorical_hue = col2.selectbox('Choose categorical column for hue', self.categorical_cols)
             
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
