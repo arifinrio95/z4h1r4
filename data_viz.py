@@ -951,6 +951,7 @@ class DataViz():
 
             # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
+
             
             # Membiarkan pengguna memilih warna dengan default pilihan
             scatter_color_choice = st.selectbox(
@@ -967,7 +968,17 @@ class DataViz():
             
             scatter_color = color_map[scatter_color_choice]
             line_color = color_map[line_color_choice]
+
+            left_col, center_col, right_col = st.columns(3)
+            columns = [left_col, center_col, right_col]
+            chart_col_idx = 0
+
+            # Filter kolom numerik yang uniq valuenya di atas 10
+            filtered_cols = [col for col in self.numeric_cols if self.df[col].nunique() > 10]
             
+            # Membuat semua kombinasi dari kolom numerik yang telah difilter
+            from itertools import combinations
+            combinations_list = list(combinations(filtered_cols, 2))
             for col1, col2 in combinations_list:
                 fig = px.scatter(
                     self.df, 
