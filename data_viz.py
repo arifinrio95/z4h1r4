@@ -1011,7 +1011,7 @@ class DataViz():
                 else:
                     distribution_type = "moderately skewed"
             
-                columns[chart_col_idx % 3].write(f"The distribution of {col} is {distribution_type}.")
+                columns[chart_col_idx % 3].markdown(f"<sub>The distribution of {col} is {distribution_type}.</sub>", unsafe_allow_html=True)
     
                 chart_col_idx += 1
 
