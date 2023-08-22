@@ -1129,11 +1129,12 @@ class DataViz():
                             explanation = "Statistically Significant"
                         else:
                             correlation_strength = "Low"
-                            explanation = "Not Statistically Significantk"
+                            explanation = "Not Statistically Significant"
                         
                         results.append((col1, col2, chi2, p, correlation_strength, explanation))
             
             results_df = pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value", "Correlation Streght", "Description"])
+            results_df = results_df.sort_values(by='P Value')
             
             # Color the cells with high correlation
             def color_cells(val):
