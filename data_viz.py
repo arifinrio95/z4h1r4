@@ -944,7 +944,7 @@ class DataViz():
 
             # fill_empty_columns(chart_col_idx, columns)
             while chart_col_idx % 3 != 3:
-                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
                     chart_col_idx += 1
             chart_col_idx = 0
             # Scatter plot with regression line
@@ -957,7 +957,7 @@ class DataViz():
 
             # fill_empty_columns(chart_col_idx, columns)
             while chart_col_idx % 3 != 3:
-                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
                     chart_col_idx += 1
             chart_col_idx = 0
             # Bar chart
@@ -971,7 +971,7 @@ class DataViz():
 
             # fill_empty_columns(chart_col_idx, columns)
             while chart_col_idx % 3 != 3:
-                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
                     chart_col_idx += 1
             chart_col_idx = 0
             # Heatmap of correlation
@@ -983,7 +983,7 @@ class DataViz():
 
             # fill_empty_columns(chart_col_idx, columns)
             while chart_col_idx % 3 != 3:
-                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
                     chart_col_idx += 1
             chart_col_idx = 0
             # Chi square for Categorical Columns
@@ -1000,7 +1000,7 @@ class DataViz():
 
             # fill_empty_columns(chart_col_idx, columns)
             while chart_col_idx % 3 != 3:
-                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
                     chart_col_idx += 1
             chart_col_idx = 0
             # Box plot
@@ -1013,7 +1013,7 @@ class DataViz():
 
             # fill_empty_columns(chart_col_idx, columns)
             while chart_col_idx % 3 != 3:
-                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
                     chart_col_idx += 1
             chart_col_idx = 0
             # Pairplot
@@ -1026,7 +1026,7 @@ class DataViz():
 
             # fill_empty_columns(chart_col_idx, columns)
             while chart_col_idx % 3 != 3:
-                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
                     chart_col_idx += 1
             chart_col_idx = 0
             # Pie chart
