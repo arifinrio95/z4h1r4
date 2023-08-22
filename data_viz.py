@@ -920,10 +920,10 @@ class DataViz():
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
 
-            def fill_empty_columns(chart_col_idx, columns):
-                while chart_col_idx % 3 != 3:
-                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
-                    chart_col_idx += 1
+            # def fill_empty_columns(chart_col_idx, columns):
+            #     while chart_col_idx % 3 != 3:
+            #         columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+            #         chart_col_idx += 1
 
     
             # Histogram
@@ -942,7 +942,10 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            fill_empty_columns(chart_col_idx, columns)
+            # fill_empty_columns(chart_col_idx, columns)
+            while chart_col_idx % 3 != 3:
+                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    chart_col_idx += 1
             chart_col_idx = 0
             # Scatter plot with regression line
             columns[chart_col_idx % 3].write("## Scatter plot with Regression Line")
@@ -952,7 +955,10 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            fill_empty_columns(chart_col_idx, columns)
+            # fill_empty_columns(chart_col_idx, columns)
+            while chart_col_idx % 3 != 3:
+                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    chart_col_idx += 1
             chart_col_idx = 0
             # Bar chart
             columns[chart_col_idx % 3].write("## Bar Chart")
@@ -963,7 +969,10 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            fill_empty_columns(chart_col_idx, columns)
+            # fill_empty_columns(chart_col_idx, columns)
+            while chart_col_idx % 3 != 3:
+                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    chart_col_idx += 1
             chart_col_idx = 0
             # Heatmap of correlation
             columns[chart_col_idx % 3].write("## Heatmap of Correlation")
@@ -972,7 +981,10 @@ class DataViz():
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
 
-            fill_empty_columns(chart_col_idx, columns)
+            # fill_empty_columns(chart_col_idx, columns)
+            while chart_col_idx % 3 != 3:
+                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    chart_col_idx += 1
             chart_col_idx = 0
             # Chi square for Categorical Columns
             columns[chart_col_idx % 3].write("## Chi Square for Categorical Columns")
@@ -986,7 +998,10 @@ class DataViz():
             columns[chart_col_idx % 3].table(pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value"]))
             chart_col_idx += 1
 
-            fill_empty_columns(chart_col_idx, columns)
+            # fill_empty_columns(chart_col_idx, columns)
+            while chart_col_idx % 3 != 3:
+                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    chart_col_idx += 1
             chart_col_idx = 0
             # Box plot
             columns[chart_col_idx % 3].write("## Box Plot")
@@ -996,7 +1011,10 @@ class DataViz():
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
 
-            fill_empty_columns(chart_col_idx, columns)
+            # fill_empty_columns(chart_col_idx, columns)
+            while chart_col_idx % 3 != 3:
+                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    chart_col_idx += 1
             chart_col_idx = 0
             # Pairplot
             columns[chart_col_idx % 3].write("## Pairplot")
@@ -1006,7 +1024,10 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            fill_empty_columns(chart_col_idx, columns)
+            # fill_empty_columns(chart_col_idx, columns)
+            while chart_col_idx % 3 != 3:
+                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
+                    chart_col_idx += 1
             chart_col_idx = 0
             # Pie chart
             columns[chart_col_idx % 3].write("## Pie Chart")
