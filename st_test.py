@@ -81,7 +81,7 @@ def login():
     hashed_pswd = make_hashes("test")
 
     # Ketika tombol diklik
-    if st.button("Login"):
+    if st.button("Login", key='login_button'):
         if 'button_clicked' in st.session_state and st.session_state.button_clicked:
             if check_hashes(password, hashed_pswd):
                 st.session_state.logged = True
