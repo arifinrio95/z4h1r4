@@ -943,20 +943,20 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            if chart_col_idx % 3 == 1:
-                columns[chart_col_idx % 3].write('intentionally left blank')
-                chart_col_idx += 1
-                columns[chart_col_idx % 3].write('intentionally left blank')
-                chart_col_idx += 1
-            if chart_col_idx % 3 == 2:
-                columns[chart_col_idx % 3].write('intentionally left blank')
-                chart_col_idx += 1
+            # if chart_col_idx % 3 == 1:
+            #     columns[chart_col_idx % 3].write('intentionally left blank')
+            #     chart_col_idx += 1
+            #     columns[chart_col_idx % 3].write('intentionally left blank')
+            #     chart_col_idx += 1
+            # if chart_col_idx % 3 == 2:
+            #     columns[chart_col_idx % 3].write('intentionally left blank')
+            #     chart_col_idx += 1
             
-            # fill_empty_columns(chart_col_idx, columns)
+            fill_empty_columns(chart_col_idx, columns)
             # while chart_col_idx % 3 != 3:
             #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
             #         chart_col_idx += 1
-            # chart_col_idx = 0
+            chart_col_idx = 0
             # Scatter plot with regression line
             columns[chart_col_idx % 3].write("## Scatter plot with Regression Line")
             col1, col2 = st.selectbox('Select first column', self.numeric_cols), st.selectbox('Select second column', self.numeric_cols, index=1)
