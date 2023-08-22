@@ -863,7 +863,7 @@ class DataViz():
             # Histogram
             for column in self.numeric_cols:
                 fig = px.histogram(
-                    df, 
+                    self.df, 
                     x=column, 
                     marginal="box", 
                     nbins=40, 
