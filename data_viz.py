@@ -932,7 +932,7 @@ class DataViz():
                     x=col, 
                     marginal="box", 
                     nbins=40, 
-                    title=f'Histogram of {column}', 
+                    title=f'Histogram of {col}', 
                     width=chart_width, 
                     height=chart_height
                 )
