@@ -862,7 +862,17 @@ class DataViz():
     
             # Histogram
             for column in self.numeric_cols:
-                fig = px.histogram(self.df, x=column, marginal="box", nbins=40, title=f'Histogram of {column}', width=chart_width, height=chart_height)
+                fig = px.histogram(
+                    df, 
+                    x=column, 
+                    marginal="box", 
+                    nbins=40, 
+                    title=f'Histogram of {column}', 
+                    width=chart_width, 
+                    height=chart_height
+                )
+                # Menambahkan garis tepi ke setiap bar histogram
+                fig.update_traces(marker=dict(line=dict(color='black', width=1)))
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
