@@ -1120,7 +1120,7 @@ def main():
     # try:
     if df is not None:
         load_df = LoadDataframe(df)
-        global df
+        # global df
         df = load_df.load_file_auto_delimiter()
         
         df.to_csv("temp_file.csv", index=False)
