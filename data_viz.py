@@ -912,39 +912,7 @@ class DataViz():
 
             # st.write('---')
 
-        with tab4:
-            def create_empty_chart(width, height):
-                """
-                Membuat dan mengembalikan sebuah figure kosong dengan lebar dan tinggi yang ditentukan.
-            
-                Args:
-                - width (int): Lebar dari chart.
-                - height (int): Tinggi dari chart.
-            
-                Returns:
-                - go.Figure: Sebuah figure kosong dengan judul berupa string kosong.
-                """
-                
-                # Membuat figure kosong
-                fig = go.Figure()
-            
-                # Menonaktifkan sumbu x dan y
-                fig.update_layout(
-                    title="",  # Judul berupa string kosong
-                    showlegend=False, 
-                    xaxis_showgrid=False, 
-                    yaxis_showgrid=False,
-                    xaxis_zeroline=False, 
-                    yaxis_zeroline=False,
-                    xaxis_visible=False, 
-                    yaxis_visible=False
-                )
-            
-                # Mengatur ukuran
-                fig.update_layout(width=width, height=height)
-    
-                return fig
-                
+        with tab4:      
             st.title("Under Construct !")
             # Initialize the columns
             left_col, center_col, right_col = st.columns(3)
@@ -952,17 +920,7 @@ class DataViz():
             chart_col_idx = 0  # counter to keep track of columns
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
-            img = Image.new('RGB', (300, 400), color = (255, 255, 255))
-            
-            # def fill_empty_columns(chart_col_idx, columns):
-            #     while chart_col_idx % 3 != 0:
-            #         # columns[chart_col_idx % 3].image(img)  # Mengisi dengan konten kosong
-            #         # chart_col_idx += 1
-            #         empty_chart = create_empty_chart(300, 400)
-            #         st.plotly_chart(empty_chart)
-            #         chart_col_idx += 1
-            
-    
+
             # Histogram
             for col in self.numeric_cols:
                 fig = px.histogram(
@@ -979,48 +937,32 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            # if chart_col_idx % 3 == 1:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # if chart_col_idx % 3 == 2:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            
-            # fill_empty_columns(chart_col_idx, columns)
-            # while chart_col_idx % 3 != 3:
-            #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
-            #         chart_col_idx += 1
-            # st.write('Garis batas histogram (testing)')
-            
             # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
-            col1, col2 = st.selectbox('Select first column', self.numeric_cols), st.selectbox('Select second column', self.numeric_cols, index=1)
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
             
+            # Filter kolom numerik yang uniq valuenya di atas 10
+            filtered_cols = [col for col in self.numeric_cols if self.df[col].nunique() > 10]
             
-            if col1 and col2:
-                fig = px.scatter(self.df, x=col1, y=col2, trendline="ols", title=f'Scatter plot of {col1} vs {col2}', width=chart_width, height=chart_height)
+            # Membuat semua kombinasi dari kolom numerik yang telah difilter
+            from itertools import combinations
+            combinations_list = list(combinations(filtered_cols, 2))
+            
+            for col1, col2 in combinations_list:
+                fig = px.scatter(
+                    self.df, 
+                    x=col1, 
+                    y=col2, 
+                    trendline="ols", 
+                    title=f'Scatter plot of {col1} vs {col2}', 
+                    width=chart_width, 
+                    height=chart_height
+                )
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            # if chart_col_idx % 3 == 1:
-            #     columns[chart_col_idx % 3].image(img)
-            #     chart_col_idx += 1
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # if chart_col_idx % 3 == 2:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # fill_empty_columns(chart_col_idx, columns)
-            # st.write('----------------------------------')
-            # while chart_col_idx % 3 != 3:
-            #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
-            #         chart_col_idx += 1
-            # chart_col_idx = 0
             # Bar chart
             st.write("## Bar Chart")
             selected_numeric_col = st.selectbox('Choose numeric column for aggregation', self.numeric_cols)
@@ -1036,20 +978,6 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            # if chart_col_idx % 3 == 1:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # if chart_col_idx % 3 == 2:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # fill_empty_columns(chart_col_idx, columns)
-            # st.write('----------------------------------')
-            # while chart_col_idx % 3 != 3:
-            #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
-            #         chart_col_idx += 1
-            # chart_col_idx = 0
             # Heatmap of correlation
             st.write("## Heatmap of Correlation")
             left_col, center_col, right_col = st.columns(3)
@@ -1061,20 +989,6 @@ class DataViz():
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
 
-            # if chart_col_idx % 3 == 1:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # if chart_col_idx % 3 == 2:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # fill_empty_columns(chart_col_idx, columns)
-            # st.write('----------------------------------')
-            # while chart_col_idx % 3 != 3:
-            #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
-            #         chart_col_idx += 1
-            # chart_col_idx = 0
             # Chi square for Categorical Columns
             st.write("## Chi Square for Categorical Columns")
             left_col, center_col, right_col = st.columns(3)
@@ -1091,20 +1005,6 @@ class DataViz():
             columns[chart_col_idx % 3].table(pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value"]))
             chart_col_idx += 1
 
-            # if chart_col_idx % 3 == 1:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # if chart_col_idx % 3 == 2:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # fill_empty_columns(chart_col_idx, columns)
-            # st.write('----------------------------------')
-            # while chart_col_idx % 3 != 3:
-            #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
-            #         chart_col_idx += 1
-            # chart_col_idx = 0
             # Box plot
             st.write("## Box Plot")
             selected_column = st.selectbox('Choose numeric column for box plot', self.numeric_cols)
@@ -1118,20 +1018,6 @@ class DataViz():
             columns[chart_col_idx % 3].plotly_chart(fig)
             chart_col_idx += 1
 
-            # if chart_col_idx % 3 == 1:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # if chart_col_idx % 3 == 2:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # fill_empty_columns(chart_col_idx, columns)
-            # st.write('----------------------------------')
-            # while chart_col_idx % 3 != 3:
-            #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
-            #         chart_col_idx += 1
-            # chart_col_idx = 0
             # Pairplot
             st.write("## Pairplot")
             selected_columns = st.multiselect('Choose columns for pairplot', self.numeric_cols, default=self.numeric_cols[:3])
@@ -1145,20 +1031,6 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            # if chart_col_idx % 3 == 1:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # if chart_col_idx % 3 == 2:
-            #     columns[chart_col_idx % 3].write('intentionally left blank')
-            #     chart_col_idx += 1
-            # fill_empty_columns(chart_col_idx, columns)
-            # st.write('----------------------------------')
-            # while chart_col_idx % 3 != 3:
-            #         columns[chart_col_idx % 3].write(" ")  # Mengisi dengan konten kosong
-            #         chart_col_idx += 1
-            # chart_col_idx = 0
             # Pie chart
             st.write("## Pie Chart")
             selected_category = st.selectbox('Choose category for pie chart', self.categorical_cols, index=1)
