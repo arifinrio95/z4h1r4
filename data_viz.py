@@ -959,6 +959,7 @@ class DataViz():
                     # chart_col_idx += 1
                     empty_chart = create_empty_chart(300, 400)
                     st.plotly_chart(empty_chart)
+                    chart_col_idx += 1
             
     
             # Histogram
