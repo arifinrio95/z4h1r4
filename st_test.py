@@ -1076,12 +1076,12 @@ def main():
 
         st.sidebar.subheader('Pilih metode eksplorasi:')
         # Tombol 1
-        # if st.sidebar.button('1. Eksplorasi data secara manual (menggunakan D-Tale)'):
-        #     st.session_state.manual_exploration = True
-        #     st.session_state.auto_exploration = False
-        #     st.session_state.show_analisis_lanjutan = False
-        #     st.session_state.show_natural_language_exploration = False
-        #     st.session_state.story_telling = False
+        if st.sidebar.button('🕵️ Explore Visualization & Insight with Ulik Data - Under Maintenance', key='my-btn0'):
+            st.session_state.manual_exploration = True
+            st.session_state.auto_exploration = False
+            st.session_state.show_analisis_lanjutan = False
+            st.session_state.show_natural_language_exploration = False
+            st.session_state.story_telling = False
 
         
         # Tombol 2
@@ -1258,6 +1258,10 @@ def main():
         #         # st.write("The Script:")
         #         # st.text(script)
         #         input_pengguna = ""
+
+        if st.session_state.get('manual_exploration', False):
+            dataviz.visualization()
+             
         if st.session_state.get('auto_exploration', False):
             # st.subheader("Pandas Profiling Report")
             # Create Pandas Profiling Report
