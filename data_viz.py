@@ -1026,7 +1026,7 @@ class DataViz():
             st.write("## Bar Chart")
             
             # Filter kolom numerik yang memiliki nilai unik tidak lebih dari 20
-            valid_numeric_cols = [col for col in self.numeric_cols if self.df[col].nunique() <= 20]
+            valid_numeric_cols = [col for col in self.numeric_cols]
             valid_categorical_cols = [col for col in self.categorical_cols if self.df[col].nunique() <= 20]
             
             col1, col2, col3, col4 = st.columns(4)
