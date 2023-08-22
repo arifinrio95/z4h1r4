@@ -58,38 +58,6 @@ class DataViz():
             ]
 
         return " ".join(words)
-
-    def create_empty_chart(width, height):
-        """
-        Membuat dan mengembalikan sebuah figure kosong dengan lebar dan tinggi yang ditentukan.
-    
-        Args:
-        - width (int): Lebar dari chart.
-        - height (int): Tinggi dari chart.
-    
-        Returns:
-        - go.Figure: Sebuah figure kosong dengan judul berupa string kosong.
-        """
-        
-        # Membuat figure kosong
-        fig = go.Figure()
-    
-        # Menonaktifkan sumbu x dan y
-        fig.update_layout(
-            title="",  # Judul berupa string kosong
-            showlegend=False, 
-            xaxis_showgrid=False, 
-            yaxis_showgrid=False,
-            xaxis_zeroline=False, 
-            yaxis_zeroline=False,
-            xaxis_visible=False, 
-            yaxis_visible=False
-        )
-    
-        # Mengatur ukuran
-        fig.update_layout(width=width, height=height)
-    
-        return fig
                             
     def visualization(self):
         st.title("Auto Data Viz & Insight by Ulik Data")
@@ -945,6 +913,38 @@ class DataViz():
             # st.write('---')
 
         with tab4:
+            def create_empty_chart(width, height):
+                """
+                Membuat dan mengembalikan sebuah figure kosong dengan lebar dan tinggi yang ditentukan.
+            
+                Args:
+                - width (int): Lebar dari chart.
+                - height (int): Tinggi dari chart.
+            
+                Returns:
+                - go.Figure: Sebuah figure kosong dengan judul berupa string kosong.
+                """
+                
+                # Membuat figure kosong
+                fig = go.Figure()
+            
+                # Menonaktifkan sumbu x dan y
+                fig.update_layout(
+                    title="",  # Judul berupa string kosong
+                    showlegend=False, 
+                    xaxis_showgrid=False, 
+                    yaxis_showgrid=False,
+                    xaxis_zeroline=False, 
+                    yaxis_zeroline=False,
+                    xaxis_visible=False, 
+                    yaxis_visible=False
+                )
+            
+                # Mengatur ukuran
+                fig.update_layout(width=width, height=height)
+    
+                return fig
+                
             st.title("Under Construct !")
             # Initialize the columns
             left_col, center_col, right_col = st.columns(3)
