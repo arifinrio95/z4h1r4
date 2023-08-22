@@ -855,7 +855,7 @@ class DataViz():
             chart_height = 400  # height of the chart
 
             def fill_empty_columns(chart_col_idx, columns):
-                while chart_col_idx % 3 != 0:
+                while chart_col_idx % 3 != 2:
                     columns[chart_col_idx % 3].write("")  # Mengisi dengan konten kosong
                     chart_col_idx += 1
 
