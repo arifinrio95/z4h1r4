@@ -1116,10 +1116,6 @@ class DataViz():
 
             # Chi square for Categorical Columns
             st.write("## Chi Square for Categorical Columns")
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0
-            
             results = []
             
             for col1 in self.categorical_cols:
@@ -1148,8 +1144,7 @@ class DataViz():
             
             styled_df = results_df.style.applymap(color_cells, subset=["Kekuatan Korelasi"])
             
-            columns[chart_col_idx % 3].write(styled_df)
-            chart_col_idx += 1
+            st.write(styled_df)
 
 
             # Box plot
