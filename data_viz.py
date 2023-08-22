@@ -65,7 +65,7 @@ class DataViz():
         return " ".join(words)
                             
     def visualization(self):
-        st.markdown("<h1 style='text-align: center; color: black;'>Automated Data Visualizations (by Ulikdata)</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; color: #4F4F4F;'>Automated Data Visualizations (by Ulikdata)</h1>", unsafe_allow_html=True)
 
         tab1, tab2, tab3, tab4 = st.tabs([
             'Simple Business Viz', 'Simple Statistical Viz', 'Advanced Plot',
