@@ -942,7 +942,7 @@ class DataViz():
                 chart_col_idx += 1
 
             fill_empty_columns(chart_col_idx, columns)
-            # chart_col_idx = 0
+            chart_col_idx = 0
             # Scatter plot with regression line
             columns[chart_col_idx % 3].write("## Scatter plot with Regression Line")
             col1, col2 = st.selectbox('Select first column', self.numeric_cols), st.selectbox('Select second column', self.numeric_cols, index=1)
@@ -952,7 +952,7 @@ class DataViz():
                 chart_col_idx += 1
 
             fill_empty_columns(chart_col_idx, columns)
-            # chart_col_idx = 0
+            chart_col_idx = 0
             # Bar chart
             columns[chart_col_idx % 3].write("## Bar Chart")
             selected_numeric_col = st.selectbox('Choose numeric column for aggregation', self.numeric_cols)
@@ -963,7 +963,7 @@ class DataViz():
                 chart_col_idx += 1
 
             fill_empty_columns(chart_col_idx, columns)
-            # chart_col_idx = 0
+            chart_col_idx = 0
             # Heatmap of correlation
             columns[chart_col_idx % 3].write("## Heatmap of Correlation")
             corr = self.df[self.numeric_cols].corr()
@@ -972,7 +972,7 @@ class DataViz():
             chart_col_idx += 1
 
             fill_empty_columns(chart_col_idx, columns)
-            # chart_col_idx = 0
+            chart_col_idx = 0
             # Chi square for Categorical Columns
             columns[chart_col_idx % 3].write("## Chi Square for Categorical Columns")
             results = []
@@ -986,7 +986,7 @@ class DataViz():
             chart_col_idx += 1
 
             fill_empty_columns(chart_col_idx, columns)
-            # chart_col_idx = 0
+            chart_col_idx = 0
             # Box plot
             columns[chart_col_idx % 3].write("## Box Plot")
             selected_column = st.selectbox('Choose numeric column for box plot', self.numeric_cols)
@@ -996,7 +996,7 @@ class DataViz():
             chart_col_idx += 1
 
             fill_empty_columns(chart_col_idx, columns)
-            # chart_col_idx = 0
+            chart_col_idx = 0
             # Pairplot
             columns[chart_col_idx % 3].write("## Pairplot")
             selected_columns = st.multiselect('Choose columns for pairplot', self.numeric_cols, default=self.numeric_cols[:3])
@@ -1006,7 +1006,7 @@ class DataViz():
                 chart_col_idx += 1
 
             fill_empty_columns(chart_col_idx, columns)
-            # chart_col_idx = 0
+            chart_col_idx = 0
             # Pie chart
             columns[chart_col_idx % 3].write("## Pie Chart")
             selected_category = st.selectbox('Choose category for pie chart', self.categorical_cols, index=1)
