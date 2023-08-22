@@ -856,7 +856,7 @@ class DataViz():
 
             def fill_empty_columns(chart_col_idx, columns):
                 while chart_col_idx % 3 != 3:
-                    columns[chart_col_idx % 3].write("")  # Mengisi dengan konten kosong
+                    columns[chart_col_idx % 3].empty()  # Mengisi dengan konten kosong
                     chart_col_idx += 1
 
     
