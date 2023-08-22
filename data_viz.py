@@ -1054,12 +1054,13 @@ class DataViz():
                 fig = px.bar(self.df, x=col, y=selected_numeric_col, color=selected_categorical_hue, title=f'Bar Chart of {col} grouped by {selected_categorical_hue}', width=chart_width, height=chart_height)
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
-
+            
             # Heatmap of correlation
+            title_placeholder = st.empty()
             correlation_methods = ["pearson", "kendall", "spearman"]
             selected_method = st.selectbox("Choose a correlation method:", correlation_methods)
             selected_palette = st.selectbox("Choose a heatmap color palette:", list(color_palettes.keys()))
-            st.write(f"## Heatmap of {selected_method.capitalize()} Correlation")
+            title_placeholder.write(f"## Heatmap of {selected_method.capitalize()} Correlation")
             corr = self.df[self.numeric_cols].corr(method=selected_method)
             fig = ff.create_annotated_heatmap(
                 z=corr.values, 
