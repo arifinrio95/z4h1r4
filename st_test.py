@@ -1315,7 +1315,7 @@ def main():
     openai.api_key = st.secrets['user_api']
 
     # try:
-    if df is not None:
+    if not df.empty:
         # load_df = LoadDataframe(df)
         # # global df
         # df = load_df.load_file_auto_delimiter()
