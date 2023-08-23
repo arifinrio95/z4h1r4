@@ -339,7 +339,9 @@ def request_story_prompt(schema_str, rows_str, min_viz, style='Plotly'):
     }]
     # Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
     #
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
+    response = openai.ChatCompletion.create(
+                                            # model="gpt-3.5-turbo",
+                                            model="gpt-4",
                                             messages=messages,
                                             max_tokens=3000,
                                             temperature=0)
