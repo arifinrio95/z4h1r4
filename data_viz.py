@@ -1218,49 +1218,49 @@ class DataViz():
                 chart_col_idx += 1
 
             # Line Plots
-            def plot_line_charts(self, chart_width=400, chart_height=400):
-                st.write("## Line Plots")
-                
-                # Filter integer and date columns based on unique value criteria
-                valid_integer_cols_for_line = [col for col in self.integer_cols if self.df[col].nunique() > 20]
-                valid_date_cols_for_line = [col for col in self.date_cols if self.df[col].nunique() > 20]
-                
-                # Aggregation options for numeric columns
-                agg_option = st.selectbox("Select aggregation for Y-axis:", ['mean', 'median', 'sum'])
-                
-                # Columns for layout
-                left_col, center_col, right_col = st.columns(3)
-                columns = [left_col, center_col, right_col]
-                chart_col_idx = 0
+            # def plot_line_charts(self, chart_width=400, chart_height=400):
+            st.write("## Line Plots")
+            
+            # Filter integer and date columns based on unique value criteria
+            valid_integer_cols_for_line = [col for col in self.integer_cols if self.df[col].nunique() > 20]
+            valid_date_cols_for_line = [col for col in self.date_cols if self.df[col].nunique() > 20]
+            
+            # Aggregation options for numeric columns
+            agg_option = st.selectbox("Select aggregation for Y-axis:", ['mean', 'median', 'sum'])
+            
+            # Columns for layout
+            left_col, center_col, right_col = st.columns(3)
+            columns = [left_col, center_col, right_col]
+            chart_col_idx = 0
+    
+            # Plot line plots for integer columns vs numeric columns
+            for int_col in valid_integer_cols_for_line:
+                for num_col in self.numeric_cols:
+                    fig = self.create_line_plot(int_col, num_col, agg_option, chart_width, chart_height)
+                    columns[chart_col_idx % 3].plotly_chart(fig)
+                    chart_col_idx += 1
+            
+            # Plot line plots for date columns vs numeric columns
+            for date_col in valid_date_cols_for_line:
+                for num_col in self.numeric_cols:
+                    fig = self.create_line_plot(date_col, num_col, agg_option, chart_width, chart_height)
+                    columns[chart_col_idx % 3].plotly_chart(fig)
+                    chart_col_idx += 1
         
-                # Plot line plots for integer columns vs numeric columns
-                for int_col in valid_integer_cols_for_line:
-                    for num_col in self.numeric_cols:
-                        fig = self.create_line_plot(int_col, num_col, agg_option, chart_width, chart_height)
-                        columns[chart_col_idx % 3].plotly_chart(fig)
-                        chart_col_idx += 1
-                
-                # Plot line plots for date columns vs numeric columns
-                for date_col in valid_date_cols_for_line:
-                    for num_col in self.numeric_cols:
-                        fig = self.create_line_plot(date_col, num_col, agg_option, chart_width, chart_height)
-                        columns[chart_col_idx % 3].plotly_chart(fig)
-                        chart_col_idx += 1
+            # def create_line_plot(self, x_col, y_col, aggregation, chart_width, chart_height):
+            if aggregation == 'mean':
+                df_agg = self.df.groupby(x_col)[y_col].mean().reset_index()
+            elif aggregation == 'median':
+                df_agg = self.df.groupby(x_col)[y_col].median().reset_index()
+            else: # sum
+                df_agg = self.df.groupby(x_col)[y_col].sum().reset_index()
+    
+            fig = px.line(df_agg, x=x_col, y=y_col, title=f'Line Plot of {y_col} by {x_col} (Aggregated by {aggregation})', width=chart_width, height=chart_height)
+                # return fig
         
-            def create_line_plot(self, x_col, y_col, aggregation, chart_width, chart_height):
-                if aggregation == 'mean':
-                    df_agg = self.df.groupby(x_col)[y_col].mean().reset_index()
-                elif aggregation == 'median':
-                    df_agg = self.df.groupby(x_col)[y_col].median().reset_index()
-                else: # sum
-                    df_agg = self.df.groupby(x_col)[y_col].sum().reset_index()
-        
-                fig = px.line(df_agg, x=x_col, y=y_col, title=f'Line Plot of {y_col} by {x_col} (Aggregated by {aggregation})', width=chart_width, height=chart_height)
-                return fig
-        
-        # Usage:
-        
-        # Assuming your dataframe is called df
-        plotter = Plotter(df)
-        plotter.plot_line_charts()
+            # Usage:
+            
+            # Assuming your dataframe is called df
+            # plotter = Plotter(df)
+            # plotter.plot_line_charts()
 
