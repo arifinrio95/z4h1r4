@@ -308,7 +308,7 @@ def request_prompt(input_pengguna,
 
 
 # Jangan diubah yg ini
-def request_story_prompt(schema_str, rows_str, min_viz, style='Plotly'):
+def request_story_prompt(schema_str, rows_str, min_viz, api_model, style='Plotly'):
     # messages = [
     #     {"role": "system", "content": "Aku akan membuat laporan untukmu."},
     #     {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}.
@@ -339,13 +339,22 @@ def request_story_prompt(schema_str, rows_str, min_viz, style='Plotly'):
     }]
     # Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
     #
-    response = openai.ChatCompletion.create(
-                                            # model="gpt-3.5-turbo",
-                                            model="gpt-4",
-                                            messages=messages,
-                                            max_tokens=3000,
-                                            temperature=0)
-    script = response.choices[0].message['content']
+    if api_model == 'GPT3.5':
+        response = openai.ChatCompletion.create(
+                                                model="gpt-3.5-turbo",
+                                                # model="gpt-4",
+                                                messages=messages,
+                                                max_tokens=3000,
+                                                temperature=0)
+        script = response.choices[0].message['content']
+    else:
+        response = openai.ChatCompletion.create(
+                                                # model="gpt-3.5-turbo",
+                                                model="gpt-4",
+                                                messages=messages,
+                                                max_tokens=3000,
+                                                temperature=0)
+        script = response.choices[0].message['content']
 
     return script
 
@@ -1707,13 +1716,16 @@ def main():
             style_choosen = st.selectbox(
                 'Choose a Visualization Style:',
                 ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
-
+            api_model = st.selectbox(
+                'Choose LLM Model:',
+                ('GPT4', 'GPT3.5'))
+            
             button = st.button("Submit")
             if button:
                 # Membagi respons berdasarkan tanda awal dan akhir kode
                 with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
                     response = request_story_prompt(schema_str, rows_str,
-                                                    min_viz, style_choosen)
+                                                    min_viz, api_model, style_choosen)
                     # st.text(response)
                     # Extracting the introductions
                     # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
