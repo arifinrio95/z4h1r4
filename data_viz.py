@@ -995,7 +995,7 @@ class DataViz():
                     color_discrete_sequence=[hist_color],
                     width=chart_width, 
                     height=chart_height
-                )
+                ),
                 fig.update_layout(
                     title={
                         'font': {'size': 12}  # Increase font size for title
