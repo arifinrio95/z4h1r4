@@ -1360,10 +1360,21 @@ class DataViz():
             # Line Plots
             st.write("## Line Plots")
 
-            # Filter integer and date columns based on unique value criteria
+            def is_arithmetic_sequence(lst):
+                if len(lst) < 2:
+                    return False
+                diff = lst[1] - lst[0]
+                for i in range(2, len(lst)):
+                    if lst[i] - lst[i-1] != diff:
+                        return False
+                return True
+            
+            # Filter integer columns based on unique value criteria and arithmetic sequence
             valid_integer_cols_for_line = [
-                col for col in self.integer_cols if self.df[col].nunique() > 5
+                col for col in self.integer_cols 
+                if self.df[col].nunique() > 5 and is_arithmetic_sequence(sorted(self.df[col].unique()))
             ]
+
             valid_date_cols_for_line = [
                 col for col in self.date_cols if self.df[col].nunique() > 5
             ]
