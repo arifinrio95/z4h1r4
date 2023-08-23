@@ -1253,7 +1253,9 @@ class DataViz():
         
                 fig = px.line(df_agg, x=x_col, y=y_col, title=f'Line Plot of {y_col} by {x_col} (Aggregated by {aggregation})', width=chart_width, height=chart_height)
                 return fig
-
+                
+            chart_width = 300  # width of the chart to fit within the column
+            chart_height = 400  # height of the chart
             plot_all_line_charts(self.df, self.integer_cols, self.numeric_cols, agg_option, chart_width, chart_height)
 
             # # Plot line plots for integer columns vs numeric columns
