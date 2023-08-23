@@ -241,7 +241,7 @@ def request_prompt(input_pengguna,
             7. Don’t give me any explanation about the script. Response only with python code in a plain text.
             8. Do not reload the dataframe.
             9. Use Try and Except for each syntax, Except with pass.
-            10. Tulis code untuk menjawab pertanyaan tersebut dalam versi streamlit."""
+            10. Tulis code untuk menjawab pertanyaan tersebut dalam versi streamlit untuk dieksekusi."""
         }]
         response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
