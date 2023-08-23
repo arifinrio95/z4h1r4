@@ -1177,7 +1177,7 @@ def main():
 
         st.sidebar.subheader('Pilih metode eksplorasi:')
         # Tombol 1
-        if st.sidebar.button('🕵️ Explore Visualization & Insight with Ulik Data - Under Maintenance', key='my-btn0'):
+        if st.sidebar.button('🕵️ Explore Visualization & Insight with Ulik Data', key='my-btn0'):
             st.session_state.manual_exploration = True
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
