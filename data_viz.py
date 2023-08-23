@@ -1247,14 +1247,14 @@ class DataViz():
             
             # Plot line plots for integer columns vs numeric columns
             for int_col in valid_integer_cols_for_line:
-                for num_col in numeric_cols:
+                for num_col in self.numeric_cols:
                     fig = create_line_plot(self.df, self.integer_cols, self.numeric_cols, agg_option, chart_width, chart_height)
                     columns[chart_col_idx % 3].plotly_chart(fig)
                     chart_col_idx += 1
             
             # Plot line plots for date columns vs numeric columns
             for date_col in valid_date_cols_for_line:
-                for num_col in numeric_cols:
+                for num_col in self.numeric_cols:
                     fig = create_line_plot(self.df, self.date_cols, self.numeric_cols, agg_option, chart_width, chart_height)
                     columns[chart_col_idx % 3].plotly_chart(fig)
                     chart_col_idx += 1
