@@ -1234,6 +1234,12 @@ class DataViz():
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
 
+            def plot_all_line_charts(self, df, integer_cols, numeric_cols, agg_option, chart_width, chart_height):
+                for x_col in integer_cols:
+                    for y_col in numeric_cols:
+                        fig = create_line_plot(df, x_col, y_col, agg_option, chart_width, chart_height)
+                        chart_col_idx += 1
+                        
             def create_line_plot(df, x_col, y_col, aggregation, chart_width, chart_height):
                 st.write(f"x_col: {x_col}, Type: {type(x_col)}")
                 st.write(f"Columns in df: {df.columns}")
@@ -1246,18 +1252,20 @@ class DataViz():
         
                 fig = px.line(df_agg, x=x_col, y=y_col, title=f'Line Plot of {y_col} by {x_col} (Aggregated by {aggregation})', width=chart_width, height=chart_height)
                 return fig
+
+            plot_all_line_charts(self.df, self.integer_cols, self.numeric_cols, agg_option, chart_width, chart_height)
+
+            # # Plot line plots for integer columns vs numeric columns
+            # for int_col in valid_integer_cols_for_line:
+            #     for num_col in self.numeric_cols:
+            #         fig = create_line_plot(self.df, self.integer_cols, self.numeric_cols, agg_option, chart_width, chart_height)
+            #         columns[chart_col_idx % 3].plotly_chart(fig)
+            #         chart_col_idx += 1
             
-            # Plot line plots for integer columns vs numeric columns
-            for int_col in valid_integer_cols_for_line:
-                for num_col in self.numeric_cols:
-                    fig = create_line_plot(self.df, self.integer_cols, self.numeric_cols, agg_option, chart_width, chart_height)
-                    columns[chart_col_idx % 3].plotly_chart(fig)
-                    chart_col_idx += 1
-            
-            # Plot line plots for date columns vs numeric columns
-            for date_col in valid_date_cols_for_line:
-                for num_col in self.numeric_cols:
-                    fig = create_line_plot(self.df, self.date_cols, self.numeric_cols, agg_option, chart_width, chart_height)
-                    columns[chart_col_idx % 3].plotly_chart(fig)
-                    chart_col_idx += 1
+            # # Plot line plots for date columns vs numeric columns
+            # for date_col in valid_date_cols_for_line:
+            #     for num_col in self.numeric_cols:
+            #         fig = create_line_plot(self.df, self.date_cols, self.numeric_cols, agg_option, chart_width, chart_height)
+            #         columns[chart_col_idx % 3].plotly_chart(fig)
+            #         chart_col_idx += 1
 
