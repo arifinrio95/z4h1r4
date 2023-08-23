@@ -1260,9 +1260,9 @@ class DataViz():
                 fig.update_layout(
                     title={
                         'text': f'Line Plot of {y_col} by {x_col}<br>(Aggregated by {aggregation})',
-                        'x': 0.5,  # Center the title
-                        'xanchor': 'center',
-                        # 'font': {'size': 16}  # Increase font size for title
+                        # 'x': 0.5,  # Center the title
+                        # 'xanchor': 'center',
+                        'font': {'size': 10}  # Increase font size for title
                     },
                     width=chart_width,
                     height=chart_height,
