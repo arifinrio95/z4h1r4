@@ -1244,14 +1244,15 @@ class DataViz():
 
             def create_line_plot(df, x_col, y_col, aggregation, chart_width, chart_height):
                 if aggregation == 'mean':
-                    df_agg = df.groupby(x_col)[y_col].mean().reset_index()
+                    df_agg = df.groupby(x_col, as_index=False)[y_col].mean()
                 elif aggregation == 'median':
-                    df_agg = df.groupby(x_col)[y_col].median().reset_index()
+                    df_agg = df.groupby(x_col, as_index=False)[y_col].median()
                 else: # sum
-                    df_agg = df.groupby(x_col)[y_col].sum().reset_index()
-                # title=f'Pie Chart of {col}<br>(Aggregated by {aggregation_method} of {selected_numeric})', 
+                    df_agg = df.groupby(x_col, as_index=False)[y_col].sum()
+            
                 fig = px.line(df_agg, x=x_col, y=y_col, title=f'Line Plot of {y_col} by {x_col}<br>(Aggregated by {aggregation})', width=chart_width, height=chart_height)
                 return fig
+
                 
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
