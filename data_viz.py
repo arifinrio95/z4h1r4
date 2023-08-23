@@ -1213,7 +1213,18 @@ class DataViz():
                     fig = px.pie(aggregated_data, names=col, values=selected_numeric, 
                                  title=f'Pie Chart of {col}<br>(Aggregated by {aggregation_method} of {selected_numeric})', 
                                  width=chart_width, height=chart_height)
-
+                
+                # Adjust legend to have lines pointing directly to the pie sections
+                fig.update_layout(legend=dict(
+                    yanchor="top",
+                    y=0.99,
+                    xanchor="left",
+                    x=0.01,
+                    traceorder="reversed",
+                    title_orientation="horizontal",
+                    itemsizing="trace"
+                ))
+            
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
