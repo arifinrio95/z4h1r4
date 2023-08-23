@@ -1055,7 +1055,7 @@ class DataViz():
             st.write("## Scatter plot with Regression Line")
 
             # Kolom dropdown untuk memilih jumlah plot
-            num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, 11)), index=9)  # Default ke 10
+            num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, 11)), index=9, key="num_of_plot")  # Default ke 10
 
              # Membiarkan pengguna memilih warna dengan default pilihan
             scatter_color_choice = col1.selectbox(
