@@ -996,7 +996,10 @@ class DataViz():
                     width=chart_width, 
                     height=chart_height
                 )
-
+                fig.update_layout(
+                    title={
+                        'font': {'size': 12}  # Increase font size for title
+                    },
                 fig.update_traces(marker=dict(color=hist_color, line=dict(color=edge_color, width=1)))
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 
@@ -1061,7 +1064,10 @@ class DataViz():
                     width=chart_width, 
                     height=chart_height
                 )
-                            
+                fig.update_layout(
+                    title={
+                        'font': {'size': 12}  # Increase font size for title
+                    },        
                 # Mengatur warna garis regresi dan ukuran titik scatter
                 fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
                 fig.update_traces(marker=dict(size=5, color=scatter_color), selector=dict(mode='markers'))
@@ -1099,7 +1105,10 @@ class DataViz():
                              width=chart_width, 
                              height=chart_height,
                              color_discrete_sequence=color_palettes_dicrete[selected_palette]) # Gunakan palet warna yang terpilih
-                
+                fig.update_layout(
+                    title={
+                        'font': {'size': 12}  # Increase font size for title
+                    },
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
             
@@ -1170,7 +1179,11 @@ class DataViz():
             for num_col in valid_numeric_cols_for_box:
                 for cat_col in valid_categorical_cols_for_box:
                     fig = px.box(self.df, x=cat_col, y=num_col, title=f'Box Plot of {num_col} grouped by {cat_col}', width=chart_width, height=chart_height)
-                    columns[chart_col_idx % 3].plotly_chart(fig)
+                    fig.update_layout(
+                        title={
+                            'font': {'size': 12}  # Increase font size for title
+                        },
+                        columns[chart_col_idx % 3].plotly_chart(fig)
                     chart_col_idx += 1
 
 
@@ -1209,11 +1222,18 @@ class DataViz():
                     fig = px.pie(aggregated_data, names=col, values='count', 
                                  title=f'Pie Chart of {col}<br>(Aggregated by count)', 
                                  width=chart_width, height=chart_height)
+                    fig.update_layout(
+                        title={
+                            'font': {'size': 12}  # Increase font size for title
+                        },
                 else:
                     fig = px.pie(aggregated_data, names=col, values=selected_numeric, 
                                  title=f'Pie Chart of {col}<br>(Aggregated by {aggregation_method} of {selected_numeric})', 
                                  width=chart_width, height=chart_height)
-
+                    fig.update_layout(
+                        title={
+                            'font': {'size': 12}  # Increase font size for title
+                        },
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
@@ -1262,7 +1282,7 @@ class DataViz():
                         'text': f'Line Plot of {y_col} by {x_col}<br>(Aggregated by {aggregation})',
                         # 'x': 0.5,  # Center the title
                         # 'xanchor': 'center',
-                        'font': {'size': 10}  # Increase font size for title
+                        'font': {'size': 12}  # Increase font size for title
                     },
                     width=chart_width,
                     height=chart_height,
