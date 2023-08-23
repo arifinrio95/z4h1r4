@@ -1050,8 +1050,25 @@ class DataViz():
 
                 chart_col_idx += 1
 
-            # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
+
+            # Kolom dropdown untuk memilih jumlah plot
+            num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, 11)), index=9)  # Default ke 10
+            
+            # Menghitung matriks korelasi
+            correlation_matrix = self.df[filtered_cols].corr()
+            
+            # Membuat daftar dari pasangan kolom dan nilai korelasinya
+            pairs_correlation = []
+            for col1, col2 in combinations(filtered_cols, 2):
+                pairs_correlation.append(((col1, col2), abs(correlation_matrix.loc[col1, col2])))
+            
+            # Mengurutkan pasangan berdasarkan nilai korelasi (absolut) tertinggi
+            sorted_pairs = sorted(pairs_correlation, key=lambda x: x[1], reverse=True)
+            
+            # Mengambil pasangan dengan korelasi tertinggi sesuai dengan pilihan pengguna
+            top_pairs = [pair[0] for pair in sorted_pairs[:num_of_plots]]
+            
             col1, col2, col3, col4 = st.columns(4)
 
             # Membiarkan pengguna memilih warna dengan default pilihan
@@ -1075,16 +1092,9 @@ class DataViz():
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
-
-            # Filter kolom numerik yang uniq valuenya di atas 10
-            filtered_cols = [
-                col for col in self.numeric_cols if self.df[col].nunique() > 10
-            ]
-
-            # Membuat semua kombinasi dari kolom numerik yang telah difilter
-            from itertools import combinations
-            combinations_list = list(combinations(filtered_cols, 2))
-            for col1, col2 in combinations_list:
+            
+            # Membuat scatter plot untuk pasangan kolom dengan korelasi tertinggi
+            for col1, col2 in top_pairs:
                 fig = px.scatter(self.df,
                                  x=col1,
                                  y=col2,
@@ -1093,17 +1103,11 @@ class DataViz():
                                  title=f'Scatter plot of {col1} vs {col2}',
                                  width=chart_width,
                                  height=chart_height)
-                fig.update_layout(title={
-                    'font': {
-                        'size': 12
-                    }  # Increase font size for title
-                })
-                # Mengatur warna garis regresi dan ukuran titik scatter
-                fig.update_traces(line=dict(color=line_color),
-                                  selector=dict(type='scatter', mode='lines'))
-                fig.update_traces(marker=dict(size=5, color=scatter_color),
-                                  selector=dict(mode='markers'))
-
+                fig.update_layout(title={'font': {'size': 12}})
+                
+                fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
+                fig.update_traces(marker=dict(size=5, color=scatter_color), selector=dict(mode='markers'))
+            
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
