@@ -336,7 +336,7 @@ def request_story_prompt(schema_str, rows_str, min_viz, api_model, style='Plotly
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
         Give a clear {style} title.
         Optimize the script for efficiency and minimize the number of lines.
-        Use looping for columns if multiple chart of the same insight can run simultaneously. For example insight 1 is distribution, insight 2 is correlation, insight 3 is wordcloud, and soon."""}]
+        Visualize various insights with different chart types that are unique and interesting."""}]
     # messages = [{
     #     "role":
     #     "system",
