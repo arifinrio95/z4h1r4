@@ -1061,9 +1061,7 @@ class DataViz():
             scatter_color_choice = col1.selectbox(
                 "Choose color for scatter points:",
                 list(color_map.keys()),
-                index=list(color_map.keys()).index(
-                    "Sage")  # Default ke "Terracotta"
-            )
+                index=list(color_map.keys()).index("Sage"), key="scatter_color_choice_key")  # Default ke "Terracotta"
 
             line_color_choice = col2.selectbox(
                 "Choose color for regression line:",
