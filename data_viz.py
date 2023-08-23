@@ -995,11 +995,16 @@ class DataViz():
                     color_discrete_sequence=[hist_color],
                     width=chart_width, 
                     height=chart_height
-                ),
+                )
+                # Check if fig is a tuple and extract the figure if it is.
+                if isinstance(fig, tuple):
+                    fig = fig[0]
+                    
                 fig.update_layout(
                     title={
                         'font': {'size': 12}  # Increase font size for title
-                    })
+                    }
+                )
                 fig.update_traces(marker=dict(color=hist_color, line=dict(color=edge_color, width=1)))
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 
