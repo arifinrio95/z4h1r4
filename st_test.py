@@ -204,7 +204,7 @@ local_css("style.css")
 def request_prompt(input_pengguna,
                    schema_str,
                    rows_str,
-                   style='Visualization',
+                   style,
                    error_message=None,
                    previous_script=None,
                    retry_count=0):
@@ -243,6 +243,14 @@ def request_prompt(input_pengguna,
             9. Use Try and Except for each syntax, Except with pass.
             10. Show all codes or text from your response in streamlit syntax."""
         }]
+        response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-16k",
+        # model="gpt-3.5-turbo",
+        # model="gpt-4",
+        messages=messages,
+        max_tokens=3000,
+        temperature=0)
+        script = response.choices[0].message['content']
     else:
         # versi 1 prompt
         messages = [{
@@ -269,24 +277,31 @@ def request_prompt(input_pengguna,
             12. Use {style} library for visualization.
             13. Pay attention to the dataframe schema, don't do any convert."""
         }]
-        # Give and show with streamlit the title for every steps. Give an explanation for every syntax.
-
-    if error_message and previous_script:
-        messages.append({
-            "role":
-            "user",
-            "content":
-            f"Solve this error: {error_message} in previous Script : {previous_script} to "
-        })
-
-    response = openai.ChatCompletion.create(
+        response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
         # model="gpt-3.5-turbo",
         # model="gpt-4",
         messages=messages,
         max_tokens=3000,
         temperature=0)
-    script = response.choices[0].message['content']
+        script = response.choices[0].message['content']
+
+    # if error_message and previous_script:
+    #     messages.append({
+    #         "role":
+    #         "user",
+    #         "content":
+    #         f"Solve this error: {error_message} in previous Script : {previous_script} to "
+    #     })
+
+    # response = openai.ChatCompletion.create(
+    #     model="gpt-3.5-turbo-16k",
+    #     # model="gpt-3.5-turbo",
+    #     # model="gpt-4",
+    #     messages=messages,
+    #     max_tokens=3000,
+    #     temperature=0)
+    # script = response.choices[0].message['content']
 
     return script
 
@@ -1634,20 +1649,20 @@ def main():
                         # st.subheader("Visualizations")
                         exec(str(script))
 
-                    button = st.button("Print Code")
+                    # button = st.button("Print Code")
 
-                    if button:
-                        # st.subheader("Streamlit Script")
-                        # st.text(script)
-                        st.subheader(f"{style_choosen} Script")
-                        if style_choosen == 'Plotly':
-                            st.text(
-                                convert_streamlit_to_plotly(
-                                    st.session_state['script']))
-                        elif style_choosen == 'Seaborn':
-                            st.text(
-                                convert_streamlit_to_python_seaborn(
-                                    st.session_state['script']))
+                    # if button:
+                    #     # st.subheader("Streamlit Script")
+                    #     # st.text(script)
+                    #     st.subheader(f"{style_choosen} Script")
+                    #     if style_choosen == 'Plotly':
+                    #         st.text(
+                    #             convert_streamlit_to_plotly(
+                    #                 st.session_state['script']))
+                    #     elif style_choosen == 'Seaborn':
+                    #         st.text(
+                    #             convert_streamlit_to_python_seaborn(
+                    #                 st.session_state['script']))
 
                     input_pengguna = ""
 
