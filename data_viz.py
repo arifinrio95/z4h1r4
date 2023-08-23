@@ -1255,72 +1255,76 @@ class DataViz():
             # sns.pairplot(self.df)
             # st.pyplot(plt)
 
-            st.write("## Pie Charts for Categorical Columns")
-
-            # Filter categorical columns based on unique value count
-            filtered_categorical_cols = [
-                col for col in self.categorical_cols
-                if len(self.df[col].unique()) < 10
-            ]
-            filtered_numeric_cols = [
-                col for col in self.numeric_cols
-                if len(self.df[col].unique()) > 20
-            ]
-
-            # Choose aggregation method
-            aggregation_method = st.selectbox('Choose aggregation method',
-                                              ['count', 'mean', 'sum'])
-
-            # If aggregation method is not count, let user choose a numeric column
-            selected_numeric = None
-            if aggregation_method != 'count':
-                selected_numeric = st.selectbox(
-                    'Choose a numeric column for aggregation',
-                    filtered_numeric_cols)
-
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0
-
-            # Aggregate the data
-            if aggregation_method == 'count':
-                aggregated_data = self.df[filtered_categorical_cols].groupby(
-                    filtered_categorical_cols).size().reset_index(name='count')
-            else:
-                aggregated_data = self.df.groupby(filtered_categorical_cols)[
-                    selected_numeric].agg(aggregation_method).reset_index()
-
-            # Create pie charts for all filtered categorical columns
-            for col in filtered_categorical_cols:
+            try:
+                st.write("## Pie Charts for Categorical Columns")
+    
+                # Filter categorical columns based on unique value count
+                filtered_categorical_cols = [
+                    col for col in self.categorical_cols
+                    if len(self.df[col].unique()) < 10
+                ]
+                filtered_numeric_cols = [
+                    col for col in self.numeric_cols
+                    if len(self.df[col].unique()) > 20
+                ]
+    
+                # Choose aggregation method
+                aggregation_method = st.selectbox('Choose aggregation method',
+                                                  ['count', 'mean', 'sum'])
+    
+                # If aggregation method is not count, let user choose a numeric column
+                selected_numeric = None
+                if aggregation_method != 'count':
+                    selected_numeric = st.selectbox(
+                        'Choose a numeric column for aggregation',
+                        filtered_numeric_cols)
+    
+                left_col, center_col, right_col = st.columns(3)
+                columns = [left_col, center_col, right_col]
+                chart_col_idx = 0
+    
+                # Aggregate the data
                 if aggregation_method == 'count':
-                    fig = px.pie(
-                        aggregated_data,
-                        names=col,
-                        values='count',
-                        title=f'Pie Chart of {col}<br>(Aggregated by count)',
-                        width=chart_width,
-                        height=chart_height)
-                    fig.update_layout(title={
-                        'font': {
-                            'size': 12
-                        }  # Increase font size for title
-                    })
+                    aggregated_data = self.df[filtered_categorical_cols].groupby(
+                        filtered_categorical_cols).size().reset_index(name='count')
                 else:
-                    fig = px.pie(
-                        aggregated_data,
-                        names=col,
-                        values=selected_numeric,
-                        title=
-                        f'Pie Chart of {col}<br>(Aggregated by {aggregation_method} of {selected_numeric})',
-                        width=chart_width,
-                        height=chart_height)
-                    fig.update_layout(title={
-                        'font': {
-                            'size': 12
-                        }  # Increase font size for title
-                    })
-                columns[chart_col_idx % 3].plotly_chart(fig)
-                chart_col_idx += 1
+                    aggregated_data = self.df.groupby(filtered_categorical_cols)[
+                        selected_numeric].agg(aggregation_method).reset_index()
+    
+                # Create pie charts for all filtered categorical columns
+                for col in filtered_categorical_cols:
+                    if aggregation_method == 'count':
+                        fig = px.pie(
+                            aggregated_data,
+                            names=col,
+                            values='count',
+                            title=f'Pie Chart of {col}<br>(Aggregated by count)',
+                            width=chart_width,
+                            height=chart_height)
+                        fig.update_layout(title={
+                            'font': {
+                                'size': 12
+                            }  # Increase font size for title
+                        })
+                    else:
+                        fig = px.pie(
+                            aggregated_data,
+                            names=col,
+                            values=selected_numeric,
+                            title=
+                            f'Pie Chart of {col}<br>(Aggregated by {aggregation_method} of {selected_numeric})',
+                            width=chart_width,
+                            height=chart_height)
+                        fig.update_layout(title={
+                            'font': {
+                                'size': 12
+                            }  # Increase font size for title
+                        })
+                    columns[chart_col_idx % 3].plotly_chart(fig)
+                    chart_col_idx += 1
+
+            except:
+                pass
 
             # Line Plots
             st.write("## Line Plots")
