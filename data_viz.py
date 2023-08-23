@@ -9,9 +9,14 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy.stats import chi2_contingency
 from wordcloud import WordCloud, STOPWORDS
-# from nltk.corpus import stopwords
-# from nltk.tokenize import word_tokenize
-# from nltk.stem import WordNetLemmatizer
+
+import nltk
+
+nltk.data.path.append('nltk_data/')
+
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer
 from scipy.stats import skew, kurtosis
 
@@ -22,11 +27,17 @@ class DataViz():
         # self.df = pd.read_csv('train.csv')
         self.num_df = self.df.select_dtypes(include='number')
         self.cat_df = self.df.select_dtypes(exclude='number')
-        self.date_cols = self.df.select_dtypes(include='datetime64[ns]').columns
+        self.date_cols = self.df.select_dtypes(
+            include='datetime64[ns]').columns
         # sorry duplicate dulu
-        self.integer_cols = self.df.select_dtypes(['int16', 'int32', 'int64']).columns
-        self.numeric_cols = self.df.select_dtypes(['int16', 'int32', 'int64', 'float16', 'float32', 'float64']).columns
-        self.categorical_cols = self.df.select_dtypes(exclude=['int16', 'int32', 'int64', 'float16', 'float32', 'float64']).columns
+        self.integer_cols = self.df.select_dtypes(['int16', 'int32',
+                                                   'int64']).columns
+        self.numeric_cols = self.df.select_dtypes(
+            ['int16', 'int32', 'int64', 'float16', 'float32',
+             'float64']).columns
+        self.categorical_cols = self.df.select_dtypes(exclude=[
+            'int16', 'int32', 'int64', 'float16', 'float32', 'float64'
+        ]).columns
 
     def format_value(self, valu):
         '''
@@ -40,7 +51,7 @@ class DataViz():
             return f"{valu/1e3:.1f} K"
         else:
             return f"{valu:.1f}"
-            
+
     # Preprocess the text data
     def preprocess_text(self,
                         text,
@@ -64,9 +75,11 @@ class DataViz():
             ]
 
         return " ".join(words)
-                            
+
     def visualization(self):
-        st.markdown("<h1 style='text-align: center; color: #4F4F4F;'>Automated Data Visualizations (by Ulikdata)</h1>", unsafe_allow_html=True)
+        st.markdown(
+            "<h1 style='text-align: center; color: #4F4F4F;'>Automated Data Visualizations (by Ulikdata)</h1>",
+            unsafe_allow_html=True)
 
         tab1, tab2, tab3, tab4 = st.tabs([
             'Simple Business Viz', 'Simple Statistical Viz', 'Advanced Plot',
@@ -600,9 +613,9 @@ class DataViz():
                 fig = px.histogram(self.num_df[VAR],
                                    nbins=int(BIN),
                                    histnorm=NORM)
-                fig.update_traces(marker=dict(line=dict(color='black', width=1)))
+                fig.update_traces(marker=dict(
+                    line=dict(color='black', width=1)))
                 f = fig.full_figure_for_development(warn=False)
-                
 
                 xbins = f.data[0].xbins
                 plotbins = list(
@@ -880,47 +893,46 @@ class DataViz():
                     img_col.plotly_chart(fig)
 
         with tab3:
-            st.title("Under Construct !")
-            # ## WORD CLOUDS
-            # st.subheader("Word Cloud!")
-            # c1 = st.container()
-            # desc_col, img_col = c1.columns(2)
-            # # User input options
-            # ngrams = desc_col.selectbox("Select n-grams", [1, 2, 3])
-            # variables = desc_col.selectbox(
-            #     "Select Text Variables to be analyzed",
-            #     self.cat_df.columns.tolist())
-            # standardize_text = desc_col.checkbox(
-            #     "Standardize text (lowercase)")
-            # lemmatize_text = desc_col.checkbox("Lemmatize text")
-            # remove_stopwords = desc_col.checkbox("Remove stopwords")
+            ## WORD CLOUDS
+            st.subheader("Word Cloud!")
+            c1 = st.container()
+            desc_col, img_col = c1.columns(2)
+            # User input options
+            ngrams = desc_col.selectbox("Select n-grams", [1, 2, 3])
+            variables = desc_col.selectbox(
+                "Select Text Variables to be analyzed",
+                self.cat_df.columns.tolist())
+            standardize_text = desc_col.checkbox(
+                "Standardize text (lowercase)")
+            lemmatize_text = desc_col.checkbox("Lemmatize text")
+            remove_stopwords = desc_col.checkbox("Remove stopwords")
 
-            # processed_text = self.df.apply(lambda row: self.preprocess_text(
-            #     row[variables], standardize_text, lemmatize_text,
-            #     remove_stopwords),
-            #                                axis=1)
+            processed_text = self.df.apply(lambda row: self.preprocess_text(
+                row[variables], standardize_text, lemmatize_text,
+                remove_stopwords),
+                                           axis=1)
 
-            # # Your existing code for vectorizing and calculating word frequencies
-            # vectorizer = CountVectorizer(ngram_range=(ngrams, ngrams))
-            # bag_of_words = vectorizer.fit_transform(processed_text)
-            # sum_words = bag_of_words.sum(axis=0)
-            # words_freq = [(word, sum_words[0, idx])
-            #               for word, idx in vectorizer.vocabulary_.items()]
-            # words_freq = sorted(words_freq, key=lambda x: x[1], reverse=True)
+            # Your existing code for vectorizing and calculating word frequencies
+            vectorizer = CountVectorizer(ngram_range=(ngrams, ngrams))
+            bag_of_words = vectorizer.fit_transform(processed_text)
+            sum_words = bag_of_words.sum(axis=0)
+            words_freq = [(word, sum_words[0, idx])
+                          for word, idx in vectorizer.vocabulary_.items()]
+            words_freq = sorted(words_freq, key=lambda x: x[1], reverse=True)
 
-            # # Generating wordcloud
-            # wordcloud = WordCloud(
-            #     width=800, height=400,
-            #     background_color="white").generate_from_frequencies(
-            #         dict(words_freq[:20]))
+            # Generating wordcloud
+            wordcloud = WordCloud(
+                width=800, height=400,
+                background_color="white").generate_from_frequencies(
+                    dict(words_freq[:20]))
 
-            # # Display the word cloud using Matplotlib within Streamlit
-            # img_col.write("Generated Word Cloud:")
-            # img_col.image(wordcloud.to_array(), use_column_width=True)
+            # Display the word cloud using Matplotlib within Streamlit
+            img_col.write("Generated Word Cloud:")
+            img_col.image(wordcloud.to_array(), use_column_width=True)
 
-            # st.write('---')
-        
-        with tab4:      
+            st.write('---')
+
+        with tab4:
             # Membuat peta warna
             color_map = {
                 "Olive Green": "#808000",
@@ -944,39 +956,49 @@ class DataViz():
                 "Jet (Blue-Cyan-Yellow-Red)": "Jet",
             }
             color_palettes_dicrete = {
-                "Earth Tones": ["#a52a2a", "#654321", "#c2b280", "#808000", "#6a5acd"],
+                "Earth Tones":
+                ["#a52a2a", "#654321", "#c2b280", "#808000", "#6a5acd"],
                 "Cool": ["#99e6e6", "#e6e6ff", "#a3d1ff"],
                 "Warm": ["#ffdb58", "#ffb366", "#ff7f50"],
-                "Sunset": ["#FF4500", "#FF6347", "#FF7F50", "#FF8C00", "#FFA500"],
-                "Ocean": ["#1E90FF", "#20B2AA", "#4682B4", "#5F9EA0", "#00CED1"],
-                "Forest": ["#228B22", "#006400", "#2E8B57", "#3CB371", "#32CD32"],
-                "Berry": ["#8B0000", "#B22222", "#DC143C", "#FF0000", "#FF4500"],
-                "Pastel": ["#FFDAB9", "#E6E6FA", "#FFFACD", "#D8BFD8", "#F0E68C"],
-                "Neon": ["#FF1493", "#00FF00", "#FFD700", "#FF69B4", "#00BFFF"],
-                "Monochrome": ["#2F4F4F", "#708090", "#778899", "#B0C4DE", "#F5F5F5"],
+                "Sunset":
+                ["#FF4500", "#FF6347", "#FF7F50", "#FF8C00", "#FFA500"],
+                "Ocean":
+                ["#1E90FF", "#20B2AA", "#4682B4", "#5F9EA0", "#00CED1"],
+                "Forest":
+                ["#228B22", "#006400", "#2E8B57", "#3CB371", "#32CD32"],
+                "Berry":
+                ["#8B0000", "#B22222", "#DC143C", "#FF0000", "#FF4500"],
+                "Pastel":
+                ["#FFDAB9", "#E6E6FA", "#FFFACD", "#D8BFD8", "#F0E68C"],
+                "Neon":
+                ["#FF1493", "#00FF00", "#FFD700", "#FF69B4", "#00BFFF"],
+                "Monochrome":
+                ["#2F4F4F", "#708090", "#778899", "#B0C4DE", "#F5F5F5"],
                 # ... you can further expand and add more palettes as needed
             }
-            
+
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
 
             # Histogram
             st.write("## Histogram for Numeric Columns")
             col1, col2, col3, col4 = st.columns(4)
-            
+
             # Membiarkan pengguna memilih warna dengan default pilihan
             hist_color_choice = col1.selectbox(
-                "Choose color for histogram bars:", 
-                list(color_map.keys()), 
-                index=list(color_map.keys()).index("Sage")  # Default ke "Terracotta"
+                "Choose color for histogram bars:",
+                list(color_map.keys()),
+                index=list(color_map.keys()).index(
+                    "Sage")  # Default ke "Terracotta"
             )
-            
+
             edge_color_choice = col2.selectbox(
-                "Choose color for histogram bar edges:", 
-                list(color_map.keys()), 
-                index=list(color_map.keys()).index("Umber")  # Default ke "Umber"
+                "Choose color for histogram bar edges:",
+                list(color_map.keys()),
+                index=list(color_map.keys()).index(
+                    "Umber")  # Default ke "Umber"
             )
-            
+
             hist_color = color_map[hist_color_choice]
             edge_color = color_map[edge_color_choice]
 
@@ -986,32 +1008,31 @@ class DataViz():
             chart_col_idx = 0  # counter to keep track of columns
 
             for col in self.numeric_cols:
-                fig = px.histogram(
-                    self.df, 
-                    x=col, 
-                    marginal="box", 
-                    nbins=40, 
-                    title=f'Histogram of {col}', 
-                    color_discrete_sequence=[hist_color],
-                    width=chart_width, 
-                    height=chart_height
-                )
+                fig = px.histogram(self.df,
+                                   x=col,
+                                   marginal="box",
+                                   nbins=40,
+                                   title=f'Histogram of {col}',
+                                   color_discrete_sequence=[hist_color],
+                                   width=chart_width,
+                                   height=chart_height)
                 # Check if fig is a tuple and extract the figure if it is.
                 if isinstance(fig, tuple):
                     fig = fig[0]
-                    
-                fig.update_layout(
-                    title={
-                        'font': {'size': 12}  # Increase font size for title
-                    }
-                )
-                fig.update_traces(marker=dict(color=hist_color, line=dict(color=edge_color, width=1)))
+
+                fig.update_layout(title={
+                    'font': {
+                        'size': 12
+                    }  # Increase font size for title
+                })
+                fig.update_traces(marker=dict(
+                    color=hist_color, line=dict(color=edge_color, width=1)))
                 columns[chart_col_idx % 3].plotly_chart(fig)
-                
+
                 # Calculate skewness and kurtosis
                 col_skewness = skew(self.df[col])
                 col_kurtosis = kurtosis(self.df[col])
-            
+
                 # Determine the distribution type based on skewness and kurtosis
                 if abs(col_skewness) < 0.5 and abs(col_kurtosis) < 0.5:
                     distribution_type = "approximately normal"
@@ -1021,176 +1042,212 @@ class DataViz():
                     distribution_type = "has heavier tails than a normal distribution"
                 else:
                     distribution_type = "moderately skewed"
-            
-                columns[chart_col_idx % 3].markdown(f"<sub>The distribution of {col} is {distribution_type}.</sub>", unsafe_allow_html=True)
 
-                
-    
+                columns[chart_col_idx % 3].markdown(
+                    f"<sub>The distribution of {col} is {distribution_type}.</sub>",
+                    unsafe_allow_html=True)
+
                 chart_col_idx += 1
 
             # Scatter plot with regression line
             st.write("## Scatter plot with Regression Line")
             col1, col2, col3, col4 = st.columns(4)
-            
+
             # Membiarkan pengguna memilih warna dengan default pilihan
             scatter_color_choice = col1.selectbox(
-                "Choose color for scatter points:", 
-                list(color_map.keys()), 
-                index=list(color_map.keys()).index("Sage")  # Default ke "Terracotta"
+                "Choose color for scatter points:",
+                list(color_map.keys()),
+                index=list(color_map.keys()).index(
+                    "Sage")  # Default ke "Terracotta"
             )
-                        
+
             line_color_choice = col2.selectbox(
-                "Choose color for regression line:", 
-                list(color_map.keys()), 
-                index=list(color_map.keys()).index("Umber")  # Default ke "Umber"
+                "Choose color for regression line:",
+                list(color_map.keys()),
+                index=list(color_map.keys()).index(
+                    "Umber")  # Default ke "Umber"
             )
-                        
+
             scatter_color = color_map[scatter_color_choice]
             line_color = color_map[line_color_choice]
-            
+
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
-            
+
             # Filter kolom numerik yang uniq valuenya di atas 10
-            filtered_cols = [col for col in self.numeric_cols if self.df[col].nunique() > 10]
-                        
+            filtered_cols = [
+                col for col in self.numeric_cols if self.df[col].nunique() > 10
+            ]
+
             # Membuat semua kombinasi dari kolom numerik yang telah difilter
             from itertools import combinations
             combinations_list = list(combinations(filtered_cols, 2))
             for col1, col2 in combinations_list:
-                fig = px.scatter(
-                    self.df, 
-                    x=col1, 
-                    y=col2, 
-                    trendline="ols", 
-                    color_discrete_sequence=[scatter_color],  
-                    title=f'Scatter plot of {col1} vs {col2}', 
-                    width=chart_width, 
-                    height=chart_height
-                )
-                fig.update_layout(
-                    title={
-                        'font': {'size': 12}  # Increase font size for title
-                    })     
+                fig = px.scatter(self.df,
+                                 x=col1,
+                                 y=col2,
+                                 trendline="ols",
+                                 color_discrete_sequence=[scatter_color],
+                                 title=f'Scatter plot of {col1} vs {col2}',
+                                 width=chart_width,
+                                 height=chart_height)
+                fig.update_layout(title={
+                    'font': {
+                        'size': 12
+                    }  # Increase font size for title
+                })
                 # Mengatur warna garis regresi dan ukuran titik scatter
-                fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
-                fig.update_traces(marker=dict(size=5, color=scatter_color), selector=dict(mode='markers'))
-            
+                fig.update_traces(line=dict(color=line_color),
+                                  selector=dict(type='scatter', mode='lines'))
+                fig.update_traces(marker=dict(size=5, color=scatter_color),
+                                  selector=dict(mode='markers'))
+
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
-
 
             # Bar chart
             st.write("## Bar Chart")
-            
+
             # Filter kolom numerik yang memiliki nilai unik tidak lebih dari 20
             valid_numeric_cols = [col for col in self.numeric_cols]
-            valid_categorical_cols = [col for col in self.categorical_cols if self.df[col].nunique() <= 20]
-            
+            valid_categorical_cols = [
+                col for col in self.categorical_cols
+                if self.df[col].nunique() <= 20
+            ]
+
             col1, col2, col3, col4 = st.columns(4)
-            
+
             # Pilih kolom numerik dan kategorikal
-            selected_numeric_col = col1.selectbox('Choose numeric column for aggregation', valid_numeric_cols)
-            selected_categorical_hue = col2.selectbox('Choose categorical column for hue', valid_categorical_cols)
-            
+            selected_numeric_col = col1.selectbox(
+                'Choose numeric column for aggregation', valid_numeric_cols)
+            selected_categorical_hue = col2.selectbox(
+                'Choose categorical column for hue', valid_categorical_cols)
+
             # Pilih palet warna
-            selected_palette = col3.selectbox("Choose a bar chart color palette:", list(color_palettes_dicrete.keys()))
-            
+            selected_palette = col3.selectbox(
+                "Choose a bar chart color palette:",
+                list(color_palettes_dicrete.keys()))
+
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
-            
+
             for col in valid_categorical_cols:
-                fig = px.bar(self.df, 
-                             x=col, 
-                             y=selected_numeric_col, 
-                             color=selected_categorical_hue, 
-                             title=f'Bar Chart of {col} grouped by {selected_categorical_hue}', 
-                             width=chart_width, 
-                             height=chart_height,
-                             color_discrete_sequence=color_palettes_dicrete[selected_palette]) # Gunakan palet warna yang terpilih
-                fig.update_layout(
-                    title={
-                        'font': {'size': 12}  # Increase font size for title
-                    })
+                fig = px.bar(
+                    self.df,
+                    x=col,
+                    y=selected_numeric_col,
+                    color=selected_categorical_hue,
+                    title=
+                    f'Bar Chart of {col} grouped by {selected_categorical_hue}',
+                    width=chart_width,
+                    height=chart_height,
+                    color_discrete_sequence=color_palettes_dicrete[
+                        selected_palette])  # Gunakan palet warna yang terpilih
+                fig.update_layout(title={
+                    'font': {
+                        'size': 12
+                    }  # Increase font size for title
+                })
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
-            
+
             # Heatmap of correlation
             title_placeholder = st.empty()
             correlation_methods = ["pearson", "kendall", "spearman"]
-            selected_method = st.selectbox("Choose a correlation method:", correlation_methods)
-            default_palette_idx = list(color_palettes.keys()).index("Cool (Blue-Cyan-Purple)")
-            selected_palette = st.selectbox("Choose a heatmap color palette:", list(color_palettes.keys()), index=default_palette_idx)
-            title_placeholder.write(f"## Heatmap of {selected_method.capitalize()} Correlation")
+            selected_method = st.selectbox("Choose a correlation method:",
+                                           correlation_methods)
+            default_palette_idx = list(
+                color_palettes.keys()).index("Cool (Blue-Cyan-Purple)")
+            selected_palette = st.selectbox("Choose a heatmap color palette:",
+                                            list(color_palettes.keys()),
+                                            index=default_palette_idx)
+            title_placeholder.write(
+                f"## Heatmap of {selected_method.capitalize()} Correlation")
             corr = self.df[self.numeric_cols].corr(method=selected_method)
             fig = ff.create_annotated_heatmap(
-                z=corr.values, 
-                x=list(corr.columns), 
-                y=list(corr.index), 
+                z=corr.values,
+                x=list(corr.columns),
+                y=list(corr.index),
                 annotation_text=corr.round(2).values,
-                colorscale=color_palettes[selected_palette]
-            )
+                colorscale=color_palettes[selected_palette])
             st.plotly_chart(fig)
 
             # Chi square for Categorical Columns
             st.write("## Chi Square for Categorical Columns")
             results = []
-            
+
             for col1 in self.categorical_cols:
                 for col2 in self.categorical_cols:
                     if col1 != col2:
                         contingency = pd.crosstab(self.df[col1], self.df[col2])
                         chi2, p, _, _ = chi2_contingency(contingency)
-                        
+
                         if p < 0.05:
                             correlation_strength = "High"
                             explanation = "Statistically Significant"
                         else:
                             correlation_strength = "Low"
                             explanation = "Not Statistically Significant"
-                        
-                        results.append((col1, col2, chi2, p, correlation_strength, explanation))
-            
-            results_df = pd.DataFrame(results, columns=["Column 1", "Column 2", "Chi2 Value", "P Value", "Correlation Streght", "Description"])
+
+                        results.append((col1, col2, chi2, p,
+                                        correlation_strength, explanation))
+
+            results_df = pd.DataFrame(results,
+                                      columns=[
+                                          "Column 1", "Column 2", "Chi2 Value",
+                                          "P Value", "Correlation Streght",
+                                          "Description"
+                                      ])
             results_df = results_df.sort_values(by='P Value')
-            
+
             # Color the cells with high correlation
             def color_cells(val):
                 if val == "High":
                     return 'background-color: yellow'
                 else:
                     return ''
-            
-            styled_df = results_df.style.applymap(color_cells, subset=["Correlation Streght"])
-            
-            st.write(styled_df)
 
+            styled_df = results_df.style.applymap(
+                color_cells, subset=["Correlation Streght"])
+
+            st.write(styled_df)
 
             # Box plot
             st.write("## Box Plot")
-            
+
             # Filter the numeric columns based on unique value criteria
-            valid_numeric_cols_for_box = [col for col in self.numeric_cols if self.df[col].nunique() > 20]
-            
+            valid_numeric_cols_for_box = [
+                col for col in self.numeric_cols if self.df[col].nunique() > 20
+            ]
+
             # Filter the categorical columns based on unique value criteria
-            valid_categorical_cols_for_box = [col for col in self.categorical_cols if self.df[col].nunique() < 10]
-            
+            valid_categorical_cols_for_box = [
+                col for col in self.categorical_cols
+                if self.df[col].nunique() < 10
+            ]
+
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
-            
+
             for num_col in valid_numeric_cols_for_box:
                 for cat_col in valid_categorical_cols_for_box:
-                    fig = px.box(self.df, x=cat_col, y=num_col, title=f'Box Plot of {num_col} grouped by {cat_col}', width=chart_width, height=chart_height)
-                    fig.update_layout(
-                        title={
-                            'font': {'size': 12}  # Increase font size for title
-                        })
+                    fig = px.box(
+                        self.df,
+                        x=cat_col,
+                        y=num_col,
+                        title=f'Box Plot of {num_col} grouped by {cat_col}',
+                        width=chart_width,
+                        height=chart_height)
+                    fig.update_layout(title={
+                        'font': {
+                            'size': 12
+                        }  # Increase font size for title
+                    })
                     columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
-
 
             # Pairplot
             # st.write("## Pairplot")
@@ -1200,45 +1257,67 @@ class DataViz():
             st.write("## Pie Charts for Categorical Columns")
 
             # Filter categorical columns based on unique value count
-            filtered_categorical_cols = [col for col in self.categorical_cols if len(self.df[col].unique()) < 10]
-            filtered_numeric_cols = [col for col in self.numeric_cols if len(self.df[col].unique()) > 20]
-            
+            filtered_categorical_cols = [
+                col for col in self.categorical_cols
+                if len(self.df[col].unique()) < 10
+            ]
+            filtered_numeric_cols = [
+                col for col in self.numeric_cols
+                if len(self.df[col].unique()) > 20
+            ]
+
             # Choose aggregation method
-            aggregation_method = st.selectbox('Choose aggregation method', ['count', 'mean', 'sum'])
-            
+            aggregation_method = st.selectbox('Choose aggregation method',
+                                              ['count', 'mean', 'sum'])
+
             # If aggregation method is not count, let user choose a numeric column
             selected_numeric = None
             if aggregation_method != 'count':
-                selected_numeric = st.selectbox('Choose a numeric column for aggregation', filtered_numeric_cols)
-            
+                selected_numeric = st.selectbox(
+                    'Choose a numeric column for aggregation',
+                    filtered_numeric_cols)
+
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
-            
+
             # Aggregate the data
             if aggregation_method == 'count':
-                aggregated_data = self.df[filtered_categorical_cols].groupby(filtered_categorical_cols).size().reset_index(name='count')
+                aggregated_data = self.df[filtered_categorical_cols].groupby(
+                    filtered_categorical_cols).size().reset_index(name='count')
             else:
-                aggregated_data = self.df.groupby(filtered_categorical_cols)[selected_numeric].agg(aggregation_method).reset_index()
-            
+                aggregated_data = self.df.groupby(filtered_categorical_cols)[
+                    selected_numeric].agg(aggregation_method).reset_index()
+
             # Create pie charts for all filtered categorical columns
             for col in filtered_categorical_cols:
                 if aggregation_method == 'count':
-                    fig = px.pie(aggregated_data, names=col, values='count', 
-                                 title=f'Pie Chart of {col}<br>(Aggregated by count)', 
-                                 width=chart_width, height=chart_height)
-                    fig.update_layout(
-                        title={
-                            'font': {'size': 12}  # Increase font size for title
-                        })
+                    fig = px.pie(
+                        aggregated_data,
+                        names=col,
+                        values='count',
+                        title=f'Pie Chart of {col}<br>(Aggregated by count)',
+                        width=chart_width,
+                        height=chart_height)
+                    fig.update_layout(title={
+                        'font': {
+                            'size': 12
+                        }  # Increase font size for title
+                    })
                 else:
-                    fig = px.pie(aggregated_data, names=col, values=selected_numeric, 
-                                 title=f'Pie Chart of {col}<br>(Aggregated by {aggregation_method} of {selected_numeric})', 
-                                 width=chart_width, height=chart_height)
-                    fig.update_layout(
-                        title={
-                            'font': {'size': 12}  # Increase font size for title
-                        })
+                    fig = px.pie(
+                        aggregated_data,
+                        names=col,
+                        values=selected_numeric,
+                        title=
+                        f'Pie Chart of {col}<br>(Aggregated by {aggregation_method} of {selected_numeric})',
+                        width=chart_width,
+                        height=chart_height)
+                    fig.update_layout(title={
+                        'font': {
+                            'size': 12
+                        }  # Increase font size for title
+                    })
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
@@ -1246,69 +1325,85 @@ class DataViz():
             st.write("## Line Plots")
 
             # Filter integer and date columns based on unique value criteria
-            valid_integer_cols_for_line = [col for col in self.integer_cols if self.df[col].nunique() > 5]
-            valid_date_cols_for_line = [col for col in self.date_cols if self.df[col].nunique() > 5]
-            
+            valid_integer_cols_for_line = [
+                col for col in self.integer_cols if self.df[col].nunique() > 5
+            ]
+            valid_date_cols_for_line = [
+                col for col in self.date_cols if self.df[col].nunique() > 5
+            ]
+
             # Aggregation options for numeric columns
-            agg_option = st.selectbox("Select aggregation for Y-axis:", ['mean', 'median', 'sum'])
-            
+            agg_option = st.selectbox("Select aggregation for Y-axis:",
+                                      ['mean', 'median', 'sum'])
+
             # Columns for layout
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
 
-            def plot_all_line_charts(df, integer_cols, numeric_cols, agg_option, chart_width, chart_height, columns, chart_col_idx):
+            def plot_all_line_charts(df, integer_cols, numeric_cols,
+                                     agg_option, chart_width, chart_height,
+                                     columns, chart_col_idx):
                 for x_col in integer_cols:
                     for y_col in numeric_cols:
                         # Skip plotting if x and y columns are the same
                         if x_col == y_col:
                             continue
-                        
-                        fig = create_line_plot(df, x_col, y_col, agg_option, chart_width, chart_height)
+
+                        fig = create_line_plot(df, x_col, y_col, agg_option,
+                                               chart_width, chart_height)
                         columns[chart_col_idx % 3].plotly_chart(fig)
                         chart_col_idx += 1
-            
+
                 chart_col_idx = 0
 
-            def create_line_plot(df, x_col, y_col, aggregation, chart_width, chart_height):
+            def create_line_plot(df, x_col, y_col, aggregation, chart_width,
+                                 chart_height):
                 if aggregation == 'mean':
                     df_agg = df.groupby(x_col, as_index=False)[y_col].mean()
                 elif aggregation == 'median':
                     df_agg = df.groupby(x_col, as_index=False)[y_col].median()
                 else:  # sum
                     df_agg = df.groupby(x_col, as_index=False)[y_col].sum()
-            
+
                 # Create line plot
                 fig = px.line(df_agg, x=x_col, y=y_col)
-            
+
                 # Apply custom style
                 fig.update_layout(
                     title={
-                        'text': f'Line Plot of {y_col} by {x_col}<br>(Aggregated by {aggregation})',
+                        'text':
+                        f'Line Plot of {y_col} by {x_col}<br>(Aggregated by {aggregation})',
                         # 'x': 0.5,  # Center the title
                         # 'xanchor': 'center',
-                        'font': {'size': 12}  # Increase font size for title
+                        'font': {
+                            'size': 12
+                        }  # Increase font size for title
                     },
                     width=chart_width,
                     height=chart_height,
                     paper_bgcolor="white",  # set background color to white
-                    plot_bgcolor="white",   # set plot background color to white
-                    xaxis_showgrid=True,    # Show x-axis gridlines
+                    plot_bgcolor="white",  # set plot background color to white
+                    xaxis_showgrid=True,  # Show x-axis gridlines
                     xaxis_gridcolor='rgba(200,200,200,0.2)',  # Lighten gridlines
-                    yaxis_showgrid=True,    # Show y-axis gridlines
+                    yaxis_showgrid=True,  # Show y-axis gridlines
                     yaxis_gridcolor='rgba(200,200,200,0.2)',  # Lighten gridlines
-                    margin=dict(t=40, b=40, l=40, r=10)  # Add margins to the plot
+                    margin=dict(t=40, b=40, l=40,
+                                r=10)  # Add margins to the plot
                 )
-            
+
                 # Update line style
                 fig.update_traces(
-                    line=dict(dash="solid", width=2.5),  # Set line style and width
+                    line=dict(dash="solid",
+                              width=2.5),  # Set line style and width
                     marker=dict(size=8),  # Adjust marker size
                     mode="lines+markers"  # Add markers to the line
                 )
-            
+
                 return fig
 
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
-            plot_all_line_charts(self.df, self.integer_cols, self.numeric_cols, agg_option, chart_width, chart_height, columns, chart_col_idx)
+            plot_all_line_charts(self.df, self.integer_cols, self.numeric_cols,
+                                 agg_option, chart_width, chart_height,
+                                 columns, chart_col_idx)
