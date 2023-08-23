@@ -1086,8 +1086,10 @@ class DataViz():
             
             # Menghitung matriks korelasi
             correlation_matrix = self.df[filtered_cols].corr()
-            
+
             # Membuat daftar dari pasangan kolom dan nilai korelasinya
+            from itertools import combinations
+            
             pairs_correlation = []
             for col1, col2 in combinations(filtered_cols, 2):
                 pairs_correlation.append(((col1, col2), abs(correlation_matrix.loc[col1, col2])))
