@@ -22,8 +22,7 @@ class DataViz():
         # self.df = pd.read_csv('train.csv')
         self.num_df = self.df.select_dtypes(include='number')
         self.cat_df = self.df.select_dtypes(exclude='number')
-        self.date_cols = [col for col in df.columns if df[col].dtype == 'datetime64[ns]']
-
+        self.date_cols = self.df.select_dtypes(include='datetime64[ns]')
         # sorry duplicate dulu
         self.numeric_cols = self.df.select_dtypes(['int16', 'int32', 'int64', 'float16', 'float32', 'float64']).columns
         self.categorical_cols = self.df.select_dtypes(exclude=['int16', 'int32', 'int64', 'float16', 'float32', 'float64']).columns
