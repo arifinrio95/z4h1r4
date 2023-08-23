@@ -204,7 +204,7 @@ local_css("style.css")
 def request_prompt(input_pengguna,
                    schema_str,
                    rows_str,
-                   style='Plotly',
+                   style='Visualization',
                    error_message=None,
                    previous_script=None,
                    retry_count=0):
@@ -221,32 +221,55 @@ def request_prompt(input_pengguna,
     #     7. Pay attention to the column type before creating the script."""}
     # ]
 
-    # versi 1 prompt
-    messages = [{
-        "role":
-        "system",
-        "content":
-        "I only response with python syntax streamlit version, no other text explanation."
-    }, {
-        "role":
-        "user",
-        "content":
-        f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-        1. {input_pengguna}. 
-        2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-        3. Respond with scripts without any text. 
-        4. Respond in plain text code. 
-        5. Don’t start your response with “Sure, here are”. 
-        6. Start your response with “import”.
-        7. Don’t give me any explanation about the script. Response only with python code in a plain text.
-        8. Do not reload the dataframe.
-        9. Use Try and Except for each syntax, Except with pass.
-        10. Give a Title inside the chart for each visualization. Don't use st.title or st.subheader.
-        11. Use unique streamlit widgets.
-        12. Use {style} library for visualization.
-        13. Pay attention to the dataframe schema, don't do any convert."""
-    }]
-    # Give and show with streamlit the title for every steps. Give an explanation for every syntax.
+    if style == 'General Question':
+        messages = [{
+            "role":
+            "system",
+            "content":
+            "I only response with python syntax streamlit version, no other text explanation."
+        }, {
+            "role":
+            "user",
+            "content":
+            f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
+            1. {input_pengguna}. 
+            2. My dataframe already load previously, named df, use it, do not reload the dataframe.
+            3. Respond with scripts without any text. 
+            4. Respond in plain text code. 
+            5. Don’t start your response with “Sure, here are”. 
+            6. Start your response with “import”.
+            7. Don’t give me any explanation about the script. Response only with python code in a plain text.
+            8. Do not reload the dataframe.
+            9. Use Try and Except for each syntax, Except with pass.
+            10. Pay attention to the dataframe schema, don't do any convert."""
+        }]
+    else:
+        # versi 1 prompt
+        messages = [{
+            "role":
+            "system",
+            "content":
+            "I only response with python syntax streamlit version, no other text explanation."
+        }, {
+            "role":
+            "user",
+            "content":
+            f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
+            1. {input_pengguna}. 
+            2. My dataframe already load previously, named df, use it, do not reload the dataframe.
+            3. Respond with scripts without any text. 
+            4. Respond in plain text code. 
+            5. Don’t start your response with “Sure, here are”. 
+            6. Start your response with “import”.
+            7. Don’t give me any explanation about the script. Response only with python code in a plain text.
+            8. Do not reload the dataframe.
+            9. Use Try and Except for each syntax, Except with pass.
+            10. Give a Title inside the chart for each visualization. Don't use st.title or st.subheader.
+            11. Use unique streamlit widgets.
+            12. Use {style} library for visualization.
+            13. Pay attention to the dataframe schema, don't do any convert."""
+        }]
+        # Give and show with streamlit the title for every steps. Give an explanation for every syntax.
 
     if error_message and previous_script:
         messages.append({
@@ -1575,15 +1598,15 @@ def main():
         if st.session_state.get('show_natural_language_exploration', False):
             st.subheader("Natural Language Exploration")
             input_pengguna = ""
-            style_choosen = 'Plotly'
+            style_choosen = 'Visualization'
             input_pengguna = st.text_area(
                 """Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
                 value=
                 "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
             )
             style_choosen = st.selectbox(
-                'Choose a Visualization Style:',
-                ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
+                'Choose an Objective:',
+                ('Visualization', 'General Question'))
 
             if 'button_clicked' not in st.session_state:
                 st.session_state.button_clicked = False
