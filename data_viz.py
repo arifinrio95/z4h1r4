@@ -1235,6 +1235,8 @@ class DataViz():
             chart_col_idx = 0
 
             def create_line_plot(df, x_col, y_col, aggregation, chart_width, chart_height):
+                print(f"x_col: {x_col}, Type: {type(x_col)}")
+                print(f"Columns in df: {df.columns}")
                 if aggregation == 'mean':
                     df_agg = df.groupby(x_col)[y_col].mean().reset_index()
                 elif aggregation == 'median':
