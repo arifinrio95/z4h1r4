@@ -334,9 +334,11 @@ def request_story_prompt(schema_str, rows_str, min_viz, api_model, style='Plotly
         Display in order: introductory, introduction for insight 1, visualization for insight 1, introduction for insight 2, visualization for insight 2, and so on.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
-        Give a clear {style} title.
-        Optimize the script for efficiency and minimize the number of lines.
-        Visualize different columns for different insight, the insights must be unique and interesting, and it's {min_viz} most important insights from the data."""}]
+        Visualize different columns for different insight, the insights must be unique and interesting, and it's {min_viz} most important insights from the data.
+        
+        """}]
+    # Optimize the script for efficiency and minimize the number of lines.
+    
     # messages = [{
     #     "role":
     #     "system",
