@@ -1235,12 +1235,15 @@ class DataViz():
             def plot_all_line_charts(df, integer_cols, numeric_cols, agg_option, chart_width, chart_height, columns, chart_col_idx):
                 for x_col in integer_cols:
                     for y_col in numeric_cols:
+                        # Skip plotting if x and y columns are the same
+                        if x_col == y_col:
+                            continue
+                        
                         fig = create_line_plot(df, x_col, y_col, agg_option, chart_width, chart_height)
                         columns[chart_col_idx % 3].plotly_chart(fig)
                         chart_col_idx += 1
-
+            
                 chart_col_idx = 0
-            # df_agg = df.groupby(x_col)[y_col].mean().reset_index().rename(columns={"Quantity": "New_Column_Name"})
 
             def create_line_plot(df, x_col, y_col, aggregation, chart_width, chart_height):
                 if aggregation == 'mean':
@@ -1253,7 +1256,6 @@ class DataViz():
                 fig = px.line(df_agg, x=x_col, y=y_col, title=f'Line Plot of {y_col} by {x_col}<br>(Aggregated by {aggregation})', width=chart_width, height=chart_height)
                 return fig
 
-                
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
             plot_all_line_charts(self.df, self.integer_cols, self.numeric_cols, agg_option, chart_width, chart_height, columns, chart_col_idx)
