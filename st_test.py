@@ -335,7 +335,7 @@ def request_story_prompt(schema_str, rows_str, min_viz, style='Plotly'):
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
         Give a clear {style} title.
-        Provide minimum {min_viz} numbers of insights."""
+        Optimized the script, efficient code and least numbers of lines."""
     }]
     # Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
     #
@@ -1711,7 +1711,7 @@ def main():
             button = st.button("Submit")
             if button:
                 # Membagi respons berdasarkan tanda awal dan akhir kode
-                with st.spinner('Generating insights...'):
+                with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
                     response = request_story_prompt(schema_str, rows_str,
                                                     min_viz, style_choosen)
                     # st.text(response)
