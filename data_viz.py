@@ -1057,26 +1057,6 @@ class DataViz():
             # Kolom dropdown untuk memilih jumlah plot
             num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, 11)), index=9, key="num_of_plot")  # Default ke 10
 
-             # Membiarkan pengguna memilih warna dengan default pilihan
-            scatter_color_choice = col1.selectbox(
-                "Choose color for scatter points:",
-                list(color_map.keys()),
-                index=list(color_map.keys()).index("Sage"), key="scatter_color_choice_key")  # Default ke "Terracotta"
-
-            line_color_choice = col2.selectbox(
-                "Choose color for regression line:",
-                list(color_map.keys()),
-                index=list(color_map.keys()).index(
-                    "Umber")  # Default ke "Umber"
-            )
-
-            scatter_color = color_map[scatter_color_choice]
-            line_color = color_map[line_color_choice]
-
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0
-
             # Filter kolom numerik yang uniq valuenya di atas 10
             filtered_cols = [
                 col for col in self.numeric_cols if self.df[col].nunique() > 10
