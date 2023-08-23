@@ -1223,8 +1223,8 @@ class DataViz():
 
         
             # Filter integer and date columns based on unique value criteria
-            valid_integer_cols_for_line = [col for col in self.integer_cols if self.df[col].nunique() > 20]
-            valid_date_cols_for_line = [col for col in self.date_cols if self.df[col].nunique() > 20]
+            valid_integer_cols_for_line = [col for col in self.integer_cols if self.df[col].nunique() > 10]
+            valid_date_cols_for_line = [col for col in self.date_cols if self.df[col].nunique() > 10]
             
             # Aggregation options for numeric columns
             agg_option = st.selectbox("Select aggregation for Y-axis:", ['mean', 'median', 'sum'])
