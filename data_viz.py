@@ -1238,6 +1238,7 @@ class DataViz():
                 for x_col in integer_cols:
                     for y_col in numeric_cols:
                         fig = create_line_plot(df, x_col, y_col, agg_option, chart_width, chart_height)
+                        columns[chart_col_idx % 3].plotly_chart(fig)
                         chart_col_idx += 1
                         
             def create_line_plot(df, x_col, y_col, aggregation, chart_width, chart_height):
