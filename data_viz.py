@@ -1234,7 +1234,7 @@ class DataViz():
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
 
-            def plot_all_line_charts(df, integer_cols, numeric_cols, agg_option, chart_width, chart_height):
+            def plot_all_line_charts(df, integer_cols, numeric_cols, agg_option, chart_width, chart_height, columns, chart_col_idx):
                 for x_col in integer_cols:
                     for y_col in numeric_cols:
                         fig = create_line_plot(df, x_col, y_col, agg_option, chart_width, chart_height)
@@ -1256,7 +1256,7 @@ class DataViz():
                 
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
-            plot_all_line_charts(self.df, self.integer_cols, self.numeric_cols, agg_option, chart_width, chart_height)
+            plot_all_line_charts(self.df, self.integer_cols, self.numeric_cols, agg_option, chart_width, chart_height, columns, chart_col_idx)
 
             # # Plot line plots for integer columns vs numeric columns
             # for int_col in valid_integer_cols_for_line:
