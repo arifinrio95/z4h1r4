@@ -1388,11 +1388,11 @@ class DataViz():
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
 
-            def plot_all_line_charts(df, integer_cols, numeric_cols,
+            def plot_all_line_charts(df, integer_cols, float_cols,
                                      agg_option, chart_width, chart_height,
                                      columns, chart_col_idx):
                 for x_col in integer_cols:
-                    for y_col in numeric_cols:
+                    for y_col in float_cols:
                         # Skip plotting if x and y columns are the same
                         if x_col == y_col:
                             continue
