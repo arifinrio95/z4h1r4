@@ -1243,7 +1243,7 @@ class DataViz():
             ]
             
             # Calculate Point-Biserial correlation for each combination of numeric and categorical columns
-            self.df = self.df.dropna(subset=[num_col, cat_col])
+            self.df = self.df.dropna()
             correlations = []
             for num_col in valid_numeric_cols_for_box:
                 for cat_col in valid_categorical_cols_for_box:
