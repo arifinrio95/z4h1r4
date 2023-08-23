@@ -248,7 +248,7 @@ def request_prompt(input_pengguna,
         model="gpt-3.5-turbo",
         # model="gpt-4",
         messages=messages,
-        max_tokens=1000,
+        max_tokens=3000,
         temperature=0)
         script = response.choices[0].message['content']
     else:
@@ -282,7 +282,7 @@ def request_prompt(input_pengguna,
         model="gpt-3.5-turbo",
         # model="gpt-4",
         messages=messages,
-        max_tokens=1000,
+        max_tokens=3000,
         temperature=0)
         script = response.choices[0].message['content']
 
@@ -340,7 +340,7 @@ def request_story_prompt(schema_str, rows_str, min_viz, style='Plotly'):
     #
     response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
                                             messages=messages,
-                                            max_tokens=1000,
+                                            max_tokens=3000,
                                             temperature=0)
     script = response.choices[0].message['content']
 
