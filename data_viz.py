@@ -599,7 +599,9 @@ class DataViz():
                 fig = px.histogram(self.num_df[VAR],
                                    nbins=int(BIN),
                                    histnorm=NORM)
+                fig.update_traces(marker=dict(color=hist_color, line=dict(color='black', width=1)))
                 f = fig.full_figure_for_development(warn=False)
+                
 
                 xbins = f.data[0].xbins
                 plotbins = list(
