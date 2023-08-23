@@ -336,7 +336,7 @@ def request_story_prompt(schema_str, rows_str, min_viz, api_model, style='Plotly
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
         Give a clear {style} title.
         Optimize the script for efficiency and minimize the number of lines.
-        Visualize different chart types for each insight that are unique and interesting, and it's {min_viz} most important insights from the data."""}]
+        Visualize different chart types and different columns for each insight that are unique and interesting, and it's {min_viz} most important insights from the data."""}]
     # messages = [{
     #     "role":
     #     "system",
