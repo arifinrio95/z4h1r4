@@ -919,17 +919,7 @@ class DataViz():
             # img_col.image(wordcloud.to_array(), use_column_width=True)
 
             # st.write('---')
-
-        def create_line_plot(df, x_col, y_col, aggregation, chart_width, chart_height):
-                if aggregation == 'mean':
-                    df_agg = df.groupby(x_col)[y_col].mean().reset_index()
-                elif aggregation == 'median':
-                    df_agg = df.groupby(x_col)[y_col].median().reset_index()
-                else: # sum
-                    df_agg = df.groupby(x_col)[y_col].sum().reset_index()
         
-                fig = px.line(df_agg, x=x_col, y=y_col, title=f'Line Plot of {y_col} by {x_col} (Aggregated by {aggregation})', width=chart_width, height=chart_height)
-                return fig
         with tab4:      
             # Membuat peta warna
             color_map = {
@@ -1243,7 +1233,17 @@ class DataViz():
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
+
+            def create_line_plot(df, x_col, y_col, aggregation, chart_width, chart_height):
+                if aggregation == 'mean':
+                    df_agg = df.groupby(x_col)[y_col].mean().reset_index()
+                elif aggregation == 'median':
+                    df_agg = df.groupby(x_col)[y_col].median().reset_index()
+                else: # sum
+                    df_agg = df.groupby(x_col)[y_col].sum().reset_index()
         
+                fig = px.line(df_agg, x=x_col, y=y_col, title=f'Line Plot of {y_col} by {x_col} (Aggregated by {aggregation})', width=chart_width, height=chart_height)
+                return fig
             
             # Plot line plots for integer columns vs numeric columns
             for int_col in valid_integer_cols_for_line:
