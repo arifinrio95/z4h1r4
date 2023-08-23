@@ -35,6 +35,8 @@ class DataViz():
         self.numeric_cols = self.df.select_dtypes(
             ['int16', 'int32', 'int64', 'float16', 'float32',
              'float64']).columns
+        self.float_cols = self.df.select_dtypes(
+            ['float16', 'float32', 'float64']).columns
         self.categorical_cols = self.df.select_dtypes(exclude=[
             'int16', 'int32', 'int64', 'float16', 'float32', 'float64'
         ]).columns
@@ -1008,7 +1010,7 @@ class DataViz():
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0  # counter to keep track of columns
 
-            for col in self.numeric_cols:
+            for col in self.float_cols:
                 fig = px.histogram(self.df,
                                    x=col,
                                    marginal="box",
@@ -1054,6 +1056,33 @@ class DataViz():
 
             # Kolom dropdown untuk memilih jumlah plot
             num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, 11)), index=9)  # Default ke 10
+
+             # Membiarkan pengguna memilih warna dengan default pilihan
+            scatter_color_choice = col1.selectbox(
+                "Choose color for scatter points:",
+                list(color_map.keys()),
+                index=list(color_map.keys()).index(
+                    "Sage")  # Default ke "Terracotta"
+            )
+
+            line_color_choice = col2.selectbox(
+                "Choose color for regression line:",
+                list(color_map.keys()),
+                index=list(color_map.keys()).index(
+                    "Umber")  # Default ke "Umber"
+            )
+
+            scatter_color = color_map[scatter_color_choice]
+            line_color = color_map[line_color_choice]
+
+            left_col, center_col, right_col = st.columns(3)
+            columns = [left_col, center_col, right_col]
+            chart_col_idx = 0
+
+            # Filter kolom numerik yang uniq valuenya di atas 10
+            filtered_cols = [
+                col for col in self.numeric_cols if self.df[col].nunique() > 10
+            ]
             
             # Menghitung matriks korelasi
             correlation_matrix = self.df[filtered_cols].corr()
