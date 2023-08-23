@@ -1238,10 +1238,10 @@ class DataViz():
                         fig = create_line_plot(df, x_col, y_col, agg_option, chart_width, chart_height)
                         columns[chart_col_idx % 3].plotly_chart(fig)
                         chart_col_idx += 1
+
+                chart_col_idx = 0
                         
             def create_line_plot(df, x_col, y_col, aggregation, chart_width, chart_height):
-                st.write(f"x_col: {x_col}, Type: {type(x_col)}")
-                st.write(f"Columns in df: {df.columns}")
                 if aggregation == 'mean':
                     df_agg = df.groupby(x_col)[y_col].mean().reset_index()
                 elif aggregation == 'median':
