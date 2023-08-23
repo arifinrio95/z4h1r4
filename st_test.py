@@ -244,11 +244,11 @@ def request_prompt(input_pengguna,
             10. Tulis code untuk menjawab pertanyaan tersebut dalam versi streamlit untuk dieksekusi."""
         }]
         response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k",
-        # model="gpt-3.5-turbo",
+        # model="gpt-3.5-turbo-16k",
+        model="gpt-3.5-turbo",
         # model="gpt-4",
         messages=messages,
-        max_tokens=3000,
+        max_tokens=1000,
         temperature=0)
         script = response.choices[0].message['content']
     else:
@@ -274,15 +274,15 @@ def request_prompt(input_pengguna,
             9. Use Try and Except for each syntax, Except with pass.
             10. Give a Title inside the chart for each visualization. Don't use st.title or st.subheader.
             11. Use unique streamlit widgets.
-            12. Use {style} library for visualization.
+            12. Use Plotly library for visualization.
             13. Pay attention to the dataframe schema, don't do any convert."""
         }]
         response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k",
-        # model="gpt-3.5-turbo",
+        # model="gpt-3.5-turbo-16k",
+        model="gpt-3.5-turbo",
         # model="gpt-4",
         messages=messages,
-        max_tokens=3000,
+        max_tokens=1000,
         temperature=0)
         script = response.choices[0].message['content']
 
@@ -338,9 +338,9 @@ def request_story_prompt(schema_str, rows_str, min_viz, style='Plotly'):
     }]
     # Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
     #
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo-16k",
+    response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
                                             messages=messages,
-                                            max_tokens=10000,
+                                            max_tokens=1000,
                                             temperature=0)
     script = response.choices[0].message['content']
 
