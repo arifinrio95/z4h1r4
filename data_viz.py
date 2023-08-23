@@ -1228,40 +1228,53 @@ class DataViz():
 
             st.write(styled_df)
 
-            # Box plot
-            st.write("## Box Plot")
+            import scipy.stats as stats
 
+            st.write("## Box Plot")
+            
             # Filter the numeric columns based on unique value criteria
             valid_numeric_cols_for_box = [
                 col for col in self.numeric_cols if self.df[col].nunique() > 20
             ]
-
+            
             # Filter the categorical columns based on unique value criteria
             valid_categorical_cols_for_box = [
-                col for col in self.categorical_cols
-                if self.df[col].nunique() < 10
+                col for col in self.categorical_cols if self.df[col].nunique() < 10
             ]
-
+            
+            # Calculate Point-Biserial correlation for each combination of numeric and categorical columns
+            correlations = []
+            for num_col in valid_numeric_cols_for_box:
+                for cat_col in valid_categorical_cols_for_box:
+                    correlation, _ = stats.pointbiserialr(self.df[num_col], self.df[cat_col].astype('category').cat.codes)
+                    correlations.append(((num_col, cat_col), correlation))
+            
+            # Sort the pairs by absolute value of Point-Biserial correlation
+            sorted_correlations = sorted(correlations, key=lambda x: abs(x[1]), reverse=True)
+            
+            # Let the user choose how many plots to display, default is 9
+            num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, 10)), index=8)  # Default to 9
+            
+            top_pairs = [pair[0] for pair in sorted_correlations[:num_of_plots]]
+            
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
-
-            for num_col in valid_numeric_cols_for_box:
-                for cat_col in valid_categorical_cols_for_box:
-                    fig = px.box(
-                        self.df,
-                        x=cat_col,
-                        y=num_col,
-                        title=f'Box Plot of {num_col} grouped by {cat_col}',
-                        width=chart_width,
-                        height=chart_height)
-                    fig.update_layout(title={
-                        'font': {
-                            'size': 12
-                        }  # Increase font size for title
-                    })
-                    columns[chart_col_idx % 3].plotly_chart(fig)
+            
+            # Create box plots for the top correlated pairs
+            for num_col, cat_col in top_pairs:
+                fig = px.box(
+                    self.df,
+                    x=cat_col,
+                    y=num_col,
+                    title=f'Box Plot of {num_col} grouped by {cat_col}',
+                    width=chart_width,
+                    height=chart_height)
+                fig.update_layout(title={'font': {'size': 12}})
+                
+                columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
+
 
             # Pairplot
             # st.write("## Pairplot")
