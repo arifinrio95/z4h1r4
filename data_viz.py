@@ -1030,23 +1030,23 @@ class DataViz():
                     color=hist_color, line=dict(color=edge_color, width=1)))
                 columns[chart_col_idx % 3].plotly_chart(fig)
 
-                # Calculate skewness and kurtosis
-                col_skewness = skew(self.df[col])
-                col_kurtosis = kurtosis(self.df[col])
+                # # Calculate skewness and kurtosis
+                # col_skewness = skew(self.df[col])
+                # col_kurtosis = kurtosis(self.df[col])
 
-                # Determine the distribution type based on skewness and kurtosis
-                if abs(col_skewness) < 0.5 and abs(col_kurtosis) < 0.5:
-                    distribution_type = "approximately normal"
-                elif abs(col_skewness) > 1:
-                    distribution_type = "highly skewed"
-                elif abs(col_kurtosis) > 0.5:
-                    distribution_type = "has heavier tails than a normal distribution"
-                else:
-                    distribution_type = "moderately skewed"
+                # # Determine the distribution type based on skewness and kurtosis
+                # if abs(col_skewness) < 0.5 and abs(col_kurtosis) < 0.5:
+                #     distribution_type = "approximately normal"
+                # elif abs(col_skewness) > 1:
+                #     distribution_type = "highly skewed"
+                # elif abs(col_kurtosis) > 0.5:
+                #     distribution_type = "has heavier tails than a normal distribution"
+                # else:
+                #     distribution_type = "moderately skewed"
 
-                columns[chart_col_idx % 3].markdown(
-                    f"<sub>The distribution of {col} is {distribution_type}.</sub>",
-                    unsafe_allow_html=True)
+                # columns[chart_col_idx % 3].markdown(
+                #     f"<sub>The distribution of {col} is {distribution_type}.</sub>",
+                #     unsafe_allow_html=True)
 
                 chart_col_idx += 1
 
