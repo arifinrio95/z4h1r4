@@ -1414,7 +1414,7 @@ class DataViz():
                         columns[chart_col_idx % 3].plotly_chart(fig)
                         chart_col_idx += 1
 
-                chart_col_idx = 0
+                # chart_col_idx = 0
 
             def create_line_plot(df, x_col, y_col, aggregation, chart_width,
                                  chart_height):
