@@ -1177,7 +1177,7 @@ def main():
 
         st.sidebar.subheader('Pilih metode eksplorasi:')
         # Tombol 1
-        if st.sidebar.button('🕵️ Explore Visualization & Insight with Ulik Data', key='my-btn0'):
+        if st.sidebar.button('🕵️ Explore Visualization & Insight with UlikData', key='my-btn0'):
             st.session_state.manual_exploration = True
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
@@ -1219,7 +1219,7 @@ def main():
 
         # Tombol 5
         # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('🤖 Automatic Insight Generations (by Ulikdata x GPT) - Under Maintenance', key='my-btn3'):
+        if st.sidebar.button('🤖 Automatic Insight Generations (by UlikData x GPT) - Under Maintenance', key='my-btn3'):
             st.session_state.manual_exploration = False
             st.session_state.auto_exploration = False
             st.session_state.show_analisis_lanjutan = False
