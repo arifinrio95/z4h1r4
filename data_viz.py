@@ -1247,8 +1247,9 @@ class DataViz():
             correlations = []
             for num_col in valid_numeric_cols_for_box:
                 for cat_col in valid_categorical_cols_for_box:
-                    correlation, _ = stats.pointbiserialr(self.df[num_col], self.df[cat_col].astype('category').cat.codes)
-                    correlations.append(((num_col, cat_col), correlation))
+                    if len(self.df[num_col].unique()) > 1 and len(self.df[cat_col].unique()) > 1:
+                        correlation, _ = stats.pointbiserialr(self.df[num_col], self.df[cat_col].astype('category').cat.codes)
+                        correlations.append(((num_col, cat_col), correlation))
             
             # Sort the pairs by absolute value of Point-Biserial correlation
             sorted_correlations = sorted(correlations, key=lambda x: abs(x[1]), reverse=True)
