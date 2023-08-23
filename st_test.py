@@ -317,26 +317,48 @@ def request_story_prompt(schema_str, rows_str, min_viz, api_model, style='Plotly
     # ]
 
     # Versi penjelasan dan code
+    # messages = [{
+    #     "role":
+    #     "system",
+    #     "content":
+    #     f"I will create a long article for you in the form of analysis and visualization in {style} scripts to be displayed in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
+    # }, {
+    #     "role":
+    #     "user",
+    #     "content":
+    #     f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
+    #     My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
+    #     The article should start with an introductory paragraph in plain text, followed by introduction for the first insight and the visualization of the first insight with {style} library for visualization and show in streamlit.
+    #     Then continue with an introduction paragraph in for insight 2, followed by the visualization of the second with {style} library for visualization and show in streamlit.
+    #     And so on, up to a minimum of {min_viz} insights, do not provide under {min_viz} number of insights, the minimum is {min_viz}.
+    #     Display in order: introductory, introduction for insight 1, visualization for insight 1, introduction for insight 2, visualization for insight 2, and so on.
+    #     Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
+    #     Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
+    #     Give a clear {style} title.
+    #     Optimize the script for efficiency and minimize the number of lines.
+    #     Use looping for columns if multiple visualizations of the same type can run simultaneously.
+    #     Pay attention to the dataframe schema for best and interesting chart types."""
+    # }]
     messages = [{
         "role":
         "system",
         "content":
-        "I will create a long article for you in the form of analysis and visualization in {style} scripts to be displayed in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
+        f"I will create a long article for you in the form of analysis and visualization in {style} scripts to be displayed in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
     }, {
         "role":
         "user",
         "content":
         f"""Create an article in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
-        The article should start with an introductory paragraph in plain text, followed by introduction for the first insight and the visualization of the first insight with {style} library for visualization and show in streamlit.
-        Then continue with an introduction paragraph in for insight 2, followed by the visualization of the second with {style} library for visualization and show in streamlit.
-        And so on, up to a minimum of {min_viz} insights, do not provide under {min_viz} number of insights, the minimum is {min_viz}.
-        Display in order: introductory, introduction for insight 1, visualization for insight 1, introduction for insight 2, visualization for insight 2, and so on.
+        The article should start with an introductory paragraph in plain text, followed by introduction for the first chart type and the visualization of the first chart type with {style} library for visualization and show in streamlit.
+        Then continue with an introduction paragraph in for chart type 2, followed by the visualization of the second with {style} library for visualization and show in streamlit.
+        And so on, up to a minimum of {min_viz} chart type, do not provide under {min_viz} number of chart type, the minimum is {min_viz}.
+        Display in order: introductory, introduction for chart type 1, visualization for chart type 1, introduction for chart type 2, visualization for chart type 2, and so on.
         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
         Give a clear {style} title.
         Optimize the script for efficiency and minimize the number of lines.
-        Use looping for columns if multiple visualizations of the same type can run simultaneously.
+        Use looping for columns if multiple visualizations of the same type can run simultaneously. For example chart type 1 is distribution, chart type 2 is correlation, chart type 3 is wordcloud, and soon.
         Pay attention to the dataframe schema for best and interesting chart types."""
     }]
     # Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
