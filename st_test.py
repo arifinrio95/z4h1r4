@@ -1696,8 +1696,10 @@ def main():
 
             #     st.markdown(request_story_prompt(dict_stats))
 
-            min_viz = st.selectbox('Expected number of insights:',
-                                   [3, 4, 5, 6, 7, 8, 9, 10])
+            # min_viz = st.selectbox('Expected number of insights:',
+            #                        [3, 4, 5, 6, 7, 8, 9, 10])
+            min_viz = st.slider('Expected number of insights:', min_value=3, max_value=50)
+
             style_choosen = 'Plotly'
             style_choosen = st.selectbox(
                 'Choose a Visualization Style:',
