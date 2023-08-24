@@ -1130,6 +1130,7 @@ class DataViz():
                                  width=chart_width,
                                  height=chart_height)
                     fig.update_traces(marker=dict(size=5, selector=dict(mode='markers'))
+                    fig.update_traces(line=dict(selector=dict(type='scatter', mode='lines'))
                 else:
                     fig = px.scatter(self.df,
                                      x=col1,
@@ -1140,10 +1141,11 @@ class DataViz():
                                      width=chart_width,
                                      height=chart_height)
                     fig.update_traces(marker=dict(size=5, color=scatter_color), selector=dict(mode='markers'))
+                    fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
                     
                 fig.update_layout(title={'font': {'size': 12}})
                 
-                fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
+                
                 
             
                 columns[chart_col_idx % 3].plotly_chart(fig)
