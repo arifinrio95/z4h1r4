@@ -1274,7 +1274,7 @@ class DataViz():
             results_df = pd.DataFrame(results,
                                       columns=[
                                           "Column 1", "Column 2", "Chi2 Value",
-                                          "P Value", "Correlation Streght",
+                                          "P Value", "Correlation Strength",
                                           "Description"
                                       ])
             results_df = results_df.sort_values(by='P Value')
@@ -1287,7 +1287,7 @@ class DataViz():
                     return ''
 
             styled_df = results_df.style.applymap(
-                color_cells, subset=["Correlation Strenght"])
+                color_cells, subset=["Correlation Strength"])
 
             st.write(styled_df)
 
