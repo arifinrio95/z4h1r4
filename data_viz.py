@@ -991,21 +991,21 @@ class DataViz():
 
             # Histogram
             st.write("## Histogram for Numeric Columns")
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3= st.columns(3)
 
             # Membiarkan pengguna memilih warna dengan default pilihan
             hist_color_choice = col1.selectbox(
                 "Choose color for histogram bars:",
                 list(color_map.keys()),
                 index=list(color_map.keys()).index(
-                    "Sage") 
+                    "Default Plotly") 
             )
 
             edge_color_choice = col2.selectbox(
                 "Choose color for histogram bar edges:",
                 list(color_map.keys()),
                 index=list(color_map.keys()).index(
-                    "Umber")  # Default ke "Umber"
+                    "Default Plotly")  # Default ke "Umber"
             )
 
             hist_color = color_map[hist_color_choice]
@@ -1080,7 +1080,7 @@ class DataViz():
             st.write("## Scatter plot with Regression Line")
 
             # Kolom dropdown untuk memilih jumlah plot
-            num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, 11)), index=9, key="num_of_plot")  # Default ke 10
+            num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, 11)), index=1, key="num_of_plot")  # Default ke 10
 
             # Filter kolom numerik yang uniq valuenya di atas 10
             filtered_cols = [
@@ -1103,14 +1103,14 @@ class DataViz():
             # Mengambil pasangan dengan korelasi tertinggi sesuai dengan pilihan pengguna
             top_pairs = [pair[0] for pair in sorted_pairs[:num_of_plots]]
             
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3 = st.columns(3)
 
             # Membiarkan pengguna memilih warna dengan default pilihan
             scatter_color_choice = col1.selectbox(
                 "Choose color for scatter points:",
                 list(color_map.keys()),
                 index=list(color_map.keys()).index(
-                    "Sage")  # Default ke "Terracotta"
+                    "Default Plotly")  # Default ke "Terracotta"
             )
 
             line_color_choice = col2.selectbox(
