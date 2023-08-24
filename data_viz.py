@@ -1172,7 +1172,7 @@ class DataViz():
                 if self.df[col].nunique() <= 20
             ]
 
-            col1, col2, col3 = st.columns()
+            col1, col2, col3 = st.columns(3)
 
             # Pilih kolom numerik dan kategorikal
             selected_numeric_col = col1.selectbox(
