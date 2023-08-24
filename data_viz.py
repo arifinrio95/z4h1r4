@@ -1190,16 +1190,16 @@ class DataViz():
             chart_col_idx = 0
 
             for col in valid_categorical_cols:
-                if selected_palette == 'plotly':
+                if selected_palette == 'Default Plotly':
                     fig = px.bar(
-                    self.df,
-                    x=col,
-                    y=selected_numeric_col,
-                    color=selected_categorical_hue,
-                    title=
-                    f'Bar Chart of {col} grouped by {selected_categorical_hue}',
-                    width=chart_width,
-                    height=chart_height)  # Gunakan palet warna yang terpilih
+                        self.df,
+                        x=col,
+                        y=selected_numeric_col,
+                        color=selected_categorical_hue,
+                        title=
+                        f'Bar Chart of {col} grouped by {selected_categorical_hue}',
+                        width=chart_width,
+                        height=chart_height)  # Gunakan palet warna yang terpilih
                 else:
                     fig = px.bar(
                         self.df,
