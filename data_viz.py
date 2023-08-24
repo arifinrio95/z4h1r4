@@ -945,8 +945,10 @@ class DataViz():
                 "Beige": "#F5F5DC",
                 "Burnt Sienna": "#E97451",
                 "Terracotta": "#E2725B",
-                "Umber": "#635147"
+                "Umber": "#635147",
+                "Default Plotly": "plotly"  # Default Plotly color
             }
+            
             color_palettes = {
                 "Blue Shades": "Blues",
                 "Red Shades": "Reds",
@@ -957,28 +959,32 @@ class DataViz():
                 "Picnic (Green-Yellow-Red)": "Picnic",
                 "Portland (Blue-Purple-Red)": "Portland",
                 "Jet (Blue-Cyan-Yellow-Red)": "Jet",
+                "Default Plotly": "plotly"  # Default Plotly color scale
             }
-            color_palettes_dicrete = {
+            
+            color_palettes_discrete = {
                 "Earth Tones":
-                ["#a52a2a", "#654321", "#c2b280", "#808000", "#6a5acd"],
+                    ["#a52a2a", "#654321", "#c2b280", "#808000", "#6a5acd"],
                 "Cool": ["#99e6e6", "#e6e6ff", "#a3d1ff"],
                 "Warm": ["#ffdb58", "#ffb366", "#ff7f50"],
                 "Sunset":
-                ["#FF4500", "#FF6347", "#FF7F50", "#FF8C00", "#FFA500"],
+                    ["#FF4500", "#FF6347", "#FF7F50", "#FF8C00", "#FFA500"],
                 "Ocean":
-                ["#1E90FF", "#20B2AA", "#4682B4", "#5F9EA0", "#00CED1"],
+                    ["#1E90FF", "#20B2AA", "#4682B4", "#5F9EA0", "#00CED1"],
                 "Forest":
-                ["#228B22", "#006400", "#2E8B57", "#3CB371", "#32CD32"],
+                    ["#228B22", "#006400", "#2E8B57", "#3CB371", "#32CD32"],
                 "Berry":
-                ["#8B0000", "#B22222", "#DC143C", "#FF0000", "#FF4500"],
+                    ["#8B0000", "#B22222", "#DC143C", "#FF0000", "#FF4500"],
                 "Pastel":
-                ["#FFDAB9", "#E6E6FA", "#FFFACD", "#D8BFD8", "#F0E68C"],
+                    ["#FFDAB9", "#E6E6FA", "#FFFACD", "#D8BFD8", "#F0E68C"],
                 "Neon":
-                ["#FF1493", "#00FF00", "#FFD700", "#FF69B4", "#00BFFF"],
+                    ["#FF1493", "#00FF00", "#FFD700", "#FF69B4", "#00BFFF"],
                 "Monochrome":
-                ["#2F4F4F", "#708090", "#778899", "#B0C4DE", "#F5F5F5"],
+                    ["#2F4F4F", "#708090", "#778899", "#B0C4DE", "#F5F5F5"],
+                "Default Plotly": "plotly"  # Default Plotly color scale
                 # ... you can further expand and add more palettes as needed
             }
+
 
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
