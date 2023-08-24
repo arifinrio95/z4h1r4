@@ -1183,7 +1183,7 @@ class DataViz():
             # Pilih palet warna
             selected_palette = col3.selectbox(
                 "Choose a bar chart color palette:",
-                list(color_palettes_dicrete.keys()))
+                list(color_palettes_discrete.keys()))
 
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
