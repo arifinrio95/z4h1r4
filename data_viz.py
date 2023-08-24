@@ -1017,7 +1017,7 @@ class DataViz():
             chart_col_idx = 0  # counter to keep track of columns
 
             for col in self.float_cols:
-                if hist_color == 'Default Plotly':
+                if hist_color == 'plotly':
                     fig = px.histogram(self.df,
                                    x=col,
                                    marginal="box",
@@ -1119,14 +1119,23 @@ class DataViz():
             
             # Membuat scatter plot untuk pasangan kolom dengan korelasi tertinggi
             for col1, col2 in top_pairs:
-                fig = px.scatter(self.df,
+                if scatter_color_choice == 'plotly':
+                    fig = px.scatter(self.df,
                                  x=col1,
                                  y=col2,
                                  trendline="ols",
-                                 color_discrete_sequence=[scatter_color],
                                  title=f'Scatter plot of {col1} vs {col2}',
                                  width=chart_width,
                                  height=chart_height)
+                else:
+                    fig = px.scatter(self.df,
+                                     x=col1,
+                                     y=col2,
+                                     trendline="ols",
+                                     color_discrete_sequence=[scatter_color],
+                                     title=f'Scatter plot of {col1} vs {col2}',
+                                     width=chart_width,
+                                     height=chart_height)
                 fig.update_layout(title={'font': {'size': 12}})
                 
                 fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
