@@ -1210,7 +1210,7 @@ class DataViz():
                         f'Bar Chart of {col} grouped by {selected_categorical_hue}',
                         width=chart_width,
                         height=chart_height,
-                        color_discrete_sequence=color_palettes_dicrete[
+                        color_discrete_sequence=color_palettes_discrete[
                             selected_palette])  # Gunakan palet warna yang terpilih
                 fig.update_layout(title={
                     'font': {
