@@ -1137,7 +1137,7 @@ class DataViz():
                                  title=f'Scatter plot of {col1} vs {col2}',
                                  width=chart_width,
                                  height=chart_height)
-                    fig.update_traces(marker=dict(size=5, selector=dict(mode='markers'))
+                    fig.update_traces(marker=dict(size=5), selector=dict(mode='markers'))
                 else:
                     fig = px.scatter(self.df,
                                      x=col1,
