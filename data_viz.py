@@ -1357,114 +1357,118 @@ class DataViz():
             except:
                 pass
 
-            # Line Plots
-            st.write("## Line Plots")
-            
-            def is_arithmetic_sequence(lst):
-                if len(lst) < 2:
-                    return False
-                diff = lst[1] - lst[0]
-                for i in range(2, len(lst)):
-                    if lst[i] - lst[i-1] != diff:
+
+            try:
+                # Line Plots
+                st.write("## Line Plots")
+                
+                def is_arithmetic_sequence(lst):
+                    if len(lst) < 2:
                         return False
-                return True
-            
-            # Filter integer columns based on unique value criteria and arithmetic sequence
-            valid_integer_cols_for_line = [
-                col for col in self.integer_cols 
-                if self.df[col].nunique() > 5 and is_arithmetic_sequence(sorted(self.df[col].unique()))
-            ]
-            
-            # Calculate Pearson correlation for each combination of valid integer and numeric columns
-            correlations = {}
-            for int_col in valid_integer_cols_for_line:
-                for num_col in self.numeric_cols:  # Assuming you have numeric_cols defined
-                    if int_col != num_col:
-                        correlation = self.df[int_col].corr(self.df[num_col])
-                        correlations[(int_col, num_col)] = correlation
-            
-            # Sort the pairs by absolute value of Pearson correlation in descending order
-            sorted_correlations = sorted(correlations.items(), key=lambda x: abs(x[1]), reverse=True)
-            
-            # Let the user choose how many plots to display, default is 9
-            num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, len(sorted_correlations) + 1)), index=8)  # Default to 9
-            
-            # Select the top pairs based on user input
-            top_pairs = [pair[0] for pair in sorted_correlations[:num_of_plots]]
-            
-            # Aggregation options for numeric columns
-            agg_option = st.selectbox("Select aggregation for Y-axis:", ['mean', 'median', 'sum'])
-            
-            # Columns for layout
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0
-
-            def plot_all_line_charts(df, integer_cols, float_cols,
-                                     agg_option, chart_width, chart_height,
-                                     columns, chart_col_idx):
-                for x_col in integer_cols:
-                    for y_col in float_cols:
-                        # Skip plotting if x and y columns are the same
-                        if x_col == y_col:
-                            continue
-
-                        fig = create_line_plot(df, x_col, y_col, agg_option,
-                                               chart_width, chart_height)
-                        columns[chart_col_idx % 3].plotly_chart(fig)
-                        chart_col_idx += 1
-
-                # chart_col_idx = 0
-
-            def create_line_plot(df, x_col, y_col, aggregation, chart_width,
-                                 chart_height):
-                if aggregation == 'mean':
-                    df_agg = df.groupby(x_col, as_index=False)[y_col].mean()
-                elif aggregation == 'median':
-                    df_agg = df.groupby(x_col, as_index=False)[y_col].median()
-                else:  # sum
-                    df_agg = df.groupby(x_col, as_index=False)[y_col].sum()
-
-                # Create line plot
-                fig = px.line(df_agg, x=x_col, y=y_col)
-
-                # Apply custom style
-                fig.update_layout(
-                    title={
-                        'text':
-                        f'Line Plot of {y_col} by {x_col}<br>(Aggregated by {aggregation})',
-                        # 'x': 0.5,  # Center the title
-                        # 'xanchor': 'center',
-                        'font': {
-                            'size': 12
-                        }  # Increase font size for title
-                    },
-                    width=chart_width,
-                    height=chart_height,
-                    paper_bgcolor="white",  # set background color to white
-                    plot_bgcolor="white",  # set plot background color to white
-                    xaxis_showgrid=True,  # Show x-axis gridlines
-                    xaxis_gridcolor='rgba(200,200,200,0.2)',  # Lighten gridlines
-                    yaxis_showgrid=True,  # Show y-axis gridlines
-                    yaxis_gridcolor='rgba(200,200,200,0.2)',  # Lighten gridlines
-                    margin=dict(t=40, b=40, l=40,
-                                r=10)  # Add margins to the plot
-                )
-
-                # Update line style
-                fig.update_traces(
-                    line=dict(dash="solid",
-                              width=2.5),  # Set line style and width
-                    marker=dict(size=8),  # Adjust marker size
-                    mode="lines+markers"  # Add markers to the line
-                )
-
-                return fig
-            
-            chart_width = 300  # width of the chart to fit within the column
-            chart_height = 400  # height of the chart
-            
-            # Create line plots for the selected pairs
-            for int_col, num_col in top_pairs:
-                plot_all_line_charts(self.df, [int_col], [num_col], agg_option, chart_width, chart_height, columns, chart_col_idx)
+                    diff = lst[1] - lst[0]
+                    for i in range(2, len(lst)):
+                        if lst[i] - lst[i-1] != diff:
+                            return False
+                    return True
+                
+                # Filter integer columns based on unique value criteria and arithmetic sequence
+                valid_integer_cols_for_line = [
+                    col for col in self.integer_cols 
+                    if self.df[col].nunique() > 5 and is_arithmetic_sequence(sorted(self.df[col].unique()))
+                ]
+                
+                # Calculate Pearson correlation for each combination of valid integer and numeric columns
+                correlations = {}
+                for int_col in valid_integer_cols_for_line:
+                    for num_col in self.numeric_cols:  # Assuming you have numeric_cols defined
+                        if int_col != num_col:
+                            correlation = self.df[int_col].corr(self.df[num_col])
+                            correlations[(int_col, num_col)] = correlation
+                
+                # Sort the pairs by absolute value of Pearson correlation in descending order
+                sorted_correlations = sorted(correlations.items(), key=lambda x: abs(x[1]), reverse=True)
+                
+                # Let the user choose how many plots to display, default is 9
+                num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, len(sorted_correlations) + 1)), index=1)  # Default to 9
+                
+                # Select the top pairs based on user input
+                top_pairs = [pair[0] for pair in sorted_correlations[:num_of_plots]]
+                
+                # Aggregation options for numeric columns
+                agg_option = st.selectbox("Select aggregation for Y-axis:", ['mean', 'median', 'sum'])
+                
+                # Columns for layout
+                left_col, center_col, right_col = st.columns(3)
+                columns = [left_col, center_col, right_col]
+                chart_col_idx = 0
+    
+                def plot_all_line_charts(df, integer_cols, float_cols,
+                                         agg_option, chart_width, chart_height,
+                                         columns, chart_col_idx):
+                    for x_col in integer_cols:
+                        for y_col in float_cols:
+                            # Skip plotting if x and y columns are the same
+                            if x_col == y_col:
+                                continue
+    
+                            fig = create_line_plot(df, x_col, y_col, agg_option,
+                                                   chart_width, chart_height)
+                            columns[chart_col_idx % 3].plotly_chart(fig)
+                            chart_col_idx += 1
+    
+                    # chart_col_idx = 0
+    
+                def create_line_plot(df, x_col, y_col, aggregation, chart_width,
+                                     chart_height):
+                    if aggregation == 'mean':
+                        df_agg = df.groupby(x_col, as_index=False)[y_col].mean()
+                    elif aggregation == 'median':
+                        df_agg = df.groupby(x_col, as_index=False)[y_col].median()
+                    else:  # sum
+                        df_agg = df.groupby(x_col, as_index=False)[y_col].sum()
+    
+                    # Create line plot
+                    fig = px.line(df_agg, x=x_col, y=y_col)
+    
+                    # Apply custom style
+                    fig.update_layout(
+                        title={
+                            'text':
+                            f'Line Plot of {y_col} by {x_col}<br>(Aggregated by {aggregation})',
+                            # 'x': 0.5,  # Center the title
+                            # 'xanchor': 'center',
+                            'font': {
+                                'size': 12
+                            }  # Increase font size for title
+                        },
+                        width=chart_width,
+                        height=chart_height,
+                        paper_bgcolor="white",  # set background color to white
+                        plot_bgcolor="white",  # set plot background color to white
+                        xaxis_showgrid=True,  # Show x-axis gridlines
+                        xaxis_gridcolor='rgba(200,200,200,0.2)',  # Lighten gridlines
+                        yaxis_showgrid=True,  # Show y-axis gridlines
+                        yaxis_gridcolor='rgba(200,200,200,0.2)',  # Lighten gridlines
+                        margin=dict(t=40, b=40, l=40,
+                                    r=10)  # Add margins to the plot
+                    )
+    
+                    # Update line style
+                    fig.update_traces(
+                        line=dict(dash="solid",
+                                  width=2.5),  # Set line style and width
+                        marker=dict(size=8),  # Adjust marker size
+                        mode="lines+markers"  # Add markers to the line
+                    )
+    
+                    return fig
+                
+                chart_width = 300  # width of the chart to fit within the column
+                chart_height = 400  # height of the chart
+                
+                # Create line plots for the selected pairs
+                for int_col, num_col in top_pairs:
+                    plot_all_line_charts(self.df, [int_col], [num_col], agg_option, chart_width, chart_height, columns, chart_col_idx)
+            except:
+                pass
 
