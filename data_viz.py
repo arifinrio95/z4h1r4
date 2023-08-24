@@ -1025,7 +1025,7 @@ class DataViz():
                                    title=f'Histogram of {col}',
                                    width=chart_width,
                                    height=chart_height)
-                    fig.update_traces(marker=dict(line=dict(color=edge_color, width=1)))
+                    
                 else:
                     fig = px.histogram(self.df,
                                        x=col,
@@ -1035,8 +1035,16 @@ class DataViz():
                                        color_discrete_sequence=[hist_color],
                                        width=chart_width,
                                        height=chart_height)
-                    fig.update_traces(marker=dict(
-                    color=hist_color, line=dict(color=edge_color, width=1)))
+                    # fig.update_traces(marker=dict(
+                    # color=hist_color, line=dict(color=edge_color, width=1)))
+                    fig.update_traces(marker=dict(color=hist_color))
+
+                if edge_color == 'plotly':
+                    fig.update_traces(marker=dict(line=dict(width=1)))
+                else:
+                    fig.update_traces(marker=dict(line=dict(color=edge_color, width=1)))
+
+                    
                 # Check if fig is a tuple and extract the figure if it is.
                 if isinstance(fig, tuple):
                     fig = fig[0]
@@ -1130,7 +1138,6 @@ class DataViz():
                                  width=chart_width,
                                  height=chart_height)
                     fig.update_traces(marker=dict(size=5, selector=dict(mode='markers'))
-                    # fig.update_traces(line=dict(selector=dict(type='scatter', mode='lines'))
                 else:
                     fig = px.scatter(self.df,
                                      x=col1,
@@ -1141,6 +1148,10 @@ class DataViz():
                                      width=chart_width,
                                      height=chart_height)
                     fig.update_traces(marker=dict(size=5, color=scatter_color), selector=dict(mode='markers'))
+
+                if line_color_choice == 'plotly':
+                    pass
+                else:
                     fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
                     
                 fig.update_layout(title={'font': {'size': 12}})
