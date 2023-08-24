@@ -1414,7 +1414,7 @@ class DataViz():
                             fig = create_line_plot(df, x_col, y_col, agg_option,
                                                    chart_width, chart_height)
                             columns[chart_col_idx % 3].plotly_chart(fig)
-                            chart_col_idx += 1
+                            # chart_col_idx += 1
     
                     # chart_col_idx = 0
     
@@ -1467,8 +1467,9 @@ class DataViz():
                 chart_height = 400  # height of the chart
                 
                 # Create line plots for the selected pairs
-                # for int_col, num_col in top_pairs:
-                plot_all_line_charts(self.df, [int_col], [num_col], agg_option, chart_width, chart_height, columns, chart_col_idx)
+                for int_col, num_col in top_pairs:
+                    plot_all_line_charts(self.df, [int_col], [num_col], agg_option, chart_width, chart_height, columns, chart_col_idx)
+                    chart_col_idx += 1
             except:
                 pass
 
