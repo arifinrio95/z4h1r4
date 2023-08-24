@@ -1129,7 +1129,7 @@ class DataViz():
             
             # Membuat scatter plot untuk pasangan kolom dengan korelasi tertinggi
             for col1, col2 in top_pairs:
-                if scatter_color_choice == 'plotly':
+                if scatter_color == 'plotly':
                     fig = px.scatter(self.df,
                                  x=col1,
                                  y=col2,
