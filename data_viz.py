@@ -1130,7 +1130,7 @@ class DataViz():
                                  width=chart_width,
                                  height=chart_height)
                     fig.update_traces(marker=dict(size=5, selector=dict(mode='markers'))
-                    fig.update_traces(line=dict(selector=dict(type='scatter', mode='lines'))
+                    # fig.update_traces(line=dict(selector=dict(type='scatter', mode='lines'))
                 else:
                     fig = px.scatter(self.df,
                                      x=col1,
