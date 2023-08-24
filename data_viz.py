@@ -1149,7 +1149,7 @@ class DataViz():
                                      height=chart_height)
                     fig.update_traces(marker=dict(size=5, color=scatter_color), selector=dict(mode='markers'))
 
-                if line_color_choice == 'plotly':
+                if line_color == 'plotly':
                     pass
                 else:
                     fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
