@@ -1190,7 +1190,8 @@ class DataViz():
             chart_col_idx = 0
 
             for col in valid_categorical_cols:
-                fig = px.bar(
+                if selected_palette == 'plotly':
+                    fig = px.bar(
                     self.df,
                     x=col,
                     y=selected_numeric_col,
@@ -1198,9 +1199,19 @@ class DataViz():
                     title=
                     f'Bar Chart of {col} grouped by {selected_categorical_hue}',
                     width=chart_width,
-                    height=chart_height,
-                    color_discrete_sequence=color_palettes_dicrete[
-                        selected_palette])  # Gunakan palet warna yang terpilih
+                    height=chart_height)  # Gunakan palet warna yang terpilih
+                else:
+                    fig = px.bar(
+                        self.df,
+                        x=col,
+                        y=selected_numeric_col,
+                        color=selected_categorical_hue,
+                        title=
+                        f'Bar Chart of {col} grouped by {selected_categorical_hue}',
+                        width=chart_width,
+                        height=chart_height,
+                        color_discrete_sequence=color_palettes_dicrete[
+                            selected_palette])  # Gunakan palet warna yang terpilih
                 fig.update_layout(title={
                     'font': {
                         'size': 12
@@ -1222,12 +1233,21 @@ class DataViz():
             title_placeholder.write(
                 f"## Heatmap of {selected_method.capitalize()} Correlation")
             corr = self.df[self.numeric_cols].corr(method=selected_method)
-            fig = ff.create_annotated_heatmap(
+
+            if selected_palette == 'plotly':
+                fig = ff.create_annotated_heatmap(
                 z=corr.values,
                 x=list(corr.columns),
                 y=list(corr.index),
-                annotation_text=corr.round(2).values,
-                colorscale=color_palettes[selected_palette])
+                annotation_text=corr.round(2).values)
+            else:
+                fig = ff.create_annotated_heatmap(
+                    z=corr.values,
+                    x=list(corr.columns),
+                    y=list(corr.index),
+                    annotation_text=corr.round(2).values,
+                    colorscale=color_palettes[selected_palette])
+                
             st.plotly_chart(fig)
 
             # Chi square for Categorical Columns
@@ -1266,7 +1286,7 @@ class DataViz():
                     return ''
 
             styled_df = results_df.style.applymap(
-                color_cells, subset=["Correlation Streght"])
+                color_cells, subset=["Correlation Strenght"])
 
             st.write(styled_df)
 
