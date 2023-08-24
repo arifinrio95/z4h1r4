@@ -1172,7 +1172,7 @@ class DataViz():
                 if self.df[col].nunique() <= 20
             ]
 
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3 = st.columns()
 
             # Pilih kolom numerik dan kategorikal
             selected_numeric_col = col1.selectbox(
@@ -1183,7 +1183,8 @@ class DataViz():
             # Pilih palet warna
             selected_palette = col3.selectbox(
                 "Choose a bar chart color palette:",
-                list(color_palettes_discrete.keys()))
+                list(color_palettes_discrete.keys()), index=list(color_palettes_discrete.keys()).index(
+                    "Default Plotly"))
 
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
