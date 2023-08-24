@@ -1017,14 +1017,23 @@ class DataViz():
             chart_col_idx = 0  # counter to keep track of columns
 
             for col in self.float_cols:
-                fig = px.histogram(self.df,
+                if hist_color == 'Default Plotly':
+                    fig = px.histogram(self.df,
                                    x=col,
                                    marginal="box",
                                    nbins=40,
                                    title=f'Histogram of {col}',
-                                   color_discrete_sequence=[hist_color],
                                    width=chart_width,
                                    height=chart_height)
+                else:
+                    fig = px.histogram(self.df,
+                                       x=col,
+                                       marginal="box",
+                                       nbins=40,
+                                       title=f'Histogram of {col}',
+                                       color_discrete_sequence=[hist_color],
+                                       width=chart_width,
+                                       height=chart_height)
                 # Check if fig is a tuple and extract the figure if it is.
                 if isinstance(fig, tuple):
                     fig = fig[0]
