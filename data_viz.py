@@ -998,7 +998,7 @@ class DataViz():
                 "Choose color for histogram bars:",
                 list(color_map.keys()),
                 index=list(color_map.keys()).index(
-                    "Sage")  # Default ke "Terracotta"
+                    "Sage") 
             )
 
             edge_color_choice = col2.selectbox(
@@ -1025,6 +1025,7 @@ class DataViz():
                                    title=f'Histogram of {col}',
                                    width=chart_width,
                                    height=chart_height)
+                    fig.update_traces(marker=dict(line=dict(color=edge_color, width=1)))
                 else:
                     fig = px.histogram(self.df,
                                        x=col,
@@ -1034,6 +1035,8 @@ class DataViz():
                                        color_discrete_sequence=[hist_color],
                                        width=chart_width,
                                        height=chart_height)
+                    fig.update_traces(marker=dict(
+                    color=hist_color, line=dict(color=edge_color, width=1)))
                 # Check if fig is a tuple and extract the figure if it is.
                 if isinstance(fig, tuple):
                     fig = fig[0]
@@ -1043,8 +1046,7 @@ class DataViz():
                         'size': 12
                     }  # Increase font size for title
                 })
-                fig.update_traces(marker=dict(
-                    color=hist_color, line=dict(color=edge_color, width=1)))
+                
                 columns[chart_col_idx % 3].plotly_chart(fig)
 
                 # # Calculate skewness and kurtosis
@@ -1127,6 +1129,7 @@ class DataViz():
                                  title=f'Scatter plot of {col1} vs {col2}',
                                  width=chart_width,
                                  height=chart_height)
+                    fig.update_traces(marker=dict(size=5, selector=dict(mode='markers'))
                 else:
                     fig = px.scatter(self.df,
                                      x=col1,
@@ -1136,10 +1139,12 @@ class DataViz():
                                      title=f'Scatter plot of {col1} vs {col2}',
                                      width=chart_width,
                                      height=chart_height)
+                    fig.update_traces(marker=dict(size=5, color=scatter_color), selector=dict(mode='markers'))
+                    
                 fig.update_layout(title={'font': {'size': 12}})
                 
                 fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
-                fig.update_traces(marker=dict(size=5, color=scatter_color), selector=dict(mode='markers'))
+                
             
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
