@@ -245,12 +245,12 @@ def request_prompt(input_pengguna,
             11. Optimalkan script-nya agar tidak panjang."""
         }]
         response = openai.ChatCompletion.create(
-        # model="gpt-3.5-turbo-16k",
-        model="gpt-3.5-turbo",
-        # model="gpt-4",
-        messages=messages,
-        max_tokens=3000,
-        temperature=0)
+            # model="gpt-3.5-turbo-16k",
+            model="gpt-3.5-turbo",
+            # model="gpt-4",
+            messages=messages,
+            max_tokens=3000,
+            temperature=0)
         script = response.choices[0].message['content']
     else:
         # versi 1 prompt
@@ -279,12 +279,12 @@ def request_prompt(input_pengguna,
             13. Pay attention to the dataframe schema, don't do any convert."""
         }]
         response = openai.ChatCompletion.create(
-        # model="gpt-3.5-turbo-16k",
-        model="gpt-3.5-turbo",
-        # model="gpt-4",
-        messages=messages,
-        max_tokens=3000,
-        temperature=0)
+            # model="gpt-3.5-turbo-16k",
+            model="gpt-3.5-turbo",
+            # model="gpt-4",
+            messages=messages,
+            max_tokens=3000,
+            temperature=0)
         script = response.choices[0].message['content']
 
     # if error_message and previous_script:
@@ -308,7 +308,11 @@ def request_prompt(input_pengguna,
 
 
 # Jangan diubah yg ini
-def request_story_prompt(schema_str, rows_str, min_viz, api_model, style='Plotly'):
+def request_story_prompt(schema_str,
+                         rows_str,
+                         min_viz,
+                         api_model,
+                         style='Plotly'):
     # messages = [
     #     {"role": "system", "content": "Aku akan membuat laporan untukmu."},
     #     {"role": "user", "content": f"""Buatkan laporan berbentuk insights yang interpretatif dari data berikut:  {dict_stats}.
@@ -336,9 +340,10 @@ def request_story_prompt(schema_str, rows_str, min_viz, api_model, style='Plotly
         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
         Visualize with {style} in streamlit, different columns for different insight, the insights must be unique and interesting, and it's {min_viz} most important insights from the data.
         
-        """}]
+        """
+    }]
     # Optimize the script for efficiency and minimize the number of lines.
-    
+
     # messages = [{
     #     "role":
     #     "system",
@@ -365,19 +370,19 @@ def request_story_prompt(schema_str, rows_str, min_viz, api_model, style='Plotly
     #
     if api_model == 'GPT3.5':
         response = openai.ChatCompletion.create(
-                                                model="gpt-3.5-turbo",
-                                                # model="gpt-4",
-                                                messages=messages,
-                                                max_tokens=3000,
-                                                temperature=0)
+            model="gpt-3.5-turbo",
+            # model="gpt-4",
+            messages=messages,
+            max_tokens=3000,
+            temperature=0)
         script = response.choices[0].message['content']
     else:
         response = openai.ChatCompletion.create(
-                                                # model="gpt-3.5-turbo",
-                                                model="gpt-4",
-                                                messages=messages,
-                                                max_tokens=3000,
-                                                temperature=0)
+            # model="gpt-3.5-turbo",
+            model="gpt-4",
+            messages=messages,
+            max_tokens=3000,
+            temperature=0)
         script = response.choices[0].message['content']
 
     return script
@@ -1342,6 +1347,8 @@ def get_sample_data(dataset_name):
         return sns.load_dataset('tips')
     elif dataset_name == 'Titanic (Dummy Data)':
         return sns.load_dataset('titanic')
+    elif dataset_name == 'Gap Minder (Dummy Data)':
+        return px.data.gapminder()
     # Tambahkan dataset lainnya sesuai kebutuhan
     else:
         return None
@@ -1655,9 +1662,8 @@ def main():
                 value=
                 "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
             )
-            style_choosen = st.selectbox(
-                'Choose an Objective:',
-                ('Visualization', 'General Question'))
+            style_choosen = st.selectbox('Choose an Objective:',
+                                         ('Visualization', 'General Question'))
 
             if 'button_clicked' not in st.session_state:
                 st.session_state.button_clicked = False
@@ -1740,16 +1746,16 @@ def main():
             style_choosen = st.selectbox(
                 'Choose a Visualization Style:',
                 ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
-            api_model = st.selectbox(
-                'Choose LLM Model:',
-                ('GPT4', 'GPT3.5'))
-            
+            api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+
             button = st.button("Submit")
             if button:
                 # Membagi respons berdasarkan tanda awal dan akhir kode
-                with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
+                with st.spinner(
+                        'Generating insights...(it may takes 1-2 minutes)'):
                     response = request_story_prompt(schema_str, rows_str,
-                                                    min_viz, api_model, style_choosen)
+                                                    min_viz, api_model,
+                                                    style_choosen)
                     # st.text(response)
                     # Extracting the introductions
                     # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'

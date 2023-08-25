@@ -1,24 +1,26 @@
+import pandas as pd
+import numpy as np
+from scipy.stats import skew, kurtosis, chi2_contingency
+
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 
-import pandas as pd
-import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
-from scipy.stats import chi2_contingency
 from wordcloud import WordCloud, STOPWORDS
 
 import nltk
 
 nltk.data.path.append('nltk_data/')
-
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
+
 from sklearn.feature_extraction.text import CountVectorizer
-from scipy.stats import skew, kurtosis
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.inspection import permutation_importance
+import category_encoders as ce
 
 
 class DataViz():
@@ -78,14 +80,180 @@ class DataViz():
 
         return " ".join(words)
 
+    def variable_selection(self,
+                           selected_variables,
+                           progress_bar,
+                           threshold_dist_uniform=0.9,
+                           alpha_chi2=0.05):
+
+        progress_bar.progress(0.1)
+
+        # Step 1: Split data into numerical and categorical variables
+        numerical_vars = self.num_df.columns.tolist()
+        categorical_vars = self.cat_df.columns.tolist()
+        variables_to_remove = []
+        for var in numerical_vars:
+            if self.df[var].value_counts(
+                    normalize=True).max() >= threshold_dist_uniform:
+                variables_to_remove.append(var)
+            elif self.df[var].std(
+            ) == 0:  # Check if standard deviation is zero (incremental)
+                variables_to_remove.append(var)
+            elif self.df[var].diff().dropna().unique().size == 1:
+                # Check if the variable values are incremental
+                variables_to_remove.append(var)
+
+        numerical_vars = [
+            x for x in numerical_vars if x not in variables_to_remove
+        ]
+
+        if selected_variables in numerical_vars:
+            numerical_vars = [
+                x for x in numerical_vars if x != selected_variables
+            ]
+
+            # Step 2: Check the number of numerical and categorical variables
+            if len(numerical_vars) >= 5:
+                # Step 3: Permutation Importance
+                X = self.df[numerical_vars]
+                y = self.df[selected_variables]
+
+                X_train, X_test, y_train, y_test = train_test_split(
+                    X, y, test_size=0.2, random_state=42)
+
+                clf = RandomForestRegressor(n_estimators=100, random_state=42)
+                clf.fit(X_train, y_train)
+                progress_bar.progress(0.25)
+
+                perm_importance = permutation_importance(clf, X_test, y_test)
+                progress_bar.progress(0.5)
+
+                feature_importance = perm_importance.importances_mean
+
+                # Step 4: Select best 5 numerical and 5 categorical variables based on permutation score
+                top_numerical_vars = np.array(numerical_vars)[np.argsort(
+                    feature_importance)[-5:]]
+
+                remaining_variables = list(top_numerical_vars)
+
+            else:
+                progress_bar.progress(0.25)
+                remaining_variables = numerical_vars
+                progress_bar.progress(0.5)
+
+            if len(categorical_vars) >= 5:
+                # Step 3: Permutation Importance
+                X = self.df[categorical_vars]
+                y = self.df[selected_variables]
+
+                # Encode target variable using target encoding
+                encoder = ce.TargetEncoder(cols=categorical_vars)
+                X_encoded = encoder.fit_transform(X, y)
+
+                X_train, X_test, y_train, y_test = train_test_split(
+                    X_encoded, y, test_size=0.2, random_state=42)
+
+                clf = RandomForestRegressor(n_estimators=100, random_state=42)
+                clf.fit(X_train, y_train)
+
+                perm_importance = permutation_importance(clf, X_test, y_test)
+                progress_bar.progress(0.75)
+
+                feature_importance = perm_importance.importances_mean
+
+                # Step 4: Select best 5 numerical and 5 categorical variables based on permutation score
+                top_categorical_vars = np.array(categorical_vars)[np.argsort(
+                    feature_importance)[-5:]]
+
+                remaining_variables += list(top_categorical_vars)
+                progress_bar.progress(1)
+
+            else:
+                progress_bar.progress(0.75)
+                remaining_variables += list(categorical_vars)
+                progress_bar.progress(1)
+
+            return remaining_variables
+
+        elif selected_variables in categorical_vars:
+            categorical_vars = [
+                x for x in categorical_vars if x != selected_variables
+            ]
+            for var in numerical_vars:
+                if self.df.groupby(selected_variables)[var].mean(
+                ).value_counts(normalize=True).max() >= threshold_dist_uniform:
+                    variables_to_remove.append(var)
+                elif self.df.groupby(selected_variables)[var].std().std(
+                ) == 0:  # Check if standard deviation is zero (incremental)
+                    variables_to_remove.append(var)
+                elif self.df.groupby(selected_variables)[var].mean().diff(
+                ).dropna().unique().size == 1:
+                    # Check if the variable values are incremental
+                    variables_to_remove.append(var)
+
+                numerical_vars = [
+                    x for x in numerical_vars if x not in variables_to_remove
+                ]
+
+            if len(numerical_vars) >= 5:
+                X = self.df[numerical_vars]
+                y = self.df[selected_variables]
+                X_train, X_test, y_train, y_test = train_test_split(
+                    X, y, test_size=0.2, random_state=42)
+
+                clf = RandomForestClassifier(n_estimators=100, random_state=42)
+                clf.fit(X_train, y_train)
+                progress_bar.progress(0.25)
+
+                perm_importance = permutation_importance(clf, X_test, y_test)
+                progress_bar.progress(0.5)
+
+                feature_importance = perm_importance.importances_mean
+
+                # Step 4: Select best 5 numerical and 5 categorical variables based on permutation score
+                top_numerical_vars = np.array(numerical_vars)[np.argsort(
+                    feature_importance)[-5:]]
+
+                remaining_variables = list(top_numerical_vars)
+
+            else:
+                progress_bar.progress(0.25)
+                remaining_variables = list(numerical_vars)
+                progress_bar.progress(0.5)
+
+            # Step 6: Check chi2 values for categorical variables
+            chi2_results = []
+            for var in categorical_vars:
+                contingency_table = pd.crosstab(self.df[var],
+                                                self.df[selected_variables])
+                chi2_stat, p_val, _, _ = chi2_contingency(contingency_table)
+                chi2_results.append((var, chi2_stat, p_val))
+                progress_bar.progress(0.75)
+
+            # Sort chi2 results based on p-value
+            chi2_results.sort(key=lambda x: x[2])
+
+            # Remove variables with p-value >= alpha_chi2
+            top_categorical_vars = []
+            for var, chi2_stat, p_val in chi2_results:
+                if p_val < alpha_chi2 and len(top_categorical_vars) < 5:
+                    top_categorical_vars.append(var)
+            remaining_variables += list(top_categorical_vars)
+            progress_bar.progress(1)
+
+            return remaining_variables
+
+        else:
+            return numerical_vars + categorical_vars
+
     def visualization(self):
         st.markdown(
             "<h1 style='text-align: center; color: #4F4F4F;'>Automated Data Visualizations (by Ulikdata)</h1>",
             unsafe_allow_html=True)
 
-        tab1, tab2, tab3, tab4 = st.tabs([
-            'Simple Business Viz', 'Simple Statistical Viz', 'Advanced Plot',
-            'Auto Insight!'
+        tab1, tab2, tab3, tab4, tab5 = st.tabs([
+            'Custom Business Viz', 'Custom Statistical Viz', 'Custom Text Viz',
+            '1-Click Analyze!', '1-Click Summarize!'
         ])
 
         with tab1:
@@ -948,7 +1116,7 @@ class DataViz():
                 "Umber": "#635147",
                 "Default Plotly": "plotly"  # Default Plotly color
             }
-            
+
             color_palettes = {
                 "Blue Shades": "Blues",
                 "Red Shades": "Reds",
@@ -961,45 +1129,43 @@ class DataViz():
                 "Jet (Blue-Cyan-Yellow-Red)": "Jet",
                 "Default Plotly": "plotly"  # Default Plotly color scale
             }
-            
+
             color_palettes_discrete = {
                 "Earth Tones":
-                    ["#a52a2a", "#654321", "#c2b280", "#808000", "#6a5acd"],
+                ["#a52a2a", "#654321", "#c2b280", "#808000", "#6a5acd"],
                 "Cool": ["#99e6e6", "#e6e6ff", "#a3d1ff"],
                 "Warm": ["#ffdb58", "#ffb366", "#ff7f50"],
                 "Sunset":
-                    ["#FF4500", "#FF6347", "#FF7F50", "#FF8C00", "#FFA500"],
+                ["#FF4500", "#FF6347", "#FF7F50", "#FF8C00", "#FFA500"],
                 "Ocean":
-                    ["#1E90FF", "#20B2AA", "#4682B4", "#5F9EA0", "#00CED1"],
+                ["#1E90FF", "#20B2AA", "#4682B4", "#5F9EA0", "#00CED1"],
                 "Forest":
-                    ["#228B22", "#006400", "#2E8B57", "#3CB371", "#32CD32"],
+                ["#228B22", "#006400", "#2E8B57", "#3CB371", "#32CD32"],
                 "Berry":
-                    ["#8B0000", "#B22222", "#DC143C", "#FF0000", "#FF4500"],
+                ["#8B0000", "#B22222", "#DC143C", "#FF0000", "#FF4500"],
                 "Pastel":
-                    ["#FFDAB9", "#E6E6FA", "#FFFACD", "#D8BFD8", "#F0E68C"],
+                ["#FFDAB9", "#E6E6FA", "#FFFACD", "#D8BFD8", "#F0E68C"],
                 "Neon":
-                    ["#FF1493", "#00FF00", "#FFD700", "#FF69B4", "#00BFFF"],
+                ["#FF1493", "#00FF00", "#FFD700", "#FF69B4", "#00BFFF"],
                 "Monochrome":
-                    ["#2F4F4F", "#708090", "#778899", "#B0C4DE", "#F5F5F5"],
-                "Default Plotly": "plotly"  # Default Plotly color scale
+                ["#2F4F4F", "#708090", "#778899", "#B0C4DE", "#F5F5F5"],
+                "Default Plotly":
+                "plotly"  # Default Plotly color scale
                 # ... you can further expand and add more palettes as needed
             }
-
 
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
 
             # Histogram
             st.write("## Histogram for Numeric Columns")
-            col1, col2, col3= st.columns(3)
+            col1, col2, col3 = st.columns(3)
 
             # Membiarkan pengguna memilih warna dengan default pilihan
             hist_color_choice = col1.selectbox(
                 "Choose color for histogram bars:",
                 list(color_map.keys()),
-                index=list(color_map.keys()).index(
-                    "Default Plotly") 
-            )
+                index=list(color_map.keys()).index("Default Plotly"))
 
             edge_color_choice = col2.selectbox(
                 "Choose color for histogram bar edges:",
@@ -1019,13 +1185,13 @@ class DataViz():
             for col in self.float_cols:
                 if hist_color == 'plotly':
                     fig = px.histogram(self.df,
-                                   x=col,
-                                   marginal="box",
-                                   nbins=40,
-                                   title=f'Histogram of {col}',
-                                   width=chart_width,
-                                   height=chart_height)
-                    
+                                       x=col,
+                                       marginal="box",
+                                       nbins=40,
+                                       title=f'Histogram of {col}',
+                                       width=chart_width,
+                                       height=chart_height)
+
                 else:
                     fig = px.histogram(self.df,
                                        x=col,
@@ -1042,9 +1208,9 @@ class DataViz():
                 if edge_color == 'plotly':
                     fig.update_traces(marker=dict(line=dict(width=1)))
                 else:
-                    fig.update_traces(marker=dict(line=dict(color=edge_color, width=1)))
+                    fig.update_traces(marker=dict(
+                        line=dict(color=edge_color, width=1)))
 
-                    
                 # Check if fig is a tuple and extract the figure if it is.
                 if isinstance(fig, tuple):
                     fig = fig[0]
@@ -1054,7 +1220,7 @@ class DataViz():
                         'size': 12
                     }  # Increase font size for title
                 })
-                
+
                 columns[chart_col_idx % 3].plotly_chart(fig)
 
                 # # Calculate skewness and kurtosis
@@ -1080,29 +1246,35 @@ class DataViz():
             st.write("## Scatter plot with Regression Line")
 
             # Kolom dropdown untuk memilih jumlah plot
-            num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, 11)), index=1, key="num_of_plot")  # Default ke 10
+            num_of_plots = st.selectbox("Choose number of plots to display:",
+                                        list(range(1, 11)),
+                                        index=1,
+                                        key="num_of_plot")  # Default ke 10
 
             # Filter kolom numerik yang uniq valuenya di atas 10
             filtered_cols = [
                 col for col in self.numeric_cols if self.df[col].nunique() > 10
             ]
-            
+
             # Menghitung matriks korelasi
             correlation_matrix = self.df[filtered_cols].corr()
 
             # Membuat daftar dari pasangan kolom dan nilai korelasinya
             from itertools import combinations
-            
+
             pairs_correlation = []
             for col1, col2 in combinations(filtered_cols, 2):
-                pairs_correlation.append(((col1, col2), abs(correlation_matrix.loc[col1, col2])))
-            
+                pairs_correlation.append(
+                    ((col1, col2), abs(correlation_matrix.loc[col1, col2])))
+
             # Mengurutkan pasangan berdasarkan nilai korelasi (absolut) tertinggi
-            sorted_pairs = sorted(pairs_correlation, key=lambda x: x[1], reverse=True)
-            
+            sorted_pairs = sorted(pairs_correlation,
+                                  key=lambda x: x[1],
+                                  reverse=True)
+
             # Mengambil pasangan dengan korelasi tertinggi sesuai dengan pilihan pengguna
             top_pairs = [pair[0] for pair in sorted_pairs[:num_of_plots]]
-            
+
             col1, col2, col3 = st.columns(3)
 
             # Membiarkan pengguna memilih warna dengan default pilihan
@@ -1126,18 +1298,19 @@ class DataViz():
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
-            
+
             # Membuat scatter plot untuk pasangan kolom dengan korelasi tertinggi
             for col1, col2 in top_pairs:
                 if scatter_color == 'plotly':
                     fig = px.scatter(self.df,
-                                 x=col1,
-                                 y=col2,
-                                 trendline="ols",
-                                 title=f'Scatter plot of {col1} vs {col2}',
-                                 width=chart_width,
-                                 height=chart_height)
-                    fig.update_traces(marker=dict(size=5), selector=dict(mode='markers'))
+                                     x=col1,
+                                     y=col2,
+                                     trendline="ols",
+                                     title=f'Scatter plot of {col1} vs {col2}',
+                                     width=chart_width,
+                                     height=chart_height)
+                    fig.update_traces(marker=dict(size=5),
+                                      selector=dict(mode='markers'))
                 else:
                     fig = px.scatter(self.df,
                                      x=col1,
@@ -1147,18 +1320,18 @@ class DataViz():
                                      title=f'Scatter plot of {col1} vs {col2}',
                                      width=chart_width,
                                      height=chart_height)
-                    fig.update_traces(marker=dict(size=5, color=scatter_color), selector=dict(mode='markers'))
+                    fig.update_traces(marker=dict(size=5, color=scatter_color),
+                                      selector=dict(mode='markers'))
 
                 if line_color == 'plotly':
                     pass
                 else:
-                    fig.update_traces(line=dict(color=line_color), selector=dict(type='scatter', mode='lines'))
-                    
+                    fig.update_traces(line=dict(color=line_color),
+                                      selector=dict(type='scatter',
+                                                    mode='lines'))
+
                 fig.update_layout(title={'font': {'size': 12}})
-                
-                
-                
-            
+
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
@@ -1183,8 +1356,9 @@ class DataViz():
             # Pilih palet warna
             selected_palette = col3.selectbox(
                 "Choose a bar chart color palette:",
-                list(color_palettes_discrete.keys()), index=list(color_palettes_discrete.keys()).index(
-                    "Default Plotly"))
+                list(color_palettes_discrete.keys()),
+                index=list(
+                    color_palettes_discrete.keys()).index("Default Plotly"))
 
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
@@ -1200,7 +1374,8 @@ class DataViz():
                         title=
                         f'Bar Chart of {col} grouped by {selected_categorical_hue}',
                         width=chart_width,
-                        height=chart_height)  # Gunakan palet warna yang terpilih
+                        height=chart_height
+                    )  # Gunakan palet warna yang terpilih
                 else:
                     fig = px.bar(
                         self.df,
@@ -1212,7 +1387,8 @@ class DataViz():
                         width=chart_width,
                         height=chart_height,
                         color_discrete_sequence=color_palettes_discrete[
-                            selected_palette])  # Gunakan palet warna yang terpilih
+                            selected_palette]
+                    )  # Gunakan palet warna yang terpilih
                 fig.update_layout(title={
                     'font': {
                         'size': 12
@@ -1237,10 +1413,10 @@ class DataViz():
 
             if selected_palette == 'plotly':
                 fig = ff.create_annotated_heatmap(
-                z=corr.values,
-                x=list(corr.columns),
-                y=list(corr.index),
-                annotation_text=corr.round(2).values)
+                    z=corr.values,
+                    x=list(corr.columns),
+                    y=list(corr.index),
+                    annotation_text=corr.round(2).values)
             else:
                 fig = ff.create_annotated_heatmap(
                     z=corr.values,
@@ -1248,7 +1424,7 @@ class DataViz():
                     y=list(corr.index),
                     annotation_text=corr.round(2).values,
                     colorscale=color_palettes[selected_palette])
-                
+
             st.plotly_chart(fig)
 
             # Chi square for Categorical Columns
@@ -1294,41 +1470,52 @@ class DataViz():
             import scipy.stats as stats
 
             st.write("## Box Plot")
-            
+
             # Filter the numeric columns based on unique value criteria
             valid_numeric_cols_for_box = [
                 col for col in self.numeric_cols if self.df[col].nunique() > 20
             ]
-            
+
             # Filter the categorical columns based on unique value criteria
             valid_categorical_cols_for_box = [
-                col for col in self.categorical_cols if self.df[col].nunique() < 10
+                col for col in self.categorical_cols
+                if self.df[col].nunique() < 10
             ]
-            
+
             # Calculate Point-Biserial correlation for each combination of numeric and categorical columns
             for column in self.df.columns:
                 if self.df[column].dtype in ['float64', 'int64']:
-                    self.df[column] = self.df[column].fillna(self.df[column].mean())
+                    self.df[column] = self.df[column].fillna(
+                        self.df[column].mean())
 
             correlations = []
             for num_col in valid_numeric_cols_for_box:
                 for cat_col in valid_categorical_cols_for_box:
-                    if len(self.df[num_col].unique()) > 1 and len(self.df[cat_col].unique()) > 1:
-                        correlation, _ = stats.pointbiserialr(self.df[num_col], self.df[cat_col].astype('category').cat.codes)
+                    if len(self.df[num_col].unique()) > 1 and len(
+                            self.df[cat_col].unique()) > 1:
+                        correlation, _ = stats.pointbiserialr(
+                            self.df[num_col],
+                            self.df[cat_col].astype('category').cat.codes)
                         correlations.append(((num_col, cat_col), correlation))
-            
+
             # Sort the pairs by absolute value of Point-Biserial correlation
-            sorted_correlations = sorted(correlations, key=lambda x: abs(x[1]), reverse=True)
-            
+            sorted_correlations = sorted(correlations,
+                                         key=lambda x: abs(x[1]),
+                                         reverse=True)
+
             # Let the user choose how many plots to display, default is 9
-            num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, 10)), index=8)  # Default to 9
-            
-            top_pairs = [pair[0] for pair in sorted_correlations[:num_of_plots]]
-            
+            num_of_plots = st.selectbox("Choose number of plots to display:",
+                                        list(range(1, 10)),
+                                        index=8)  # Default to 9
+
+            top_pairs = [
+                pair[0] for pair in sorted_correlations[:num_of_plots]
+            ]
+
             left_col, center_col, right_col = st.columns(3)
             columns = [left_col, center_col, right_col]
             chart_col_idx = 0
-            
+
             # Create box plots for the top correlated pairs
             for num_col, cat_col in top_pairs:
                 fig = px.box(
@@ -1339,10 +1526,9 @@ class DataViz():
                     width=chart_width,
                     height=chart_height)
                 fig.update_layout(title={'font': {'size': 12}})
-                
+
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
-
 
             # Pairplot
             # st.write("## Pairplot")
@@ -1351,7 +1537,7 @@ class DataViz():
 
             try:
                 st.write("## Pie Charts for Categorical Columns")
-    
+
                 # Filter categorical columns based on unique value count
                 filtered_categorical_cols = [
                     col for col in self.categorical_cols
@@ -1361,30 +1547,33 @@ class DataViz():
                     col for col in self.numeric_cols
                     if len(self.df[col].unique()) > 20
                 ]
-    
+
                 # Choose aggregation method
                 aggregation_method = st.selectbox('Choose aggregation method',
                                                   ['count', 'mean', 'sum'])
-    
+
                 # If aggregation method is not count, let user choose a numeric column
                 selected_numeric = None
                 if aggregation_method != 'count':
                     selected_numeric = st.selectbox(
                         'Choose a numeric column for aggregation',
                         filtered_numeric_cols)
-    
+
                 left_col, center_col, right_col = st.columns(3)
                 columns = [left_col, center_col, right_col]
                 chart_col_idx = 0
-    
+
                 # Aggregate the data
                 if aggregation_method == 'count':
-                    aggregated_data = self.df[filtered_categorical_cols].groupby(
-                        filtered_categorical_cols).size().reset_index(name='count')
+                    aggregated_data = self.df[
+                        filtered_categorical_cols].groupby(
+                            filtered_categorical_cols).size().reset_index(
+                                name='count')
                 else:
-                    aggregated_data = self.df.groupby(filtered_categorical_cols)[
-                        selected_numeric].agg(aggregation_method).reset_index()
-    
+                    aggregated_data = self.df.groupby(
+                        filtered_categorical_cols)[selected_numeric].agg(
+                            aggregation_method).reset_index()
+
                 # Create pie charts for all filtered categorical columns
                 for col in filtered_categorical_cols:
                     if aggregation_method == 'count':
@@ -1392,7 +1581,8 @@ class DataViz():
                             aggregated_data,
                             names=col,
                             values='count',
-                            title=f'Pie Chart of {col}<br>(Aggregated by count)',
+                            title=
+                            f'Pie Chart of {col}<br>(Aggregated by count)',
                             width=chart_width,
                             height=chart_height)
                         fig.update_layout(title={
@@ -1420,51 +1610,61 @@ class DataViz():
             except:
                 pass
 
-
             try:
                 # Line Plots
                 st.write("## Line Plots")
-                
+
                 def is_arithmetic_sequence(lst):
                     if len(lst) < 2:
                         return False
                     diff = lst[1] - lst[0]
                     for i in range(2, len(lst)):
-                        if lst[i] - lst[i-1] != diff:
+                        if lst[i] - lst[i - 1] != diff:
                             return False
                     return True
-                
+
                 # Filter integer columns based on unique value criteria and arithmetic sequence
                 valid_integer_cols_for_line = [
-                    col for col in self.integer_cols 
-                    if self.df[col].nunique() > 5 and is_arithmetic_sequence(sorted(self.df[col].unique()))
+                    col for col in self.integer_cols
+                    if self.df[col].nunique() > 5
+                    and is_arithmetic_sequence(sorted(self.df[col].unique()))
                 ]
-                
+
                 # Calculate Pearson correlation for each combination of valid integer and numeric columns
                 correlations = {}
                 for int_col in valid_integer_cols_for_line:
                     for num_col in self.numeric_cols:  # Assuming you have numeric_cols defined
                         if int_col != num_col:
-                            correlation = self.df[int_col].corr(self.df[num_col])
+                            correlation = self.df[int_col].corr(
+                                self.df[num_col])
                             correlations[(int_col, num_col)] = correlation
-                
+
                 # Sort the pairs by absolute value of Pearson correlation in descending order
-                sorted_correlations = sorted(correlations.items(), key=lambda x: abs(x[1]), reverse=True)
-                
+                sorted_correlations = sorted(correlations.items(),
+                                             key=lambda x: abs(x[1]),
+                                             reverse=True)
+
                 # Let the user choose how many plots to display, default is 9
-                num_of_plots = st.selectbox("Choose number of plots to display:", list(range(1, len(sorted_correlations) + 1)), index=1)  # Default to 9
-                
+                num_of_plots = st.selectbox(
+                    "Choose number of plots to display:",
+                    list(range(1,
+                               len(sorted_correlations) + 1)),
+                    index=1)  # Default to 9
+
                 # Select the top pairs based on user input
-                top_pairs = [pair[0] for pair in sorted_correlations[:num_of_plots]]
-                
+                top_pairs = [
+                    pair[0] for pair in sorted_correlations[:num_of_plots]
+                ]
+
                 # Aggregation options for numeric columns
-                agg_option = st.selectbox("Select aggregation for Y-axis:", ['mean', 'median', 'sum'])
-                
+                agg_option = st.selectbox("Select aggregation for Y-axis:",
+                                          ['mean', 'median', 'sum'])
+
                 # Columns for layout
                 left_col, center_col, right_col = st.columns(3)
                 columns = [left_col, center_col, right_col]
                 chart_col_idx = 0
-    
+
                 def plot_all_line_charts(df, integer_cols, float_cols,
                                          agg_option, chart_width, chart_height,
                                          columns, chart_col_idx):
@@ -1473,26 +1673,29 @@ class DataViz():
                             # Skip plotting if x and y columns are the same
                             if x_col == y_col:
                                 continue
-    
-                            fig = create_line_plot(df, x_col, y_col, agg_option,
-                                                   chart_width, chart_height)
+
+                            fig = create_line_plot(df, x_col, y_col,
+                                                   agg_option, chart_width,
+                                                   chart_height)
                             columns[chart_col_idx % 3].plotly_chart(fig)
                             # chart_col_idx += 1
-    
+
                     # chart_col_idx = 0
-    
-                def create_line_plot(df, x_col, y_col, aggregation, chart_width,
-                                     chart_height):
+
+                def create_line_plot(df, x_col, y_col, aggregation,
+                                     chart_width, chart_height):
                     if aggregation == 'mean':
-                        df_agg = df.groupby(x_col, as_index=False)[y_col].mean()
+                        df_agg = df.groupby(x_col,
+                                            as_index=False)[y_col].mean()
                     elif aggregation == 'median':
-                        df_agg = df.groupby(x_col, as_index=False)[y_col].median()
+                        df_agg = df.groupby(x_col,
+                                            as_index=False)[y_col].median()
                     else:  # sum
                         df_agg = df.groupby(x_col, as_index=False)[y_col].sum()
-    
+
                     # Create line plot
                     fig = px.line(df_agg, x=x_col, y=y_col)
-    
+
                     # Apply custom style
                     fig.update_layout(
                         title={
@@ -1507,15 +1710,18 @@ class DataViz():
                         width=chart_width,
                         height=chart_height,
                         paper_bgcolor="white",  # set background color to white
-                        plot_bgcolor="white",  # set plot background color to white
+                        plot_bgcolor=
+                        "white",  # set plot background color to white
                         xaxis_showgrid=True,  # Show x-axis gridlines
-                        xaxis_gridcolor='rgba(200,200,200,0.2)',  # Lighten gridlines
+                        xaxis_gridcolor=
+                        'rgba(200,200,200,0.2)',  # Lighten gridlines
                         yaxis_showgrid=True,  # Show y-axis gridlines
-                        yaxis_gridcolor='rgba(200,200,200,0.2)',  # Lighten gridlines
+                        yaxis_gridcolor=
+                        'rgba(200,200,200,0.2)',  # Lighten gridlines
                         margin=dict(t=40, b=40, l=40,
                                     r=10)  # Add margins to the plot
                     )
-    
+
                     # Update line style
                     fig.update_traces(
                         line=dict(dash="solid",
@@ -1523,16 +1729,352 @@ class DataViz():
                         marker=dict(size=8),  # Adjust marker size
                         mode="lines+markers"  # Add markers to the line
                     )
-    
+
                     return fig
-                
+
                 chart_width = 300  # width of the chart to fit within the column
                 chart_height = 400  # height of the chart
-                
+
                 # Create line plots for the selected pairs
                 for int_col, num_col in top_pairs:
-                    plot_all_line_charts(self.df, [int_col], [num_col], agg_option, chart_width, chart_height, columns, chart_col_idx)
+                    plot_all_line_charts(self.df, [int_col], [num_col],
+                                         agg_option, chart_width, chart_height,
+                                         columns, chart_col_idx)
                     chart_col_idx += 1
             except:
                 pass
 
+        with tab5:
+            st.title("1-Click Summarize!")
+            st.subheader("A. Data Summary")
+            st.dataframe(self.df.head(), use_container_width=True)
+            r, c = self.df.shape
+            date_cols = self.df.select_dtypes(
+                include='datetime64[ns]').columns.tolist()
+            integer_cols = self.df.select_dtypes(['int16', 'int32',
+                                                  'int64']).columns.tolist()
+            numeric_cols = self.num_df.columns.tolist()
+            float_cols = self.df.select_dtypes(
+                ['float16', 'float32', 'float64']).columns.tolist()
+            categorical_cols = self.cat_df.columns.tolist()
+            text1 = f'''We have {r} records with {c} columns. The Columns consits of:  
+            1. Have {len(date_cols)} date columns : {date_cols}.  
+            2. Have {len(numeric_cols)} numeric columns : {numeric_cols}.  
+            2.a. Have {len(integer_cols)} integer columns : {integer_cols}.  
+            2.b. Have {len(float_cols)} float columns : {float_cols}.  
+            3. Have {len(categorical_cols)} categorical columns : {categorical_cols}.'''
+
+            st.markdown(text1)
+            st.write('---')
+            selected_variable = st.selectbox(
+                "Select a Variables for detail Summary:",
+                self.df.columns.tolist())
+            st.session_state.button_clicked = False
+            message_placeholder = st.empty()
+            message_placeholder.write("Processing... please wait!!!")
+
+            progress_bar = st.progress(0)
+            cols_used = self.variable_selection(selected_variable,
+                                                progress_bar)
+            progress_bar.empty()
+            message_placeholder.empty()
+
+            st.write("---")
+
+            data = self.df[cols_used + [selected_variable]].copy()
+            date_cols = data.select_dtypes(
+                include='datetime64[ns]').columns.tolist()
+            integer_cols = data.select_dtypes(['int16', 'int32',
+                                               'int64']).columns.tolist()
+            numeric_cols = data.select_dtypes(
+                ['int16', 'int32', 'int64', 'float16', 'float32',
+                 'float64']).columns.tolist()
+            float_cols = data.select_dtypes(['float16', 'float32',
+                                             'float64']).columns.tolist()
+            categorical_cols = data.select_dtypes(exclude=[
+                'int16', 'int32', 'int64', 'float16', 'float32', 'float64',
+                'datetime64[ns]'
+            ]).columns.tolist()
+            if selected_variable in numeric_cols:
+                top_bottom_text = ''
+                corr_text = ''
+                # Grouping Data into Deciles and Getting Group with Highest Frequency
+                description = data[selected_variable].describe()
+                missing_values = 100 - (description['count'] * 100 / len(data))
+                skewness = data[selected_variable].skew()
+                kurt = data[selected_variable].kurtosis()
+
+                # Calculate deciles using numpy.percentile
+                percentiles = np.percentile(data[selected_variable],
+                                            np.arange(0, 101, 10))
+                group_labels = [f'Decile {i+1}' for i in range(10)]
+
+                # Add a new column to the DataFrame indicating the decile group
+                data['decile_group'] = pd.cut(data[selected_variable],
+                                              bins=percentiles,
+                                              labels=group_labels)
+
+                # Count the occurrences in each decile group
+                group_counts = data['decile_group'].value_counts()
+                top_group, max_val_group = group_counts.idxmax(), max(
+                    group_counts)
+                st.write("##")
+                st.write(
+                    f"Variable {selected_variable} have the following summary:"
+                )
+                i = 1
+                for idx, val in description.items():
+                    if i == 1:
+                        text = f"{i}. have {idx} values : {val:.2f} \n "
+                        i += 1
+                    else:
+                        new_idx = idx.replace("%", "th percentile")
+                        text += f"{i}. have {new_idx} values : {val:.2f} \n "
+                        i += 1
+                text += f'{i}. have skewness {skewness:.3f} and kurtosis {kurt:.3f} \n '
+                i += 1
+                text += f'{i}. have top decile group {top_group} with frequency {max_val_group} \n '
+                i += 1
+                text += f'{i}. have missing values {missing_values:.2f} % \n '
+                i += 1
+
+                description['skewness'] = skewness
+                description['kurtosis'] = kurt
+                description['top_decile'] = top_group
+                description['top_decile_freq'] = max_val_group
+                description['missing_pct'] = missing_values / 100
+
+                st.subheader("B. Distribution")
+                st.dataframe(description, use_container_width=True)
+                st.write('---')
+                st.subheader("C. Grouped Summary")
+                j = 1
+                if len(categorical_cols) > 0:
+                    for c_ in categorical_cols:
+                        grouped_summary = data.groupby(
+                            c_)[selected_variable].describe()
+                        mean_values = grouped_summary['mean'].sort_values()
+
+                        # Create formatted text for top and bottom categories
+                        top_mean = mean_values.tail(3).sort_values(
+                            ascending=False)
+                        bottom_mean = mean_values.head(3)
+
+                        top_mean_text = ", ".join(
+                            f"{name} ({mean:.2f})" for name, mean in zip(
+                                top_mean.index, top_mean.values))
+                        bottom_mean_text = ", ".join(
+                            f"{name} ({mean:.2f})" for name, mean in zip(
+                                bottom_mean.index, bottom_mean.values))
+
+                        top_bottom_text += f"{i}. Top 3 {c_} with highest Average {selected_variable}: {top_mean_text} \n "
+                        i += 1
+                        top_bottom_text += f"{i}. Bottom 3 {c_} with lowest Average {selected_variable}: {bottom_mean_text} \n "
+                        i += 1
+
+                        st.subheader(
+                            f"{j}. Summary of {selected_variable} grouped by {c_}"
+                        )
+                        j += 1
+                        st.dataframe(grouped_summary, use_container_width=True)
+
+                        # Display top and bottom categories (based on mean)
+                        c1, c2 = st.columns(2)
+                        with c1:
+
+                            c1.write(
+                                f"Top 3 {c_} categories by average {selected_variable}:"
+                            )
+                            c1.dataframe(mean_values.tail(3).sort_values(
+                                ascending=False),
+                                         use_container_width=True)
+                        with c2:
+                            c2.write(
+                                f"Bottom 3 {c_} categories by average {selected_variable}:"
+                            )
+                            c2.dataframe(mean_values.head(3),
+                                         use_container_width=True)
+
+                        st.write("---")
+                else:
+                    st.write("No Categorical Variables")
+                    st.write('---')
+
+                st.subheader("D. Correlation Summary")
+                if len(numeric_cols) > 1:
+                    # Calculate correlations
+                    correlations = data[numeric_cols].corr()[selected_variable]
+                    strong_counter = 0
+                    for idx, val in correlations.items():
+                        if idx != selected_variable:
+                            map_conditions = 'weak' if np.abs(
+                                val
+                            ) < 0.6 else 'positive strong' if val >= 0.6 else 'negative strong'
+                            if map_conditions != 'weak':
+                                strong_counter += 1
+                                st.write(
+                                    "Correlation of {selected_variable} and {idx} are {map_conditions} with value {val:.3f}.  "
+                                )
+                            corr_text += f"{i}. correlation of {selected_variable} and {idx} are {map_conditions} with value {val:.3f}. \n "
+                            i += 1
+                    if strong_counter == 0:
+                        st.write(
+                            f"No Variables have strong correlation with {selected_variable}."
+                        )
+                else:
+                    st.write("No Categorical Variables")
+                st.write('---')
+                all_text = f"Variable {selected_variable} have the following summary: \n " + text + top_bottom_text + corr_text
+
+            elif selected_variable in categorical_cols:
+                description = data[selected_variable].describe()
+                missing_values = 100 - (description['count'] * 100 / len(data))
+                st.write("##")
+                st.write(
+                    f"Variable {selected_variable} have the following summary:"
+                )
+                i = 1
+                for idx, val in description.items():
+                    if i == 1:
+                        text = f"{i}. have {idx} values : {val} \n "
+                        i += 1
+                    else:
+                        new_idx = idx.replace("top", "top values").replace(
+                            "freq", "frequency of top values")
+                        text += f"{i}. have {new_idx} values : {val} \n "
+                        i += 1
+                text += f'{i}. have missing values {missing_values:.2f} % \n '
+                i += 1
+                description['missing_pct'] = missing_values / 100
+
+                st.subheader("B. Distribution")
+                st.dataframe(description, use_container_width=True)
+                st.write('---')
+                st.subheader("C. Grouped Summary")
+                top_bottom_text = ''
+                grouped_summary = data.groupby(
+                    selected_variable)[numeric_cols].describe()
+                j = 1
+                if len(numeric_cols) > 0:
+                    for n_ in numeric_cols:
+                        st.subheader(
+                            f"{j}. Summary of {selected_variable} grouped by {n_}"
+                        )
+                        j += 1
+                        mean_values = grouped_summary[n_]['mean'].sort_values()
+
+                        # Create formatted text for top and bottom categories
+                        top_mean = mean_values.tail(3).sort_values(
+                            ascending=False)
+                        bottom_mean = mean_values.head(3)
+
+                        top_mean_text = ", ".join(
+                            f"{name} ({mean:.2f})" for name, mean in zip(
+                                top_mean.index, top_mean.values))
+                        bottom_mean_text = ", ".join(
+                            f"{name} ({mean:.2f})" for name, mean in zip(
+                                bottom_mean.index, bottom_mean.values))
+
+                        top_bottom_text += f"{i}. Top 3 {selected_variable} with highest Average of {n_}: {top_mean_text} \n "
+                        i += 1
+                        top_bottom_text += f"{i}. Bottom 3 {selected_variable} with lowest Average of {n_}: {bottom_mean_text} \n "
+                        i += 1
+                        st.dataframe(grouped_summary[n_])
+                        # Display top and bottom categories (based on mean)
+                        c1, c2 = st.columns(2)
+                        with c1:
+                            c1.write(
+                                f"Top 3 {selected_variable} categories by average of {n_}:"
+                            )
+                            c1.dataframe(top_mean, use_container_width=True)
+                        with c2:
+                            c2.write(
+                                f"Bottom 3 {selected_variable} categories by average of {n_}:"
+                            )
+                            c2.dataframe(bottom_mean, use_container_width=True)
+
+                        st.write("---")
+                else:
+                    st.write("No Numerical Variables")
+                    st.write("---")
+
+                st.subheader("D. Correlation Summary")
+                highest_values = dict()
+                lowest_values = dict()
+                corr_text = ''
+                j = 1
+                if len(categorical_cols) > 1:
+                    for var2 in categorical_cols:
+                        if var2 != selected_variable:
+                            contingency_table = pd.crosstab(
+                                data[selected_variable], data[var2])
+                            # Find highest and lowest values
+                            max_value = contingency_table.values.max()
+                            min_value = contingency_table.values.min()
+
+                            # Get indices of highest and lowest values
+                            max_indices = np.where(
+                                contingency_table.values == max_value)
+                            min_indices = np.where(
+                                contingency_table.values == min_value)
+
+                            # Get corresponding row and column labels
+                            max_rows = [
+                                contingency_table.index[i]
+                                for i in max_indices[0]
+                            ]
+                            max_cols = [
+                                contingency_table.columns[i]
+                                for i in max_indices[1]
+                            ]
+
+                            min_rows = [
+                                contingency_table.index[i]
+                                for i in min_indices[0]
+                            ]
+                            min_cols = [
+                                contingency_table.columns[i]
+                                for i in min_indices[1]
+                            ]
+
+                            # Store results in dictionaries
+                            highest_values[var2] = {
+                                'value': max_value,
+                                'rows': max_rows,
+                                'columns': max_cols
+                            }
+                            lowest_values[var2] = {
+                                'value': min_value,
+                                'rows': min_rows,
+                                'columns': min_cols
+                            }
+                            st.subheader(
+                                f"{j}. Summary of {selected_variable} grouped by {var2}"
+                            )
+                            j += 1
+                            st.dataframe(contingency_table,
+                                         use_container_width=True)
+                            st.write("---")
+                            corr_text += f"{i}. Highest Values of {var2}, Value: {highest_values[var2]['value']}, {selected_variable}: {highest_values[var2]['rows']}, {var2}: {highest_values[var2]['columns']}. \n "
+                            corr_text += f"{i+1}. Lowest Values of {var2}, Value: {lowest_values[var2]['value']}, {selected_variable}: {lowest_values[var2]['rows']}, {var2}: {lowest_values[var2]['columns']}. \n "
+                            i += 2
+
+                else:
+                    st.write("No Categorical Variables")
+                    st.write("---")
+
+                all_text = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text + corr_text
+
+            else:
+                st.write(
+                    f"{selected_variable} is a Date columns, we will not show any analytics for it."
+                )
+
+            button = st.button("Give Me Summarize!")
+
+            if button:
+                st.session_state.button_clicked = True
+
+            if st.session_state.get('button_clicked', False):
+                st.success("Summary Generated!")
+                st.text(all_text)
