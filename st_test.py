@@ -223,7 +223,7 @@ def request_prompt(input_pengguna,
     # ]
 
     if style == 'General Question':
-        st.write(get_answer_csv(df, input_pengguna))
+        script = get_answer_csv(df, input_pengguna)
         
         # messages = [{
         #     "role":
@@ -1692,7 +1692,10 @@ def main():
 
                     with main_col1:  # Gunakan kolom utama pertama
                         # st.subheader("Visualizations")
-                        exec(str(script))
+                        if style_choosen == 'General Question':
+                            st.write(script)
+                        else:
+                            exec(str(script))
 
                     # button = st.button("Print Code")
 
