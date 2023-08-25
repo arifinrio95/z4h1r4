@@ -1,3 +1,4 @@
+import openai
 import pandas as pd
 import numpy as np
 from scipy.stats import skew, kurtosis, chi2_contingency
@@ -79,6 +80,32 @@ class DataViz():
             ]
 
         return " ".join(words)
+
+    def request_summary_wording(text_summary,
+                             api_model:
+    messages = [
+        {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan bahasa yang natural dan insightful."},
+        {"role": "user", "content": f"""Buatkan laporan terstruktur dan insightful dari informasi berikut: {text_summary}."""}
+    ]
+
+    if api_model == 'GPT3.5':
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            # model="gpt-4",
+            messages=messages,
+            max_tokens=3000,
+            temperature=0)
+        script = response.choices[0].message['content']
+    else:
+        response = openai.ChatCompletion.create(
+            # model="gpt-3.5-turbo",
+            model="gpt-4",
+            messages=messages,
+            max_tokens=3000,
+            temperature=0)
+        script = response.choices[0].message['content']
+
+    return script
 
     def variable_selection(self,
                            selected_variables,
@@ -2071,11 +2098,17 @@ class DataViz():
                     f"{selected_variable} is a Date columns, we will not show any analytics for it."
                 )
 
+            st.write("Summarize It!")
+            api_model = st.selectbox('Choose LLM Model to Summarize:', ('GPT4', 'GPT3.5'))
             button = st.button("Give Me Summarize!")
-
+            
+            
             if button:
                 st.session_state.button_clicked = True
 
             if st.session_state.get('button_clicked', False):
                 st.success("Summary Generated!")
-                st.text(all_text)
+                # st.text(all_text)
+                with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
+                    response = request_summary_wording(all_text, api_model)
+                    st.text(response)
