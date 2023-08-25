@@ -116,8 +116,9 @@ class DataViz():
             # Step 2: Check the number of numerical and categorical variables
             if len(numerical_vars) >= 5:
                 # Step 3: Permutation Importance
-                X = self.df[numerical_vars]
-                y = self.df[selected_variables]
+                data = self.df.dropna()
+                X = data[numerical_vars]
+                y = data[selected_variables]
 
                 X_train, X_test, y_train, y_test = train_test_split(
                     X, y, test_size=0.2, random_state=42)
@@ -144,8 +145,9 @@ class DataViz():
 
             if len(categorical_vars) >= 5:
                 # Step 3: Permutation Importance
-                X = self.df[categorical_vars]
-                y = self.df[selected_variables]
+                data = self.df.dropna()
+                X = data[categorical_vars]
+                y = data[selected_variables]
 
                 # Encode target variable using target encoding
                 encoder = ce.TargetEncoder(cols=categorical_vars)
@@ -197,8 +199,9 @@ class DataViz():
                 ]
 
             if len(numerical_vars) >= 5:
-                X = self.df[numerical_vars]
-                y = self.df[selected_variables]
+                data = self.df.dropna()
+                X = data[numerical_vars]
+                y = data[selected_variables]
                 X_train, X_test, y_train, y_test = train_test_split(
                     X, y, test_size=0.2, random_state=42)
 
@@ -1929,7 +1932,7 @@ class DataViz():
                 st.write('---')
                 all_text = f"Variable {selected_variable} have the following summary: \n " + text + top_bottom_text + corr_text
                 all_text_without_corr = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text
-                
+
             elif selected_variable in categorical_cols:
                 description = data[selected_variable].describe()
                 missing_values = 100 - (description['count'] * 100 / len(data))
