@@ -1381,7 +1381,7 @@ def main():
 
     option = st.selectbox('Pilih sumber data:',
                           ('Upload Your File', 'Iris (Dummy Data)',
-                           'Tips (Dummy Data)', 'Titanic (Dummy Data)'))
+                           'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)'))
 
     df = pd.DataFrame()
     if option == 'Upload Your File':

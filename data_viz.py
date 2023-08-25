@@ -1812,7 +1812,8 @@ class DataViz():
                 # Add a new column to the DataFrame indicating the decile group
                 data['decile_group'] = pd.cut(data[selected_variable],
                                               bins=percentiles,
-                                              labels=group_labels)
+                                              labels=group_labels,
+                                              duplicates='drop')
 
                 # Count the occurrences in each decile group
                 group_counts = data['decile_group'].value_counts()
