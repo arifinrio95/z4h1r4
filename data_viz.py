@@ -83,29 +83,29 @@ class DataViz():
 
     def request_summary_wording(text_summary,
                              api_model:
-    messages = [
-        {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan bahasa yang natural dan insightful."},
-        {"role": "user", "content": f"""Buatkan laporan terstruktur dan insightful dari informasi berikut: {text_summary}."""}
-    ]
-
-    if api_model == 'GPT3.5':
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            # model="gpt-4",
-            messages=messages,
-            max_tokens=3000,
-            temperature=0)
-        script = response.choices[0].message['content']
-    else:
-        response = openai.ChatCompletion.create(
-            # model="gpt-3.5-turbo",
-            model="gpt-4",
-            messages=messages,
-            max_tokens=3000,
-            temperature=0)
-        script = response.choices[0].message['content']
-
-    return script
+        messages = [
+            {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan bahasa yang natural dan insightful."},
+            {"role": "user", "content": f"""Buatkan laporan terstruktur dan insightful dari informasi berikut: {text_summary}."""}
+        ]
+    
+        if api_model == 'GPT3.5':
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                # model="gpt-4",
+                messages=messages,
+                max_tokens=3000,
+                temperature=0)
+            script = response.choices[0].message['content']
+        else:
+            response = openai.ChatCompletion.create(
+                # model="gpt-3.5-turbo",
+                model="gpt-4",
+                messages=messages,
+                max_tokens=3000,
+                temperature=0)
+            script = response.choices[0].message['content']
+    
+        return script
 
     def variable_selection(self,
                            selected_variables,
