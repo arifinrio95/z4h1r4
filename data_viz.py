@@ -2110,5 +2110,5 @@ class DataViz():
                 st.success("Summary Generated!")
                 # st.text(all_text)
                 with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
-                    response = request_summary_wording(all_text, api_model)
+                    response = request_summary_wording(str(all_text), api_model)
                     st.text(response)
