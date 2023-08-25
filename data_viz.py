@@ -2078,7 +2078,7 @@ class DataViz():
 
             st.subheader("Summarize It!")
             api_model = st.selectbox('Choose LLM Model to Summarize:', ('GPT4', 'GPT3.5'))
-            language = st.selectbox('Choose Language:', ('Indonesia', 'English', 'German', 'Jawa Timur', 'Ngapak', 'Sunda', 'Batak'))
+            language = st.selectbox('Choose Language:', ('Indonesia', 'English', 'German', 'Jawa Timur', 'Jawa Ngapak', 'Sunda', 'Batak'))
             style_choosen = st.selectbox('Choose the Formality:', ('Formal', 'Semi-Formal' ,'Non-Formal'))
             objective = st.selectbox('Choose the Objective:', ('Narative', 'Persuasive', 'Descriptive', 'Argumentative' , 'Satire'))
             button = st.button("Give Me Summarize!")
@@ -2090,7 +2090,7 @@ class DataViz():
                                         objective,
                                         api_model):
                 messages = [
-                    {"role": "system", "content": f"Aku akan menjabarkan summary kamu dengan gaya naratif dan insightful menggunakan bahasa {language}."},
+                    {"role": "system", "content": f"Aku akan menjabarkan summary kamu dengan menggunakan bahasa {language}."},
                     {"role": "user", "content": f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective} menggunakan bahasa {language}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}."""}
                 ]
             
