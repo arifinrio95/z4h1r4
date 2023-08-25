@@ -222,36 +222,38 @@ def request_prompt(input_pengguna,
     # ]
 
     if style == 'General Question':
-        messages = [{
-            "role":
-            "system",
-            "content":
-            "I only response with python syntax streamlit version, no other text explanation."
-        }, {
-            "role":
-            "user",
-            "content":
-            f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-            1. {input_pengguna}. 
-            2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-            3. Respond with scripts without any text. 
-            4. Respond in plain text code. 
-            5. Don’t start your response with “Sure, here are”. 
-            6. Start your response with “import”.
-            7. Don’t give me any explanation about the script. Response only with python code in a plain text.
-            8. Do not reload the dataframe.
-            9. Use Try and Except for each syntax, Except with pass.
-            10. Tulis code untuk menjawab poin 1 dalam versi streamlit untuk dieksekusi. Sesuaikan code-nya dengan data types dari {schema_str}.
-            11. Optimalkan script-nya agar tidak panjang."""
-        }]
-        response = openai.ChatCompletion.create(
-            # model="gpt-3.5-turbo-16k",
-            model="gpt-3.5-turbo",
-            # model="gpt-4",
-            messages=messages,
-            max_tokens=3000,
-            temperature=0)
-        script = response.choices[0].message['content']
+        st.write(get_answer_csv(df, input_pengguna))
+        
+        # messages = [{
+        #     "role":
+        #     "system",
+        #     "content":
+        #     "I only response with python syntax streamlit version, no other text explanation."
+        # }, {
+        #     "role":
+        #     "user",
+        #     "content":
+        #     f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
+        #     1. {input_pengguna}. 
+        #     2. My dataframe already load previously, named df, use it, do not reload the dataframe.
+        #     3. Respond with scripts without any text. 
+        #     4. Respond in plain text code. 
+        #     5. Don’t start your response with “Sure, here are”. 
+        #     6. Start your response with “import”.
+        #     7. Don’t give me any explanation about the script. Response only with python code in a plain text.
+        #     8. Do not reload the dataframe.
+        #     9. Use Try and Except for each syntax, Except with pass.
+        #     10. Tulis code untuk menjawab poin 1 dalam versi streamlit untuk dieksekusi. Sesuaikan code-nya dengan data types dari {schema_str}.
+        #     11. Optimalkan script-nya agar tidak panjang."""
+        # }]
+        # response = openai.ChatCompletion.create(
+        #     # model="gpt-3.5-turbo-16k",
+        #     model="gpt-3.5-turbo",
+        #     # model="gpt-4",
+        #     messages=messages,
+        #     max_tokens=3000,
+        #     temperature=0)
+        # script = response.choices[0].message['content']
     else:
         # versi 1 prompt
         messages = [{
