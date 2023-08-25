@@ -2078,9 +2078,10 @@ class DataViz():
 
             st.subheader("Summarize It!")
             api_model = st.selectbox('Choose LLM Model to Summarize:', ('GPT4', 'GPT3.5'))
-            language = st.selectbox('Choose Language:', ('Indonesia', 'English', 'German', 'Sunda'))
-            style_choosen = st.selectbox('Choose the Formality:', ('Formal', 'Semi-Formal' ,'Non-Formal'))
-            objective = st.selectbox('Choose the Objective:', ('Narative', 'Persuasive', 'Descriptive', 'Argumentative' , 'Satire'))
+            language = st.selectbox('Choose Language:', ('Indonesia', 'English', 'Sunda'))
+            style_choosen = st.selectbox('Choose the Formality:', ('Formal', 'Non-Formal'))
+            objective = st.selectbox('Choose the Style:', ('Narative', 'Persuasive', 'Descriptive', 'Argumentative' , 'Satire'))
+            format = st.selectbox('Choose the Format:', ('Paragraf', 'Youtube Script', 'Thread', 'Caption Instagram'))
             button = st.button("Give Me Summarize!")
             
             # openai.api_key = st.secrets['user_api']
@@ -2088,10 +2089,11 @@ class DataViz():
                                         language,
                                         style_choosen,
                                         objective,
+                                        format,
                                         api_model):
                 messages = [
-                    {"role": "system", "content": f"Aku akan menjabarkan summary kamu dengan menggunakan bahasa {language}."},
-                    {"role": "user", "content": f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective} menggunakan bahasa {language}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}."""}
+                    {"role": "system", "content": f"Aku akan menjabarkan summary kamu dengan menggunakan bahasa {language}. Dalam format {format}."},
+                    {"role": "user", "content": f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}."""}
                 ]
             
                 if api_model == 'GPT3.5':
@@ -2134,6 +2136,6 @@ class DataViz():
                 st.success("Summary Generated!")
                 # st.text(all_text)
                 with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
-                    response = request_summary_wording(str(all_text_without_corr), language, style_choosen, objective, api_model)
+                    response = request_summary_wording(str(all_text_without_corr), language, style_choosen, objective, format, api_model)
                     # st.text(split_text_into_lines(response))
                     st.write(response)
