@@ -2085,7 +2085,7 @@ class DataViz():
                                         api_model):
                 messages = [
                     {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan bahasa yang natural dan insightful."},
-                    {"role": "user", "content": f"""Buatkan laporan terstruktur dan insightful dari informasi berikut: {text_summary}."""}
+                    {"role": "user", "content": f"""Buatkan laporan terstruktur dan insightful, serta berikan opini atau rekomendasi di setiap point dari informasi berikut: {text_summary}."""}
                 ]
             
                 if api_model == 'GPT3.5':
@@ -2106,6 +2106,21 @@ class DataViz():
                     script = response.choices[0].message['content']
             
                 return script
+
+            def split_text_into_lines(text, words_per_line=20):
+                words = text.split()
+                lines = []
+                for i in range(0, len(words), words_per_line):
+                    line = ' '.join(words[i:i+words_per_line])
+                    lines.append(line)
+                return '\n'.join(lines)
+            
+            # Contoh penggunaan fungsi
+            text_explanation = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nec eros erat. Duis nulla lectus, vehicula id dictum quis, ullamcorper quis arcu. Vivamus et eros eu erat suscipit mollis. Curabitur a eros quis nisl porttitor pretium."
+            formatted_text = split_text_into_lines(text_explanation)
+            print(formatted_text)
+
+
             if button:
                 st.session_state.button_clicked = True
 
@@ -2114,4 +2129,4 @@ class DataViz():
                 st.text(all_text)
                 with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
                     response = request_summary_wording(str(all_text_without_corr), api_model)
-                    st.text(response)
+                    st.text(split_text_into_lines(response))
