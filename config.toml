@@ -11,6 +11,7 @@ show_traceback_stack = false
 developmentMode = false
 disableWatchdogWarning = false
 unitTest = false
+dataFrameSerialization = "legacy"
 
 [theme]
 primaryColor="#F63366"
