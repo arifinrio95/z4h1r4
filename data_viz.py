@@ -2084,8 +2084,8 @@ class DataViz():
             def request_summary_wording(text_summary,
                                         api_model):
                 messages = [
-                    {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan gaya naratif dan insightful."},
-                    {"role": "user", "content": f"""Buatkan laporan naratif dan insightful, serta berikan opini atau rekomendasi di setiap point dari informasi berikut: {text_summary}."""}
+                    {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan gaya naratif dan insightful dan memberikan respon dalam syntax streamlit."},
+                    {"role": "user", "content": f"""Buatkan laporan naratif dan insightful, serta berikan opini atau rekomendasi di setiap point dari informasi berikut: {text_summary}. Response dengan syntax streamlit, seperti st.title, st.subheader, st.write."""}
                 ]
             
                 if api_model == 'GPT3.5':
@@ -2130,4 +2130,4 @@ class DataViz():
                 with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
                     response = request_summary_wording(str(all_text_without_corr), api_model)
                     # st.text(split_text_into_lines(response))
-                    st.write(response)
+                    exec(response)
