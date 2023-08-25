@@ -2070,7 +2070,7 @@ class DataViz():
                     st.write("---")
 
                 all_text = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text + corr_text
-
+                all_text_without_corr = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text
             else:
                 st.write(
                     f"{selected_variable} is a Date columns, we will not show any analytics for it."
@@ -2093,7 +2093,7 @@ class DataViz():
                         model="gpt-3.5-turbo-16k",
                         # model="gpt-4",
                         messages=messages,
-                        max_tokens=10000,
+                        max_tokens=3000,
                         temperature=0)
                     script = response.choices[0].message['content']
                 else:
@@ -2113,5 +2113,5 @@ class DataViz():
                 st.success("Summary Generated!")
                 st.text(all_text)
                 with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
-                    response = request_summary_wording(str(all_text), api_model)
+                    response = request_summary_wording(str(all_text_without_corr), api_model)
                     st.text(response)
