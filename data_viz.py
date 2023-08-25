@@ -2080,7 +2080,7 @@ class DataViz():
             api_model = st.selectbox('Choose LLM Model to Summarize:', ('GPT4', 'GPT3.5'))
             button = st.button("Give Me Summarize!")
             
-            openai.api_key = st.secrets['user_api']
+            # openai.api_key = st.secrets['user_api']
             def request_summary_wording(text_summary,
                                         api_model):
                 messages = [
