@@ -2126,7 +2126,8 @@ class DataViz():
 
             if st.session_state.get('button_clicked', False):
                 st.success("Summary Generated!")
-                st.text(all_text)
+                # st.text(all_text)
                 with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
                     response = request_summary_wording(str(all_text_without_corr), api_model)
-                    st.text(split_text_into_lines(response))
+                    # st.text(split_text_into_lines(response))
+                    st.write(response)
