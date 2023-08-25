@@ -2076,7 +2076,7 @@ class DataViz():
                     f"{selected_variable} is a Date columns, we will not show any analytics for it."
                 )
 
-            st.write("Summarize It!")
+            st.subheader("Summarize It!")
             api_model = st.selectbox('Choose LLM Model to Summarize:', ('GPT4', 'GPT3.5'))
             button = st.button("Give Me Summarize!")
             
