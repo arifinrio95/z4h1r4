@@ -1928,7 +1928,8 @@ class DataViz():
                     st.write("No Categorical Variables")
                 st.write('---')
                 all_text = f"Variable {selected_variable} have the following summary: \n " + text + top_bottom_text + corr_text
-
+                all_text_without_corr = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text
+                
             elif selected_variable in categorical_cols:
                 description = data[selected_variable].describe()
                 missing_values = 100 - (description['count'] * 100 / len(data))
