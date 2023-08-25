@@ -81,8 +81,6 @@ class DataViz():
 
         return " ".join(words)
 
-    
-
     def variable_selection(self,
                            selected_variables,
                            progress_bar,
@@ -249,8 +247,6 @@ class DataViz():
         else:
             return numerical_vars + categorical_vars
 
-    
-                                    
     def visualization(self):
         st.markdown(
             "<h1 style='text-align: center; color: #4F4F4F;'>Automated Data Visualizations (by Ulikdata)</h1>",
@@ -1812,7 +1808,9 @@ class DataViz():
                 # Calculate deciles using numpy.percentile
                 percentiles = np.percentile(data[selected_variable],
                                             np.arange(0, 101, 10))
-                group_labels = [f'Decile {i+1}' for i in range(10)]
+                group_labels = [
+                    f'Decile {i+1}' for i in range(len(percentiles) - 1)
+                ]
 
                 # Add a new column to the DataFrame indicating the decile group
                 data['decile_group'] = pd.cut(data[selected_variable],
@@ -2077,25 +2075,35 @@ class DataViz():
                 )
 
             st.subheader("Summarize It!")
-            api_model = st.selectbox('Choose LLM Model to Summarize:', ('GPT4', 'GPT3.5'))
-            language = st.selectbox('Choose Language:', ('Indonesia', 'English', 'Sunda'))
-            style_choosen = st.selectbox('Choose the Formality:', ('Formal', 'Non-Formal'))
-            objective = st.selectbox('Choose the Style:', ('Narative', 'Persuasive', 'Descriptive', 'Argumentative' , 'Satire'))
-            format = st.selectbox('Choose the Format:', ('Paragraf', 'Youtube Script', 'Thread', 'Caption Instagram'))
+            api_model = st.selectbox('Choose LLM Model to Summarize:',
+                                     ('GPT4', 'GPT3.5'))
+            language = st.selectbox('Choose Language:',
+                                    ('Indonesia', 'English', 'Sunda'))
+            style_choosen = st.selectbox('Choose the Formality:',
+                                         ('Formal', 'Non-Formal'))
+            objective = st.selectbox('Choose the Style:',
+                                     ('Narative', 'Persuasive', 'Descriptive',
+                                      'Argumentative', 'Satire'))
+            format = st.selectbox(
+                'Choose the Format:',
+                ('Paragraf', 'Youtube Script', 'Thread', 'Caption Instagram'))
             button = st.button("Give Me Summarize!")
-            
+
             # openai.api_key = st.secrets['user_api']
-            def request_summary_wording(text_summary,
-                                        language,
-                                        style_choosen,
-                                        objective,
-                                        format,
-                                        api_model):
-                messages = [
-                    {"role": "system", "content": f"Aku akan menjabarkan summary kamu dengan menggunakan bahasa {language}. Dalam format {format}."},
-                    {"role": "user", "content": f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}."""}
-                ]
-            
+            def request_summary_wording(text_summary, language, style_choosen,
+                                        objective, format, api_model):
+                messages = [{
+                    "role":
+                    "system",
+                    "content":
+                    f"Aku akan menjabarkan summary kamu dengan menggunakan bahasa {language}. Dalam format {format}."
+                }, {
+                    "role":
+                    "user",
+                    "content":
+                    f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}."""
+                }]
+
                 if api_model == 'GPT3.5':
                     response = openai.ChatCompletion.create(
                         model="gpt-3.5-turbo-16k",
@@ -2112,22 +2120,21 @@ class DataViz():
                         max_tokens=3000,
                         temperature=0.6)
                     script = response.choices[0].message['content']
-            
+
                 return script
 
             def split_text_into_lines(text, words_per_line=20):
                 words = text.split()
                 lines = []
                 for i in range(0, len(words), words_per_line):
-                    line = ' '.join(words[i:i+words_per_line])
+                    line = ' '.join(words[i:i + words_per_line])
                     lines.append(line)
                 return '\n'.join(lines)
-            
+
             # Contoh penggunaan fungsi
             # text_explanation = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nec eros erat. Duis nulla lectus, vehicula id dictum quis, ullamcorper quis arcu. Vivamus et eros eu erat suscipit mollis. Curabitur a eros quis nisl porttitor pretium."
             # formatted_text = split_text_into_lines(text_explanation)
             # print(formatted_text)
-
 
             if button:
                 st.session_state.button_clicked = True
@@ -2135,7 +2142,10 @@ class DataViz():
             if st.session_state.get('button_clicked', False):
                 st.success("Summary Generated!")
                 # st.text(all_text)
-                with st.spinner('Generating insights...(it may takes 1-2 minutes)'):
-                    response = request_summary_wording(str(all_text_without_corr), language, style_choosen, objective, format, api_model)
+                with st.spinner(
+                        'Generating insights...(it may takes 1-2 minutes)'):
+                    response = request_summary_wording(
+                        str(all_text_without_corr), language, style_choosen,
+                        objective, format, api_model)
                     # st.text(split_text_into_lines(response))
                     st.write(response)
