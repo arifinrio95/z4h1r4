@@ -2100,7 +2100,7 @@ class DataViz():
                         # model="gpt-4",
                         messages=messages,
                         max_tokens=3000,
-                        temperature=1)
+                        temperature=0.6)
                     script = response.choices[0].message['content']
                 else:
                     response = openai.ChatCompletion.create(
@@ -2108,7 +2108,7 @@ class DataViz():
                         model="gpt-4",
                         messages=messages,
                         max_tokens=3000,
-                        temperature=1)
+                        temperature=0.6)
                     script = response.choices[0].message['content']
             
                 return script
