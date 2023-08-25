@@ -249,32 +249,7 @@ class DataViz():
         else:
             return numerical_vars + categorical_vars
 
-    openai.api_key = st.secrets['user_api']
-    def request_summary_wording(text_summary,
-                                api_model):
-        messages = [
-            {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan bahasa yang natural dan insightful."},
-            {"role": "user", "content": f"""Buatkan laporan terstruktur dan insightful dari informasi berikut: {text_summary}."""}
-        ]
     
-        if api_model == 'GPT3.5':
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                # model="gpt-4",
-                messages=messages,
-                max_tokens=3000,
-                temperature=0)
-            script = response.choices[0].message['content']
-        else:
-            response = openai.ChatCompletion.create(
-                # model="gpt-3.5-turbo",
-                model="gpt-4",
-                messages=messages,
-                max_tokens=3000,
-                temperature=0)
-            script = response.choices[0].message['content']
-    
-        return script
                                     
     def visualization(self):
         st.markdown(
@@ -2105,7 +2080,32 @@ class DataViz():
             api_model = st.selectbox('Choose LLM Model to Summarize:', ('GPT4', 'GPT3.5'))
             button = st.button("Give Me Summarize!")
             
+            openai.api_key = st.secrets['user_api']
+            def request_summary_wording(text_summary,
+                                        api_model):
+                messages = [
+                    {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan bahasa yang natural dan insightful."},
+                    {"role": "user", "content": f"""Buatkan laporan terstruktur dan insightful dari informasi berikut: {text_summary}."""}
+                ]
             
+                if api_model == 'GPT3.5':
+                    response = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        # model="gpt-4",
+                        messages=messages,
+                        max_tokens=3000,
+                        temperature=0)
+                    script = response.choices[0].message['content']
+                else:
+                    response = openai.ChatCompletion.create(
+                        # model="gpt-3.5-turbo",
+                        model="gpt-4",
+                        messages=messages,
+                        max_tokens=3000,
+                        temperature=0)
+                    script = response.choices[0].message['content']
+            
+                return script
             if button:
                 st.session_state.button_clicked = True
 
