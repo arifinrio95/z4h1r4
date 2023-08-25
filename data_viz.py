@@ -2117,8 +2117,8 @@ class DataViz():
             
             # Contoh penggunaan fungsi
             # text_explanation = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nec eros erat. Duis nulla lectus, vehicula id dictum quis, ullamcorper quis arcu. Vivamus et eros eu erat suscipit mollis. Curabitur a eros quis nisl porttitor pretium."
-            formatted_text = split_text_into_lines(text_explanation)
-            print(formatted_text)
+            # formatted_text = split_text_into_lines(text_explanation)
+            # print(formatted_text)
 
 
             if button:
