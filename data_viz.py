@@ -2084,7 +2084,7 @@ class DataViz():
             def request_summary_wording(text_summary,
                                         api_model):
                 messages = [
-                    {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan gaya naratif dan insightful dan memberikan respon dalam syntax streamlit."},
+                    {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan gaya naratif dan insightful."},
                     {"role": "user", "content": f"""Buatkan laporan naratif dan insightful, serta berikan opini atau rekomendasi di setiap point dari informasi berikut: {text_summary}."""}
                 ]
             
