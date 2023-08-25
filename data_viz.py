@@ -2090,7 +2090,7 @@ class DataViz():
                                         objective,
                                         api_model):
                 messages = [
-                    {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan gaya naratif dan insightful."},
+                    {"role": "system", "content": f"Aku akan menjabarkan summary kamu dengan gaya naratif dan insightful menggunakan bahasa {language}."},
                     {"role": "user", "content": f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective} menggunakan bahasa {language}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}."""}
                 ]
             
