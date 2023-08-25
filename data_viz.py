@@ -81,31 +81,7 @@ class DataViz():
 
         return " ".join(words)
 
-    def request_summary_wording(text_summary,
-                                api_model):
-        messages = [
-            {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan bahasa yang natural dan insightful."},
-            {"role": "user", "content": f"""Buatkan laporan terstruktur dan insightful dari informasi berikut: {text_summary}."""}
-        ]
     
-        if api_model == 'GPT3.5':
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                # model="gpt-4",
-                messages=messages,
-                max_tokens=3000,
-                temperature=0)
-            script = response.choices[0].message['content']
-        else:
-            response = openai.ChatCompletion.create(
-                # model="gpt-3.5-turbo",
-                model="gpt-4",
-                messages=messages,
-                max_tokens=3000,
-                temperature=0)
-            script = response.choices[0].message['content']
-    
-        return script
 
     def variable_selection(self,
                            selected_variables,
@@ -273,6 +249,33 @@ class DataViz():
         else:
             return numerical_vars + categorical_vars
 
+    openai.api_key = st.secrets['user_api']
+    def request_summary_wording(text_summary,
+                                api_model):
+        messages = [
+            {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan bahasa yang natural dan insightful."},
+            {"role": "user", "content": f"""Buatkan laporan terstruktur dan insightful dari informasi berikut: {text_summary}."""}
+        ]
+    
+        if api_model == 'GPT3.5':
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                # model="gpt-4",
+                messages=messages,
+                max_tokens=3000,
+                temperature=0)
+            script = response.choices[0].message['content']
+        else:
+            response = openai.ChatCompletion.create(
+                # model="gpt-3.5-turbo",
+                model="gpt-4",
+                messages=messages,
+                max_tokens=3000,
+                temperature=0)
+            script = response.choices[0].message['content']
+    
+        return script
+                                    
     def visualization(self):
         st.markdown(
             "<h1 style='text-align: center; color: #4F4F4F;'>Automated Data Visualizations (by Ulikdata)</h1>",
