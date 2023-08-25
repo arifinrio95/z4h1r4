@@ -82,7 +82,7 @@ class DataViz():
         return " ".join(words)
 
     def request_summary_wording(text_summary,
-                             api_model:
+                             api_model):
         messages = [
             {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan bahasa yang natural dan insightful."},
             {"role": "user", "content": f"""Buatkan laporan terstruktur dan insightful dari informasi berikut: {text_summary}."""}
