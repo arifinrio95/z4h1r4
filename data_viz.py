@@ -1808,14 +1808,13 @@ class DataViz():
                 # Calculate deciles using numpy.percentile
                 percentiles = np.percentile(data[selected_variable],
                                             np.arange(0, 101, 10))
-                group_labels = [
-                    f'Decile {i+1}' for i in range(len(percentiles) - 1)
-                ]
+                # group_labels = [
+                #     f'Decile {i+1}' for i in range(len(percentiles) - 1)
+                # ]
 
                 # Add a new column to the DataFrame indicating the decile group
                 data['decile_group'] = pd.cut(data[selected_variable],
                                               bins=percentiles,
-                                              labels=group_labels,
                                               duplicates='drop')
 
                 # Count the occurrences in each decile group
