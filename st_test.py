@@ -202,6 +202,7 @@ local_css("style.css")
 
 
 def request_prompt(input_pengguna,
+                   df,
                    schema_str,
                    rows_str,
                    style,
@@ -1678,7 +1679,7 @@ def main():
                     input_pengguna != None) & st.session_state.button_clicked:
                 st.session_state.button_clicked = True
                 with st.spinner('Wait for it...'):
-                    script = request_prompt(input_pengguna, schema_str,
+                    script = request_prompt(input_pengguna, df, schema_str,
                                             rows_str, style_choosen, None,
                                             None, 0)
                     st.session_state['script'] = script
