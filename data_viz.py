@@ -2078,7 +2078,7 @@ class DataViz():
 
             st.subheader("Summarize It!")
             api_model = st.selectbox('Choose LLM Model to Summarize:', ('GPT4', 'GPT3.5'))
-            language = st.selectbox('Choose Language:', ('Indonesia', 'English', 'German', 'Jawa Timur', 'Jawa Ngapak', 'Sunda', 'Batak'))
+            language = st.selectbox('Choose Language:', ('Indonesia', 'English', 'German', 'Sunda'))
             style_choosen = st.selectbox('Choose the Formality:', ('Formal', 'Semi-Formal' ,'Non-Formal'))
             objective = st.selectbox('Choose the Objective:', ('Narative', 'Persuasive', 'Descriptive', 'Argumentative' , 'Satire'))
             button = st.button("Give Me Summarize!")
