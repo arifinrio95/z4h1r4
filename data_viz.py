@@ -2085,7 +2085,7 @@ class DataViz():
                                         api_model):
                 messages = [
                     {"role": "system", "content": "Aku akan menjabarkan summary kamu dengan gaya naratif dan insightful."},
-                    {"role": "user", "content": f"""Buatkan laporan naratif dan insightful, serta berikan opini atau rekomendasi di setiap point dari informasi berikut: {text_summary}."""}
+                    {"role": "user", "content": f"""Buatkan laporan naratif dan insightful, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}."""}
                 ]
             
                 if api_model == 'GPT3.5':
