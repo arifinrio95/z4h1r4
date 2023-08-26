@@ -56,6 +56,8 @@ from lazypredict.Supervised import LazyClassifier
 
 import hashlib
 
+from kaggle.api.kaggle_api_extended import KaggleApi
+
 
 # Fungsi untuk mengenkripsi password
 def make_hashes(password):
@@ -1358,6 +1360,22 @@ def get_sample_data(dataset_name):
 
 
 def main():
+    # Inisialisasi API Kaggle
+    api = KaggleApi()
+    api.authenticate()
+
+    def get_kaggle_datasets():
+        datasets = api.dataset_list(search='', file_type='csv', sort_by='hottest')
+        dataset_names = [ds.ref for ds in datasets]
+        return dataset_names
+
+    def load_kaggle_dataset(dataset_name):
+        api.dataset_download_files(dataset_name, path='./', unzip=True)
+        csv_file = [f for f in os.listdir() if f.endswith('.csv')][0]
+        df = pd.read_csv(csv_file)
+        os.remove(csv_file)  # Menghapus file CSV setelah digunakan
+        return df
+
     import warnings
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -1384,7 +1402,7 @@ def main():
 
     option = st.selectbox('Pilih sumber data:',
                           ('Upload Your File', 'Iris (Dummy Data)',
-                           'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)'))
+                           'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
 
     df = pd.DataFrame()
     if option == 'Upload Your File':
@@ -1393,10 +1411,21 @@ def main():
             load_df = LoadDataframe(file)
             df = load_df.load_file_auto_delimiter()
             # df = pd.read_csv(file)
+    elif option == 'Explore Kaggle Dataset':
+        selected_dataset = st.selectbox("Pilih Dataset:", get_datasets())
+        # Tombol untuk mengunduh dan menampilkan dataset
+        if st.button("Load Dataset"):
+            st.write(f"Loading {selected_dataset}...")
+            df = load_dataset(selected_dataset)
+            st.write(f"Dataset {selected_dataset} berhasil dimuat!")
+            # st.dataframe(df)
+
     else:
         df = get_sample_data(option)
 
     openai.api_key = st.secrets['user_api']
+    kaggle_username = os.environ.get("KAGGLE_USERNAME")
+    kaggle_key = os.environ.get("KAGGLE_KEY")
 
     # try:
     if not df.empty:
