@@ -1412,7 +1412,7 @@ def main():
         if file:
             load_df = LoadDataframe(file)
             # st.session_state.df = load_df.load_file_auto_delimiter()
-            # df = pd.read_csv(file)
+            df = pd.read_csv(file)
     elif option == 'Explore Kaggle Dataset':
         selected_dataset = st.selectbox("Pilih Dataset:", get_kaggle_datasets())
         # Tombol untuk mengunduh dan menampilkan dataset
