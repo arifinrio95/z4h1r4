@@ -1405,34 +1405,36 @@ def main():
                            'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
 
     df = pd.DataFrame()
+    if 'df' not in st.session_state:
+        st.session_state.df = None
     if option == 'Upload Your File':
         file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
         if file:
             load_df = LoadDataframe(file)
-            df = load_df.load_file_auto_delimiter()
+            st.session_state.df = load_df.load_file_auto_delimiter()
             # df = pd.read_csv(file)
     elif option == 'Explore Kaggle Dataset':
         selected_dataset = st.selectbox("Pilih Dataset:", get_kaggle_datasets())
         # Tombol untuk mengunduh dan menampilkan dataset
         if st.button("Load Dataset"):
             st.write(f"Loading {selected_dataset}...")
-            df = load_kaggle_dataset(selected_dataset)
+            st.session_state.df = load_kaggle_dataset(selected_dataset)
             st.write(f"Dataset {selected_dataset} berhasil dimuat!")
             # st.dataframe(df)
 
     else:
-        df = get_sample_data(option)
+        st.session_state.df = get_sample_data(option)
 
     openai.api_key = st.secrets['user_api']
     kaggle_username = os.environ.get("KAGGLE_USERNAME")
     kaggle_key = os.environ.get("KAGGLE_KEY")
 
     # try:
-    if not df.empty:
+    if st.session_state.df is not None:
         # load_df = LoadDataframe(df)
         # # global df
         # df = load_df.load_file_auto_delimiter()
-
+        df = st.session_state.df
         df.to_csv("temp_file.csv", index=False)
         uploaded_file_path = "temp_file.csv"
 
