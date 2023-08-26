@@ -1413,7 +1413,7 @@ def main():
             load_df = LoadDataframe(file)
             # st.session_state.df = load_df.load_file_auto_delimiter()
             try:
-                df = pd.read_csv(file)
+                df = load_df.load_file_auto_delimiter()
             except:
                 st.error("Mohon masukkan file csv atau 1 sheet excel dengan format tabel yang benar (terdiri dari nama kolom di row pertama dan value di row berikutnya).")
     elif option == 'Explore Kaggle Dataset':
