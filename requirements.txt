@@ -34,3 +34,4 @@ torchaudio==0.9.1 -f https://download.pytorch.org/whl/cpu/torch_stable.html
 lazypredict
 nltk
 category_encoders
+kaggle
