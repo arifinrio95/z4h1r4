@@ -1411,7 +1411,7 @@ def main():
         file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
         if file:
             load_df = LoadDataframe(file)
-            st.session_state.df = load_df.load_file_auto_delimiter()
+            # st.session_state.df = load_df.load_file_auto_delimiter()
             # df = pd.read_csv(file)
     elif option == 'Explore Kaggle Dataset':
         selected_dataset = st.selectbox("Pilih Dataset:", get_kaggle_datasets())
@@ -1424,7 +1424,7 @@ def main():
             # st.dataframe(df)
 
     else:
-        st.session_state.df = get_sample_data(option)
+        df = get_sample_data(option)
 
     openai.api_key = st.secrets['user_api']
     kaggle_username = os.environ.get("KAGGLE_USERNAME")
