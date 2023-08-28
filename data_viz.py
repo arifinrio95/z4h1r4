@@ -1164,183 +1164,185 @@ class DataViz():
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
 
-            # Histogram
-            st.write("## Histogram for Numeric Columns")
-            col1, col2, col3 = st.columns(3)
+            if float_cols:
+                # Histogram
+                st.write("## Histogram for Numeric Columns")
+                col1, col2, col3 = st.columns(3)
+    
+                # Membiarkan pengguna memilih warna dengan default pilihan
+                hist_color_choice = col1.selectbox(
+                    "Choose color for histogram bars:",
+                    list(color_map.keys()),
+                    index=list(color_map.keys()).index("Default Plotly"))
+    
+                edge_color_choice = col2.selectbox(
+                    "Choose color for histogram bar edges:",
+                    list(color_map.keys()),
+                    index=list(color_map.keys()).index(
+                        "Default Plotly")  # Default ke "Umber"
+                )
+    
+                hist_color = color_map[hist_color_choice]
+                edge_color = color_map[edge_color_choice]
+    
+                # Initialize the columns
+                left_col, center_col, right_col = st.columns(3)
+                columns = [left_col, center_col, right_col]
+                chart_col_idx = 0  # counter to keep track of columns
+    
+                for col in self.float_cols:
+                    if hist_color == 'plotly':
+                        fig = px.histogram(self.df,
+                                           x=col,
+                                           marginal="box",
+                                           nbins=40,
+                                           title=f'Histogram of {col}',
+                                           width=chart_width,
+                                           height=chart_height)
+    
+                    else:
+                        fig = px.histogram(self.df,
+                                           x=col,
+                                           marginal="box",
+                                           nbins=40,
+                                           title=f'Histogram of {col}',
+                                           color_discrete_sequence=[hist_color],
+                                           width=chart_width,
+                                           height=chart_height)
+                        # fig.update_traces(marker=dict(
+                        # color=hist_color, line=dict(color=edge_color, width=1)))
+                        fig.update_traces(marker=dict(color=hist_color))
+    
+                    if edge_color == 'plotly':
+                        fig.update_traces(marker=dict(line=dict(width=1)))
+                    else:
+                        fig.update_traces(marker=dict(
+                            line=dict(color=edge_color, width=1)))
+    
+                    # Check if fig is a tuple and extract the figure if it is.
+                    if isinstance(fig, tuple):
+                        fig = fig[0]
+    
+                    fig.update_layout(title={
+                        'font': {
+                            'size': 12
+                        }  # Increase font size for title
+                    })
+    
+                    columns[chart_col_idx % 3].plotly_chart(fig)
+    
+                    # # Calculate skewness and kurtosis
+                    # col_skewness = skew(self.df[col])
+                    # col_kurtosis = kurtosis(self.df[col])
+    
+                    # # Determine the distribution type based on skewness and kurtosis
+                    # if abs(col_skewness) < 0.5 and abs(col_kurtosis) < 0.5:
+                    #     distribution_type = "approximately normal"
+                    # elif abs(col_skewness) > 1:
+                    #     distribution_type = "highly skewed"
+                    # elif abs(col_kurtosis) > 0.5:
+                    #     distribution_type = "has heavier tails than a normal distribution"
+                    # else:
+                    #     distribution_type = "moderately skewed"
+    
+                    # columns[chart_col_idx % 3].markdown(
+                    #     f"<sub>The distribution of {col} is {distribution_type}.</sub>",
+                    #     unsafe_allow_html=True)
+    
+                    chart_col_idx += 1
 
-            # Membiarkan pengguna memilih warna dengan default pilihan
-            hist_color_choice = col1.selectbox(
-                "Choose color for histogram bars:",
-                list(color_map.keys()),
-                index=list(color_map.keys()).index("Default Plotly"))
-
-            edge_color_choice = col2.selectbox(
-                "Choose color for histogram bar edges:",
-                list(color_map.keys()),
-                index=list(color_map.keys()).index(
-                    "Default Plotly")  # Default ke "Umber"
-            )
-
-            hist_color = color_map[hist_color_choice]
-            edge_color = color_map[edge_color_choice]
-
-            # Initialize the columns
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0  # counter to keep track of columns
-
-            for col in self.float_cols:
-                if hist_color == 'plotly':
-                    fig = px.histogram(self.df,
-                                       x=col,
-                                       marginal="box",
-                                       nbins=40,
-                                       title=f'Histogram of {col}',
-                                       width=chart_width,
-                                       height=chart_height)
-
-                else:
-                    fig = px.histogram(self.df,
-                                       x=col,
-                                       marginal="box",
-                                       nbins=40,
-                                       title=f'Histogram of {col}',
-                                       color_discrete_sequence=[hist_color],
-                                       width=chart_width,
-                                       height=chart_height)
-                    # fig.update_traces(marker=dict(
-                    # color=hist_color, line=dict(color=edge_color, width=1)))
-                    fig.update_traces(marker=dict(color=hist_color))
-
-                if edge_color == 'plotly':
-                    fig.update_traces(marker=dict(line=dict(width=1)))
-                else:
-                    fig.update_traces(marker=dict(
-                        line=dict(color=edge_color, width=1)))
-
-                # Check if fig is a tuple and extract the figure if it is.
-                if isinstance(fig, tuple):
-                    fig = fig[0]
-
-                fig.update_layout(title={
-                    'font': {
-                        'size': 12
-                    }  # Increase font size for title
-                })
-
-                columns[chart_col_idx % 3].plotly_chart(fig)
-
-                # # Calculate skewness and kurtosis
-                # col_skewness = skew(self.df[col])
-                # col_kurtosis = kurtosis(self.df[col])
-
-                # # Determine the distribution type based on skewness and kurtosis
-                # if abs(col_skewness) < 0.5 and abs(col_kurtosis) < 0.5:
-                #     distribution_type = "approximately normal"
-                # elif abs(col_skewness) > 1:
-                #     distribution_type = "highly skewed"
-                # elif abs(col_kurtosis) > 0.5:
-                #     distribution_type = "has heavier tails than a normal distribution"
-                # else:
-                #     distribution_type = "moderately skewed"
-
-                # columns[chart_col_idx % 3].markdown(
-                #     f"<sub>The distribution of {col} is {distribution_type}.</sub>",
-                #     unsafe_allow_html=True)
-
-                chart_col_idx += 1
-
-            st.write("## Scatter plot with Regression Line")
-
-            # Kolom dropdown untuk memilih jumlah plot
-            num_of_plots = st.selectbox("Choose number of plots to display:",
-                                        list(range(1, 11)),
-                                        index=1,
-                                        key="num_of_plot")  # Default ke 10
-
-            # Filter kolom numerik yang uniq valuenya di atas 10
-            filtered_cols = [
-                col for col in self.numeric_cols if self.df[col].nunique() > 10
-            ]
-
-            # Menghitung matriks korelasi
-            correlation_matrix = self.df[filtered_cols].corr()
-
-            # Membuat daftar dari pasangan kolom dan nilai korelasinya
-            from itertools import combinations
-
-            pairs_correlation = []
-            for col1, col2 in combinations(filtered_cols, 2):
-                pairs_correlation.append(
-                    ((col1, col2), abs(correlation_matrix.loc[col1, col2])))
-
-            # Mengurutkan pasangan berdasarkan nilai korelasi (absolut) tertinggi
-            sorted_pairs = sorted(pairs_correlation,
-                                  key=lambda x: x[1],
-                                  reverse=True)
-
-            # Mengambil pasangan dengan korelasi tertinggi sesuai dengan pilihan pengguna
-            top_pairs = [pair[0] for pair in sorted_pairs[:num_of_plots]]
-
-            col1, col2, col3 = st.columns(3)
-
-            # Membiarkan pengguna memilih warna dengan default pilihan
-            scatter_color_choice = col1.selectbox(
-                "Choose color for scatter points:",
-                list(color_map.keys()),
-                index=list(color_map.keys()).index(
-                    "Default Plotly")  # Default ke "Terracotta"
-            )
-
-            line_color_choice = col2.selectbox(
-                "Choose color for regression line:",
-                list(color_map.keys()),
-                index=list(color_map.keys()).index(
-                    "Umber")  # Default ke "Umber"
-            )
-
-            scatter_color = color_map[scatter_color_choice]
-            line_color = color_map[line_color_choice]
-
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0
-
-            # Membuat scatter plot untuk pasangan kolom dengan korelasi tertinggi
-            for col1, col2 in top_pairs:
-                if scatter_color == 'plotly':
-                    fig = px.scatter(self.df,
-                                     x=col1,
-                                     y=col2,
-                                     trendline="ols",
-                                     title=f'Scatter plot of {col1} vs {col2}',
-                                     width=chart_width,
-                                     height=chart_height)
-                    fig.update_traces(marker=dict(size=5),
-                                      selector=dict(mode='markers'))
-                else:
-                    fig = px.scatter(self.df,
-                                     x=col1,
-                                     y=col2,
-                                     trendline="ols",
-                                     color_discrete_sequence=[scatter_color],
-                                     title=f'Scatter plot of {col1} vs {col2}',
-                                     width=chart_width,
-                                     height=chart_height)
-                    fig.update_traces(marker=dict(size=5, color=scatter_color),
-                                      selector=dict(mode='markers'))
-
-                if line_color == 'plotly':
-                    pass
-                else:
-                    fig.update_traces(line=dict(color=line_color),
-                                      selector=dict(type='scatter',
-                                                    mode='lines'))
-
-                fig.update_layout(title={'font': {'size': 12}})
-
-                columns[chart_col_idx % 3].plotly_chart(fig)
-                chart_col_idx += 1
+            if numeric_cols:
+                st.write("## Scatter plot with Regression Line")
+    
+                # Kolom dropdown untuk memilih jumlah plot
+                num_of_plots = st.selectbox("Choose number of plots to display:",
+                                            list(range(1, 11)),
+                                            index=1,
+                                            key="num_of_plot")  # Default ke 10
+    
+                # Filter kolom numerik yang uniq valuenya di atas 10
+                filtered_cols = [
+                    col for col in self.numeric_cols if self.df[col].nunique() > 10
+                ]
+    
+                # Menghitung matriks korelasi
+                correlation_matrix = self.df[filtered_cols].corr()
+    
+                # Membuat daftar dari pasangan kolom dan nilai korelasinya
+                from itertools import combinations
+    
+                pairs_correlation = []
+                for col1, col2 in combinations(filtered_cols, 2):
+                    pairs_correlation.append(
+                        ((col1, col2), abs(correlation_matrix.loc[col1, col2])))
+    
+                # Mengurutkan pasangan berdasarkan nilai korelasi (absolut) tertinggi
+                sorted_pairs = sorted(pairs_correlation,
+                                      key=lambda x: x[1],
+                                      reverse=True)
+    
+                # Mengambil pasangan dengan korelasi tertinggi sesuai dengan pilihan pengguna
+                top_pairs = [pair[0] for pair in sorted_pairs[:num_of_plots]]
+    
+                col1, col2, col3 = st.columns(3)
+    
+                # Membiarkan pengguna memilih warna dengan default pilihan
+                scatter_color_choice = col1.selectbox(
+                    "Choose color for scatter points:",
+                    list(color_map.keys()),
+                    index=list(color_map.keys()).index(
+                        "Default Plotly")  # Default ke "Terracotta"
+                )
+    
+                line_color_choice = col2.selectbox(
+                    "Choose color for regression line:",
+                    list(color_map.keys()),
+                    index=list(color_map.keys()).index(
+                        "Umber")  # Default ke "Umber"
+                )
+    
+                scatter_color = color_map[scatter_color_choice]
+                line_color = color_map[line_color_choice]
+    
+                left_col, center_col, right_col = st.columns(3)
+                columns = [left_col, center_col, right_col]
+                chart_col_idx = 0
+    
+                # Membuat scatter plot untuk pasangan kolom dengan korelasi tertinggi
+                for col1, col2 in top_pairs:
+                    if scatter_color == 'plotly':
+                        fig = px.scatter(self.df,
+                                         x=col1,
+                                         y=col2,
+                                         trendline="ols",
+                                         title=f'Scatter plot of {col1} vs {col2}',
+                                         width=chart_width,
+                                         height=chart_height)
+                        fig.update_traces(marker=dict(size=5),
+                                          selector=dict(mode='markers'))
+                    else:
+                        fig = px.scatter(self.df,
+                                         x=col1,
+                                         y=col2,
+                                         trendline="ols",
+                                         color_discrete_sequence=[scatter_color],
+                                         title=f'Scatter plot of {col1} vs {col2}',
+                                         width=chart_width,
+                                         height=chart_height)
+                        fig.update_traces(marker=dict(size=5, color=scatter_color),
+                                          selector=dict(mode='markers'))
+    
+                    if line_color == 'plotly':
+                        pass
+                    else:
+                        fig.update_traces(line=dict(color=line_color),
+                                          selector=dict(type='scatter',
+                                                        mode='lines'))
+    
+                    fig.update_layout(title={'font': {'size': 12}})
+    
+                    columns[chart_col_idx % 3].plotly_chart(fig)
+                    chart_col_idx += 1
 
             # Bar chart
             st.write("## Bar Chart")
