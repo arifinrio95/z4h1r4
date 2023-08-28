@@ -478,7 +478,7 @@ class DataViz():
                     try:
                         data = self.df[[VAR3, VAR4]].copy()
                     except KeyError as e:
-                        print(f"KeyError: {e}"))
+                        st.write(f"KeyError: {e}")
 
                 df_to_plot = data.sort_values(
                     by=VAR4,
