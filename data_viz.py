@@ -1406,138 +1406,141 @@ class DataViz():
                 columns[chart_col_idx % 3].plotly_chart(fig)
                 chart_col_idx += 1
 
-            # Heatmap of correlation
-            title_placeholder = st.empty()
-            correlation_methods = ["pearson", "kendall", "spearman"]
-            selected_method = st.selectbox("Choose a correlation method:",
-                                           correlation_methods)
-            default_palette_idx = list(
-                color_palettes.keys()).index("Cool (Blue-Cyan-Purple)")
-            selected_palette = st.selectbox("Choose a heatmap color palette:",
-                                            list(color_palettes.keys()),
-                                            index=default_palette_idx)
-            title_placeholder.write(
-                f"## Heatmap of {selected_method.capitalize()} Correlation")
-            corr = self.df[self.numeric_cols].corr(method=selected_method)
-
-            if selected_palette == 'plotly':
-                fig = ff.create_annotated_heatmap(
-                    z=corr.values,
-                    x=list(corr.columns),
-                    y=list(corr.index),
-                    annotation_text=corr.round(2).values)
-            else:
-                fig = ff.create_annotated_heatmap(
-                    z=corr.values,
-                    x=list(corr.columns),
-                    y=list(corr.index),
-                    annotation_text=corr.round(2).values,
-                    colorscale=color_palettes[selected_palette])
-
-            st.plotly_chart(fig)
-
-            # Chi square for Categorical Columns
-            st.write("## Chi Square for Categorical Columns")
-            results = []
-
-            for col1 in self.categorical_cols:
-                for col2 in self.categorical_cols:
-                    if col1 != col2:
-                        contingency = pd.crosstab(self.df[col1], self.df[col2])
-                        chi2, p, _, _ = chi2_contingency(contingency)
-
-                        if p < 0.05:
-                            correlation_strength = "High"
-                            explanation = "Statistically Significant"
-                        else:
-                            correlation_strength = "Low"
-                            explanation = "Not Statistically Significant"
-
-                        results.append((col1, col2, chi2, p,
-                                        correlation_strength, explanation))
-
-            results_df = pd.DataFrame(results,
-                                      columns=[
-                                          "Column 1", "Column 2", "Chi2 Value",
-                                          "P Value", "Correlation Strength",
-                                          "Description"
-                                      ])
-            results_df = results_df.sort_values(by='P Value')
-
-            # Color the cells with high correlation
-            def color_cells(val):
-                if val == "High":
-                    return 'background-color: yellow'
+            if len(self.numeric_cols) != 0:
+                # Heatmap of correlation
+                title_placeholder = st.empty()
+                correlation_methods = ["pearson", "kendall", "spearman"]
+                selected_method = st.selectbox("Choose a correlation method:",
+                                               correlation_methods)
+                default_palette_idx = list(
+                    color_palettes.keys()).index("Cool (Blue-Cyan-Purple)")
+                selected_palette = st.selectbox("Choose a heatmap color palette:",
+                                                list(color_palettes.keys()),
+                                                index=default_palette_idx)
+                title_placeholder.write(
+                    f"## Heatmap of {selected_method.capitalize()} Correlation")
+                corr = self.df[self.numeric_cols].corr(method=selected_method)
+    
+                if selected_palette == 'plotly':
+                    fig = ff.create_annotated_heatmap(
+                        z=corr.values,
+                        x=list(corr.columns),
+                        y=list(corr.index),
+                        annotation_text=corr.round(2).values)
                 else:
-                    return ''
+                    fig = ff.create_annotated_heatmap(
+                        z=corr.values,
+                        x=list(corr.columns),
+                        y=list(corr.index),
+                        annotation_text=corr.round(2).values,
+                        colorscale=color_palettes[selected_palette])
+    
+                st.plotly_chart(fig)
 
-            styled_df = results_df.style.applymap(
-                color_cells, subset=["Correlation Strength"])
-
-            st.write(styled_df)
-
-            import scipy.stats as stats
+            if len(self.categorical_cols) > 1:
+                # Chi square for Categorical Columns
+                st.write("## Chi Square for Categorical Columns")
+                results = []
+    
+                for col1 in self.categorical_cols:
+                    for col2 in self.categorical_cols:
+                        if col1 != col2:
+                            contingency = pd.crosstab(self.df[col1], self.df[col2])
+                            chi2, p, _, _ = chi2_contingency(contingency)
+    
+                            if p < 0.05:
+                                correlation_strength = "High"
+                                explanation = "Statistically Significant"
+                            else:
+                                correlation_strength = "Low"
+                                explanation = "Not Statistically Significant"
+    
+                            results.append((col1, col2, chi2, p,
+                                            correlation_strength, explanation))
+    
+                results_df = pd.DataFrame(results,
+                                          columns=[
+                                              "Column 1", "Column 2", "Chi2 Value",
+                                              "P Value", "Correlation Strength",
+                                              "Description"
+                                          ])
+                results_df = results_df.sort_values(by='P Value')
+    
+                # Color the cells with high correlation
+                def color_cells(val):
+                    if val == "High":
+                        return 'background-color: yellow'
+                    else:
+                        return ''
+    
+                styled_df = results_df.style.applymap(
+                    color_cells, subset=["Correlation Strength"])
+    
+                st.write(styled_df)
+    
+                import scipy.stats as stats
 
             st.write("## Box Plot")
 
-            # Filter the numeric columns based on unique value criteria
-            valid_numeric_cols_for_box = [
-                col for col in self.numeric_cols if self.df[col].nunique() > 20
-            ]
-
-            # Filter the categorical columns based on unique value criteria
-            valid_categorical_cols_for_box = [
-                col for col in self.categorical_cols
-                if self.df[col].nunique() < 10
-            ]
-
-            # Calculate Point-Biserial correlation for each combination of numeric and categorical columns
-            for column in self.df.columns:
-                if self.df[column].dtype in ['float64', 'int64']:
-                    self.df[column] = self.df[column].fillna(
-                        self.df[column].mean())
-
-            correlations = []
-            for num_col in valid_numeric_cols_for_box:
-                for cat_col in valid_categorical_cols_for_box:
-                    if len(self.df[num_col].unique()) > 1 and len(
-                            self.df[cat_col].unique()) > 1:
-                        correlation, _ = stats.pointbiserialr(
-                            self.df[num_col],
-                            self.df[cat_col].astype('category').cat.codes)
-                        correlations.append(((num_col, cat_col), correlation))
-
-            # Sort the pairs by absolute value of Point-Biserial correlation
-            sorted_correlations = sorted(correlations,
-                                         key=lambda x: abs(x[1]),
-                                         reverse=True)
-
-            # Let the user choose how many plots to display, default is 9
-            num_of_plots = st.selectbox("Choose number of plots to display:",
-                                        list(range(1, 10)),
-                                        index=8)  # Default to 9
-
-            top_pairs = [
-                pair[0] for pair in sorted_correlations[:num_of_plots]
-            ]
-
-            left_col, center_col, right_col = st.columns(3)
-            columns = [left_col, center_col, right_col]
-            chart_col_idx = 0
-
-            # Create box plots for the top correlated pairs
-            for num_col, cat_col in top_pairs:
-                fig = px.box(
-                    self.df,
-                    x=cat_col,
-                    y=num_col,
-                    title=f'Box Plot of {num_col} grouped by {cat_col}',
-                    width=chart_width,
-                    height=chart_height)
-                fig.update_layout(title={'font': {'size': 12}})
-
-                columns[chart_col_idx % 3].plotly_chart(fig)
-                chart_col_idx += 1
+            if (len(self.numeric_cols) != 0) & (len(self.categorical_cols) != 0):
+                # Filter the numeric columns based on unique value criteria
+                valid_numeric_cols_for_box = [
+                    col for col in self.numeric_cols if self.df[col].nunique() > 20
+                ]
+    
+                # Filter the categorical columns based on unique value criteria
+                valid_categorical_cols_for_box = [
+                    col for col in self.categorical_cols
+                    if self.df[col].nunique() < 10
+                ]
+    
+                # Calculate Point-Biserial correlation for each combination of numeric and categorical columns
+                for column in self.df.columns:
+                    if self.df[column].dtype in ['float64', 'int64']:
+                        self.df[column] = self.df[column].fillna(
+                            self.df[column].mean())
+    
+                correlations = []
+                for num_col in valid_numeric_cols_for_box:
+                    for cat_col in valid_categorical_cols_for_box:
+                        if len(self.df[num_col].unique()) > 1 and len(
+                                self.df[cat_col].unique()) > 1:
+                            correlation, _ = stats.pointbiserialr(
+                                self.df[num_col],
+                                self.df[cat_col].astype('category').cat.codes)
+                            correlations.append(((num_col, cat_col), correlation))
+    
+                # Sort the pairs by absolute value of Point-Biserial correlation
+                sorted_correlations = sorted(correlations,
+                                             key=lambda x: abs(x[1]),
+                                             reverse=True)
+    
+                # Let the user choose how many plots to display, default is 9
+                num_of_plots = st.selectbox("Choose number of plots to display:",
+                                            list(range(1, 10)),
+                                            index=8)  # Default to 9
+    
+                top_pairs = [
+                    pair[0] for pair in sorted_correlations[:num_of_plots]
+                ]
+    
+                left_col, center_col, right_col = st.columns(3)
+                columns = [left_col, center_col, right_col]
+                chart_col_idx = 0
+    
+                # Create box plots for the top correlated pairs
+                for num_col, cat_col in top_pairs:
+                    fig = px.box(
+                        self.df,
+                        x=cat_col,
+                        y=num_col,
+                        title=f'Box Plot of {num_col} grouped by {cat_col}',
+                        width=chart_width,
+                        height=chart_height)
+                    fig.update_layout(title={'font': {'size': 12}})
+    
+                    columns[chart_col_idx % 3].plotly_chart(fig)
+                    chart_col_idx += 1
 
             # Pairplot
             # st.write("## Pairplot")
