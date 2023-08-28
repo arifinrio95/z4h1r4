@@ -475,7 +475,10 @@ class DataViz():
                         data[VAR5] = data[VAR5].apply(
                             lambda x: x if x in top_categories else 'Others')
                 else:
-                    data = self.df[[VAR3, VAR4]].copy()
+                    try:
+                        data = self.df[[VAR3, VAR4]].copy()
+                    except KeyError as e:
+                        print(f"KeyError: {e}"))
 
                 df_to_plot = data.sort_values(
                     by=VAR4,
