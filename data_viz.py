@@ -1164,7 +1164,7 @@ class DataViz():
             chart_width = 300  # width of the chart to fit within the column
             chart_height = 400  # height of the chart
 
-            if float_cols in locals():
+            if self.float_cols in locals():
                 # Histogram
                 st.write("## Histogram for Numeric Columns")
                 col1, col2, col3 = st.columns(3)
@@ -1251,7 +1251,7 @@ class DataViz():
     
                     chart_col_idx += 1
 
-            if numeric_cols in locals():
+            if self.numeric_cols in locals():
                 st.write("## Scatter plot with Regression Line")
     
                 # Kolom dropdown untuk memilih jumlah plot
