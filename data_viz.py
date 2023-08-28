@@ -441,113 +441,113 @@ class DataViz():
                 st.write('---')
 
                 # ini error kalo ngga ada kolom numerik yg has no null
-                ## LINE CHART
-                c3 = st.container()
-                desc_col, img_col = c3.columns(2)
-
-                desc_col.subheader("Line Chart")
-                # Widget selection for user input
-                VAR3 = desc_col.selectbox(
-                    'Line Chart Horizontal Variable (Date / Category):',
-                    self.cat_df.columns.tolist())
-                VAR4 = desc_col.selectbox(
-                    'Line Chart Vertical Variable (Value):',
-                    self.num_df.columns.tolist())
-                VAR5 = desc_col.selectbox(
-                    'Line Chart Categorical Variable (Hue):', ['None'] +
-                    [x for x in self.cat_df.columns.tolist() if x != VAR3])
-
-                dc1, dc2 = desc_col.columns(2)
-                # Streamlit checkbox for smooth line option
-                smooth_line = dc1.checkbox("Smooth Line")
-
-                # Streamlit checkbox for wide format data
-                wide_format = dc2.checkbox("Wide Format Data")
-
-                if VAR5 != 'None':
-                    data = self.df[[VAR3, VAR4, VAR5]].copy()
-                    # Check if the number of unique categories is greater than 3
-                    if data[VAR5].nunique() > 3:
-                        # Get the top N categories
-                        top_categories = data[VAR5].value_counts().nlargest(
-                            3).index.tolist()
-                        # Create a new categorical variable that groups top N categories and labels the rest as 'Others'
-                        data[VAR5] = data[VAR5].apply(
-                            lambda x: x if x in top_categories else 'Others')
-                else:
-                    try:
-                        data = self.df[[VAR3, VAR4]].copy()
-                    except KeyError as e:
-                        st.write(f"KeyError: {e}")
-
-                df_to_plot = data.sort_values(
-                    by=VAR4,
-                    ascending=True).reset_index().drop(columns=['index'])
-
-                if wide_format:
-                    # Reshape the data for Plotly Express
-                    df_to_plot = df_to_plot.stack().reset_index()
-
                 try:
-                    # Calculate insights
-                    max_value = df_to_plot[VAR4].max()
-                    min_value = df_to_plot[VAR4].min()
-                    max_date = df_to_plot.loc[df_to_plot[VAR4] ==
-                                              max_value][VAR3].values[0]
-                    min_date = df_to_plot.loc[df_to_plot[VAR4] ==
-                                              min_value][VAR3].values[0]
-
-                    # Create a line chart to visualize monthly transaction trends
+                    ## LINE CHART
+                    c3 = st.container()
+                    desc_col, img_col = c3.columns(2)
+    
+                    desc_col.subheader("Line Chart")
+                    # Widget selection for user input
+                    VAR3 = desc_col.selectbox(
+                        'Line Chart Horizontal Variable (Date / Category):',
+                        self.cat_df.columns.tolist())
+                    VAR4 = desc_col.selectbox(
+                        'Line Chart Vertical Variable (Value):',
+                        self.num_df.columns.tolist())
+                    VAR5 = desc_col.selectbox(
+                        'Line Chart Categorical Variable (Hue):', ['None'] +
+                        [x for x in self.cat_df.columns.tolist() if x != VAR3])
+    
+                    dc1, dc2 = desc_col.columns(2)
+                    # Streamlit checkbox for smooth line option
+                    smooth_line = dc1.checkbox("Smooth Line")
+    
+                    # Streamlit checkbox for wide format data
+                    wide_format = dc2.checkbox("Wide Format Data")
+    
                     if VAR5 != 'None':
-                        fig = px.line(
-                            df_to_plot,
-                            x=VAR3,
-                            y=VAR4,
-                            color=VAR5,
-                            title=f"{VAR4} Trends by {VAR3}",
-                            line_shape='spline' if smooth_line else 'linear')
+                        data = self.df[[VAR3, VAR4, VAR5]].copy()
+                        # Check if the number of unique categories is greater than 3
+                        if data[VAR5].nunique() > 3:
+                            # Get the top N categories
+                            top_categories = data[VAR5].value_counts().nlargest(
+                                3).index.tolist()
+                            # Create a new categorical variable that groups top N categories and labels the rest as 'Others'
+                            data[VAR5] = data[VAR5].apply(
+                                lambda x: x if x in top_categories else 'Others')
                     else:
-                        fig = px.line(
-                            df_to_plot,
-                            x=VAR3,
-                            y=VAR4,
-                            title=f"{VAR4} Trends by {VAR3}",
-                            line_shape='spline' if smooth_line else 'linear')
-
-                    with desc_col:
-                        desc_col.write('##')
-                        desc_col.markdown("#### :blue[Insight!]")
-                        # Display insights
-                        desc_col.write(
-                            f"Maximum Value: {max_value} on {max_date}")
-                        desc_col.write(
-                            f"Minimum Value: {min_value} on {min_date}")
-
-                        # Calculate trend direction
-                        last_value = df_to_plot.iloc[-1][VAR4]
-                        first_value = df_to_plot.iloc[0][VAR4]
-                        TREND = "Stagnant"
-                        if last_value > first_value:
-                            TREND = "Positive"
-                        elif last_value < first_value:
-                            TREND = "Negative"
-
-                        # Display trend direction insight
-                        desc_col.write(
-                            f"Trend Direction: {TREND.capitalize()} trend")
-
-                    with img_col:
-                        # Create a plot using Plotly
-                        img_col.plotly_chart(fig)
-
+                        data = self.df[[VAR3, VAR4]].copy()
+    
+                    df_to_plot = data.sort_values(
+                        by=VAR4,
+                        ascending=True).reset_index().drop(columns=['index'])
+    
+                    if wide_format:
+                        # Reshape the data for Plotly Express
+                        df_to_plot = df_to_plot.stack().reset_index()
+    
+                    try:
+                        # Calculate insights
+                        max_value = df_to_plot[VAR4].max()
+                        min_value = df_to_plot[VAR4].min()
+                        max_date = df_to_plot.loc[df_to_plot[VAR4] ==
+                                                  max_value][VAR3].values[0]
+                        min_date = df_to_plot.loc[df_to_plot[VAR4] ==
+                                                  min_value][VAR3].values[0]
+    
+                        # Create a line chart to visualize monthly transaction trends
+                        if VAR5 != 'None':
+                            fig = px.line(
+                                df_to_plot,
+                                x=VAR3,
+                                y=VAR4,
+                                color=VAR5,
+                                title=f"{VAR4} Trends by {VAR3}",
+                                line_shape='spline' if smooth_line else 'linear')
+                        else:
+                            fig = px.line(
+                                df_to_plot,
+                                x=VAR3,
+                                y=VAR4,
+                                title=f"{VAR4} Trends by {VAR3}",
+                                line_shape='spline' if smooth_line else 'linear')
+    
+                        with desc_col:
+                            desc_col.write('##')
+                            desc_col.markdown("#### :blue[Insight!]")
+                            # Display insights
+                            desc_col.write(
+                                f"Maximum Value: {max_value} on {max_date}")
+                            desc_col.write(
+                                f"Minimum Value: {min_value} on {min_date}")
+    
+                            # Calculate trend direction
+                            last_value = df_to_plot.iloc[-1][VAR4]
+                            first_value = df_to_plot.iloc[0][VAR4]
+                            TREND = "Stagnant"
+                            if last_value > first_value:
+                                TREND = "Positive"
+                            elif last_value < first_value:
+                                TREND = "Negative"
+    
+                            # Display trend direction insight
+                            desc_col.write(
+                                f"Trend Direction: {TREND.capitalize()} trend")
+    
+                        with img_col:
+                            # Create a plot using Plotly
+                            img_col.plotly_chart(fig)
+    
+                    except:
+                        with desc_col:
+                            desc_col.write('##')
+                            desc_col.markdown(
+                                "Seems your data is not in a correct format, please uncheck Wide Data Format or crosscheck your data format"
+                            )
+    
+                    st.write('---')
                 except:
-                    with desc_col:
-                        desc_col.write('##')
-                        desc_col.markdown(
-                            "Seems your data is not in a correct format, please uncheck Wide Data Format or crosscheck your data format"
-                        )
-
-                st.write('---')
+                    pass
 
                 ## PIVOT TABLE
                 c4 = st.container()
