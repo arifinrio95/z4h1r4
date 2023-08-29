@@ -1071,7 +1071,7 @@ class DataViz():
                     img_col.plotly_chart(fig)
 
         with tab3:
-            if len(self.cat_df.columns.tolist())) != 0:
+            if len(self.cat_df.columns.tolist()) != 0:
                 ## WORD CLOUDS
                 st.subheader("Word Cloud!")
                 c1 = st.container()
