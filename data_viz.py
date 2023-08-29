@@ -1071,44 +1071,45 @@ class DataViz():
                     img_col.plotly_chart(fig)
 
         with tab3:
-            ## WORD CLOUDS
-            st.subheader("Word Cloud!")
-            c1 = st.container()
-            desc_col, img_col = c1.columns(2)
-            # User input options
-            ngrams = desc_col.selectbox("Select n-grams", [1, 2, 3])
-            variables = desc_col.selectbox(
-                "Select Text Variables to be analyzed",
-                self.cat_df.columns.tolist())
-            standardize_text = desc_col.checkbox(
-                "Standardize text (lowercase)")
-            lemmatize_text = desc_col.checkbox("Lemmatize text")
-            remove_stopwords = desc_col.checkbox("Remove stopwords")
-
-            processed_text = self.df.apply(lambda row: self.preprocess_text(
-                row[variables], standardize_text, lemmatize_text,
-                remove_stopwords),
-                                           axis=1)
-
-            # Your existing code for vectorizing and calculating word frequencies
-            vectorizer = CountVectorizer(ngram_range=(ngrams, ngrams))
-            bag_of_words = vectorizer.fit_transform(processed_text)
-            sum_words = bag_of_words.sum(axis=0)
-            words_freq = [(word, sum_words[0, idx])
-                          for word, idx in vectorizer.vocabulary_.items()]
-            words_freq = sorted(words_freq, key=lambda x: x[1], reverse=True)
-
-            # Generating wordcloud
-            wordcloud = WordCloud(
-                width=800, height=400,
-                background_color="white").generate_from_frequencies(
-                    dict(words_freq[:20]))
-
-            # Display the word cloud using Matplotlib within Streamlit
-            img_col.write("Generated Word Cloud:")
-            img_col.image(wordcloud.to_array(), use_column_width=True)
-
-            st.write('---')
+            if len(self.cat_df.columns.tolist())) != 0:
+                ## WORD CLOUDS
+                st.subheader("Word Cloud!")
+                c1 = st.container()
+                desc_col, img_col = c1.columns(2)
+                # User input options
+                ngrams = desc_col.selectbox("Select n-grams", [1, 2, 3])
+                variables = desc_col.selectbox(
+                    "Select Text Variables to be analyzed",
+                    self.cat_df.columns.tolist())
+                standardize_text = desc_col.checkbox(
+                    "Standardize text (lowercase)")
+                lemmatize_text = desc_col.checkbox("Lemmatize text")
+                remove_stopwords = desc_col.checkbox("Remove stopwords")
+    
+                processed_text = self.df.apply(lambda row: self.preprocess_text(
+                    row[variables], standardize_text, lemmatize_text,
+                    remove_stopwords),
+                                               axis=1)
+    
+                # Your existing code for vectorizing and calculating word frequencies
+                vectorizer = CountVectorizer(ngram_range=(ngrams, ngrams))
+                bag_of_words = vectorizer.fit_transform(processed_text)
+                sum_words = bag_of_words.sum(axis=0)
+                words_freq = [(word, sum_words[0, idx])
+                              for word, idx in vectorizer.vocabulary_.items()]
+                words_freq = sorted(words_freq, key=lambda x: x[1], reverse=True)
+    
+                # Generating wordcloud
+                wordcloud = WordCloud(
+                    width=800, height=400,
+                    background_color="white").generate_from_frequencies(
+                        dict(words_freq[:20]))
+    
+                # Display the word cloud using Matplotlib within Streamlit
+                img_col.write("Generated Word Cloud:")
+                img_col.image(wordcloud.to_array(), use_column_width=True)
+    
+                st.write('---')
 
         with tab4:
             # Membuat peta warna
