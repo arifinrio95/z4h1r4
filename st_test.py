@@ -1422,9 +1422,12 @@ def main():
         # if st.button("Load Dataset"):
         st.write(f"Loading {selected_dataset}...")
         # st.session_state.df = load_kaggle_dataset(selected_dataset)
-        df = load_kaggle_dataset(selected_dataset)
-        st.write(f"Dataset {selected_dataset} berhasil dimuat!")
+        try:
+            df = load_kaggle_dataset(selected_dataset)
+            st.success(f"Dataset {selected_dataset} berhasil dimuat!")
             # st.dataframe(df)
+        except:
+            st.error(f"Dataset {selected_dataset} gagal dimuat!")
 
     else:
         df = get_sample_data(option)
