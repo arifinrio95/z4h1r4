@@ -2050,8 +2050,8 @@ def main():
 
             
             # Sidebar kiri bawah: Pilihan agregasi
-            if len(selected_columns) > 0:
-                numeric_cols = [col for col in selected_columns if pd.api.types.is_numeric_dtype(df[col])]
+            if len(st.session_state.selected_columns) > 0:
+                numeric_cols = [col for col in st.session_state.selected_columns if pd.api.types.is_numeric_dtype(df[col])]
                 if len(numeric_cols) > 0:
                     aggregation = st.sidebar.selectbox("Select aggregation for numeric columns", ["sum", "count", "mean", "median"])
             
@@ -2063,30 +2063,30 @@ def main():
                 return 'numeric' if pd.api.types.is_numeric_dtype(df[column]) else 'categorical'
             
             # Visualisasi sesuai dengan jumlah dan tipe kolom yang dipilih
-            if len(selected_columns) == 1:
-                col = selected_columns[0]
+            if len(st.session_state.selected_columns) == 1:
+                col = st.session_state.selected_columns[0]
                 if detect_dtype(col) == 'numeric':
                     st.write(px.histogram(df, x=col))
                 else:
                     st.write(px.bar(df, x=col))
             
-            elif len(selected_columns) == 2:
-                col1, col2 = selected_columns
+            elif len(st.session_state.selected_columns) == 2:
+                col1, col2 = st.session_state.selected_columns
                 if detect_dtype(col1) == 'numeric' and detect_dtype(col2) == 'numeric':
                     st.write(px.scatter(df, x=col1, y=col2))
                 else:
                     st.write(px.bar(df, x=col1, y=col2))
             
-            elif len(selected_columns) == 3:
-                col1, col2, col3 = selected_columns
+            elif len(st.session_state.selected_columns) == 3:
+                col1, col2, col3 = st.session_state.selected_columns
                 # Anda bisa menambahkan logika lain di sini
                 st.write(px.scatter_3d(df, x=col1, y=col2, z=col3))
             
-            elif len(selected_columns) == 4:
-                col1, col2, col3, col4 = selected_columns
+            elif len(st.session_state.selected_columns) == 4:
+                col1, col2, col3, col4 = st.session_state.selected_columns
                 
                 # Mendeteksi tipe data untuk setiap kolom
-                types = [detect_dtype(col) for col in selected_columns]
+                types = [detect_dtype(col) for col in st.session_state.selected_columns]
                 
                 if types.count('numeric') == 4:
                     # Semua kolom numerik: gunakan kolom ke-4 sebagai ukuran poin ('size')
@@ -2094,8 +2094,8 @@ def main():
                     
                 elif types.count('categorical') >= 1:
                     # Ada setidaknya satu kolom kategorikal: gunakan sebagai 'hue'
-                    categorical_col = [col for col, dtype in zip(selected_columns, types) if dtype == 'categorical'][0]
-                    numeric_cols = [col for col in selected_columns if col != categorical_col]
+                    categorical_col = [col for col, dtype in zip(st.session_state.selected_columns, types) if dtype == 'categorical'][0]
+                    numeric_cols = [col for col in st.session_state.selected_columns if col != categorical_col]
                     st.write(px.scatter(df, x=numeric_cols[0], y=numeric_cols[1], color=categorical_col, size=numeric_cols[2]))
                     
                 else:
@@ -2104,7 +2104,7 @@ def main():
             
             else:
                 st.write("Displaying raw data:")
-                st.write(df[selected_columns])
+                st.write(df[st.session_state.selected_columns])
                 
         # if st.session_state.get('sentiment', False):
         #     with st.spinner('Downloading the pretrained model...'):
