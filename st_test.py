@@ -2070,8 +2070,23 @@ def main():
             
             elif len(selected_columns) == 4:
                 col1, col2, col3, col4 = selected_columns
-                # Anda bisa menambahkan logika lain di sini
-                st.write("Visualisasi untuk 4 kolom belum diimplementasikan.")
+                
+                # Mendeteksi tipe data untuk setiap kolom
+                types = [detect_dtype(col) for col in selected_columns]
+                
+                if types.count('numeric') == 4:
+                    # Semua kolom numerik: gunakan kolom ke-4 sebagai ukuran poin ('size')
+                    st.write(px.scatter(df, x=col1, y=col2, color=col3, size=col4))
+                    
+                elif types.count('categorical') >= 1:
+                    # Ada setidaknya satu kolom kategorikal: gunakan sebagai 'hue'
+                    categorical_col = [col for col, dtype in zip(selected_columns, types) if dtype == 'categorical'][0]
+                    numeric_cols = [col for col in selected_columns if col != categorical_col]
+                    st.write(px.scatter(df, x=numeric_cols[0], y=numeric_cols[1], color=categorical_col, size=numeric_cols[2]))
+                    
+                else:
+                    st.write("Visualisasi untuk kombinasi ini belum diimplementasikan.")
+
             
             else:
                 st.write("Displaying raw data:")
