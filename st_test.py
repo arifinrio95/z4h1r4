@@ -1501,6 +1501,7 @@ def main():
             st.session_state.show_analisis_lanjutan = False
             st.session_state.show_natural_language_exploration = False
             st.session_state.story_telling = False
+            st.session_state.vizz_tools = False
 
         # Tombol 2
         # st.sidebar.markdown('<button class="my-btn">2. Automatic EDA with Autoviz</button>', unsafe_allow_html=True)
@@ -1533,6 +1534,7 @@ def main():
             st.session_state.story_telling = False
             st.session_state.sentiment = False
             st.session_state.classification = False
+            st.session_state.vizz_tools = False 
 
         # Tombol 5
         # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
@@ -1546,7 +1548,8 @@ def main():
             st.session_state.story_telling = True
             st.session_state.sentiment = False
             st.session_state.classification = False
-
+            st.session_state.vizz_tools = False
+                    
         # Tombol 6
         # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
         # if st.sidebar.button('6. Sentiment Classifications (Zero Shot)', key='my-btn4'):
@@ -1568,6 +1571,20 @@ def main():
             st.session_state.story_telling = False
             st.session_state.sentiment = False
             st.session_state.classification = True
+            st.session_state.vizz_tools = False                     
+
+        # Tombol 8
+        if st.sidebar.button('Testing BI Tools (under development)',
+                             key='my-btn8'):
+            st.session_state.manual_exploration = False
+            st.session_state.auto_exploration = False
+            st.session_state.show_analisis_lanjutan = False
+            st.session_state.show_natural_language_exploration = False
+            st.session_state.story_telling = False
+            st.session_state.sentiment = False
+            st.session_state.classification = False
+            st.session_state.vizz_tools = True
+                                 
 
         # if st.session_state.get('manual_exploration', False):
         #     st.subheader("D-Tale")
@@ -2013,6 +2030,53 @@ def main():
                                                y_test)
                     st.write(results)
 
+        if st.session_state.get('vizz_tools', False):
+            st.subheader("Recomender Visualization")
+            # Sidebar kiri atas: Radio button untuk memilih kolom
+            selected_columns = st.sidebar.multiselect("Select columns to visualize", df.columns)
+            
+            # Sidebar kiri bawah: Pilihan agregasi
+            if len(selected_columns) > 0:
+                numeric_cols = [col for col in selected_columns if pd.api.types.is_numeric_dtype(df[col])]
+                if len(numeric_cols) > 0:
+                    aggregation = st.sidebar.selectbox("Select aggregation for numeric columns", ["sum", "count", "mean", "median"])
+            
+            # Main content
+            st.title('Data Visualization')
+            
+            # Fungsi untuk mendeteksi tipe data
+            def detect_dtype(column):
+                return 'numeric' if pd.api.types.is_numeric_dtype(df[column]) else 'categorical'
+            
+            # Visualisasi sesuai dengan jumlah dan tipe kolom yang dipilih
+            if len(selected_columns) == 1:
+                col = selected_columns[0]
+                if detect_dtype(col) == 'numeric':
+                    st.write(px.histogram(df, x=col))
+                else:
+                    st.write(px.bar(df, x=col))
+            
+            elif len(selected_columns) == 2:
+                col1, col2 = selected_columns
+                if detect_dtype(col1) == 'numeric' and detect_dtype(col2) == 'numeric':
+                    st.write(px.scatter(df, x=col1, y=col2))
+                else:
+                    st.write(px.bar(df, x=col1, y=col2))
+            
+            elif len(selected_columns) == 3:
+                col1, col2, col3 = selected_columns
+                # Anda bisa menambahkan logika lain di sini
+                st.write(px.scatter_3d(df, x=col1, y=col2, z=col3))
+            
+            elif len(selected_columns) == 4:
+                col1, col2, col3, col4 = selected_columns
+                # Anda bisa menambahkan logika lain di sini
+                st.write("Visualisasi untuk 4 kolom belum diimplementasikan.")
+            
+            else:
+                st.write("Displaying raw data:")
+                st.write(df[selected_columns])
+                
         # if st.session_state.get('sentiment', False):
         #     with st.spinner('Downloading the pretrained model...'):
         #         # Load BART model (Pastikan Anda memiliki model yang sesuai untuk sentiment analysis)
