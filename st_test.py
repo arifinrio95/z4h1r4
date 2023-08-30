@@ -2033,7 +2033,21 @@ def main():
         if st.session_state.get('vizz_tools', False):
             st.subheader("Recomender Visualization")
             # Sidebar kiri atas: Radio button untuk memilih kolom
-            selected_columns = st.sidebar.multiselect("Select columns to visualize", df.columns)
+            # selected_columns = st.sidebar.multiselect("Select columns to visualize", df.columns)
+            # Inisialisasi state jika belum ada
+            if 'selected_columns' not in st.session_state:
+                st.session_state.selected_columns = []
+            
+            # Sidebar kiri atas: Radio button untuk memilih kolom
+            for col in df.columns:
+                is_selected = st.sidebar.checkbox(f"Select {col}", value=col in st.session_state.selected_columns)
+                if is_selected:
+                    if col not in st.session_state.selected_columns:
+                        st.session_state.selected_columns.append(col)
+                else:
+                    if col in st.session_state.selected_columns:
+                        st.session_state.selected_columns.remove(col)
+
             
             # Sidebar kiri bawah: Pilihan agregasi
             if len(selected_columns) > 0:
