@@ -169,7 +169,7 @@ hide_menu = """
 .stActionButton {
   visibility: hidden !important;
 }
-.css-10pw50 {
+footer {
   visibility: hidden !important;
 }
 </style>
