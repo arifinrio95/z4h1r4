@@ -1883,22 +1883,19 @@ def main():
             if 'selected_columns' not in st.session_state:
                 st.session_state.selected_columns = []
             
-            # Sidebar kiri atas: Radio button untuk memilih kolom
-            for col in df.columns:
-                is_selected = st.sidebar.checkbox(f"Select {col}", value=col in st.session_state.selected_columns)
-                if is_selected:
-                    if col not in st.session_state.selected_columns:
-                        st.session_state.selected_columns.append(col)
-                else:
-                    if col in st.session_state.selected_columns:
-                        st.session_state.selected_columns.remove(col)
-
+            # Multiselect di tengah untuk memilih kolom
+            st.session_state.selected_columns = st.multiselect(
+                "Select Columns", 
+                df.columns.tolist(), 
+                default=st.session_state.selected_columns
+            )
             
-            # Sidebar kiri bawah: Pilihan agregasi
+            # Pilihan agregasi
             if len(st.session_state.selected_columns) > 0:
                 numeric_cols = [col for col in st.session_state.selected_columns if pd.api.types.is_numeric_dtype(df[col])]
                 if len(numeric_cols) > 0:
-                    aggregation = st.sidebar.selectbox("Select aggregation for numeric columns", ["sum", "count", "mean", "median"])
+                    aggregation = st.selectbox("Select aggregation for numeric columns", ["sum", "count", "mean", "median"])
+
             
             # Main content
             st.title('Data Visualization')
