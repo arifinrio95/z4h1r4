@@ -135,9 +135,6 @@ def login():
     with col2:
         st.markdown('<div class="login-bg">', unsafe_allow_html=True)
 
-        # Membuat kursor
-        cursor = connection.cursor()
-
         st.subheader("Enter your email that is registered on ulikdata.com")
         usermail = st.text_input("email")
         # password = st.text_input("Password", type='password')
@@ -146,6 +143,9 @@ def login():
         st.markdown("[If you haven't registered, please register here!](https://www.ulikdata.com)")
 
         # hashed_pswd = make_hashes("test")
+
+        # Membuat kursor
+        cursor = connection.cursor()
 
         # Menjalankan query SQL untuk mengecek keberadaan email
         cursor.execute("SELECT EXISTS(SELECT 1 FROM account WHERE email = %s)", (usermail,))
