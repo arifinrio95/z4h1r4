@@ -1,6 +1,7 @@
 import openai
 import streamlit as st
 import re
+from dataviz.barchart import BarChart
 
 from load_dataframe import LoadDataframe
 from data_viz import DataViz
@@ -113,8 +114,6 @@ def login():
     st.markdown('<div id="ulikdata">Ulikdata</div>', unsafe_allow_html=True)
     st.markdown("---")
 
-    
-
     col1, col2, col3 = st.columns(3)
 
     # Tambahkan gambar dari Google Drive di kolom pertama (col1)
@@ -133,7 +132,9 @@ def login():
         # password = st.text_input("Password", type='password')
 
         # st.write("If you haven't registered, please register for free at ulikdata.com")
-        st.markdown("[If you haven't registered, please register here!](https://www.ulikdata.com)")
+        st.markdown(
+            "[If you haven't registered, please register here!](https://www.ulikdata.com)"
+        )
 
         # hashed_pswd = make_hashes("test")
 
@@ -151,21 +152,20 @@ def login():
 
         # # Menjalankan query SQL untuk mengecek keberadaan email
         # cursor.execute("SELECT EXISTS(SELECT 1 FROM account WHERE email = %s)", (usermail,))
-        
+
         # # Mengambil hasil query
         # exists = cursor.fetchone()[0]
-        
+
         # # Menutup kursor dan koneksi
         # cursor.close()
         # connection.close()
 
         # if exists == True:
-        if usermail == "founder_superuser@gmail.com":    
+        if usermail == "founder_superuser@gmail.com":
             st.session_state.logged = True
             st.experimental_rerun()
         else:
             st.write("""Your email has not been registered.""")
-            
 
         # if check_hashes(password, hashed_pswd):
         #     st.session_state.logged = True
@@ -280,7 +280,7 @@ def request_prompt(input_pengguna,
 
     if style == 'General Question':
         script = get_answer_csv(df, input_pengguna)
-        
+
         # messages = [{
         #     "role":
         #     "system",
@@ -290,12 +290,12 @@ def request_prompt(input_pengguna,
         #     "role":
         #     "user",
         #     "content":
-        #     f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}. 
-        #     1. {input_pengguna}. 
+        #     f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}.
+        #     1. {input_pengguna}.
         #     2. My dataframe already load previously, named df, use it, do not reload the dataframe.
-        #     3. Respond with scripts without any text. 
-        #     4. Respond in plain text code. 
-        #     5. Don’t start your response with “Sure, here are”. 
+        #     3. Respond with scripts without any text.
+        #     4. Respond in plain text code.
+        #     5. Don’t start your response with “Sure, here are”.
         #     6. Start your response with “import”.
         #     7. Don’t give me any explanation about the script. Response only with python code in a plain text.
         #     8. Do not reload the dataframe.
@@ -1412,6 +1412,7 @@ def get_sample_data(dataset_name):
     else:
         return None
 
+
 def handle_file_upload():
     # Inisialisasi API Kaggle
     # api = KaggleApi()
@@ -1419,7 +1420,7 @@ def handle_file_upload():
 
     # kaggle_username = os.environ.get("KAGGLE_USERNAME")
     # kaggle_key = os.environ.get("KAGGLE_KEY")
-    
+
     # def get_kaggle_datasets():
     #     datasets = api.dataset_list(search='', file_type='csv', sort_by='hottest')
     #     dataset_names = [ds.ref for ds in datasets]
@@ -1431,20 +1432,23 @@ def handle_file_upload():
     #     df = pd.read_csv(csv_file)
     #     os.remove(csv_file)  # Menghapus file CSV setelah digunakan
     #     return df
-        
+
     df = pd.DataFrame()
-    
+
     with st.columns([1, 2, 1])[1]:
         st.subheader('Upload your CSV / Excel data:')
-        option = st.selectbox('Pilih sumber data:',
-                              ('Upload Your File', 'Iris (Dummy Data)',
-                               'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)'))
-        
+        option = st.selectbox(
+            'Pilih sumber data:',
+            ('Upload Your File', 'Iris (Dummy Data)', 'Tips (Dummy Data)',
+             'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)'))
+
         if option == 'Upload Your File':
             file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
             if file:
                 try:
-                    df = pd.read_csv(file)  # Gantikan ini dengan fungsi Anda sendiri untuk membaca file
+                    df = pd.read_csv(
+                        file
+                    )  # Gantikan ini dengan fungsi Anda sendiri untuk membaca file
                     st.session_state.df = df
                     st.session_state.uploaded = True
                     st.experimental_rerun()
@@ -1458,6 +1462,7 @@ def handle_file_upload():
             st.session_state.uploaded = True
             st.experimental_rerun()
             # main()
+
 
 def main():
     import warnings
@@ -1530,7 +1535,7 @@ def main():
         #     st.session_state.show_natural_language_exploration = False
         #     st.session_state.story_telling = False
         #     st.session_state.vizz_tools = False
-                    
+
         # # Tombol 4
         # # st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization)</button>', unsafe_allow_html=True)
         # if st.sidebar.button(
@@ -1543,7 +1548,7 @@ def main():
         #     st.session_state.story_telling = False
         #     st.session_state.sentiment = False
         #     st.session_state.classification = False
-        #     st.session_state.vizz_tools = False 
+        #     st.session_state.vizz_tools = False
 
         # # Tombol 5
         # # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
@@ -1570,7 +1575,7 @@ def main():
         #     st.session_state.story_telling = False
         #     st.session_state.sentiment = False
         #     st.session_state.classification = True
-        #     st.session_state.vizz_tools = False                     
+        #     st.session_state.vizz_tools = False
 
         # # Tombol 8
         # if st.sidebar.button('Testing BI Tools (under development)',
@@ -1583,15 +1588,13 @@ def main():
         #     st.session_state.sentiment = False
         #     st.session_state.classification = False
         #     st.session_state.vizz_tools = True
-                                 
-        tab_manual, tab_auto_insight, tab_reco_vizz, tab_nlp, tab_ml  = st.tabs(
-            ["1-Click Exploration",
-             "Automatic Data Exploration",
-             "Recomender Visualization",
-             "Ask Your Data",
-             "Machine Learning Modeling"
-             ]
-        )
+
+        tab_manual, tab_auto_insight, tab_reco_vizz, tab_nlp, tab_ml = st.tabs(
+            [
+                "1-Click Exploration", "Automatic Data Exploration",
+                "Recomender Visualization", "Ask Your Data",
+                "Machine Learning Modeling"
+            ])
 
         # if st.session_state.get('manual_exploration', False):
         with tab_manual:
@@ -1622,9 +1625,9 @@ def main():
                     input_pengguna != None) & st.session_state.button_clicked:
                 st.session_state.button_clicked = True
                 with st.spinner('Wait for it...'):
-                    script = request_prompt(input_pengguna, uploaded_file_path, schema_str,
-                                            rows_str, style_choosen, None,
-                                            None, 0)
+                    script = request_prompt(input_pengguna, uploaded_file_path,
+                                            schema_str, rows_str,
+                                            style_choosen, None, None, 0)
                     st.session_state['script'] = script
                     # Membuat 2 kolom utama
                     main_col1, main_col3 = st.columns(
@@ -1926,77 +1929,245 @@ def main():
         # elif tabs == "Testing BI Tools (under development)":
         with tab_reco_vizz:
             st.subheader("Recomender Visualization")
+            # Tableau 10 color palette
+            tableau_10 = [
+                '#1F77B4', '#FF7F0E', '#2CA02C', '#D62728', '#9467BD',
+                '#8C564B', '#E377C2', '#7F7F7F', '#BCBD22', '#17BECF'
+            ]
+
+            # Load your DataFrame here
+            data_used = df.copy()
+            for col in data_used.columns:
+                if data_used[col].dtype == 'object':  # Categorical columns
+                    data_used[col].fillna('Missing Data', inplace=True)
+                else:  # Numerical columns
+                    data_used[col].fillna(0, inplace=True)
+
+            # Layout
+            st.title("Data Visualization Streamlit App")
+
+            column1, column2 = st.columns([1, 3])
+            # Sidebar for DataFrame column selection
+            with column1:
+                with st.expander("Select Columns"):
+                    selected_columns = []
+                    for col in data_used.columns:
+                        prefix = '09' if data_used[
+                            col].dtype != 'object' else 'AZ'
+                        display_name = f"{prefix} - {col}"
+                        if st.checkbox(display_name, False):
+                            selected_columns.append(col)
+
+                # Sidebar for DataFrame column filtering and aggregation
+                with st.expander("Filter and Aggregate"):
+                    if selected_columns:
+                        filter_values = {}
+                        for col in selected_columns:
+                            if data_used[col].dtype == 'object':
+                                filter_values[col] = st.text_input(
+                                    f"Filter {col} (text)")
+                            else:
+                                min_val, max_val = st.slider(
+                                    f"Filter {col} (range)",
+                                    float(data_used[col].min()),
+                                    float(data_used[col].max()),
+                                    (float(data_used[col].min()),
+                                     float(data_used[col].max())))
+                                filter_values[col] = (min_val, max_val)
+                        if len(selected_columns) > 1:
+                            aggregation = st.selectbox(
+                                "Aggregation",
+                                ["sum", "min", "max", "mean", "median"])
+                        else:
+                            aggregation = "count"
+
+                with st.expander("Data Selection Customizer"):
+                    if len(selected_columns) > 1 and len(selected_columns) < 4:
+                        customizer = {}
+                        customizer['X'] = st.selectbox(
+                            "Select X Variable:",
+                            [x for x in selected_columns])
+                        customizer['Y'] = st.selectbox(
+                            "Select Y Variable:",
+                            [x for x in selected_columns])
+                        if len(selected_columns) == 3:
+                            customizer['Z'] = st.selectbox(
+                                "Select Z Variable:",
+                                [x for x in selected_columns])
+
+            with column2:
+                insight = None
+                column2.subheader("Visualization")
+                if len(selected_columns) == 1:
+                    col = selected_columns[0]
+                    if data_used[col].dtype == 'object':
+                        chart_type = column2.selectbox(
+                            "Select Type of Chart", [
+                                "Bar Chart", "Columns Chart", "Pie Chart",
+                                "Doughnut Chart"
+                            ])
+                        if chart_type == "Bar Chart":
+                            fig, insight = BarChart(data_used, col, tableau_10,
+                                                    aggregation)
+
+                        elif chart_type == "Columns Chart":
+                            fig, insight = BarChart(data_used,
+                                                    col,
+                                                    tableau_10,
+                                                    aggregation,
+                                                    columns_chart=True)
+                        elif chart_type == "Pie Chart":
+                            fig = px.pie(data_used,
+                                         names=col,
+                                         color_discrete_sequence=tableau_10)
+                            insight = "No"
+                        elif chart_type == "Doughnut Chart":
+                            fig = px.pie(data_used,
+                                         names=col,
+                                         hole=0.4,
+                                         color_discrete_sequence=tableau_10)
+                            insight = "No"
+                            total_count = data_used[col].count()
+                            fig.update_layout(annotations=[
+                                dict(text=str(total_count),
+                                     x=0.5,
+                                     y=0.5,
+                                     font_size=20,
+                                     showarrow=False)
+                            ])
+                    else:
+                        chart_type = column2.selectbox(
+                            "Select Type of Chart", ["Histogram", "Boxplot"])
+                        if chart_type == "Histogram":
+                            fig = px.histogram(
+                                data_used,
+                                x=col,
+                                color_discrete_sequence=tableau_10)
+                            insight = "No"
+                        elif chart_type == "Boxplot":
+                            fig = px.box(data_used,
+                                         x=col,
+                                         color_discrete_sequence=tableau_10)
+                            insight = "No"
+
+                    column2.plotly_chart(fig, use_container_width=True)
+                    column2.write('---')
+                    column2.markdown("#### :blue[Insight!]")
+                    column2.write(insight)
+
+                elif len(selected_columns) == 2:
+                    col1 = selected_columns[0]
+                    col2 = selected_columns[1]
+                    if data_used[col1].dtype == 'object' and data_used[
+                            col2].dtype == 'object':
+                        fig = px.bar(data_used,
+                                     x=col1,
+                                     color=col2,
+                                     color_discrete_sequence=tableau_10)
+                        insight = "No"
+
+                    elif data_used[col1].dtype != 'object' and data_used[
+                            col2].dtype != 'object':
+                        fig = px.scatter(data_used,
+                                         x=col1,
+                                         y=col2,
+                                         color_discrete_sequence=tableau_10)
+                        insight = "No"
+                    elif data_used[col1].dtype == 'object' and data_used[
+                            col2].dtype != 'object':
+                        fig, insight = BarChart(data_used,
+                                                col1,
+                                                tableau_10,
+                                                aggregation,
+                                                col2=col2)
+                    else:
+                        fig, insight = BarChart(data_used,
+                                                col2,
+                                                tableau_10,
+                                                aggregation,
+                                                col2=col1)
+                    column2.plotly_chart(fig, use_container_width=True)
+                    column2.write('---')
+                    column2.markdown("#### :blue[Insight!]")
+                    column2.write(insight)
+                elif len(selected_columns) >= 3:
+                    cat_cols = data_used[selected_columns].select_dtypes(
+                        include='object').columns.tolist()
+                    if len(cat_cols) > 0:
+                        data = data_used[selected_columns].groupby(
+                            by=cat_cols).agg(aggregation)
+                    else:
+                        data = data_used[selected_columns].copy()
+                    column2.dataframe(data, use_container_width=True)
             # Sidebar kiri atas: Radio button untuk memilih kolom
             # selected_columns = st.sidebar.multiselect("Select columns to visualize", df.columns)
             # Inisialisasi state jika belum ada
-            if 'selected_columns' not in st.session_state:
-                st.session_state.selected_columns = []
-            
-            # Multiselect di tengah untuk memilih kolom
-            st.session_state.selected_columns = st.multiselect(
-                "Select Columns", 
-                df.columns.tolist(), 
-                default=st.session_state.selected_columns
-            )
-            
-            # Pilihan agregasi
-            if len(st.session_state.selected_columns) > 0:
-                numeric_cols = [col for col in st.session_state.selected_columns if pd.api.types.is_numeric_dtype(df[col])]
-                if len(numeric_cols) > 0:
-                    aggregation = st.selectbox("Select aggregation for numeric columns", ["sum", "count", "mean", "median"])
+            # if 'selected_columns' not in st.session_state:
+            #     st.session_state.selected_columns = []
 
-            
-            # Main content
-            st.title('Data Visualization')
-            
-            # Fungsi untuk mendeteksi tipe data
-            def detect_dtype(column):
-                return 'numeric' if pd.api.types.is_numeric_dtype(df[column]) else 'categorical'
-            
-            # Visualisasi sesuai dengan jumlah dan tipe kolom yang dipilih
-            if len(st.session_state.selected_columns) == 1:
-                col = st.session_state.selected_columns[0]
-                if detect_dtype(col) == 'numeric':
-                    st.write(px.histogram(df, x=col))
-                else:
-                    st.write(px.bar(df, x=col))
-            
-            elif len(st.session_state.selected_columns) == 2:
-                col1, col2 = st.session_state.selected_columns
-                if detect_dtype(col1) == 'numeric' and detect_dtype(col2) == 'numeric':
-                    st.write(px.scatter(df, x=col1, y=col2))
-                else:
-                    st.write(px.bar(df, x=col1, y=col2))
-            
-            elif len(st.session_state.selected_columns) == 3:
-                col1, col2, col3 = st.session_state.selected_columns
-                # Anda bisa menambahkan logika lain di sini
-                st.write(px.scatter_3d(df, x=col1, y=col2, z=col3))
-            
-            elif len(st.session_state.selected_columns) == 4:
-                col1, col2, col3, col4 = st.session_state.selected_columns
-                
-                # Mendeteksi tipe data untuk setiap kolom
-                types = [detect_dtype(col) for col in st.session_state.selected_columns]
-                
-                if types.count('numeric') == 4:
-                    # Semua kolom numerik: gunakan kolom ke-4 sebagai ukuran poin ('size')
-                    st.write(px.scatter(df, x=col1, y=col2, color=col3, size=col4))
-                    
-                elif types.count('categorical') >= 1:
-                    # Ada setidaknya satu kolom kategorikal: gunakan sebagai 'hue'
-                    categorical_col = [col for col, dtype in zip(st.session_state.selected_columns, types) if dtype == 'categorical'][0]
-                    numeric_cols = [col for col in st.session_state.selected_columns if col != categorical_col]
-                    st.write(px.scatter(df, x=numeric_cols[0], y=numeric_cols[1], color=categorical_col, size=numeric_cols[2]))
-                    
-                else:
-                    st.write("Visualisasi untuk kombinasi ini belum diimplementasikan.")
+            # # Multiselect di tengah untuk memilih kolom
+            # st.session_state.selected_columns = st.multiselect(
+            #     "Select Columns",
+            #     df.columns.tolist(),
+            #     default=st.session_state.selected_columns
+            # )
 
-            
-            else:
-                st.write("Displaying raw data:")
-                st.write(df[st.session_state.selected_columns])
-                
+            # # Pilihan agregasi
+            # if len(st.session_state.selected_columns) > 0:
+            #     numeric_cols = [col for col in st.session_state.selected_columns if pd.api.types.is_numeric_dtype(df[col])]
+            #     if len(numeric_cols) > 0:
+            #         aggregation = st.selectbox("Select aggregation for numeric columns", ["sum", "count", "mean", "median"])
+
+            # # Main content
+            # st.title('Data Visualization')
+
+            # # Fungsi untuk mendeteksi tipe data
+            # def detect_dtype(column):
+            #     return 'numeric' if pd.api.types.is_numeric_dtype(df[column]) else 'categorical'
+
+            # # Visualisasi sesuai dengan jumlah dan tipe kolom yang dipilih
+            # if len(st.session_state.selected_columns) == 1:
+            #     col = st.session_state.selected_columns[0]
+            #     if detect_dtype(col) == 'numeric':
+            #         st.write(px.histogram(df, x=col))
+            #     else:
+            #         st.write(px.bar(df, x=col))
+
+            # elif len(st.session_state.selected_columns) == 2:
+            #     col1, col2 = st.session_state.selected_columns
+            #     if detect_dtype(col1) == 'numeric' and detect_dtype(col2) == 'numeric':
+            #         st.write(px.scatter(df, x=col1, y=col2))
+            #     else:
+            #         st.write(px.bar(df, x=col1, y=col2))
+
+            # elif len(st.session_state.selected_columns) == 3:
+            #     col1, col2, col3 = st.session_state.selected_columns
+            #     # Anda bisa menambahkan logika lain di sini
+            #     st.write(px.scatter_3d(df, x=col1, y=col2, z=col3))
+
+            # elif len(st.session_state.selected_columns) == 4:
+            #     col1, col2, col3, col4 = st.session_state.selected_columns
+
+            #     # Mendeteksi tipe data untuk setiap kolom
+            #     types = [detect_dtype(col) for col in st.session_state.selected_columns]
+
+            #     if types.count('numeric') == 4:
+            #         # Semua kolom numerik: gunakan kolom ke-4 sebagai ukuran poin ('size')
+            #         st.write(px.scatter(df, x=col1, y=col2, color=col3, size=col4))
+
+            #     elif types.count('categorical') >= 1:
+            #         # Ada setidaknya satu kolom kategorikal: gunakan sebagai 'hue'
+            #         categorical_col = [col for col, dtype in zip(st.session_state.selected_columns, types) if dtype == 'categorical'][0]
+            #         numeric_cols = [col for col in st.session_state.selected_columns if col != categorical_col]
+            #         st.write(px.scatter(df, x=numeric_cols[0], y=numeric_cols[1], color=categorical_col, size=numeric_cols[2]))
+
+            #     else:
+            #         st.write("Visualisasi untuk kombinasi ini belum diimplementasikan.")
+
+            # else:
+            #     st.write("Displaying raw data:")
+            #     st.write(df[st.session_state.selected_columns])
+
         # if st.session_state.get('sentiment', False):
         #     with st.spinner('Downloading the pretrained model...'):
         #         # Load BART model (Pastikan Anda memiliki model yang sesuai untuk sentiment analysis)
@@ -2048,8 +2219,6 @@ def main():
         #     # Download the output as CSV
         #     st.download_button("Download CSV with sentiments", df.to_csv(index=False), "sentiments.csv", "text/csv")
 
-        
-
 
 # if __name__ == "__main__":
 #     main()
@@ -2060,13 +2229,12 @@ if __name__ == '__main__':
     #     st.session_state.df = pd.DataFrame()
     # if 'uploaded' not in st.session_state:
     #     st.session_state.uploaded = False
-    
+
     # # Jika DataFrame belum di-upload, tampilkan menu upload
     # if st.session_state.uploaded:
     #     main()
     # else:
     #     handle_file_upload()
-        
 
     # Cek apakah user sudah login atau belum
     if 'logged' not in st.session_state:
@@ -2078,7 +2246,7 @@ if __name__ == '__main__':
             st.session_state.df = pd.DataFrame()
         if 'uploaded' not in st.session_state:
             st.session_state.uploaded = False
-        
+
         # Jika DataFrame belum di-upload, tampilkan menu upload
         if st.session_state.uploaded:
             main()
