@@ -1364,6 +1364,25 @@ def get_sample_data(dataset_name):
         return None
 
 def handle_file_upload():
+    # Inisialisasi API Kaggle
+    api = KaggleApi()
+    api.authenticate()
+
+    kaggle_username = os.environ.get("KAGGLE_USERNAME")
+    kaggle_key = os.environ.get("KAGGLE_KEY")
+    
+    def get_kaggle_datasets():
+        datasets = api.dataset_list(search='', file_type='csv', sort_by='hottest')
+        dataset_names = [ds.ref for ds in datasets]
+        return dataset_names
+
+    def load_kaggle_dataset(dataset_name):
+        api.dataset_download_files(dataset_name, path='./', unzip=True)
+        csv_file = [f for f in os.listdir() if f.endswith('.csv')][0]
+        df = pd.read_csv(csv_file)
+        os.remove(csv_file)  # Menghapus file CSV setelah digunakan
+        return df
+        
     df = pd.DataFrame()
     
     with st.columns([1, 2, 1])[1]:
@@ -1384,83 +1403,13 @@ def handle_file_upload():
     return df
 
 def main():
-    # Inisialisasi API Kaggle
-    api = KaggleApi()
-    api.authenticate()
-
-    def get_kaggle_datasets():
-        datasets = api.dataset_list(search='', file_type='csv', sort_by='hottest')
-        dataset_names = [ds.ref for ds in datasets]
-        return dataset_names
-
-    def load_kaggle_dataset(dataset_name):
-        api.dataset_download_files(dataset_name, path='./', unzip=True)
-        csv_file = [f for f in os.listdir() if f.endswith('.csv')][0]
-        df = pd.read_csv(csv_file)
-        os.remove(csv_file)  # Menghapus file CSV setelah digunakan
-        return df
+    
 
     import warnings
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
-    # st.image(
-    #     'https://drive.google.com/uc?export=view&id=1cgBcbwB7uTAJHaoe80XHQWuPdIyqj38v',
-    #     use_column_width=True)
-
-    # st.title('Personal Data Analysis by Datasans')
-    # st.write('Beta Access.')
-    # st.write(
-    #     """Our web app offers a cutting-edge solution for automatic data exploration, allowing users to dive into their data using natural language commands. 
-    #             Through integrated Natural Language Processing (NLP) capabilities, users can easily query and analyze their data as if chatting with a data expert."""
-    # )
-    # st.write(
-    #     """Beyond manual exploration, the app autonomously identifies and presents valuable insights from the data, 
-    #             making the process both efficient and intuitive for the end user."""
-    # )
-    # st.write('')
-    # st.write('')
-    # st.write(
-    #     '*Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.*'
-    # )
-    # col1, col2, col3 = st.columns([1, 2, 1])
-    # with col2:
-    #     st.subheader('Upload your CSV / Excel data:')
-    
-    #     option = st.selectbox('Pilih sumber data:',
-    #                           ('Upload Your File', 'Iris (Dummy Data)',
-    #                            'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
-
-    #     df = pd.DataFrame()
-    #     # if 'df' not in st.session_state:
-    #     #     st.session_state.df = None
-    #     if option == 'Upload Your File':
-    #         file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
-    #         if file:
-    #             load_df = LoadDataframe(file)
-    #             # st.session_state.df = load_df.load_file_auto_delimiter()
-    #             try:
-    #                 df = load_df.load_file_auto_delimiter()
-    #             except:
-    #                 st.error("Mohon masukkan file csv atau 1 sheet excel dengan format tabel yang benar (terdiri dari nama kolom di row pertama dan value di row berikutnya).")
-    #     elif option == 'Explore Kaggle Dataset':
-    #         selected_dataset = st.selectbox("Pilih Dataset:", get_kaggle_datasets())
-    #         # Tombol untuk mengunduh dan menampilkan dataset
-    #         # if st.button("Load Dataset"):
-    #         st.write(f"Loading {selected_dataset}...")
-    #         # st.session_state.df = load_kaggle_dataset(selected_dataset)
-    #         try:
-    #             df = load_kaggle_dataset(selected_dataset)
-    #             st.success(f"Dataset {selected_dataset} berhasil dimuat!")
-    #             # st.dataframe(df)
-    #         except:
-    #             st.error(f"Dataset {selected_dataset} gagal dimuat!")
-    
-    #     else:
-    #         df = get_sample_data(option)
-
     openai.api_key = st.secrets['user_api']
-    kaggle_username = os.environ.get("KAGGLE_USERNAME")
-    kaggle_key = os.environ.get("KAGGLE_KEY")
+    
 
     # try:
     # Inisialisasi session state untuk df dan status upload jika belum ada
@@ -1472,9 +1421,6 @@ def main():
     # Jika DataFrame belum di-upload, tampilkan menu upload
     if not st.session_state.uploaded:
         df = handle_file_upload()
-        
-
-
     else:
         # st.write("DataFrame sudah di-upload.")
         st.dataframe(st.session_state.df)
@@ -2203,7 +2149,20 @@ def main():
 if __name__ == "__main__":
     main()
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    # Inisialisasi session state untuk df dan status upload jika belum ada
+    if 'df' not in st.session_state:
+        st.session_state.df = pd.DataFrame()
+    if 'uploaded' not in st.session_state:
+        st.session_state.uploaded = False
+    
+    # Jika DataFrame belum di-upload, tampilkan menu upload
+    if not st.session_state.uploaded:
+        handle_file_upload()
+    else:
+        main()
+        
+
     # # Cek apakah user sudah login atau belum
     # if 'logged' not in st.session_state:
     #     st.session_state.logged = False
