@@ -1363,6 +1363,25 @@ def get_sample_data(dataset_name):
     else:
         return None
 
+def handle_file_upload():
+    df = pd.DataFrame()
+    
+    with st.columns([1, 2, 1])[1]:
+        st.subheader('Upload your CSV / Excel data:')
+        option = st.selectbox('Pilih sumber data:',
+                              ('Upload Your File', 'Iris (Dummy Data)',
+                               'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
+        
+        if option == 'Upload Your File':
+            file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
+            if file:
+                try:
+                    df = pd.read_csv(file)  # Gantikan ini dengan fungsi Anda sendiri untuk membaca file
+                except:
+                    st.error("Mohon masukkan file dengan format yang benar.")
+        # Tambahkan logika lainnya untuk opsi lainnya di sini
+    
+    return df
 
 def main():
     # Inisialisasi API Kaggle
@@ -1444,7 +1463,16 @@ def main():
     kaggle_key = os.environ.get("KAGGLE_KEY")
 
     # try:
+    # Inisialisasi session state untuk df jika belum ada
+    if 'df' not in st.session_state:
+        st.session_state.df = pd.DataFrame()
+    
+    # Panggil fungsi untuk menangani UI upload file
+    df = handle_file_upload()
+    
+    # Jika df tidak kosong, simpan ke session state
     if not df.empty:
+        st.session_state.df = df
         # load_df = LoadDataframe(df)
         # # global df
         # df = load_df.load_file_auto_delimiter()
