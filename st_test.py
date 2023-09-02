@@ -59,12 +59,12 @@ import hashlib
 from kaggle.api.kaggle_api_extended import KaggleApi
 
 
-Fungsi untuk mengenkripsi password
+# Fungsi untuk mengenkripsi password
 def make_hashes(password):
     return hashlib.sha256(str.encode(password)).hexdigest()
 
 
-Fungsi untuk memeriksa password yang di-hash
+# Fungsi untuk memeriksa password yang di-hash
 def check_hashes(password, hashed_text):
     if make_hashes(password) == hashed_text:
         return hashed_text
