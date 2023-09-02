@@ -1940,12 +1940,12 @@ def main():
 
             # Load your DataFrame here
             data_used = df.copy()
-            for col in data_used.columns:
-                if data_used[col].dtype == 'object':  # Categorical columns
-                    data_used[col] = data_used[col].fillna('Missing Data')
-                else:  # Numerical columns
-                    # data_used[col].cat.add_categories([0], inplace=True)
-                    data_used[col] = data_used[col].fillna(0)
+            numeric_cols = data_used.select_dtypes(include=['number']).columns
+            data_used[numeric_cols] = data_used[numeric_cols].fillna(0)
+
+            object_cols = data_used.select_dtypes(include=['object']).columns
+            data_used[object_cols] = data_used[object_cols].fillna(
+                'Missing Data')
 
             # Layout
             column1, column2 = st.columns([1, 3])
