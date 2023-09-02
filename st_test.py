@@ -1470,70 +1470,70 @@ def main():
             """,
                     unsafe_allow_html=True)
 
-        st.sidebar.subheader('Pilih metode eksplorasi:')
-        # Tombol 1
-        if st.sidebar.button(
-                '🕵️ Explore Visualization & Insight with UlikData',
-                key='my-btn0'):
-            st.session_state.manual_exploration = True
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
-            st.session_state.vizz_tools = False
+        # st.sidebar.subheader('Pilih metode eksplorasi:')
+        # # Tombol 1
+        # if st.sidebar.button(
+        #         '🕵️ Explore Visualization & Insight with UlikData',
+        #         key='my-btn0'):
+        #     st.session_state.manual_exploration = True
+        #     st.session_state.auto_exploration = False
+        #     st.session_state.show_analisis_lanjutan = False
+        #     st.session_state.show_natural_language_exploration = False
+        #     st.session_state.story_telling = False
+        #     st.session_state.vizz_tools = False
                     
-        # Tombol 4
-        # st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization)</button>', unsafe_allow_html=True)
-        if st.sidebar.button(
-                '💬 Explore with Natural Language (Best for Data Visualization)',
-                key='my-btn2'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = True
-            st.session_state.story_telling = False
-            st.session_state.sentiment = False
-            st.session_state.classification = False
-            st.session_state.vizz_tools = False 
+        # # Tombol 4
+        # # st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization)</button>', unsafe_allow_html=True)
+        # if st.sidebar.button(
+        #         '💬 Explore with Natural Language (Best for Data Visualization)',
+        #         key='my-btn2'):
+        #     st.session_state.manual_exploration = False
+        #     st.session_state.auto_exploration = False
+        #     st.session_state.show_analisis_lanjutan = False
+        #     st.session_state.show_natural_language_exploration = True
+        #     st.session_state.story_telling = False
+        #     st.session_state.sentiment = False
+        #     st.session_state.classification = False
+        #     st.session_state.vizz_tools = False 
 
-        # Tombol 5
-        # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
-        if st.sidebar.button(
-                '🤖 Automatic Insight Generations (by UlikData x GPT) - Under Maintenance',
-                key='my-btn3'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = True
-            st.session_state.sentiment = False
-            st.session_state.classification = False
-            st.session_state.vizz_tools = False
+        # # Tombol 5
+        # # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
+        # if st.sidebar.button(
+        #         '🤖 Automatic Insight Generations (by UlikData x GPT) - Under Maintenance',
+        #         key='my-btn3'):
+        #     st.session_state.manual_exploration = False
+        #     st.session_state.auto_exploration = False
+        #     st.session_state.show_analisis_lanjutan = False
+        #     st.session_state.show_natural_language_exploration = False
+        #     st.session_state.story_telling = True
+        #     st.session_state.sentiment = False
+        #     st.session_state.classification = False
+        #     st.session_state.vizz_tools = False
 
-        # Tombol 7
-        # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('🧠 Machine Learning (Classification Model)',
-                             key='my-btn7'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
-            st.session_state.sentiment = False
-            st.session_state.classification = True
-            st.session_state.vizz_tools = False                     
+        # # Tombol 7
+        # # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
+        # if st.sidebar.button('🧠 Machine Learning (Classification Model)',
+        #                      key='my-btn7'):
+        #     st.session_state.manual_exploration = False
+        #     st.session_state.auto_exploration = False
+        #     st.session_state.show_analisis_lanjutan = False
+        #     st.session_state.show_natural_language_exploration = False
+        #     st.session_state.story_telling = False
+        #     st.session_state.sentiment = False
+        #     st.session_state.classification = True
+        #     st.session_state.vizz_tools = False                     
 
-        # Tombol 8
-        if st.sidebar.button('Testing BI Tools (under development)',
-                             key='my-btn8'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
-            st.session_state.sentiment = False
-            st.session_state.classification = False
-            st.session_state.vizz_tools = True
+        # # Tombol 8
+        # if st.sidebar.button('Testing BI Tools (under development)',
+        #                      key='my-btn8'):
+        #     st.session_state.manual_exploration = False
+        #     st.session_state.auto_exploration = False
+        #     st.session_state.show_analisis_lanjutan = False
+        #     st.session_state.show_natural_language_exploration = False
+        #     st.session_state.story_telling = False
+        #     st.session_state.sentiment = False
+        #     st.session_state.classification = False
+        #     st.session_state.vizz_tools = True
                                  
         tab_manual, tab_nlp, tab_auto_insight, tab_ml, tab_reco_vizz = st.tabs(
             ["Explore Visualization & Insight with UlikData",
