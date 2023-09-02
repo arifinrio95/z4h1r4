@@ -135,6 +135,9 @@ def login():
     with col2:
         st.markdown('<div class="login-bg">', unsafe_allow_html=True)
 
+        # Membuat kursor
+        cursor = connection.cursor()
+
         st.subheader("Enter your email that is registered on ulikdata.com")
         usermail = st.text_input("email")
         # password = st.text_input("Password", type='password')
