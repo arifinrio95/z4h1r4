@@ -2195,10 +2195,7 @@ def main():
     else:
         # st.write("DataFrame sudah di-upload.")
         st.dataframe(st.session_state.df)
-    
-    # Jika df tidak kosong, simpan ke session state
-    if not df.empty:
-        
+
         
 
 
