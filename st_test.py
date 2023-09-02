@@ -1473,6 +1473,11 @@ def main():
     if not st.session_state.uploaded:
         df = handle_file_upload()
         
+
+
+    else:
+        # st.write("DataFrame sudah di-upload.")
+        st.dataframe(st.session_state.df)
         # Jika df tidak kosong, simpan ke session state dan ubah status upload
         if not df.empty:
             st.session_state.df = df
@@ -2191,10 +2196,6 @@ def main():
     
             #     # Download the output as CSV
             #     st.download_button("Download CSV with sentiments", df.to_csv(index=False), "sentiments.csv", "text/csv")
-
-    else:
-        # st.write("DataFrame sudah di-upload.")
-        st.dataframe(st.session_state.df)
 
         
 
