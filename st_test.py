@@ -1944,11 +1944,10 @@ def main():
                     data_used[col].fillna(0, inplace=True)
 
             # Layout
-            st.title("Data Visualization Streamlit App")
-
             column1, column2 = st.columns([1, 3])
             # Sidebar for DataFrame column selection
             with column1:
+                st.subheader("Toolkit!")
                 with st.expander("Select Columns"):
                     selected_columns = []
                     for col in data_used.columns:
