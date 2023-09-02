@@ -2092,7 +2092,7 @@ def main():
                     column2.write(insight)
 
                 elif len(selected_columns) == 3:
-                st.write(px.scatter_3d(data_used[selected_columns], x=selected_columns[0], y=selected_columns[1], z=selected_columns[2]))
+                    st.write(px.scatter_3d(data_used[selected_columns], x=selected_columns[0], y=selected_columns[1], z=selected_columns[2]))
                 
                 elif len(selected_columns) >= 4:
                     cat_cols = data_used[selected_columns].select_dtypes(
