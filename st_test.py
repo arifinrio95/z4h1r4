@@ -2090,7 +2090,17 @@ def main():
                     column2.write('---')
                     column2.markdown("#### :blue[Insight!]")
                     column2.write(insight)
-                elif len(selected_columns) >= 3:
+
+                elif len(selected_columns) == 3:
+                    fig = px.scatter_3d(data_used[selected_columns], 
+                                         x=selected_columns[0], 
+                                         y=selected_columns[1], 
+                                         z=selected_columns[2], 
+                                         width=800, 
+                                         height=1200)
+                    st.plotly_chart(fig, use_container_width=True)
+                
+                elif len(selected_columns) >= 4:
                     cat_cols = data_used[selected_columns].select_dtypes(
                         include='object').columns.tolist()
                     if len(cat_cols) > 0:
