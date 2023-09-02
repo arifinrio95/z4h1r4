@@ -1415,7 +1415,7 @@ def main():
             .small-font {
                 font-size:12px !important;
             }
-            .small-selectbox {
+            .small-selectbox select {
                 height: 30px !important;
             }
         </style>
@@ -1424,14 +1424,20 @@ def main():
     # Header
     st.markdown("<h4 style='font-size:16px;'>Upload your CSV / Excel data:</h4>", unsafe_allow_html=True)
     
-    # Selectbox dengan class CSS untuk ukuran kecil
-    option = st.selectbox(
-        '', 
-        ('Upload Your File', 'Iris (Dummy Data)', 'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'),
-        format_func=lambda x: "" if x == "" else x,
-        key="small_selectbox",
-        class_name="small-selectbox small-font"
-    )
+    # Selectbox dengan styling inline
+    st.markdown("""
+        <div class="small-selectbox small-font">
+            <select>
+                <option value="" disabled selected>Select your option</option>
+                <option value="Upload Your File">Upload Your File</option>
+                <option value="Iris (Dummy Data)">Iris (Dummy Data)</option>
+                <option value="Tips (Dummy Data)">Tips (Dummy Data)</option>
+                <option value="Titanic (Dummy Data)">Titanic (Dummy Data)</option>
+                <option value="Gap Minder (Dummy Data)">Gap Minder (Dummy Data)</option>
+                <option value="Explore Kaggle Dataset">Explore Kaggle Dataset</option>
+            </select>
+        </div>
+    """, unsafe_allow_html=True)
 
     df = pd.DataFrame()
     # if 'df' not in st.session_state:
