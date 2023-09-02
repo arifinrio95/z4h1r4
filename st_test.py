@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 import re
 
-from load_dataframe import LoadDataframe
+# from load_dataframe import LoadDataframe
 from data_viz import DataViz
 
 import pandas as pd
