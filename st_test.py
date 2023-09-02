@@ -102,7 +102,7 @@ def login():
     st.markdown('<div id="ulikdata">Ulikdata</div>', unsafe_allow_html=True)
     st.markdown("---")
 
-    col1, col2, col 3 = st.columns(3)
+    col1, col2, col3 = st.columns(3)
 
     # Tambahkan gambar dari Google Drive di kolom pertama (col1)
     # col1.image(
