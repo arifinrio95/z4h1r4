@@ -1535,12 +1535,13 @@ def main():
         #     st.session_state.classification = False
         #     st.session_state.vizz_tools = True
                                  
-        tab_manual, tab_nlp, tab_auto_insight, tab_ml, tab_reco_vizz = st.tabs(
-            ["Manual Data Visualization",
-             "Ask Your Data Naturally",
+        tab_manual, tab_auto_insight, tab_reco_vizz, tab_nlp, tab_ml  = st.tabs(
+            ["1-Click Exploration",
              "Automatic Data Exploration",
-             "Machine Learning Modeling",
-             "Recomender Visualization"]
+             "Recomender Visualization",
+             "Ask Your Data",
+             "Machine Learning Modeling"
+             ]
         )
 
         # if st.session_state.get('manual_exploration', False):
