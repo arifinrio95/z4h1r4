@@ -71,70 +71,70 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 #     return False
 
 
-# def login():
-#     # CSS untuk menyesuaikan posisi "Ulikdata", gaya tombol, dan gaya kolom
-#     st.markdown("""
-#         <style>
-#             #ulikdata {
-#                 position: absolute;
-#                 top: 10px;
-#                 left: 10px;
-#                 font-weight: bold;
-#                 font-style: italic;
-#                 z-index: 999;
-#             }
-#             .stButton>button {
-#                 background-color: lightblue;
-#                 color: white;
-#             }
-#             .stButton:hover>button {
-#                 background-color: pink;
-#             }
-#             .login-bg {
-#                 background-color: #6a5acd;  /* Biru keunguan */
-#                 color: white;  /* Warna font putih */
-#             }
-#         </style>
-#     """,
-#                 unsafe_allow_html=True)
+def login():
+    # CSS untuk menyesuaikan posisi "Ulikdata", gaya tombol, dan gaya kolom
+    st.markdown("""
+        <style>
+            #ulikdata {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                font-weight: bold;
+                font-style: italic;
+                z-index: 999;
+            }
+            .stButton>button {
+                background-color: lightblue;
+                color: white;
+            }
+            .stButton:hover>button {
+                background-color: pink;
+            }
+            .login-bg {
+                background-color: #6a5acd;  /* Biru keunguan */
+                color: white;  /* Warna font putih */
+            }
+        </style>
+    """,
+                unsafe_allow_html=True)
 
-#     # Tulisan "Ulikdata" dengan ID yang kita definisikan di CSS
-#     st.markdown('<div id="ulikdata">Ulikdata</div>', unsafe_allow_html=True)
-#     st.markdown("---")
+    # Tulisan "Ulikdata" dengan ID yang kita definisikan di CSS
+    st.markdown('<div id="ulikdata">Ulikdata</div>', unsafe_allow_html=True)
+    st.markdown("---")
 
-#     col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-#     # Tambahkan gambar dari Google Drive di kolom pertama (col1)
-#     col1.image(
-#         'https://drive.google.com/uc?export=view&id=1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL',
-#         use_column_width=True)
-#     # st.image('https://drive.google.com/uc?export=view&id=1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL', use_column_width=True)
-#     # https://drive.google.com/file/d/1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL/view?usp=sharing
+    # Tambahkan gambar dari Google Drive di kolom pertama (col1)
+    col1.image(
+        'https://drive.google.com/uc?export=view&id=1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL',
+        use_column_width=True)
+    # st.image('https://drive.google.com/uc?export=view&id=1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL', use_column_width=True)
+    # https://drive.google.com/file/d/1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL/view?usp=sharing
 
-#     # Gunakan kelas CSS di dalam kolom kedua untuk background dan warna font
-#     with col2:
-#         st.markdown('<div class="login-bg">', unsafe_allow_html=True)
+    # Gunakan kelas CSS di dalam kolom kedua untuk background dan warna font
+    with col2:
+        st.markdown('<div class="login-bg">', unsafe_allow_html=True)
 
-#         st.subheader("Welcome Back!")
-#         username = st.text_input("User Name")
-#         password = st.text_input("Password", type='password')
+        st.subheader("Welcome Back!")
+        username = st.text_input("User Name")
+        password = st.text_input("Password", type='password')
 
-#         hashed_pswd = make_hashes("test")
+        hashed_pswd = make_hashes("test")
 
-#         if check_hashes(password, hashed_pswd):
-#             st.session_state.logged = True
-#             st.experimental_rerun()
+        if check_hashes(password, hashed_pswd):
+            st.session_state.logged = True
+            st.experimental_rerun()
 
-#         if st.button("Login", key='login_button'):
-#             if 'button_clicked' in st.session_state and st.session_state.button_clicked:
-#                 if check_hashes(password, hashed_pswd):
-#                     st.session_state.logged = True
-#                     st.experimental_rerun()
-#             else:
-#                 st.session_state.button_clicked = True
-#                 st.experimental_rerun()
+        if st.button("Login", key='login_button'):
+            if 'button_clicked' in st.session_state and st.session_state.button_clicked:
+                if check_hashes(password, hashed_pswd):
+                    st.session_state.logged = True
+                    st.experimental_rerun()
+            else:
+                st.session_state.button_clicked = True
+                st.experimental_rerun()
 
-#         st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 # CSS untuk tombol
