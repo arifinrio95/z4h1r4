@@ -1398,7 +1398,7 @@ def handle_file_upload():
                     df = pd.read_csv(file)  # Gantikan ini dengan fungsi Anda sendiri untuk membaca file
                     st.session_state.df = df
                     st.session_state.uploaded = True
-                    main()
+                    # main()
                 except:
                     st.error("Mohon masukkan file dengan format yang benar.")
         # Tambahkan logika lainnya untuk opsi lainnya di sini
@@ -1406,7 +1406,7 @@ def handle_file_upload():
             df = get_sample_data(option)
             st.session_state.df = df
             st.session_state.uploaded = True
-            main()
+            # main()
 
 def main():
     import warnings
