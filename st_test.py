@@ -2092,16 +2092,27 @@ def main():
                     column2.write(insight)
 
                 elif len(selected_columns) == 3:
-                    fig = px.scatter_3d(data_used[selected_columns], 
-                                         x=selected_columns[0], 
-                                         y=selected_columns[1], 
-                                         z=selected_columns[2], 
-                                         width=800, 
-                                         height=800,
-                                         marker=dict(size=6, 
-                                                line=dict(width=2,
-                                                color='black')))
-                    st.plotly_chart(fig, use_container_width=True)
+                    # Membuat scatter plot 3D dengan ukuran dan garis pinggir
+                    fig = go.Figure(data=[go.Scatter3d(
+                        x=data_used[selected_columns[0]],
+                        y=data_used[selected_columns[1]],
+                        z=data_used[selected_columns[2]],
+                        mode='markers',
+                        marker=dict(
+                            size=6,
+                            color='blue',  # set color to an array/list of desired values
+                            opacity=0.8,
+                            line=dict(
+                                color='black',
+                                width=2
+                            )
+                        )
+                    )])
+                    
+                    fig.update_layout(width=800, height=800)
+                    
+                    # Menampilkan plot di Streamlit
+                    st.plotly_chart(fig)
                 
                 elif len(selected_columns) >= 4:
                     cat_cols = data_used[selected_columns].select_dtypes(
