@@ -164,7 +164,7 @@ def login():
                 #     st.session_state.logged = True
                 #     st.experimental_rerun()
             else:
-                st.write('Your email hasn't been registered.')
+                st.write("""Your email has not been registered.""")
                 # st.session_state.button_clicked = True
                 # st.experimental_rerun()
 
