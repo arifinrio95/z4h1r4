@@ -1368,20 +1368,20 @@ def handle_file_upload():
     api = KaggleApi()
     api.authenticate()
 
-    kaggle_username = os.environ.get("KAGGLE_USERNAME")
-    kaggle_key = os.environ.get("KAGGLE_KEY")
+    # kaggle_username = os.environ.get("KAGGLE_USERNAME")
+    # kaggle_key = os.environ.get("KAGGLE_KEY")
     
-    def get_kaggle_datasets():
-        datasets = api.dataset_list(search='', file_type='csv', sort_by='hottest')
-        dataset_names = [ds.ref for ds in datasets]
-        return dataset_names
+    # def get_kaggle_datasets():
+    #     datasets = api.dataset_list(search='', file_type='csv', sort_by='hottest')
+    #     dataset_names = [ds.ref for ds in datasets]
+    #     return dataset_names
 
-    def load_kaggle_dataset(dataset_name):
-        api.dataset_download_files(dataset_name, path='./', unzip=True)
-        csv_file = [f for f in os.listdir() if f.endswith('.csv')][0]
-        df = pd.read_csv(csv_file)
-        os.remove(csv_file)  # Menghapus file CSV setelah digunakan
-        return df
+    # def load_kaggle_dataset(dataset_name):
+    #     api.dataset_download_files(dataset_name, path='./', unzip=True)
+    #     csv_file = [f for f in os.listdir() if f.endswith('.csv')][0]
+    #     df = pd.read_csv(csv_file)
+    #     os.remove(csv_file)  # Menghapus file CSV setelah digunakan
+    #     return df
         
     df = pd.DataFrame()
     
@@ -1389,7 +1389,7 @@ def handle_file_upload():
         st.subheader('Upload your CSV / Excel data:')
         option = st.selectbox('Pilih sumber data:',
                               ('Upload Your File', 'Iris (Dummy Data)',
-                               'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
+                               'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)'))
         
         if option == 'Upload Your File':
             file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
@@ -1399,19 +1399,23 @@ def handle_file_upload():
                 except:
                     st.error("Mohon masukkan file dengan format yang benar.")
         # Tambahkan logika lainnya untuk opsi lainnya di sini
-    
-    return df
+        else:
+            df = get_sample_data(option)
+    st.session_state.df = df
+    st.session_state.uploaded = True
+    # return df
 
-def main(df):
+def main():
     import warnings
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
     openai.api_key = st.secrets['user_api']
 
+    df = st.session_state.df
     # try:
     if not df.empty:
-        st.session_state.df = df
-        st.session_state.uploaded = True
+        # st.session_state.df = df
+        # st.session_state.uploaded = True
         df.to_csv("temp_file.csv", index=False)
         uploaded_file_path = "temp_file.csv"
 
@@ -2142,9 +2146,9 @@ if __name__ == '__main__':
     
     # Jika DataFrame belum di-upload, tampilkan menu upload
     if st.session_state.uploaded:
-        main(df)
+        main()
     else:
-        df = handle_file_upload()
+        handle_file_upload()
         
 
     # # Cek apakah user sudah login atau belum
