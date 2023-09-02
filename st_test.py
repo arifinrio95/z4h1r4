@@ -1536,11 +1536,11 @@ def main():
         #     st.session_state.vizz_tools = True
                                  
         tab_manual, tab_nlp, tab_auto_insight, tab_ml, tab_reco_vizz = st.tabs(
-            ["Explore Visualization & Insight with UlikData",
-             "Explore with Natural Language (Best for Data Visualization)",
-             "Automatic Insight Generations (by UlikData x GPT) - Under Maintenance",
-             "Machine Learning (Classification Model)",
-             "Testing BI Tools (under development)"]
+            ["Manual Data Visualization",
+             "Ask Your Data Naturally",
+             "Automatic Data Exploration",
+             "Machine Learning Modeling",
+             "Recomender Visualization"]
         )
 
         # if st.session_state.get('manual_exploration', False):
