@@ -61,13 +61,13 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 import psycopg2
 
 # Establish a connection to the database
-connection = psycopg2.connect(
-    host="172.104.32.208",
-    port="3768",
-    database="public",
-    user=st.secrets['user_db'],
-    password=st.secrets['pass_db']
-)
+# connection = psycopg2.connect(
+#     host="172.104.32.208",
+#     port="3768",
+#     database="public",
+#     user=st.secrets['user_db'],
+#     password=st.secrets['pass_db']
+# )
 
 
 # Fungsi untuk mengenkripsi password
@@ -112,6 +112,15 @@ def login():
     # Tulisan "Ulikdata" dengan ID yang kita definisikan di CSS
     st.markdown('<div id="ulikdata">Ulikdata</div>', unsafe_allow_html=True)
     st.markdown("---")
+
+    # Establish a connection to the database
+    connection = psycopg2.connect(
+        host="172.104.32.208",
+        port="3768",
+        database="public",
+        user=st.secrets['user_db'],
+        password=st.secrets['pass_db']
+    )
 
     col1, col2, col3 = st.columns(3)
 
