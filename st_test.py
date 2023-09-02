@@ -1365,8 +1365,8 @@ def get_sample_data(dataset_name):
 
 def handle_file_upload():
     # Inisialisasi API Kaggle
-    api = KaggleApi()
-    api.authenticate()
+    # api = KaggleApi()
+    # api.authenticate()
 
     # kaggle_username = os.environ.get("KAGGLE_USERNAME")
     # kaggle_key = os.environ.get("KAGGLE_KEY")
@@ -1398,6 +1398,7 @@ def handle_file_upload():
                     df = pd.read_csv(file)  # Gantikan ini dengan fungsi Anda sendiri untuk membaca file
                     st.session_state.df = df
                     st.session_state.uploaded = True
+                    main()
                 except:
                     st.error("Mohon masukkan file dengan format yang benar.")
         # Tambahkan logika lainnya untuk opsi lainnya di sini
@@ -1405,9 +1406,7 @@ def handle_file_upload():
             df = get_sample_data(option)
             st.session_state.df = df
             st.session_state.uploaded = True
-    
-    
-    # return df
+            main()
 
 def main():
     import warnings
