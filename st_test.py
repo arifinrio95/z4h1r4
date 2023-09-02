@@ -137,29 +137,30 @@ def login():
 
         # hashed_pswd = make_hashes("test")
 
-        # Establish a connection to the database
-        connection = psycopg2.connect(
-            host="172.104.32.208",
-            port="3768",
-            database="public",
-            user=st.secrets['user_db'],
-            password=st.secrets['pass_db']
-        )
+        # # Establish a connection to the database
+        # connection = psycopg2.connect(
+        #     host="172.104.32.208",
+        #     port="3768",
+        #     database="public",
+        #     user=st.secrets['user_db'],
+        #     password=st.secrets['pass_db']
+        # )
 
-        # Membuat kursor
-        cursor = connection.cursor()
+        # # Membuat kursor
+        # cursor = connection.cursor()
 
-        # Menjalankan query SQL untuk mengecek keberadaan email
-        cursor.execute("SELECT EXISTS(SELECT 1 FROM account WHERE email = %s)", (usermail,))
+        # # Menjalankan query SQL untuk mengecek keberadaan email
+        # cursor.execute("SELECT EXISTS(SELECT 1 FROM account WHERE email = %s)", (usermail,))
         
-        # Mengambil hasil query
-        exists = cursor.fetchone()[0]
+        # # Mengambil hasil query
+        # exists = cursor.fetchone()[0]
         
-        # Menutup kursor dan koneksi
-        cursor.close()
-        connection.close()
+        # # Menutup kursor dan koneksi
+        # cursor.close()
+        # connection.close()
 
-        if exists == True:
+        # if exists == True:
+        if usermail == founder_superuser@gmail.com:    
             st.session_state.logged = True
             st.experimental_rerun()
         else:
