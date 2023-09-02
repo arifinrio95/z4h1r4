@@ -59,6 +59,8 @@ import hashlib
 
 from kaggle.api.kaggle_api_extended import KaggleApi
 
+import plotly.graph_objects as go
+
 import psycopg2
 
 # Establish a connection to the database
