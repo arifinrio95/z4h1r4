@@ -1403,30 +1403,11 @@ def main():
     # st.write(
     #     '*Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.*'
     # )
-    # st.subheader('Upload your CSV / Excel data:')
-
-    # option = st.selectbox('Pilih sumber data:',
-    #                       ('Upload Your File', 'Iris (Dummy Data)',
-    #                        'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
-
-    # Menambahkan CSS untuk styling
-    st.markdown("""
-        <style>
-            div[data-baseweb="select"] > div {
-                font-size: 12px !important;
-                height: 30px !important;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    # Header
     st.subheader('Upload your CSV / Excel data:')
-    
-    # Selectbox
-    option = st.selectbox(
-        '', 
-        ('Upload Your File', 'Iris (Dummy Data)', 'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset')
-    )
+
+    option = st.selectbox('Pilih sumber data:',
+                          ('Upload Your File', 'Iris (Dummy Data)',
+                           'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
 
     df = pd.DataFrame()
     # if 'df' not in st.session_state:
