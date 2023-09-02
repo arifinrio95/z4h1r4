@@ -1463,734 +1463,743 @@ def main():
     kaggle_key = os.environ.get("KAGGLE_KEY")
 
     # try:
-    # Inisialisasi session state untuk df jika belum ada
+    # Inisialisasi session state untuk df dan status upload jika belum ada
     if 'df' not in st.session_state:
         st.session_state.df = pd.DataFrame()
+    if 'uploaded' not in st.session_state:
+        st.session_state.uploaded = False
     
-    # Panggil fungsi untuk menangani UI upload file
-    df = handle_file_upload()
+    # Jika DataFrame belum di-upload, tampilkan menu upload
+    if not st.session_state.uploaded:
+        df = handle_file_upload()
+        
+        # Jika df tidak kosong, simpan ke session state dan ubah status upload
+        if not df.empty:
+            st.session_state.df = df
+            st.session_state.uploaded = True
+            df.to_csv("temp_file.csv", index=False)
+            uploaded_file_path = "temp_file.csv"
+    
+            st.write("Sample Top 5 Rows")
+            st.dataframe(df.head())
+            dataviz = DataViz(df)
+    
+            # Hide dulu karna kayanya makan tempat banget.
+            # st.write('---')
+            # analytics_df.info()
+            # st.write('---')
+            # analytics_df.basic()
+            # st.write('---')
+            # # Extract df schema
+            schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
+            schema_str = json.dumps(schema_dict)
+            # st.write("\nDataframe schema : ", schema_str)
+    
+            # # Extract the first two rows into a dictionary
+            rows_dict = df.head(2).to_dict('records')
+            rows_str = json.dumps(rows_dict, default=str)
+    
+            st.markdown("""
+                <style>
+                    .stButton>button {
+                        background-color: #E8E8E8;   /* Warna abu-abu muda */
+                        border: 2px solid #C0C0C0;   /* Border abu-abu */
+                        color: #333;                 /* Warna teks gelap */
+                        padding: 8px 20px;           /* Padding lebih sedikit */
+                        text-align: center;          /* Teks tengah */
+                        text-decoration: none;
+                        display: inline-block;
+                        font-size: 16px;
+                        margin: 4px 2px;
+                        cursor: pointer;
+                        width: 300px;
+                        white-space: normal !important;
+                        border-radius: 5px;          /* Border radius */
+                        transition: background-color 0.3s, color 0.3s;  /* Transisi warna saat di-hover */
+                    }
+            
+                    .stButton>button:hover {
+                        background-color: #C0C0C0;   /* Warna saat tombol di-hover */
+                        color: #FFF;                /* Warna teks saat tombol di-hover */
+                    }
+                </style>
+                """,
+                        unsafe_allow_html=True)
+    
+            st.sidebar.subheader('Pilih metode eksplorasi:')
+            # Tombol 1
+            if st.sidebar.button(
+                    '🕵️ Explore Visualization & Insight with UlikData',
+                    key='my-btn0'):
+                st.session_state.manual_exploration = True
+                st.session_state.auto_exploration = False
+                st.session_state.show_analisis_lanjutan = False
+                st.session_state.show_natural_language_exploration = False
+                st.session_state.story_telling = False
+                st.session_state.vizz_tools = False
+    
+            # Tombol 2
+            # st.sidebar.markdown('<button class="my-btn">2. Automatic EDA with Autoviz</button>', unsafe_allow_html=True)
+            # if st.sidebar.button('🔍 Automatic EDA with Autoviz', key='my-btn1'):
+            #     st.session_state.manual_exploration = False
+            #     st.session_state.auto_exploration = True
+            #     st.session_state.show_analisis_lanjutan = False
+            #     st.session_state.show_natural_language_exploration = False
+            #     st.session_state.story_telling = False
+            #     st.session_state.sentiment = False
+            #     st.session_state.classification = False
+    
+            # Tombol 3
+            # if st.sidebar.button('3. Auto Visualization by Datasans (under development)'):
+            #     st.session_state.manual_exploration = False
+            #     st.session_state.auto_exploration = False
+            #     st.session_state.show_analisis_lanjutan = True
+            #     st.session_state.show_natural_language_exploration = False
+            #     st.session_state.story_telling = False
+    
+            # Tombol 4
+            # st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization)</button>', unsafe_allow_html=True)
+            if st.sidebar.button(
+                    '💬 Explore with Natural Language (Best for Data Visualization)',
+                    key='my-btn2'):
+                st.session_state.manual_exploration = False
+                st.session_state.auto_exploration = False
+                st.session_state.show_analisis_lanjutan = False
+                st.session_state.show_natural_language_exploration = True
+                st.session_state.story_telling = False
+                st.session_state.sentiment = False
+                st.session_state.classification = False
+                st.session_state.vizz_tools = False 
+    
+            # Tombol 5
+            # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
+            if st.sidebar.button(
+                    '🤖 Automatic Insight Generations (by UlikData x GPT) - Under Maintenance',
+                    key='my-btn3'):
+                st.session_state.manual_exploration = False
+                st.session_state.auto_exploration = False
+                st.session_state.show_analisis_lanjutan = False
+                st.session_state.show_natural_language_exploration = False
+                st.session_state.story_telling = True
+                st.session_state.sentiment = False
+                st.session_state.classification = False
+                st.session_state.vizz_tools = False
+                        
+            # Tombol 6
+            # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
+            # if st.sidebar.button('6. Sentiment Classifications (Zero Shot)', key='my-btn4'):
+            #     st.session_state.manual_exploration = False
+            #     st.session_state.auto_exploration = False
+            #     st.session_state.show_analisis_lanjutan = False
+            #     st.session_state.show_natural_language_exploration = False
+            #     st.session_state.story_telling = False
+            #     st.session_state.sentiment = True
+    
+            # Tombol 7
+            # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
+            if st.sidebar.button('🧠 Machine Learning (Classification Model)',
+                                 key='my-btn7'):
+                st.session_state.manual_exploration = False
+                st.session_state.auto_exploration = False
+                st.session_state.show_analisis_lanjutan = False
+                st.session_state.show_natural_language_exploration = False
+                st.session_state.story_telling = False
+                st.session_state.sentiment = False
+                st.session_state.classification = True
+                st.session_state.vizz_tools = False                     
+    
+            # Tombol 8
+            if st.sidebar.button('Testing BI Tools (under development)',
+                                 key='my-btn8'):
+                st.session_state.manual_exploration = False
+                st.session_state.auto_exploration = False
+                st.session_state.show_analisis_lanjutan = False
+                st.session_state.show_natural_language_exploration = False
+                st.session_state.story_telling = False
+                st.session_state.sentiment = False
+                st.session_state.classification = False
+                st.session_state.vizz_tools = True
+                                     
+    
+            # if st.session_state.get('manual_exploration', False):
+            #     st.subheader("D-Tale")
+            #     # st.write("PyGWalker adalah pustaka Python untuk analisis visual dengan stye mirip Tableau, memungkinkan eksplorasi data dengan drag and drop seperti Tableau.")
+            #     # st.markdown("[Klik di sini untuk mempelajari lebih lanjut.](https://github.com/Kanaries/pygwalker)")
+            #     # Jika tombol diklik, gunakan PyGWalker
+            #     # walker = pyg.walk(df, env='Streamlit')
+            #     dtale_func(df)
+    
+            # if st.session_state.get('auto_exploration', False):
+            #     # st.subheader("Pandas Profiling Report")
+            #     # Create Pandas Profiling Report
+            #     # pr = ProfileReport(df, explorative=True)
+    
+            #     # Display the report
+            #     # st_profile_report(pr)
+    
+            #     st.subheader("Auto Visualizations")
+            #     autovizz(df)
+            #     AV = AutoViz_Class()
+            #     dft = AV.AutoViz(df)
+            #     autoviz_app(df)
+            #     os.remove(uploaded_file_path) # Menghapus file sementara
+    
+            # if st.session_state.get('show_analisis_lanjutan', False):
+            #     st.subheader("Auto Visualization by Datasans")
+            #     with st.spinner('Wait for it...'):
+            # analysis_option = st.sidebar.selectbox('Choose an analysis:',
+            #                                        ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
+            #                                         'Principal Component Analysis', 'Outlier Detection',
+            #                                         'Normality Test', 'Linear Regression', 'Logistic Regression',
+            #                                         'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
+            #                                         'Text Analysis'))
+    
+            # if analysis_option == 'Hierarchical Clustering':
+            #     perform_hierarchical_clustering(df)
+            # elif analysis_option == 'Handle Imbalance Classes':
+            #     handle_imbalance_classes(df)
+            # elif analysis_option == 'Text Analysis':
+            #     perform_text_analysis(df)
+            # elif analysis_option == 'Logistic Regression':
+            #     perform_logistic_regression(df)
+            # elif analysis_option == 'K-Means Clustering':
+            #     perform_k_means_clustering(df)
+            # elif analysis_option == 'Time-Series Analysis':
+            #     perform_time_series_analysis(df)
+            # elif analysis_option == 'Bar Plot':
+            #     show_bar_plot(df)
+            # elif analysis_option == 'Pie Chart':
+            #     show_pie_chart(df)
+            # elif analysis_option == 'Linear Regression':
+            #     perform_linear_regression(df)
+            # elif analysis_option == 'Missing Data':
+            #     show_missing_data(df)
+            # elif analysis_option == 'Outlier Detection':
+            #     show_outliers(df)
+            # elif analysis_option == 'Normality Test':
+            #     perform_shapiro_wilk_test(df)
+            # elif analysis_option == 'Descriptive Statistics':
+            #     show_descriptive_statistics(df)
+            # elif analysis_option == 'Histogram':
+            #     show_histogram(df)
+            # elif analysis_option == 'Box Plot':
+            #     show_box_plot(df)
+            # elif analysis_option == 'Scatter Plot':
+            #     show_scatter_plot(df)
+            # elif analysis_option == 'Correlation Matrix':
+            #     show_correlation_matrix(df)
+            # elif analysis_option == 'Principal Component Analysis':
+            #     perform_pca(df)
+            # st.subheader('Basic')
+            # st.write('##')
+            # analytics_df.barplot()
+            # st.write('---')
+            # analytics_df.piechart()
+            # st.write('---')
+            # show_histogram(df)
+            # show_box_plot(df)
+            # show_scatter_plot(df)
+            # show_outliers(df)
+            # show_correlation_matrix(df)
+            # st.write('')
+            # st.subheader('Intermediate')
+            # perform_linear_regression(df)
+            # perform_logistic_regression(df)
+            # perform_k_means_clustering(df)
+            # perform_text_analysis(df)
+            # handle_imbalance_classes(df)
+            # perform_time_series_analysis(df)
+            # st.write('')
+            # st.subheader('Advanced')
+            # perform_pca(df)
+            # perform_hierarchical_clustering(df)
+            # perform_shapiro_wilk_test(df)
+    
+            # if st.session_state.get('show_natural_language_exploration', False):
+            #     st.subheader("Natural Language Exploration")
+            #     # input_pengguna = ""
+            #     # User Input
+            #     input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik' """)
+            #     button = st.button("Submit")
+            #     if (input_pengguna != "") & (input_pengguna != None) & button:
+            #         error_message = None
+            #         previous_script = None
+            #         retry_count = 0
+            #         script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
+            #         exec(str(script))
+            #         # st.write("The Script:")
+            #         # st.text(script)
+            #         input_pengguna = ""
+    
+            if st.session_state.get('manual_exploration', False):
+                dataviz.visualization()
+    
+            # if st.session_state.get('auto_exploration', False):
+            #     # st.subheader("Pandas Profiling Report")
+            #     # Create Pandas Profiling Report
+            #     # pr = ProfileReport(df, explorative=True)
+    
+            #     # Display the report
+            #     # st_profile_report(pr)
+    
+            #     st.subheader("Auto Visualizations")
+            #     with st.spinner('Generating Visualizations...'):
+            #         autoviz_app(df)
+    
+            if st.session_state.get('show_natural_language_exploration', False):
+                st.subheader("Natural Language Exploration")
+                input_pengguna = ""
+                style_choosen = 'Visualization'
+                input_pengguna = st.text_area(
+                    """Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
+                    value=
+                    "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
+                )
+                style_choosen = st.selectbox('Choose an Objective:',
+                                             ('Visualization', 'General Question'))
+    
+                if 'button_clicked' not in st.session_state:
+                    st.session_state.button_clicked = False
+    
+                button = st.button("Submit")
+                if button:
+                    st.session_state.button_clicked = True
+    
+                if (input_pengguna != "") & (
+                        input_pengguna != None) & st.session_state.button_clicked:
+                    st.session_state.button_clicked = True
+                    with st.spinner('Wait for it...'):
+                        script = request_prompt(input_pengguna, uploaded_file_path, schema_str,
+                                                rows_str, style_choosen, None,
+                                                None, 0)
+                        st.session_state['script'] = script
+                        # Membuat 2 kolom utama
+                        main_col1, main_col3 = st.columns(
+                            [2, 1])  # kolom pertama memiliki lebar 2x kolom kedua
+    
+                        # Membuat 2 sub-kolom di dalam main_col1
+                        sub_col1, sub_col2 = main_col1.columns(2)
+    
+                        with main_col1:  # Gunakan kolom utama pertama
+                            # st.subheader("Visualizations")
+                            if style_choosen == 'General Question':
+                                st.write(script)
+                            else:
+                                exec(str(script))
+    
+                        # button = st.button("Print Code")
+    
+                        # if button:
+                        #     # st.subheader("Streamlit Script")
+                        #     # st.text(script)
+                        #     st.subheader(f"{style_choosen} Script")
+                        #     if style_choosen == 'Plotly':
+                        #         st.text(
+                        #             convert_streamlit_to_plotly(
+                        #                 st.session_state['script']))
+                        #     elif style_choosen == 'Seaborn':
+                        #         st.text(
+                        #             convert_streamlit_to_python_seaborn(
+                        #                 st.session_state['script']))
+    
+                        input_pengguna = ""
+    
+            if st.session_state.get('story_telling', False):
+                st.title("Automated Insights by Ulikdata")
+    
+                st.markdown("""
+                <style>
+                    .reportview-container .markdown-text-container {
+                        font-family: monospace;
+                        background-color: #fafafa;
+                        max-width: 700px;
+                        padding-right:50px;
+                        padding-left:50px;
+                    }
+                </style>
+                """,
+                            unsafe_allow_html=True)
+                # dict_stats = analyze_dataframe(df)
+                # # st.write("Temporary showing, under review....")
+                # # st.write(dict_stats)
+                # # for i in dict_stats:
+                # #     st.markdown(request_story_prompt(i))
+                # with st.spinner('Generating visualizations...'):
+                #     input_pengguna = "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
+                #     script = (input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
+                #     # st.subheader("Visualizations")
+                #     exec(str(script))
+                # st.subheader("Insights")
+                # with st.spinner('Generating insights...'):
+    
+                #     st.markdown(request_story_prompt(dict_stats))
+    
+                min_viz = st.selectbox('Expected number of insights:',
+                                       [3, 4, 5, 6, 7, 8, 9, 10])
+                # min_viz = st.slider('Expected number of insights:', min_value=3, max_value=50)
+    
+                style_choosen = 'Plotly'
+                style_choosen = st.selectbox(
+                    'Choose a Visualization Style:',
+                    ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
+                api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+    
+                button = st.button("Submit")
+                if button:
+                    # Membagi respons berdasarkan tanda awal dan akhir kode
+                    with st.spinner(
+                            'Generating insights...(it may takes 1-2 minutes)'):
+                        response = request_story_prompt(schema_str, rows_str,
+                                                        min_viz, api_model,
+                                                        style_choosen)
+                        # st.text(response)
+                        # Extracting the introductions
+                        # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
+                        # pattern = r'st.write\("Insight \d+: (.+?)"\)'
+                        pattern = r'# Insight \d+: (.+?)\n'
+    
+                        introductions = re.findall(pattern, response)
+    
+                        # Printing the extracted introductions
+                        # for intro in introductions:
+                        #     print(intro)
+    
+                        # Saving the introductions to a list
+                        introduction_list = list(introductions)
+                        introduction_list = [
+                            "Analyze the " + s for s in introduction_list
+                        ]
+    
+                        # st.text(introduction_list)
+                        # for query in introduction_list:
+                        #     st.write(get_answer_csv(df, query))
+    
+                        def execute_streamlit_code_with_explanations(
+                                response, introduction_list):
+                            # Split kode berdasarkan st.plotly_chart()
+                            code_segments = response.split('st.plotly_chart(')
+    
+                            modified_code = code_segments[
+                                0]  # Bagian kode sebelum plot pertama
+    
+                            progress_bar = st.progress(0)
+                            for index, segment in enumerate(code_segments[1:]):
+                                # Dapatkan penjelasan untuk segment ini
+                                if index < len(introduction_list):
+                                    explanation = get_answer_csv(
+                                        uploaded_file_path,
+                                        introduction_list[index])
+                                    modified_code += f'\nst.write("{explanation}")\n'
+    
+                                # Tambahkan st.plotly_chart kembali
+                                modified_code += 'st.plotly_chart(' + segment
+    
+                                # Update progress bar
+                                progress_percentage = (index + 1) / len(
+                                    code_segments[1:])
+                                progress_bar.progress(progress_percentage)
+    
+                            # st.code(modified_code)
+                            # Eksekusi kode yang telah dimodifikasi
+                            exec(modified_code)
+    
+                        # execute_streamlit_code_with_explanations(response, introduction_list)
+    
+                        segments = response.split("BEGIN_CODE")
+                        segment_iterator = iter(segments)
+                        for segment in segment_iterator:
+                            # Jika ada kode dalam segmen ini
+                            if "END_CODE" in segment:
+                                code_end = segment.index("END_CODE")
+                                code = segment[:code_end].strip()
+                                explanation = segment[code_end +
+                                                      len("END_CODE"):].strip()
+                                explanation = explanation.replace('"', '\\"')
+    
+                                # Coba eksekusi kode
+                                # try:
+                                # st.code(code)  # Tampilkan kode dalam format kode
+                                # execute_streamlit_code_with_explanations(code, introduction_list)
+                                exec(code)
+                                # st.write("Hasil eksekusi kode:")
+                                # st.write(output)
+                                # except Exception as e:
+                                #     st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
+                                #     st.write(str(e))
+                                # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
+                                # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
+    
+                                # Tampilkan teks penjelasan
+                                if explanation:
+                                    st.write(explanation)
+                            else:
+                                # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                                st.write(segment)
+                        # st.write("For Developer Maintenance Purposed (will remove)")
+                        # st.text(response)
+                        # st.text(introduction_list)
+    
+                # st.text(request_story_prompt(analyze_dataframe(df)))
+                # visualize_analysis(dict_stats)
+    
+            if st.session_state.get('classification', False):
+                st.title("Machine Learning Modeling")
+                # Data cleansing options
+                # Check for missing values
+                if df.isnull().sum().sum() > 0:
+                    st.warning("Warning: Dataset contains missing values!")
+                    missing_stats = pd.DataFrame(df.isnull().sum(),
+                                                 columns=["Missing Values"])
+                    missing_stats["Percentage"] = (
+                        missing_stats["Missing Values"] / len(df)) * 100
+                    st.write(missing_stats[missing_stats["Missing Values"] > 0])
+    
+                    # Data cleansing options for each column
+                    st.subheader("Data Cleansing Options for Each Column")
+    
+                    for col in df.columns:
+                        if df[col].isnull().sum() > 0:
+                            st.markdown(f"### {col}")
+    
+                            if df[col].dtype in ['int64', 'float64']:
+                                # Numerical column
+                                missing_option = st.selectbox(
+                                    f"How to handle missing values for {col}?", [
+                                        "Do Nothing", "Drop Rows",
+                                        "Fill with Mean", "Fill with Median",
+                                        "Fill with Mode"
+                                    ])
+                                if missing_option == "Drop Rows":
+                                    df.dropna(subset=[col], inplace=True)
+                                elif missing_option == "Fill with Mean":
+                                    df[col].fillna(df[col].mean(), inplace=True)
+                                elif missing_option == "Fill with Median":
+                                    df[col].fillna(df[col].median(), inplace=True)
+                                elif missing_option == "Fill with Mode":
+                                    df[col].fillna(df[col].mode().iloc[0],
+                                                   inplace=True)
+                            else:
+                                # Categorical column
+                                missing_option = st.selectbox(
+                                    f"How to handle missing values for {col}?",
+                                    ["Do Nothing", "Drop Rows", "Fill with Mode"])
+                                if missing_option == "Drop Rows":
+                                    df.dropna(subset=[col], inplace=True)
+                                elif missing_option == "Fill with Mode":
+                                    df[col].fillna(df[col].mode().iloc[0],
+                                                   inplace=True)
+    
+                else:
+                    st.success("Data tidak mengandung missing values.")
+    
+                # One-hot encoding for categorical columns
+                one_hot_encode = st.checkbox("One-hot encode categorical columns?")
+                if one_hot_encode:
+                    df = pd.get_dummies(df, drop_first=True)
+    
+                # Normalize data
+                normalize = st.checkbox("Normalize data?")
+                if normalize:
+                    normalization_method = st.selectbox(
+                        "Choose normalization method:",
+                        ["Min-Max Scaling", "Z-score Normalization"])
+    
+                    numerical_cols = df.select_dtypes(
+                        include=['int64', 'float64']).columns
+                    cols_to_normalize = st.multiselect(
+                        "Select numerical columns to normalize:",
+                        options=numerical_cols,
+                        default=list(numerical_cols))
+    
+                    if normalization_method == "Min-Max Scaling":
+                        scaler = MinMaxScaler()
+                        df[cols_to_normalize] = scaler.fit_transform(
+                            df[cols_to_normalize])
+                    elif normalization_method == "Z-score Normalization":
+                        mean = df[cols_to_normalize].mean()
+                        std = df[cols_to_normalize].std()
+                        df[cols_to_normalize] = (df[cols_to_normalize] -
+                                                 mean) / std
+    
+                st.write(df.head())
+    
+                # Select target column
+                target_column = st.selectbox("Select the target column",
+                                             df.columns)
+    
+                # Select feature columns
+                # numerical_cols = df.select_dtypes(include=['int64', 'float64']).columns
+                feature_columns = st.multiselect(
+                    "Select the feature columns",
+                    df.select_dtypes(include=['int64', 'float64']).columns,
+                    default=df.select_dtypes(
+                        include=['int64', 'float64']).columns[df.select_dtypes(
+                            include=['int64', 'float64']).columns != target_column]
+                    .tolist())
+                features = df[feature_columns]
+                target = df[target_column]
+    
+                # Split dataset
+                test_size = st.slider("Select test size (fraction)", 0.1, 0.9,
+                                      0.25, 0.05)
+                X_train, X_test, y_train, y_test = train_test_split(
+                    features, target, test_size=test_size, random_state=42)
+    
+                # Select models for LazyPredict
+                # available_classifiers = [
+                #     "LinearSVC", "SGDClassifier", "MLPClassifier", "Perceptron", "LogisticRegression",
+                #     "LogisticRegressionCV", "SVC", "CalibratedClassifierCV", "PassiveAggressiveClassifier",
+                #     "LabelPropagation", "LabelSpreading", "RandomForestClassifier", "GradientBoostingClassifier",
+                #     "QuadraticDiscriminantAnalysis", "HistGradientBoostingClassifier", "RidgeClassifierCV",
+                #     "RidgeClassifier", "AdaBoostClassifier", "ExtraTreesClassifier", "KNeighborsClassifier",
+                #     "BaggingClassifier", "BernoulliNB", "LinearDiscriminantAnalysis", "GaussianNB", "NuSVC",
+                #     "DecisionTreeClassifier", "NearestCentroid", "ExtraTreeClassifier", "CheckingClassifier", "DummyClassifier"
+                # ]
+    
+                # selected_classifiers = st.multiselect("Select classification models to compare:", options=available_classifiers, default=['GaussianNB','LogisticRegression','DecisionTreeClassifier','RandomForestClassifier','GradientBoostingClassifier','AdaBoostClassifier'])
+    
+                # Run LazyPredict
+                if st.button("Run LazyPredict"):
+                    with st.spinner('Running LazyPredict...'):
+                        results = run_lazy_predict(X_train, X_test, y_train,
+                                                   y_test)
+                        st.write(results)
+    
+            if st.session_state.get('vizz_tools', False):
+                st.subheader("Recomender Visualization")
+                # Sidebar kiri atas: Radio button untuk memilih kolom
+                # selected_columns = st.sidebar.multiselect("Select columns to visualize", df.columns)
+                # Inisialisasi state jika belum ada
+                if 'selected_columns' not in st.session_state:
+                    st.session_state.selected_columns = []
+                
+                # Sidebar kiri atas: Radio button untuk memilih kolom
+                for col in df.columns:
+                    is_selected = st.sidebar.checkbox(f"Select {col}", value=col in st.session_state.selected_columns)
+                    if is_selected:
+                        if col not in st.session_state.selected_columns:
+                            st.session_state.selected_columns.append(col)
+                    else:
+                        if col in st.session_state.selected_columns:
+                            st.session_state.selected_columns.remove(col)
+    
+                
+                # Sidebar kiri bawah: Pilihan agregasi
+                if len(st.session_state.selected_columns) > 0:
+                    numeric_cols = [col for col in st.session_state.selected_columns if pd.api.types.is_numeric_dtype(df[col])]
+                    if len(numeric_cols) > 0:
+                        aggregation = st.sidebar.selectbox("Select aggregation for numeric columns", ["sum", "count", "mean", "median"])
+                
+                # Main content
+                st.title('Data Visualization')
+                
+                # Fungsi untuk mendeteksi tipe data
+                def detect_dtype(column):
+                    return 'numeric' if pd.api.types.is_numeric_dtype(df[column]) else 'categorical'
+                
+                # Visualisasi sesuai dengan jumlah dan tipe kolom yang dipilih
+                if len(st.session_state.selected_columns) == 1:
+                    col = st.session_state.selected_columns[0]
+                    if detect_dtype(col) == 'numeric':
+                        st.write(px.histogram(df, x=col))
+                    else:
+                        st.write(px.bar(df, x=col))
+                
+                elif len(st.session_state.selected_columns) == 2:
+                    col1, col2 = st.session_state.selected_columns
+                    if detect_dtype(col1) == 'numeric' and detect_dtype(col2) == 'numeric':
+                        st.write(px.scatter(df, x=col1, y=col2))
+                    else:
+                        st.write(px.bar(df, x=col1, y=col2))
+                
+                elif len(st.session_state.selected_columns) == 3:
+                    col1, col2, col3 = st.session_state.selected_columns
+                    # Anda bisa menambahkan logika lain di sini
+                    st.write(px.scatter_3d(df, x=col1, y=col2, z=col3))
+                
+                elif len(st.session_state.selected_columns) == 4:
+                    col1, col2, col3, col4 = st.session_state.selected_columns
+                    
+                    # Mendeteksi tipe data untuk setiap kolom
+                    types = [detect_dtype(col) for col in st.session_state.selected_columns]
+                    
+                    if types.count('numeric') == 4:
+                        # Semua kolom numerik: gunakan kolom ke-4 sebagai ukuran poin ('size')
+                        st.write(px.scatter(df, x=col1, y=col2, color=col3, size=col4))
+                        
+                    elif types.count('categorical') >= 1:
+                        # Ada setidaknya satu kolom kategorikal: gunakan sebagai 'hue'
+                        categorical_col = [col for col, dtype in zip(st.session_state.selected_columns, types) if dtype == 'categorical'][0]
+                        numeric_cols = [col for col in st.session_state.selected_columns if col != categorical_col]
+                        st.write(px.scatter(df, x=numeric_cols[0], y=numeric_cols[1], color=categorical_col, size=numeric_cols[2]))
+                        
+                    else:
+                        st.write("Visualisasi untuk kombinasi ini belum diimplementasikan.")
+    
+                
+                else:
+                    st.write("Displaying raw data:")
+                    st.write(df[st.session_state.selected_columns])
+                    
+            # if st.session_state.get('sentiment', False):
+            #     with st.spinner('Downloading the pretrained model...'):
+            #         # Load BART model (Pastikan Anda memiliki model yang sesuai untuk sentiment analysis)
+            #         tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
+            #         model = BartForSequenceClassification.from_pretrained('facebook/bart-large')
+    
+            #     def classify_sentiment(text):
+            #         inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+            #         outputs = model(**inputs)
+            #         sentiment_id = outputs.logits.argmax(-1).item()
+    
+            #         if sentiment_id == 0:
+            #             return "Negative"
+            #         elif sentiment_id == 1:
+            #             return "Neutral"
+            #         else:
+            #             return "Positive"
+    
+            #     def classify_with_progress(df, column):
+            #         # Inisialisasi progress bar
+            #         progress_bar = st.progress(0)
+            #         total = len(df)
+            #         sentiments = []
+    
+            #         for index, row in df.iterrows():
+            #             sentiment = classify_sentiment(row[column])
+            #             sentiments.append(sentiment)
+    
+            #             # Perbarui progress bar
+            #             progress = (index + 1) / total
+            #             progress_bar.progress(progress)
+    
+            #         # Selesai
+            #         st.write("Classification complete!")
+            #         return sentiments
+    
+            #     st.title('Sentiment Analysis with BART')
+            #     # Choose a column
+            #     column = st.selectbox('Select a column for sentiment analysis', df.columns)
+            #     button = st.button("Submit")
+            #     if button:
+            #         # Classify sentiment
+            #         with st.spinner('Classifying sentiments...(takes 5-10 minutes, please wait).'):
+            #             df['Sentiment_by_BART'] = classify_with_progress(df, column)
+    
+            #         # Display output
+            #         st.write(df[[column, 'Sentiment_by_BART']])
+    
+            #     # Download the output as CSV
+            #     st.download_button("Download CSV with sentiments", df.to_csv(index=False), "sentiments.csv", "text/csv")
+
+    else:
+        # st.write("DataFrame sudah di-upload.")
+        st.dataframe(st.session_state.df)
     
     # Jika df tidak kosong, simpan ke session state
     if not df.empty:
-        st.session_state.df = df
-        # load_df = LoadDataframe(df)
-        # # global df
-        # df = load_df.load_file_auto_delimiter()
-        # df = st.session_state.df
-        df.to_csv("temp_file.csv", index=False)
-        uploaded_file_path = "temp_file.csv"
-
-        st.write("Sample Top 5 Rows")
-        st.dataframe(df.head())
-        dataviz = DataViz(df)
-
-        # Hide dulu karna kayanya makan tempat banget.
-        # st.write('---')
-        # analytics_df.info()
-        # st.write('---')
-        # analytics_df.basic()
-        # st.write('---')
-        # # Extract df schema
-        schema_dict = df.dtypes.apply(lambda x: x.name).to_dict()
-        schema_str = json.dumps(schema_dict)
-        # st.write("\nDataframe schema : ", schema_str)
-
-        # # Extract the first two rows into a dictionary
-        rows_dict = df.head(2).to_dict('records')
-        rows_str = json.dumps(rows_dict, default=str)
-
-        st.markdown("""
-            <style>
-                .stButton>button {
-                    background-color: #E8E8E8;   /* Warna abu-abu muda */
-                    border: 2px solid #C0C0C0;   /* Border abu-abu */
-                    color: #333;                 /* Warna teks gelap */
-                    padding: 8px 20px;           /* Padding lebih sedikit */
-                    text-align: center;          /* Teks tengah */
-                    text-decoration: none;
-                    display: inline-block;
-                    font-size: 16px;
-                    margin: 4px 2px;
-                    cursor: pointer;
-                    width: 300px;
-                    white-space: normal !important;
-                    border-radius: 5px;          /* Border radius */
-                    transition: background-color 0.3s, color 0.3s;  /* Transisi warna saat di-hover */
-                }
         
-                .stButton>button:hover {
-                    background-color: #C0C0C0;   /* Warna saat tombol di-hover */
-                    color: #FFF;                /* Warna teks saat tombol di-hover */
-                }
-            </style>
-            """,
-                    unsafe_allow_html=True)
-
-        st.sidebar.subheader('Pilih metode eksplorasi:')
-        # Tombol 1
-        if st.sidebar.button(
-                '🕵️ Explore Visualization & Insight with UlikData',
-                key='my-btn0'):
-            st.session_state.manual_exploration = True
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
-            st.session_state.vizz_tools = False
-
-        # Tombol 2
-        # st.sidebar.markdown('<button class="my-btn">2. Automatic EDA with Autoviz</button>', unsafe_allow_html=True)
-        # if st.sidebar.button('🔍 Automatic EDA with Autoviz', key='my-btn1'):
-        #     st.session_state.manual_exploration = False
-        #     st.session_state.auto_exploration = True
-        #     st.session_state.show_analisis_lanjutan = False
-        #     st.session_state.show_natural_language_exploration = False
-        #     st.session_state.story_telling = False
-        #     st.session_state.sentiment = False
-        #     st.session_state.classification = False
-
-        # Tombol 3
-        # if st.sidebar.button('3. Auto Visualization by Datasans (under development)'):
-        #     st.session_state.manual_exploration = False
-        #     st.session_state.auto_exploration = False
-        #     st.session_state.show_analisis_lanjutan = True
-        #     st.session_state.show_natural_language_exploration = False
-        #     st.session_state.story_telling = False
-
-        # Tombol 4
-        # st.sidebar.markdown('<button class="my-btn">4. Natural Language (Best for Data Visualization)</button>', unsafe_allow_html=True)
-        if st.sidebar.button(
-                '💬 Explore with Natural Language (Best for Data Visualization)',
-                key='my-btn2'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = True
-            st.session_state.story_telling = False
-            st.session_state.sentiment = False
-            st.session_state.classification = False
-            st.session_state.vizz_tools = False 
-
-        # Tombol 5
-        # st.sidebar.markdown('<button class="my-btn">5. Auto Reporting (Best for Survey Data)</button>', unsafe_allow_html=True)
-        if st.sidebar.button(
-                '🤖 Automatic Insight Generations (by UlikData x GPT) - Under Maintenance',
-                key='my-btn3'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = True
-            st.session_state.sentiment = False
-            st.session_state.classification = False
-            st.session_state.vizz_tools = False
-                    
-        # Tombol 6
-        # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
-        # if st.sidebar.button('6. Sentiment Classifications (Zero Shot)', key='my-btn4'):
-        #     st.session_state.manual_exploration = False
-        #     st.session_state.auto_exploration = False
-        #     st.session_state.show_analisis_lanjutan = False
-        #     st.session_state.show_natural_language_exploration = False
-        #     st.session_state.story_telling = False
-        #     st.session_state.sentiment = True
-
-        # Tombol 7
-        # st.sidebar.markdown('<button class="my-btn">6. Sentiment Classifications (Zero Shot)</button>', unsafe_allow_html=True)
-        if st.sidebar.button('🧠 Machine Learning (Classification Model)',
-                             key='my-btn7'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
-            st.session_state.sentiment = False
-            st.session_state.classification = True
-            st.session_state.vizz_tools = False                     
-
-        # Tombol 8
-        if st.sidebar.button('Testing BI Tools (under development)',
-                             key='my-btn8'):
-            st.session_state.manual_exploration = False
-            st.session_state.auto_exploration = False
-            st.session_state.show_analisis_lanjutan = False
-            st.session_state.show_natural_language_exploration = False
-            st.session_state.story_telling = False
-            st.session_state.sentiment = False
-            st.session_state.classification = False
-            st.session_state.vizz_tools = True
-                                 
-
-        # if st.session_state.get('manual_exploration', False):
-        #     st.subheader("D-Tale")
-        #     # st.write("PyGWalker adalah pustaka Python untuk analisis visual dengan stye mirip Tableau, memungkinkan eksplorasi data dengan drag and drop seperti Tableau.")
-        #     # st.markdown("[Klik di sini untuk mempelajari lebih lanjut.](https://github.com/Kanaries/pygwalker)")
-        #     # Jika tombol diklik, gunakan PyGWalker
-        #     # walker = pyg.walk(df, env='Streamlit')
-        #     dtale_func(df)
-
-        # if st.session_state.get('auto_exploration', False):
-        #     # st.subheader("Pandas Profiling Report")
-        #     # Create Pandas Profiling Report
-        #     # pr = ProfileReport(df, explorative=True)
-
-        #     # Display the report
-        #     # st_profile_report(pr)
-
-        #     st.subheader("Auto Visualizations")
-        #     autovizz(df)
-        #     AV = AutoViz_Class()
-        #     dft = AV.AutoViz(df)
-        #     autoviz_app(df)
-        #     os.remove(uploaded_file_path) # Menghapus file sementara
-
-        # if st.session_state.get('show_analisis_lanjutan', False):
-        #     st.subheader("Auto Visualization by Datasans")
-        #     with st.spinner('Wait for it...'):
-        # analysis_option = st.sidebar.selectbox('Choose an analysis:',
-        #                                        ('Descriptive Statistics', 'Histogram', 'Box Plot', 'Scatter Plot', 'Bar Plot', 'Pie Chart', 'Missing Data', 'Correlation Matrix',
-        #                                         'Principal Component Analysis', 'Outlier Detection',
-        #                                         'Normality Test', 'Linear Regression', 'Logistic Regression',
-        #                                         'K-Means Clustering', 'Time-Series Analysis', 'Hierarchical Clustering',
-        #                                         'Text Analysis'))
-
-        # if analysis_option == 'Hierarchical Clustering':
-        #     perform_hierarchical_clustering(df)
-        # elif analysis_option == 'Handle Imbalance Classes':
-        #     handle_imbalance_classes(df)
-        # elif analysis_option == 'Text Analysis':
-        #     perform_text_analysis(df)
-        # elif analysis_option == 'Logistic Regression':
-        #     perform_logistic_regression(df)
-        # elif analysis_option == 'K-Means Clustering':
-        #     perform_k_means_clustering(df)
-        # elif analysis_option == 'Time-Series Analysis':
-        #     perform_time_series_analysis(df)
-        # elif analysis_option == 'Bar Plot':
-        #     show_bar_plot(df)
-        # elif analysis_option == 'Pie Chart':
-        #     show_pie_chart(df)
-        # elif analysis_option == 'Linear Regression':
-        #     perform_linear_regression(df)
-        # elif analysis_option == 'Missing Data':
-        #     show_missing_data(df)
-        # elif analysis_option == 'Outlier Detection':
-        #     show_outliers(df)
-        # elif analysis_option == 'Normality Test':
-        #     perform_shapiro_wilk_test(df)
-        # elif analysis_option == 'Descriptive Statistics':
-        #     show_descriptive_statistics(df)
-        # elif analysis_option == 'Histogram':
-        #     show_histogram(df)
-        # elif analysis_option == 'Box Plot':
-        #     show_box_plot(df)
-        # elif analysis_option == 'Scatter Plot':
-        #     show_scatter_plot(df)
-        # elif analysis_option == 'Correlation Matrix':
-        #     show_correlation_matrix(df)
-        # elif analysis_option == 'Principal Component Analysis':
-        #     perform_pca(df)
-        # st.subheader('Basic')
-        # st.write('##')
-        # analytics_df.barplot()
-        # st.write('---')
-        # analytics_df.piechart()
-        # st.write('---')
-        # show_histogram(df)
-        # show_box_plot(df)
-        # show_scatter_plot(df)
-        # show_outliers(df)
-        # show_correlation_matrix(df)
-        # st.write('')
-        # st.subheader('Intermediate')
-        # perform_linear_regression(df)
-        # perform_logistic_regression(df)
-        # perform_k_means_clustering(df)
-        # perform_text_analysis(df)
-        # handle_imbalance_classes(df)
-        # perform_time_series_analysis(df)
-        # st.write('')
-        # st.subheader('Advanced')
-        # perform_pca(df)
-        # perform_hierarchical_clustering(df)
-        # perform_shapiro_wilk_test(df)
-
-        # if st.session_state.get('show_natural_language_exploration', False):
-        #     st.subheader("Natural Language Exploration")
-        #     # input_pengguna = ""
-        #     # User Input
-        #     input_pengguna = st.text_area("""Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik' """)
-        #     button = st.button("Submit")
-        #     if (input_pengguna != "") & (input_pengguna != None) & button:
-        #         error_message = None
-        #         previous_script = None
-        #         retry_count = 0
-        #         script = request_prompt(input_pengguna, schema_str, rows_str, error_message, previous_script, retry_count)
-        #         exec(str(script))
-        #         # st.write("The Script:")
-        #         # st.text(script)
-        #         input_pengguna = ""
-
-        if st.session_state.get('manual_exploration', False):
-            dataviz.visualization()
-
-        # if st.session_state.get('auto_exploration', False):
-        #     # st.subheader("Pandas Profiling Report")
-        #     # Create Pandas Profiling Report
-        #     # pr = ProfileReport(df, explorative=True)
-
-        #     # Display the report
-        #     # st_profile_report(pr)
-
-        #     st.subheader("Auto Visualizations")
-        #     with st.spinner('Generating Visualizations...'):
-        #         autoviz_app(df)
-
-        if st.session_state.get('show_natural_language_exploration', False):
-            st.subheader("Natural Language Exploration")
-            input_pengguna = ""
-            style_choosen = 'Visualization'
-            input_pengguna = st.text_area(
-                """Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
-                value=
-                "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
-            )
-            style_choosen = st.selectbox('Choose an Objective:',
-                                         ('Visualization', 'General Question'))
-
-            if 'button_clicked' not in st.session_state:
-                st.session_state.button_clicked = False
-
-            button = st.button("Submit")
-            if button:
-                st.session_state.button_clicked = True
-
-            if (input_pengguna != "") & (
-                    input_pengguna != None) & st.session_state.button_clicked:
-                st.session_state.button_clicked = True
-                with st.spinner('Wait for it...'):
-                    script = request_prompt(input_pengguna, uploaded_file_path, schema_str,
-                                            rows_str, style_choosen, None,
-                                            None, 0)
-                    st.session_state['script'] = script
-                    # Membuat 2 kolom utama
-                    main_col1, main_col3 = st.columns(
-                        [2, 1])  # kolom pertama memiliki lebar 2x kolom kedua
-
-                    # Membuat 2 sub-kolom di dalam main_col1
-                    sub_col1, sub_col2 = main_col1.columns(2)
-
-                    with main_col1:  # Gunakan kolom utama pertama
-                        # st.subheader("Visualizations")
-                        if style_choosen == 'General Question':
-                            st.write(script)
-                        else:
-                            exec(str(script))
-
-                    # button = st.button("Print Code")
-
-                    # if button:
-                    #     # st.subheader("Streamlit Script")
-                    #     # st.text(script)
-                    #     st.subheader(f"{style_choosen} Script")
-                    #     if style_choosen == 'Plotly':
-                    #         st.text(
-                    #             convert_streamlit_to_plotly(
-                    #                 st.session_state['script']))
-                    #     elif style_choosen == 'Seaborn':
-                    #         st.text(
-                    #             convert_streamlit_to_python_seaborn(
-                    #                 st.session_state['script']))
-
-                    input_pengguna = ""
-
-        if st.session_state.get('story_telling', False):
-            st.title("Automated Insights by Ulikdata")
-
-            st.markdown("""
-            <style>
-                .reportview-container .markdown-text-container {
-                    font-family: monospace;
-                    background-color: #fafafa;
-                    max-width: 700px;
-                    padding-right:50px;
-                    padding-left:50px;
-                }
-            </style>
-            """,
-                        unsafe_allow_html=True)
-            # dict_stats = analyze_dataframe(df)
-            # # st.write("Temporary showing, under review....")
-            # # st.write(dict_stats)
-            # # for i in dict_stats:
-            # #     st.markdown(request_story_prompt(i))
-            # with st.spinner('Generating visualizations...'):
-            #     input_pengguna = "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
-            #     script = (input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
-            #     # st.subheader("Visualizations")
-            #     exec(str(script))
-            # st.subheader("Insights")
-            # with st.spinner('Generating insights...'):
-
-            #     st.markdown(request_story_prompt(dict_stats))
-
-            min_viz = st.selectbox('Expected number of insights:',
-                                   [3, 4, 5, 6, 7, 8, 9, 10])
-            # min_viz = st.slider('Expected number of insights:', min_value=3, max_value=50)
-
-            style_choosen = 'Plotly'
-            style_choosen = st.selectbox(
-                'Choose a Visualization Style:',
-                ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
-            api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
-
-            button = st.button("Submit")
-            if button:
-                # Membagi respons berdasarkan tanda awal dan akhir kode
-                with st.spinner(
-                        'Generating insights...(it may takes 1-2 minutes)'):
-                    response = request_story_prompt(schema_str, rows_str,
-                                                    min_viz, api_model,
-                                                    style_choosen)
-                    # st.text(response)
-                    # Extracting the introductions
-                    # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
-                    # pattern = r'st.write\("Insight \d+: (.+?)"\)'
-                    pattern = r'# Insight \d+: (.+?)\n'
-
-                    introductions = re.findall(pattern, response)
-
-                    # Printing the extracted introductions
-                    # for intro in introductions:
-                    #     print(intro)
-
-                    # Saving the introductions to a list
-                    introduction_list = list(introductions)
-                    introduction_list = [
-                        "Analyze the " + s for s in introduction_list
-                    ]
-
-                    # st.text(introduction_list)
-                    # for query in introduction_list:
-                    #     st.write(get_answer_csv(df, query))
-
-                    def execute_streamlit_code_with_explanations(
-                            response, introduction_list):
-                        # Split kode berdasarkan st.plotly_chart()
-                        code_segments = response.split('st.plotly_chart(')
-
-                        modified_code = code_segments[
-                            0]  # Bagian kode sebelum plot pertama
-
-                        progress_bar = st.progress(0)
-                        for index, segment in enumerate(code_segments[1:]):
-                            # Dapatkan penjelasan untuk segment ini
-                            if index < len(introduction_list):
-                                explanation = get_answer_csv(
-                                    uploaded_file_path,
-                                    introduction_list[index])
-                                modified_code += f'\nst.write("{explanation}")\n'
-
-                            # Tambahkan st.plotly_chart kembali
-                            modified_code += 'st.plotly_chart(' + segment
-
-                            # Update progress bar
-                            progress_percentage = (index + 1) / len(
-                                code_segments[1:])
-                            progress_bar.progress(progress_percentage)
-
-                        # st.code(modified_code)
-                        # Eksekusi kode yang telah dimodifikasi
-                        exec(modified_code)
-
-                    # execute_streamlit_code_with_explanations(response, introduction_list)
-
-                    segments = response.split("BEGIN_CODE")
-                    segment_iterator = iter(segments)
-                    for segment in segment_iterator:
-                        # Jika ada kode dalam segmen ini
-                        if "END_CODE" in segment:
-                            code_end = segment.index("END_CODE")
-                            code = segment[:code_end].strip()
-                            explanation = segment[code_end +
-                                                  len("END_CODE"):].strip()
-                            explanation = explanation.replace('"', '\\"')
-
-                            # Coba eksekusi kode
-                            # try:
-                            # st.code(code)  # Tampilkan kode dalam format kode
-                            # execute_streamlit_code_with_explanations(code, introduction_list)
-                            exec(code)
-                            # st.write("Hasil eksekusi kode:")
-                            # st.write(output)
-                            # except Exception as e:
-                            #     st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
-                            #     st.write(str(e))
-                            # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
-                            # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
-
-                            # Tampilkan teks penjelasan
-                            if explanation:
-                                st.write(explanation)
-                        else:
-                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                            st.write(segment)
-                    # st.write("For Developer Maintenance Purposed (will remove)")
-                    # st.text(response)
-                    # st.text(introduction_list)
-
-            # st.text(request_story_prompt(analyze_dataframe(df)))
-            # visualize_analysis(dict_stats)
-
-        if st.session_state.get('classification', False):
-            st.title("Machine Learning Modeling")
-            # Data cleansing options
-            # Check for missing values
-            if df.isnull().sum().sum() > 0:
-                st.warning("Warning: Dataset contains missing values!")
-                missing_stats = pd.DataFrame(df.isnull().sum(),
-                                             columns=["Missing Values"])
-                missing_stats["Percentage"] = (
-                    missing_stats["Missing Values"] / len(df)) * 100
-                st.write(missing_stats[missing_stats["Missing Values"] > 0])
-
-                # Data cleansing options for each column
-                st.subheader("Data Cleansing Options for Each Column")
-
-                for col in df.columns:
-                    if df[col].isnull().sum() > 0:
-                        st.markdown(f"### {col}")
-
-                        if df[col].dtype in ['int64', 'float64']:
-                            # Numerical column
-                            missing_option = st.selectbox(
-                                f"How to handle missing values for {col}?", [
-                                    "Do Nothing", "Drop Rows",
-                                    "Fill with Mean", "Fill with Median",
-                                    "Fill with Mode"
-                                ])
-                            if missing_option == "Drop Rows":
-                                df.dropna(subset=[col], inplace=True)
-                            elif missing_option == "Fill with Mean":
-                                df[col].fillna(df[col].mean(), inplace=True)
-                            elif missing_option == "Fill with Median":
-                                df[col].fillna(df[col].median(), inplace=True)
-                            elif missing_option == "Fill with Mode":
-                                df[col].fillna(df[col].mode().iloc[0],
-                                               inplace=True)
-                        else:
-                            # Categorical column
-                            missing_option = st.selectbox(
-                                f"How to handle missing values for {col}?",
-                                ["Do Nothing", "Drop Rows", "Fill with Mode"])
-                            if missing_option == "Drop Rows":
-                                df.dropna(subset=[col], inplace=True)
-                            elif missing_option == "Fill with Mode":
-                                df[col].fillna(df[col].mode().iloc[0],
-                                               inplace=True)
-
-            else:
-                st.success("Data tidak mengandung missing values.")
-
-            # One-hot encoding for categorical columns
-            one_hot_encode = st.checkbox("One-hot encode categorical columns?")
-            if one_hot_encode:
-                df = pd.get_dummies(df, drop_first=True)
-
-            # Normalize data
-            normalize = st.checkbox("Normalize data?")
-            if normalize:
-                normalization_method = st.selectbox(
-                    "Choose normalization method:",
-                    ["Min-Max Scaling", "Z-score Normalization"])
-
-                numerical_cols = df.select_dtypes(
-                    include=['int64', 'float64']).columns
-                cols_to_normalize = st.multiselect(
-                    "Select numerical columns to normalize:",
-                    options=numerical_cols,
-                    default=list(numerical_cols))
-
-                if normalization_method == "Min-Max Scaling":
-                    scaler = MinMaxScaler()
-                    df[cols_to_normalize] = scaler.fit_transform(
-                        df[cols_to_normalize])
-                elif normalization_method == "Z-score Normalization":
-                    mean = df[cols_to_normalize].mean()
-                    std = df[cols_to_normalize].std()
-                    df[cols_to_normalize] = (df[cols_to_normalize] -
-                                             mean) / std
-
-            st.write(df.head())
-
-            # Select target column
-            target_column = st.selectbox("Select the target column",
-                                         df.columns)
-
-            # Select feature columns
-            # numerical_cols = df.select_dtypes(include=['int64', 'float64']).columns
-            feature_columns = st.multiselect(
-                "Select the feature columns",
-                df.select_dtypes(include=['int64', 'float64']).columns,
-                default=df.select_dtypes(
-                    include=['int64', 'float64']).columns[df.select_dtypes(
-                        include=['int64', 'float64']).columns != target_column]
-                .tolist())
-            features = df[feature_columns]
-            target = df[target_column]
-
-            # Split dataset
-            test_size = st.slider("Select test size (fraction)", 0.1, 0.9,
-                                  0.25, 0.05)
-            X_train, X_test, y_train, y_test = train_test_split(
-                features, target, test_size=test_size, random_state=42)
-
-            # Select models for LazyPredict
-            # available_classifiers = [
-            #     "LinearSVC", "SGDClassifier", "MLPClassifier", "Perceptron", "LogisticRegression",
-            #     "LogisticRegressionCV", "SVC", "CalibratedClassifierCV", "PassiveAggressiveClassifier",
-            #     "LabelPropagation", "LabelSpreading", "RandomForestClassifier", "GradientBoostingClassifier",
-            #     "QuadraticDiscriminantAnalysis", "HistGradientBoostingClassifier", "RidgeClassifierCV",
-            #     "RidgeClassifier", "AdaBoostClassifier", "ExtraTreesClassifier", "KNeighborsClassifier",
-            #     "BaggingClassifier", "BernoulliNB", "LinearDiscriminantAnalysis", "GaussianNB", "NuSVC",
-            #     "DecisionTreeClassifier", "NearestCentroid", "ExtraTreeClassifier", "CheckingClassifier", "DummyClassifier"
-            # ]
-
-            # selected_classifiers = st.multiselect("Select classification models to compare:", options=available_classifiers, default=['GaussianNB','LogisticRegression','DecisionTreeClassifier','RandomForestClassifier','GradientBoostingClassifier','AdaBoostClassifier'])
-
-            # Run LazyPredict
-            if st.button("Run LazyPredict"):
-                with st.spinner('Running LazyPredict...'):
-                    results = run_lazy_predict(X_train, X_test, y_train,
-                                               y_test)
-                    st.write(results)
-
-        if st.session_state.get('vizz_tools', False):
-            st.subheader("Recomender Visualization")
-            # Sidebar kiri atas: Radio button untuk memilih kolom
-            # selected_columns = st.sidebar.multiselect("Select columns to visualize", df.columns)
-            # Inisialisasi state jika belum ada
-            if 'selected_columns' not in st.session_state:
-                st.session_state.selected_columns = []
-            
-            # Sidebar kiri atas: Radio button untuk memilih kolom
-            for col in df.columns:
-                is_selected = st.sidebar.checkbox(f"Select {col}", value=col in st.session_state.selected_columns)
-                if is_selected:
-                    if col not in st.session_state.selected_columns:
-                        st.session_state.selected_columns.append(col)
-                else:
-                    if col in st.session_state.selected_columns:
-                        st.session_state.selected_columns.remove(col)
-
-            
-            # Sidebar kiri bawah: Pilihan agregasi
-            if len(st.session_state.selected_columns) > 0:
-                numeric_cols = [col for col in st.session_state.selected_columns if pd.api.types.is_numeric_dtype(df[col])]
-                if len(numeric_cols) > 0:
-                    aggregation = st.sidebar.selectbox("Select aggregation for numeric columns", ["sum", "count", "mean", "median"])
-            
-            # Main content
-            st.title('Data Visualization')
-            
-            # Fungsi untuk mendeteksi tipe data
-            def detect_dtype(column):
-                return 'numeric' if pd.api.types.is_numeric_dtype(df[column]) else 'categorical'
-            
-            # Visualisasi sesuai dengan jumlah dan tipe kolom yang dipilih
-            if len(st.session_state.selected_columns) == 1:
-                col = st.session_state.selected_columns[0]
-                if detect_dtype(col) == 'numeric':
-                    st.write(px.histogram(df, x=col))
-                else:
-                    st.write(px.bar(df, x=col))
-            
-            elif len(st.session_state.selected_columns) == 2:
-                col1, col2 = st.session_state.selected_columns
-                if detect_dtype(col1) == 'numeric' and detect_dtype(col2) == 'numeric':
-                    st.write(px.scatter(df, x=col1, y=col2))
-                else:
-                    st.write(px.bar(df, x=col1, y=col2))
-            
-            elif len(st.session_state.selected_columns) == 3:
-                col1, col2, col3 = st.session_state.selected_columns
-                # Anda bisa menambahkan logika lain di sini
-                st.write(px.scatter_3d(df, x=col1, y=col2, z=col3))
-            
-            elif len(st.session_state.selected_columns) == 4:
-                col1, col2, col3, col4 = st.session_state.selected_columns
-                
-                # Mendeteksi tipe data untuk setiap kolom
-                types = [detect_dtype(col) for col in st.session_state.selected_columns]
-                
-                if types.count('numeric') == 4:
-                    # Semua kolom numerik: gunakan kolom ke-4 sebagai ukuran poin ('size')
-                    st.write(px.scatter(df, x=col1, y=col2, color=col3, size=col4))
-                    
-                elif types.count('categorical') >= 1:
-                    # Ada setidaknya satu kolom kategorikal: gunakan sebagai 'hue'
-                    categorical_col = [col for col, dtype in zip(st.session_state.selected_columns, types) if dtype == 'categorical'][0]
-                    numeric_cols = [col for col in st.session_state.selected_columns if col != categorical_col]
-                    st.write(px.scatter(df, x=numeric_cols[0], y=numeric_cols[1], color=categorical_col, size=numeric_cols[2]))
-                    
-                else:
-                    st.write("Visualisasi untuk kombinasi ini belum diimplementasikan.")
-
-            
-            else:
-                st.write("Displaying raw data:")
-                st.write(df[st.session_state.selected_columns])
-                
-        # if st.session_state.get('sentiment', False):
-        #     with st.spinner('Downloading the pretrained model...'):
-        #         # Load BART model (Pastikan Anda memiliki model yang sesuai untuk sentiment analysis)
-        #         tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
-        #         model = BartForSequenceClassification.from_pretrained('facebook/bart-large')
-
-        #     def classify_sentiment(text):
-        #         inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
-        #         outputs = model(**inputs)
-        #         sentiment_id = outputs.logits.argmax(-1).item()
-
-        #         if sentiment_id == 0:
-        #             return "Negative"
-        #         elif sentiment_id == 1:
-        #             return "Neutral"
-        #         else:
-        #             return "Positive"
-
-        #     def classify_with_progress(df, column):
-        #         # Inisialisasi progress bar
-        #         progress_bar = st.progress(0)
-        #         total = len(df)
-        #         sentiments = []
-
-        #         for index, row in df.iterrows():
-        #             sentiment = classify_sentiment(row[column])
-        #             sentiments.append(sentiment)
-
-        #             # Perbarui progress bar
-        #             progress = (index + 1) / total
-        #             progress_bar.progress(progress)
-
-        #         # Selesai
-        #         st.write("Classification complete!")
-        #         return sentiments
-
-        #     st.title('Sentiment Analysis with BART')
-        #     # Choose a column
-        #     column = st.selectbox('Select a column for sentiment analysis', df.columns)
-        #     button = st.button("Submit")
-        #     if button:
-        #         # Classify sentiment
-        #         with st.spinner('Classifying sentiments...(takes 5-10 minutes, please wait).'):
-        #             df['Sentiment_by_BART'] = classify_with_progress(df, column)
-
-        #         # Display output
-        #         st.write(df[[column, 'Sentiment_by_BART']])
-
-        #     # Download the output as CSV
-        #     st.download_button("Download CSV with sentiments", df.to_csv(index=False), "sentiments.csv", "text/csv")
+        
 
 
 if __name__ == "__main__":
