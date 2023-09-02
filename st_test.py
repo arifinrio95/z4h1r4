@@ -1403,11 +1403,35 @@ def main():
     # st.write(
     #     '*Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.*'
     # )
-    st.subheader('Upload your CSV / Excel data:')
+    # st.subheader('Upload your CSV / Excel data:')
 
-    option = st.selectbox('Pilih sumber data:',
-                          ('Upload Your File', 'Iris (Dummy Data)',
-                           'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
+    # option = st.selectbox('Pilih sumber data:',
+    #                       ('Upload Your File', 'Iris (Dummy Data)',
+    #                        'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
+
+    # Menambahkan CSS untuk styling
+    st.markdown("""
+        <style>
+            .small-font {
+                font-size:12px !important;
+            }
+            .small-selectbox {
+                height: 30px !important;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    # Header
+    st.markdown("<h4 style='font-size:16px;'>Upload your CSV / Excel data:</h4>", unsafe_allow_html=True)
+    
+    # Selectbox dengan class CSS untuk ukuran kecil
+    option = st.selectbox(
+        '', 
+        ('Upload Your File', 'Iris (Dummy Data)', 'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'),
+        format_func=lambda x: "" if x == "" else x,
+        key="small_selectbox",
+        class_name="small-selectbox small-font"
+    )
 
     df = pd.DataFrame()
     # if 'df' not in st.session_state:
