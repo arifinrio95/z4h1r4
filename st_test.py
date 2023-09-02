@@ -2097,7 +2097,10 @@ def main():
                                          y=selected_columns[1], 
                                          z=selected_columns[2], 
                                          width=800, 
-                                         height=1200)
+                                         height=800,
+                                         marker=dict(size=6, 
+                                                line=dict(width=2,
+                                                color='black')))
                     st.plotly_chart(fig, use_container_width=True)
                 
                 elif len(selected_columns) >= 4:
