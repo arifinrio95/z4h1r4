@@ -2006,24 +2006,34 @@ def main():
 #     main()
 
 if __name__ == '__main__':
-    # Inisialisasi session state untuk df dan status upload jika belum ada
-    if 'df' not in st.session_state:
-        st.session_state.df = pd.DataFrame()
-    if 'uploaded' not in st.session_state:
-        st.session_state.uploaded = False
+    # # Inisialisasi session state untuk df dan status upload jika belum ada
+    # if 'df' not in st.session_state:
+    #     st.session_state.df = pd.DataFrame()
+    # if 'uploaded' not in st.session_state:
+    #     st.session_state.uploaded = False
     
-    # Jika DataFrame belum di-upload, tampilkan menu upload
-    if st.session_state.uploaded:
-        main()
-    else:
-        handle_file_upload()
-        
-
-    # # Cek apakah user sudah login atau belum
-    # if 'logged' not in st.session_state:
-    #     st.session_state.logged = False
-
-    # if st.session_state.logged:
+    # # Jika DataFrame belum di-upload, tampilkan menu upload
+    # if st.session_state.uploaded:
     #     main()
     # else:
-    #     login()
+    #     handle_file_upload()
+        
+
+    # Cek apakah user sudah login atau belum
+    if 'logged' not in st.session_state:
+        st.session_state.logged = False
+
+    if st.session_state.logged:
+        # Inisialisasi session state untuk df dan status upload jika belum ada
+        if 'df' not in st.session_state:
+            st.session_state.df = pd.DataFrame()
+        if 'uploaded' not in st.session_state:
+            st.session_state.uploaded = False
+        
+        # Jika DataFrame belum di-upload, tampilkan menu upload
+        if st.session_state.uploaded:
+            main()
+        else:
+            handle_file_upload()
+    else:
+        login()
