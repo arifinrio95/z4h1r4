@@ -1422,41 +1422,41 @@ def main():
     # st.write(
     #     '*Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.*'
     # )
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.subheader('Upload your CSV / Excel data:')
+    # col1, col2, col3 = st.columns([1, 2, 1])
+    # with col2:
+    #     st.subheader('Upload your CSV / Excel data:')
     
-        option = st.selectbox('Pilih sumber data:',
-                              ('Upload Your File', 'Iris (Dummy Data)',
-                               'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
+    #     option = st.selectbox('Pilih sumber data:',
+    #                           ('Upload Your File', 'Iris (Dummy Data)',
+    #                            'Tips (Dummy Data)', 'Titanic (Dummy Data)', 'Gap Minder (Dummy Data)', 'Explore Kaggle Dataset'))
 
-        df = pd.DataFrame()
-        # if 'df' not in st.session_state:
-        #     st.session_state.df = None
-        if option == 'Upload Your File':
-            file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
-            if file:
-                load_df = LoadDataframe(file)
-                # st.session_state.df = load_df.load_file_auto_delimiter()
-                try:
-                    df = load_df.load_file_auto_delimiter()
-                except:
-                    st.error("Mohon masukkan file csv atau 1 sheet excel dengan format tabel yang benar (terdiri dari nama kolom di row pertama dan value di row berikutnya).")
-        elif option == 'Explore Kaggle Dataset':
-            selected_dataset = st.selectbox("Pilih Dataset:", get_kaggle_datasets())
-            # Tombol untuk mengunduh dan menampilkan dataset
-            # if st.button("Load Dataset"):
-            st.write(f"Loading {selected_dataset}...")
-            # st.session_state.df = load_kaggle_dataset(selected_dataset)
-            try:
-                df = load_kaggle_dataset(selected_dataset)
-                st.success(f"Dataset {selected_dataset} berhasil dimuat!")
-                # st.dataframe(df)
-            except:
-                st.error(f"Dataset {selected_dataset} gagal dimuat!")
+    #     df = pd.DataFrame()
+    #     # if 'df' not in st.session_state:
+    #     #     st.session_state.df = None
+    #     if option == 'Upload Your File':
+    #         file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
+    #         if file:
+    #             load_df = LoadDataframe(file)
+    #             # st.session_state.df = load_df.load_file_auto_delimiter()
+    #             try:
+    #                 df = load_df.load_file_auto_delimiter()
+    #             except:
+    #                 st.error("Mohon masukkan file csv atau 1 sheet excel dengan format tabel yang benar (terdiri dari nama kolom di row pertama dan value di row berikutnya).")
+    #     elif option == 'Explore Kaggle Dataset':
+    #         selected_dataset = st.selectbox("Pilih Dataset:", get_kaggle_datasets())
+    #         # Tombol untuk mengunduh dan menampilkan dataset
+    #         # if st.button("Load Dataset"):
+    #         st.write(f"Loading {selected_dataset}...")
+    #         # st.session_state.df = load_kaggle_dataset(selected_dataset)
+    #         try:
+    #             df = load_kaggle_dataset(selected_dataset)
+    #             st.success(f"Dataset {selected_dataset} berhasil dimuat!")
+    #             # st.dataframe(df)
+    #         except:
+    #             st.error(f"Dataset {selected_dataset} gagal dimuat!")
     
-        else:
-            df = get_sample_data(option)
+    #     else:
+    #         df = get_sample_data(option)
 
     openai.api_key = st.secrets['user_api']
     kaggle_username = os.environ.get("KAGGLE_USERNAME")
