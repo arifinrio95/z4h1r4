@@ -102,12 +102,12 @@ def login():
     st.markdown('<div id="ulikdata">Ulikdata</div>', unsafe_allow_html=True)
     st.markdown("---")
 
-    col1, col2 = st.columns(2)
+    col1, col2, col 3 = st.columns(3)
 
     # Tambahkan gambar dari Google Drive di kolom pertama (col1)
-    col1.image(
-        'https://drive.google.com/uc?export=view&id=1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL',
-        use_column_width=True)
+    # col1.image(
+    #     'https://drive.google.com/uc?export=view&id=1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL',
+    #     use_column_width=True)
     # st.image('https://drive.google.com/uc?export=view&id=1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL', use_column_width=True)
     # https://drive.google.com/file/d/1Kzbvjj3M_HxcvPv-JJZaZUvvwi2ltGKL/view?usp=sharing
 
@@ -115,24 +115,34 @@ def login():
     with col2:
         st.markdown('<div class="login-bg">', unsafe_allow_html=True)
 
-        st.subheader("Welcome Back!")
-        username = st.text_input("User Name")
-        password = st.text_input("Password", type='password')
+        st.subheader("Enter your email that is registered on ulikdata.com")
+        username = st.text_input("email")
+        # password = st.text_input("Password", type='password')
 
-        hashed_pswd = make_hashes("test")
+        # st.write("If you haven't registered, please register for free at ulikdata.com")
+        st.markdown("[If you haven't registered, please register here!](https://www.ulikdata.com)")
 
-        if check_hashes(password, hashed_pswd):
+        # hashed_pswd = make_hashes("test")
+
+        if username = 'founder_super':
             st.session_state.logged = True
             st.experimental_rerun()
+            
+
+        # if check_hashes(password, hashed_pswd):
+        #     st.session_state.logged = True
+        #     st.experimental_rerun()
 
         if st.button("Login", key='login_button'):
-            if 'button_clicked' in st.session_state and st.session_state.button_clicked:
-                if check_hashes(password, hashed_pswd):
-                    st.session_state.logged = True
-                    st.experimental_rerun()
-            else:
-                st.session_state.button_clicked = True
+            if 'button_clicked' in st.session_state and st.session_state.logged:
+                st.session_state.logged = True
                 st.experimental_rerun()
+                # if check_hashes(password, hashed_pswd):
+                #     st.session_state.logged = True
+                #     st.experimental_rerun()
+            # else:
+            #     st.session_state.button_clicked = True
+            #     st.experimental_rerun()
 
         st.markdown('</div>', unsafe_allow_html=True)
 
