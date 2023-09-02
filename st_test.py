@@ -1535,7 +1535,7 @@ def main():
             st.session_state.classification = False
             st.session_state.vizz_tools = True
                                  
-        tabs = st.tabs(
+        tab_autovizz, tab_nlp, tab_auto_insight, tab_ml, tab_reco_vizz = st.tabs(
             ["Explore Visualization & Insight with UlikData",
              "Explore with Natural Language (Best for Data Visualization)",
              "Automatic Insight Generations (by UlikData x GPT) - Under Maintenance",
@@ -1544,407 +1544,407 @@ def main():
         )
 
         # if st.session_state.get('show_natural_language_exploration', False):
-        if tabs == "Explore Visualization & Insight with UlikData":
-            with tabs:
-                st.subheader("Natural Language Exploration")
-                input_pengguna = ""
-                style_choosen = 'Visualization'
-                input_pengguna = st.text_area(
-                    """Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
-                    value=
-                    "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
-                )
-                style_choosen = st.selectbox('Choose an Objective:',
-                                             ('Visualization', 'General Question'))
-    
-                if 'button_clicked' not in st.session_state:
-                    st.session_state.button_clicked = False
-    
-                button = st.button("Submit")
-                if button:
-                    st.session_state.button_clicked = True
-    
-                if (input_pengguna != "") & (
-                        input_pengguna != None) & st.session_state.button_clicked:
-                    st.session_state.button_clicked = True
-                    with st.spinner('Wait for it...'):
-                        script = request_prompt(input_pengguna, uploaded_file_path, schema_str,
-                                                rows_str, style_choosen, None,
-                                                None, 0)
-                        st.session_state['script'] = script
-                        # Membuat 2 kolom utama
-                        main_col1, main_col3 = st.columns(
-                            [2, 1])  # kolom pertama memiliki lebar 2x kolom kedua
-    
-                        # Membuat 2 sub-kolom di dalam main_col1
-                        sub_col1, sub_col2 = main_col1.columns(2)
-    
-                        with main_col1:  # Gunakan kolom utama pertama
-                            # st.subheader("Visualizations")
-                            if style_choosen == 'General Question':
-                                st.write(script)
-                            else:
-                                exec(str(script))
-    
-                        # button = st.button("Print Code")
-    
-                        # if button:
-                        #     # st.subheader("Streamlit Script")
-                        #     # st.text(script)
-                        #     st.subheader(f"{style_choosen} Script")
-                        #     if style_choosen == 'Plotly':
-                        #         st.text(
-                        #             convert_streamlit_to_plotly(
-                        #                 st.session_state['script']))
-                        #     elif style_choosen == 'Seaborn':
-                        #         st.text(
-                        #             convert_streamlit_to_python_seaborn(
-                        #                 st.session_state['script']))
-    
-                        input_pengguna = ""
+        # if tabs == "Explore Visualization & Insight with UlikData":
+        with tab_autovizz:
+            st.subheader("Natural Language Exploration")
+            input_pengguna = ""
+            style_choosen = 'Visualization'
+            input_pengguna = st.text_area(
+                """Masukkan perintah anda untuk mengolah data tersebut: (ex: 'Buatkan scatter plot antara kolom A dan B', 'Hitung korelasi antara semua kolom numerik')""",
+                value=
+                "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
+            )
+            style_choosen = st.selectbox('Choose an Objective:',
+                                         ('Visualization', 'General Question'))
+
+            if 'button_clicked' not in st.session_state:
+                st.session_state.button_clicked = False
+
+            button = st.button("Submit")
+            if button:
+                st.session_state.button_clicked = True
+
+            if (input_pengguna != "") & (
+                    input_pengguna != None) & st.session_state.button_clicked:
+                st.session_state.button_clicked = True
+                with st.spinner('Wait for it...'):
+                    script = request_prompt(input_pengguna, uploaded_file_path, schema_str,
+                                            rows_str, style_choosen, None,
+                                            None, 0)
+                    st.session_state['script'] = script
+                    # Membuat 2 kolom utama
+                    main_col1, main_col3 = st.columns(
+                        [2, 1])  # kolom pertama memiliki lebar 2x kolom kedua
+
+                    # Membuat 2 sub-kolom di dalam main_col1
+                    sub_col1, sub_col2 = main_col1.columns(2)
+
+                    with main_col1:  # Gunakan kolom utama pertama
+                        # st.subheader("Visualizations")
+                        if style_choosen == 'General Question':
+                            st.write(script)
+                        else:
+                            exec(str(script))
+
+                    # button = st.button("Print Code")
+
+                    # if button:
+                    #     # st.subheader("Streamlit Script")
+                    #     # st.text(script)
+                    #     st.subheader(f"{style_choosen} Script")
+                    #     if style_choosen == 'Plotly':
+                    #         st.text(
+                    #             convert_streamlit_to_plotly(
+                    #                 st.session_state['script']))
+                    #     elif style_choosen == 'Seaborn':
+                    #         st.text(
+                    #             convert_streamlit_to_python_seaborn(
+                    #                 st.session_state['script']))
+
+                    input_pengguna = ""
 
         # if st.session_state.get('story_telling', False):
-        elif tabs == "Explore with Natural Language (Best for Data Visualization)":
-            with tabs:
-                st.title("Automated Insights by Ulikdata")
-    
-                st.markdown("""
-                <style>
-                    .reportview-container .markdown-text-container {
-                        font-family: monospace;
-                        background-color: #fafafa;
-                        max-width: 700px;
-                        padding-right:50px;
-                        padding-left:50px;
-                    }
-                </style>
-                """,
-                            unsafe_allow_html=True)
-                # dict_stats = analyze_dataframe(df)
-                # # st.write("Temporary showing, under review....")
-                # # st.write(dict_stats)
-                # # for i in dict_stats:
-                # #     st.markdown(request_story_prompt(i))
-                # with st.spinner('Generating visualizations...'):
-                #     input_pengguna = "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
-                #     script = (input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
-                #     # st.subheader("Visualizations")
-                #     exec(str(script))
-                # st.subheader("Insights")
-                # with st.spinner('Generating insights...'):
-    
-                #     st.markdown(request_story_prompt(dict_stats))
-    
-                min_viz = st.selectbox('Expected number of insights:',
-                                       [3, 4, 5, 6, 7, 8, 9, 10])
-                # min_viz = st.slider('Expected number of insights:', min_value=3, max_value=50)
-    
-                style_choosen = 'Plotly'
-                style_choosen = st.selectbox(
-                    'Choose a Visualization Style:',
-                    ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
-                api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
-    
-                button = st.button("Submit")
-                if button:
-                    # Membagi respons berdasarkan tanda awal dan akhir kode
-                    with st.spinner(
-                            'Generating insights...(it may takes 1-2 minutes)'):
-                        response = request_story_prompt(schema_str, rows_str,
-                                                        min_viz, api_model,
-                                                        style_choosen)
-                        # st.text(response)
-                        # Extracting the introductions
-                        # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
-                        # pattern = r'st.write\("Insight \d+: (.+?)"\)'
-                        pattern = r'# Insight \d+: (.+?)\n'
-    
-                        introductions = re.findall(pattern, response)
-    
-                        # Printing the extracted introductions
-                        # for intro in introductions:
-                        #     print(intro)
-    
-                        # Saving the introductions to a list
-                        introduction_list = list(introductions)
-                        introduction_list = [
-                            "Analyze the " + s for s in introduction_list
-                        ]
-    
-                        # st.text(introduction_list)
-                        # for query in introduction_list:
-                        #     st.write(get_answer_csv(df, query))
-    
-                        def execute_streamlit_code_with_explanations(
-                                response, introduction_list):
-                            # Split kode berdasarkan st.plotly_chart()
-                            code_segments = response.split('st.plotly_chart(')
-    
-                            modified_code = code_segments[
-                                0]  # Bagian kode sebelum plot pertama
-    
-                            progress_bar = st.progress(0)
-                            for index, segment in enumerate(code_segments[1:]):
-                                # Dapatkan penjelasan untuk segment ini
-                                if index < len(introduction_list):
-                                    explanation = get_answer_csv(
-                                        uploaded_file_path,
-                                        introduction_list[index])
-                                    modified_code += f'\nst.write("{explanation}")\n'
-    
-                                # Tambahkan st.plotly_chart kembali
-                                modified_code += 'st.plotly_chart(' + segment
-    
-                                # Update progress bar
-                                progress_percentage = (index + 1) / len(
-                                    code_segments[1:])
-                                progress_bar.progress(progress_percentage)
-    
-                            # st.code(modified_code)
-                            # Eksekusi kode yang telah dimodifikasi
-                            exec(modified_code)
-    
-                        # execute_streamlit_code_with_explanations(response, introduction_list)
-    
-                        segments = response.split("BEGIN_CODE")
-                        segment_iterator = iter(segments)
-                        for segment in segment_iterator:
-                            # Jika ada kode dalam segmen ini
-                            if "END_CODE" in segment:
-                                code_end = segment.index("END_CODE")
-                                code = segment[:code_end].strip()
-                                explanation = segment[code_end +
-                                                      len("END_CODE"):].strip()
-                                explanation = explanation.replace('"', '\\"')
-    
-                                # Coba eksekusi kode
-                                # try:
-                                # st.code(code)  # Tampilkan kode dalam format kode
-                                # execute_streamlit_code_with_explanations(code, introduction_list)
-                                exec(code)
-                                # st.write("Hasil eksekusi kode:")
-                                # st.write(output)
-                                # except Exception as e:
-                                #     st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
-                                #     st.write(str(e))
-                                # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
-                                # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
-    
-                                # Tampilkan teks penjelasan
-                                if explanation:
-                                    st.write(explanation)
-                            else:
-                                # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                                st.write(segment)
-                        # st.write("For Developer Maintenance Purposed (will remove)")
-                        # st.text(response)
-                        # st.text(introduction_list)
-    
-                # st.text(request_story_prompt(analyze_dataframe(df)))
-                # visualize_analysis(dict_stats)
+        # elif tabs == "Explore with Natural Language (Best for Data Visualization)":
+        with tab_nlp:
+            st.title("Automated Insights by Ulikdata")
+
+            st.markdown("""
+            <style>
+                .reportview-container .markdown-text-container {
+                    font-family: monospace;
+                    background-color: #fafafa;
+                    max-width: 700px;
+                    padding-right:50px;
+                    padding-left:50px;
+                }
+            </style>
+            """,
+                        unsafe_allow_html=True)
+            # dict_stats = analyze_dataframe(df)
+            # # st.write("Temporary showing, under review....")
+            # # st.write(dict_stats)
+            # # for i in dict_stats:
+            # #     st.markdown(request_story_prompt(i))
+            # with st.spinner('Generating visualizations...'):
+            #     input_pengguna = "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
+            #     script = (input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
+            #     # st.subheader("Visualizations")
+            #     exec(str(script))
+            # st.subheader("Insights")
+            # with st.spinner('Generating insights...'):
+
+            #     st.markdown(request_story_prompt(dict_stats))
+
+            min_viz = st.selectbox('Expected number of insights:',
+                                   [3, 4, 5, 6, 7, 8, 9, 10])
+            # min_viz = st.slider('Expected number of insights:', min_value=3, max_value=50)
+
+            style_choosen = 'Plotly'
+            style_choosen = st.selectbox(
+                'Choose a Visualization Style:',
+                ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
+            api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+
+            button = st.button("Submit")
+            if button:
+                # Membagi respons berdasarkan tanda awal dan akhir kode
+                with st.spinner(
+                        'Generating insights...(it may takes 1-2 minutes)'):
+                    response = request_story_prompt(schema_str, rows_str,
+                                                    min_viz, api_model,
+                                                    style_choosen)
+                    # st.text(response)
+                    # Extracting the introductions
+                    # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
+                    # pattern = r'st.write\("Insight \d+: (.+?)"\)'
+                    pattern = r'# Insight \d+: (.+?)\n'
+
+                    introductions = re.findall(pattern, response)
+
+                    # Printing the extracted introductions
+                    # for intro in introductions:
+                    #     print(intro)
+
+                    # Saving the introductions to a list
+                    introduction_list = list(introductions)
+                    introduction_list = [
+                        "Analyze the " + s for s in introduction_list
+                    ]
+
+                    # st.text(introduction_list)
+                    # for query in introduction_list:
+                    #     st.write(get_answer_csv(df, query))
+
+                    def execute_streamlit_code_with_explanations(
+                            response, introduction_list):
+                        # Split kode berdasarkan st.plotly_chart()
+                        code_segments = response.split('st.plotly_chart(')
+
+                        modified_code = code_segments[
+                            0]  # Bagian kode sebelum plot pertama
+
+                        progress_bar = st.progress(0)
+                        for index, segment in enumerate(code_segments[1:]):
+                            # Dapatkan penjelasan untuk segment ini
+                            if index < len(introduction_list):
+                                explanation = get_answer_csv(
+                                    uploaded_file_path,
+                                    introduction_list[index])
+                                modified_code += f'\nst.write("{explanation}")\n'
+
+                            # Tambahkan st.plotly_chart kembali
+                            modified_code += 'st.plotly_chart(' + segment
+
+                            # Update progress bar
+                            progress_percentage = (index + 1) / len(
+                                code_segments[1:])
+                            progress_bar.progress(progress_percentage)
+
+                        # st.code(modified_code)
+                        # Eksekusi kode yang telah dimodifikasi
+                        exec(modified_code)
+
+                    # execute_streamlit_code_with_explanations(response, introduction_list)
+
+                    segments = response.split("BEGIN_CODE")
+                    segment_iterator = iter(segments)
+                    for segment in segment_iterator:
+                        # Jika ada kode dalam segmen ini
+                        if "END_CODE" in segment:
+                            code_end = segment.index("END_CODE")
+                            code = segment[:code_end].strip()
+                            explanation = segment[code_end +
+                                                  len("END_CODE"):].strip()
+                            explanation = explanation.replace('"', '\\"')
+
+                            # Coba eksekusi kode
+                            # try:
+                            # st.code(code)  # Tampilkan kode dalam format kode
+                            # execute_streamlit_code_with_explanations(code, introduction_list)
+                            exec(code)
+                            # st.write("Hasil eksekusi kode:")
+                            # st.write(output)
+                            # except Exception as e:
+                            #     st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
+                            #     st.write(str(e))
+                            # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
+                            # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
+
+                            # Tampilkan teks penjelasan
+                            if explanation:
+                                st.write(explanation)
+                        else:
+                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                            st.write(segment)
+                    # st.write("For Developer Maintenance Purposed (will remove)")
+                    # st.text(response)
+                    # st.text(introduction_list)
+
+            # st.text(request_story_prompt(analyze_dataframe(df)))
+            # visualize_analysis(dict_stats)
 
         # if st.session_state.get('classification', False):
-        elif tabs == "Machine Learning (Classification Model)":
-            with tabs:
-                st.title("Machine Learning Modeling")
-                # Data cleansing options
-                # Check for missing values
-                if df.isnull().sum().sum() > 0:
-                    st.warning("Warning: Dataset contains missing values!")
-                    missing_stats = pd.DataFrame(df.isnull().sum(),
-                                                 columns=["Missing Values"])
-                    missing_stats["Percentage"] = (
-                        missing_stats["Missing Values"] / len(df)) * 100
-                    st.write(missing_stats[missing_stats["Missing Values"] > 0])
-    
-                    # Data cleansing options for each column
-                    st.subheader("Data Cleansing Options for Each Column")
-    
-                    for col in df.columns:
-                        if df[col].isnull().sum() > 0:
-                            st.markdown(f"### {col}")
-    
-                            if df[col].dtype in ['int64', 'float64']:
-                                # Numerical column
-                                missing_option = st.selectbox(
-                                    f"How to handle missing values for {col}?", [
-                                        "Do Nothing", "Drop Rows",
-                                        "Fill with Mean", "Fill with Median",
-                                        "Fill with Mode"
-                                    ])
-                                if missing_option == "Drop Rows":
-                                    df.dropna(subset=[col], inplace=True)
-                                elif missing_option == "Fill with Mean":
-                                    df[col].fillna(df[col].mean(), inplace=True)
-                                elif missing_option == "Fill with Median":
-                                    df[col].fillna(df[col].median(), inplace=True)
-                                elif missing_option == "Fill with Mode":
-                                    df[col].fillna(df[col].mode().iloc[0],
-                                                   inplace=True)
-                            else:
-                                # Categorical column
-                                missing_option = st.selectbox(
-                                    f"How to handle missing values for {col}?",
-                                    ["Do Nothing", "Drop Rows", "Fill with Mode"])
-                                if missing_option == "Drop Rows":
-                                    df.dropna(subset=[col], inplace=True)
-                                elif missing_option == "Fill with Mode":
-                                    df[col].fillna(df[col].mode().iloc[0],
-                                                   inplace=True)
-    
-                else:
-                    st.success("Data tidak mengandung missing values.")
-    
-                # One-hot encoding for categorical columns
-                one_hot_encode = st.checkbox("One-hot encode categorical columns?")
-                if one_hot_encode:
-                    df = pd.get_dummies(df, drop_first=True)
-    
-                # Normalize data
-                normalize = st.checkbox("Normalize data?")
-                if normalize:
-                    normalization_method = st.selectbox(
-                        "Choose normalization method:",
-                        ["Min-Max Scaling", "Z-score Normalization"])
-    
-                    numerical_cols = df.select_dtypes(
-                        include=['int64', 'float64']).columns
-                    cols_to_normalize = st.multiselect(
-                        "Select numerical columns to normalize:",
-                        options=numerical_cols,
-                        default=list(numerical_cols))
-    
-                    if normalization_method == "Min-Max Scaling":
-                        scaler = MinMaxScaler()
-                        df[cols_to_normalize] = scaler.fit_transform(
-                            df[cols_to_normalize])
-                    elif normalization_method == "Z-score Normalization":
-                        mean = df[cols_to_normalize].mean()
-                        std = df[cols_to_normalize].std()
-                        df[cols_to_normalize] = (df[cols_to_normalize] -
-                                                 mean) / std
-    
-                st.write(df.head())
-    
-                # Select target column
-                target_column = st.selectbox("Select the target column",
-                                             df.columns)
-    
-                # Select feature columns
-                # numerical_cols = df.select_dtypes(include=['int64', 'float64']).columns
-                feature_columns = st.multiselect(
-                    "Select the feature columns",
-                    df.select_dtypes(include=['int64', 'float64']).columns,
-                    default=df.select_dtypes(
-                        include=['int64', 'float64']).columns[df.select_dtypes(
-                            include=['int64', 'float64']).columns != target_column]
-                    .tolist())
-                features = df[feature_columns]
-                target = df[target_column]
-    
-                # Split dataset
-                test_size = st.slider("Select test size (fraction)", 0.1, 0.9,
-                                      0.25, 0.05)
-                X_train, X_test, y_train, y_test = train_test_split(
-                    features, target, test_size=test_size, random_state=42)
-    
-                # Select models for LazyPredict
-                # available_classifiers = [
-                #     "LinearSVC", "SGDClassifier", "MLPClassifier", "Perceptron", "LogisticRegression",
-                #     "LogisticRegressionCV", "SVC", "CalibratedClassifierCV", "PassiveAggressiveClassifier",
-                #     "LabelPropagation", "LabelSpreading", "RandomForestClassifier", "GradientBoostingClassifier",
-                #     "QuadraticDiscriminantAnalysis", "HistGradientBoostingClassifier", "RidgeClassifierCV",
-                #     "RidgeClassifier", "AdaBoostClassifier", "ExtraTreesClassifier", "KNeighborsClassifier",
-                #     "BaggingClassifier", "BernoulliNB", "LinearDiscriminantAnalysis", "GaussianNB", "NuSVC",
-                #     "DecisionTreeClassifier", "NearestCentroid", "ExtraTreeClassifier", "CheckingClassifier", "DummyClassifier"
-                # ]
-    
-                # selected_classifiers = st.multiselect("Select classification models to compare:", options=available_classifiers, default=['GaussianNB','LogisticRegression','DecisionTreeClassifier','RandomForestClassifier','GradientBoostingClassifier','AdaBoostClassifier'])
-    
-                # Run LazyPredict
-                if st.button("Run LazyPredict"):
-                    with st.spinner('Running LazyPredict...'):
-                        results = run_lazy_predict(X_train, X_test, y_train,
-                                                   y_test)
-                        st.write(results)
+        # elif tabs == "Machine Learning (Classification Model)":
+        with tab_ml:
+            st.title("Machine Learning Modeling")
+            # Data cleansing options
+            # Check for missing values
+            if df.isnull().sum().sum() > 0:
+                st.warning("Warning: Dataset contains missing values!")
+                missing_stats = pd.DataFrame(df.isnull().sum(),
+                                             columns=["Missing Values"])
+                missing_stats["Percentage"] = (
+                    missing_stats["Missing Values"] / len(df)) * 100
+                st.write(missing_stats[missing_stats["Missing Values"] > 0])
+
+                # Data cleansing options for each column
+                st.subheader("Data Cleansing Options for Each Column")
+
+                for col in df.columns:
+                    if df[col].isnull().sum() > 0:
+                        st.markdown(f"### {col}")
+
+                        if df[col].dtype in ['int64', 'float64']:
+                            # Numerical column
+                            missing_option = st.selectbox(
+                                f"How to handle missing values for {col}?", [
+                                    "Do Nothing", "Drop Rows",
+                                    "Fill with Mean", "Fill with Median",
+                                    "Fill with Mode"
+                                ])
+                            if missing_option == "Drop Rows":
+                                df.dropna(subset=[col], inplace=True)
+                            elif missing_option == "Fill with Mean":
+                                df[col].fillna(df[col].mean(), inplace=True)
+                            elif missing_option == "Fill with Median":
+                                df[col].fillna(df[col].median(), inplace=True)
+                            elif missing_option == "Fill with Mode":
+                                df[col].fillna(df[col].mode().iloc[0],
+                                               inplace=True)
+                        else:
+                            # Categorical column
+                            missing_option = st.selectbox(
+                                f"How to handle missing values for {col}?",
+                                ["Do Nothing", "Drop Rows", "Fill with Mode"])
+                            if missing_option == "Drop Rows":
+                                df.dropna(subset=[col], inplace=True)
+                            elif missing_option == "Fill with Mode":
+                                df[col].fillna(df[col].mode().iloc[0],
+                                               inplace=True)
+
+            else:
+                st.success("Data tidak mengandung missing values.")
+
+            # One-hot encoding for categorical columns
+            one_hot_encode = st.checkbox("One-hot encode categorical columns?")
+            if one_hot_encode:
+                df = pd.get_dummies(df, drop_first=True)
+
+            # Normalize data
+            normalize = st.checkbox("Normalize data?")
+            if normalize:
+                normalization_method = st.selectbox(
+                    "Choose normalization method:",
+                    ["Min-Max Scaling", "Z-score Normalization"])
+
+                numerical_cols = df.select_dtypes(
+                    include=['int64', 'float64']).columns
+                cols_to_normalize = st.multiselect(
+                    "Select numerical columns to normalize:",
+                    options=numerical_cols,
+                    default=list(numerical_cols))
+
+                if normalization_method == "Min-Max Scaling":
+                    scaler = MinMaxScaler()
+                    df[cols_to_normalize] = scaler.fit_transform(
+                        df[cols_to_normalize])
+                elif normalization_method == "Z-score Normalization":
+                    mean = df[cols_to_normalize].mean()
+                    std = df[cols_to_normalize].std()
+                    df[cols_to_normalize] = (df[cols_to_normalize] -
+                                             mean) / std
+
+            st.write(df.head())
+
+            # Select target column
+            target_column = st.selectbox("Select the target column",
+                                         df.columns)
+
+            # Select feature columns
+            # numerical_cols = df.select_dtypes(include=['int64', 'float64']).columns
+            feature_columns = st.multiselect(
+                "Select the feature columns",
+                df.select_dtypes(include=['int64', 'float64']).columns,
+                default=df.select_dtypes(
+                    include=['int64', 'float64']).columns[df.select_dtypes(
+                        include=['int64', 'float64']).columns != target_column]
+                .tolist())
+            features = df[feature_columns]
+            target = df[target_column]
+
+            # Split dataset
+            test_size = st.slider("Select test size (fraction)", 0.1, 0.9,
+                                  0.25, 0.05)
+            X_train, X_test, y_train, y_test = train_test_split(
+                features, target, test_size=test_size, random_state=42)
+
+            # Select models for LazyPredict
+            # available_classifiers = [
+            #     "LinearSVC", "SGDClassifier", "MLPClassifier", "Perceptron", "LogisticRegression",
+            #     "LogisticRegressionCV", "SVC", "CalibratedClassifierCV", "PassiveAggressiveClassifier",
+            #     "LabelPropagation", "LabelSpreading", "RandomForestClassifier", "GradientBoostingClassifier",
+            #     "QuadraticDiscriminantAnalysis", "HistGradientBoostingClassifier", "RidgeClassifierCV",
+            #     "RidgeClassifier", "AdaBoostClassifier", "ExtraTreesClassifier", "KNeighborsClassifier",
+            #     "BaggingClassifier", "BernoulliNB", "LinearDiscriminantAnalysis", "GaussianNB", "NuSVC",
+            #     "DecisionTreeClassifier", "NearestCentroid", "ExtraTreeClassifier", "CheckingClassifier", "DummyClassifier"
+            # ]
+
+            # selected_classifiers = st.multiselect("Select classification models to compare:", options=available_classifiers, default=['GaussianNB','LogisticRegression','DecisionTreeClassifier','RandomForestClassifier','GradientBoostingClassifier','AdaBoostClassifier'])
+
+            # Run LazyPredict
+            if st.button("Run LazyPredict"):
+                with st.spinner('Running LazyPredict...'):
+                    results = run_lazy_predict(X_train, X_test, y_train,
+                                               y_test)
+                    st.write(results)
 
         # if st.session_state.get('vizz_tools', False):
-        elif tabs == "Testing BI Tools (under development)":
-            with tabs:
-                st.subheader("Recomender Visualization")
-                # Sidebar kiri atas: Radio button untuk memilih kolom
-                # selected_columns = st.sidebar.multiselect("Select columns to visualize", df.columns)
-                # Inisialisasi state jika belum ada
-                if 'selected_columns' not in st.session_state:
-                    st.session_state.selected_columns = []
-                
-                # Sidebar kiri atas: Radio button untuk memilih kolom
-                for col in df.columns:
-                    is_selected = st.sidebar.checkbox(f"Select {col}", value=col in st.session_state.selected_columns)
-                    if is_selected:
-                        if col not in st.session_state.selected_columns:
-                            st.session_state.selected_columns.append(col)
-                    else:
-                        if col in st.session_state.selected_columns:
-                            st.session_state.selected_columns.remove(col)
-    
-                
-                # Sidebar kiri bawah: Pilihan agregasi
-                if len(st.session_state.selected_columns) > 0:
-                    numeric_cols = [col for col in st.session_state.selected_columns if pd.api.types.is_numeric_dtype(df[col])]
-                    if len(numeric_cols) > 0:
-                        aggregation = st.sidebar.selectbox("Select aggregation for numeric columns", ["sum", "count", "mean", "median"])
-                
-                # Main content
-                st.title('Data Visualization')
-                
-                # Fungsi untuk mendeteksi tipe data
-                def detect_dtype(column):
-                    return 'numeric' if pd.api.types.is_numeric_dtype(df[column]) else 'categorical'
-                
-                # Visualisasi sesuai dengan jumlah dan tipe kolom yang dipilih
-                if len(st.session_state.selected_columns) == 1:
-                    col = st.session_state.selected_columns[0]
-                    if detect_dtype(col) == 'numeric':
-                        st.write(px.histogram(df, x=col))
-                    else:
-                        st.write(px.bar(df, x=col))
-                
-                elif len(st.session_state.selected_columns) == 2:
-                    col1, col2 = st.session_state.selected_columns
-                    if detect_dtype(col1) == 'numeric' and detect_dtype(col2) == 'numeric':
-                        st.write(px.scatter(df, x=col1, y=col2))
-                    else:
-                        st.write(px.bar(df, x=col1, y=col2))
-                
-                elif len(st.session_state.selected_columns) == 3:
-                    col1, col2, col3 = st.session_state.selected_columns
-                    # Anda bisa menambahkan logika lain di sini
-                    st.write(px.scatter_3d(df, x=col1, y=col2, z=col3))
-                
-                elif len(st.session_state.selected_columns) == 4:
-                    col1, col2, col3, col4 = st.session_state.selected_columns
-                    
-                    # Mendeteksi tipe data untuk setiap kolom
-                    types = [detect_dtype(col) for col in st.session_state.selected_columns]
-                    
-                    if types.count('numeric') == 4:
-                        # Semua kolom numerik: gunakan kolom ke-4 sebagai ukuran poin ('size')
-                        st.write(px.scatter(df, x=col1, y=col2, color=col3, size=col4))
-                        
-                    elif types.count('categorical') >= 1:
-                        # Ada setidaknya satu kolom kategorikal: gunakan sebagai 'hue'
-                        categorical_col = [col for col, dtype in zip(st.session_state.selected_columns, types) if dtype == 'categorical'][0]
-                        numeric_cols = [col for col in st.session_state.selected_columns if col != categorical_col]
-                        st.write(px.scatter(df, x=numeric_cols[0], y=numeric_cols[1], color=categorical_col, size=numeric_cols[2]))
-                        
-                    else:
-                        st.write("Visualisasi untuk kombinasi ini belum diimplementasikan.")
-    
-                
+        # elif tabs == "Testing BI Tools (under development)":
+        with tab_reco_vizz:
+            st.subheader("Recomender Visualization")
+            # Sidebar kiri atas: Radio button untuk memilih kolom
+            # selected_columns = st.sidebar.multiselect("Select columns to visualize", df.columns)
+            # Inisialisasi state jika belum ada
+            if 'selected_columns' not in st.session_state:
+                st.session_state.selected_columns = []
+            
+            # Sidebar kiri atas: Radio button untuk memilih kolom
+            for col in df.columns:
+                is_selected = st.sidebar.checkbox(f"Select {col}", value=col in st.session_state.selected_columns)
+                if is_selected:
+                    if col not in st.session_state.selected_columns:
+                        st.session_state.selected_columns.append(col)
                 else:
-                    st.write("Displaying raw data:")
-                    st.write(df[st.session_state.selected_columns])
+                    if col in st.session_state.selected_columns:
+                        st.session_state.selected_columns.remove(col)
+
+            
+            # Sidebar kiri bawah: Pilihan agregasi
+            if len(st.session_state.selected_columns) > 0:
+                numeric_cols = [col for col in st.session_state.selected_columns if pd.api.types.is_numeric_dtype(df[col])]
+                if len(numeric_cols) > 0:
+                    aggregation = st.sidebar.selectbox("Select aggregation for numeric columns", ["sum", "count", "mean", "median"])
+            
+            # Main content
+            st.title('Data Visualization')
+            
+            # Fungsi untuk mendeteksi tipe data
+            def detect_dtype(column):
+                return 'numeric' if pd.api.types.is_numeric_dtype(df[column]) else 'categorical'
+            
+            # Visualisasi sesuai dengan jumlah dan tipe kolom yang dipilih
+            if len(st.session_state.selected_columns) == 1:
+                col = st.session_state.selected_columns[0]
+                if detect_dtype(col) == 'numeric':
+                    st.write(px.histogram(df, x=col))
+                else:
+                    st.write(px.bar(df, x=col))
+            
+            elif len(st.session_state.selected_columns) == 2:
+                col1, col2 = st.session_state.selected_columns
+                if detect_dtype(col1) == 'numeric' and detect_dtype(col2) == 'numeric':
+                    st.write(px.scatter(df, x=col1, y=col2))
+                else:
+                    st.write(px.bar(df, x=col1, y=col2))
+            
+            elif len(st.session_state.selected_columns) == 3:
+                col1, col2, col3 = st.session_state.selected_columns
+                # Anda bisa menambahkan logika lain di sini
+                st.write(px.scatter_3d(df, x=col1, y=col2, z=col3))
+            
+            elif len(st.session_state.selected_columns) == 4:
+                col1, col2, col3, col4 = st.session_state.selected_columns
+                
+                # Mendeteksi tipe data untuk setiap kolom
+                types = [detect_dtype(col) for col in st.session_state.selected_columns]
+                
+                if types.count('numeric') == 4:
+                    # Semua kolom numerik: gunakan kolom ke-4 sebagai ukuran poin ('size')
+                    st.write(px.scatter(df, x=col1, y=col2, color=col3, size=col4))
+                    
+                elif types.count('categorical') >= 1:
+                    # Ada setidaknya satu kolom kategorikal: gunakan sebagai 'hue'
+                    categorical_col = [col for col, dtype in zip(st.session_state.selected_columns, types) if dtype == 'categorical'][0]
+                    numeric_cols = [col for col in st.session_state.selected_columns if col != categorical_col]
+                    st.write(px.scatter(df, x=numeric_cols[0], y=numeric_cols[1], color=categorical_col, size=numeric_cols[2]))
+                    
+                else:
+                    st.write("Visualisasi untuk kombinasi ini belum diimplementasikan.")
+
+            
+            else:
+                st.write("Displaying raw data:")
+                st.write(df[st.session_state.selected_columns])
                 
         # if st.session_state.get('sentiment', False):
         #     with st.spinner('Downloading the pretrained model...'):
