@@ -113,14 +113,7 @@ def login():
     st.markdown('<div id="ulikdata">Ulikdata</div>', unsafe_allow_html=True)
     st.markdown("---")
 
-    # Establish a connection to the database
-    connection = psycopg2.connect(
-        host="172.104.32.208",
-        port="3768",
-        database="public",
-        user=st.secrets['user_db'],
-        password=st.secrets['pass_db']
-    )
+    
 
     col1, col2, col3 = st.columns(3)
 
@@ -143,6 +136,15 @@ def login():
         st.markdown("[If you haven't registered, please register here!](https://www.ulikdata.com)")
 
         # hashed_pswd = make_hashes("test")
+
+        # Establish a connection to the database
+        connection = psycopg2.connect(
+            host="172.104.32.208",
+            port="3768",
+            database="public",
+            user=st.secrets['user_db'],
+            password=st.secrets['pass_db']
+        )
 
         # Membuat kursor
         cursor = connection.cursor()
