@@ -2097,7 +2097,7 @@ def main():
                                          y=selected_columns[1], 
                                          z=selected_columns[2], 
                                          width=800, 
-                                         height=600)
+                                         height=1200)
                     st.plotly_chart(fig, use_container_width=True)
                 
                 elif len(selected_columns) >= 4:
