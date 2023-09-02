@@ -1424,8 +1424,8 @@ def main():
         df.to_csv("temp_file.csv", index=False)
         uploaded_file_path = "temp_file.csv"
 
-        st.write("Sample Top 5 Rows")
-        st.dataframe(df.head())
+        # st.write("Sample Top 5 Rows")
+        # st.dataframe(df.head())
         dataviz = DataViz(df)
 
         # Hide dulu karna kayanya makan tempat banget.
