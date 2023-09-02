@@ -1545,7 +1545,7 @@ def main():
 
         # if st.session_state.get('show_natural_language_exploration', False):
         # if tabs == "Explore Visualization & Insight with UlikData":
-        with tab_autovizz:
+        with tab_nlp:
             st.subheader("Natural Language Exploration")
             input_pengguna = ""
             style_choosen = 'Visualization'
@@ -1605,7 +1605,7 @@ def main():
 
         # if st.session_state.get('story_telling', False):
         # elif tabs == "Explore with Natural Language (Best for Data Visualization)":
-        with tab_nlp:
+        with tab_auto_insight:
             st.title("Automated Insights by Ulikdata")
 
             st.markdown("""
