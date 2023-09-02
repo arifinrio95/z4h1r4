@@ -124,7 +124,7 @@ def login():
 
         # hashed_pswd = make_hashes("test")
 
-        if username = 'founder_super':
+        if username == 'founder_super':
             st.session_state.logged = True
             st.experimental_rerun()
             
