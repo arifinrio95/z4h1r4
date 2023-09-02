@@ -58,6 +58,17 @@ import hashlib
 
 from kaggle.api.kaggle_api_extended import KaggleApi
 
+import psycopg2
+
+# Establish a connection to the database
+connection = psycopg2.connect(
+    host="172.104.32.208",
+    port="3768",
+    database="public",
+    user=st.secrets['user_db'],
+    password=st.secrets['pass_db']
+)
+
 
 # Fungsi untuk mengenkripsi password
 def make_hashes(password):
@@ -116,7 +127,7 @@ def login():
         st.markdown('<div class="login-bg">', unsafe_allow_html=True)
 
         st.subheader("Enter your email that is registered on ulikdata.com")
-        username = st.text_input("email")
+        usermail = st.text_input("email")
         # password = st.text_input("Password", type='password')
 
         # st.write("If you haven't registered, please register for free at ulikdata.com")
@@ -124,7 +135,17 @@ def login():
 
         # hashed_pswd = make_hashes("test")
 
-        if username == 'founder_super':
+        # Menjalankan query SQL untuk mengecek keberadaan email
+        cursor.execute("SELECT EXISTS(SELECT 1 FROM account WHERE email = %s)", (usermail,))
+        
+        # Mengambil hasil query
+        exists = cursor.fetchone()[0]
+        
+        # Menutup kursor dan koneksi
+        cursor.close()
+        connection.close()
+
+        if exists == True:
             st.session_state.logged = True
             st.experimental_rerun()
         else:
