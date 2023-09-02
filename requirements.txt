@@ -35,3 +35,4 @@ lazypredict
 nltk
 category_encoders
 kaggle
+psycopg2
