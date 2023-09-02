@@ -1384,25 +1384,25 @@ def main():
     import warnings
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.image(
-        'https://drive.google.com/uc?export=view&id=1cgBcbwB7uTAJHaoe80XHQWuPdIyqj38v',
-        use_column_width=True)
+    # st.image(
+    #     'https://drive.google.com/uc?export=view&id=1cgBcbwB7uTAJHaoe80XHQWuPdIyqj38v',
+    #     use_column_width=True)
 
     # st.title('Personal Data Analysis by Datasans')
     # st.write('Beta Access.')
-    st.write(
-        """Our web app offers a cutting-edge solution for automatic data exploration, allowing users to dive into their data using natural language commands. 
-                Through integrated Natural Language Processing (NLP) capabilities, users can easily query and analyze their data as if chatting with a data expert."""
-    )
-    st.write(
-        """Beyond manual exploration, the app autonomously identifies and presents valuable insights from the data, 
-                making the process both efficient and intuitive for the end user."""
-    )
-    st.write('')
-    st.write('')
-    st.write(
-        '*Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.*'
-    )
+    # st.write(
+    #     """Our web app offers a cutting-edge solution for automatic data exploration, allowing users to dive into their data using natural language commands. 
+    #             Through integrated Natural Language Processing (NLP) capabilities, users can easily query and analyze their data as if chatting with a data expert."""
+    # )
+    # st.write(
+    #     """Beyond manual exploration, the app autonomously identifies and presents valuable insights from the data, 
+    #             making the process both efficient and intuitive for the end user."""
+    # )
+    # st.write('')
+    # st.write('')
+    # st.write(
+    #     '*Beta access diberikan kepada beberapa user sebelum perilisan resmi, mohon digunakan dan berikan input melalui DM akun IG @datasans.book jika ada error atau fitur yang kurang sempurna.*'
+    # )
     st.subheader('Upload your CSV / Excel data:')
 
     option = st.selectbox('Pilih sumber data:',
