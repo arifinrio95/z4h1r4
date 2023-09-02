@@ -160,7 +160,7 @@ def login():
         # connection.close()
 
         # if exists == True:
-        if usermail == founder_superuser@gmail.com:    
+        if usermail == "founder_superuser@gmail.com":    
             st.session_state.logged = True
             st.experimental_rerun()
         else:
