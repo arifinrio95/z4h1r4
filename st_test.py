@@ -2,6 +2,7 @@ import openai
 import streamlit as st
 import re
 from dataviz.barchart import BarChart
+from dataviz.piechart import PieChart
 
 from load_dataframe import LoadDataframe
 from data_viz import DataViz
@@ -1941,10 +1942,10 @@ def main():
             data_used = df.copy()
             for col in data_used.columns:
                 if data_used[col].dtype == 'object':  # Categorical columns
-                    data_used[col].fillna('Missing Data', inplace=True)
+                    data_used[col] = data_used[col].fillna('Missing Data')
                 else:  # Numerical columns
                     # data_used[col].cat.add_categories([0], inplace=True)
-                    data_used[col].fillna(0, inplace=True)
+                    data_used[col] = data_used[col].fillna(0)
 
             # Layout
             column1, column2 = st.columns([1, 3])
@@ -2019,24 +2020,14 @@ def main():
                                                     aggregation,
                                                     columns_chart=True)
                         elif chart_type == "Pie Chart":
-                            fig = px.pie(data_used,
-                                         names=col,
-                                         color_discrete_sequence=tableau_10)
-                            insight = "No"
+                            fig, insight = PieChart(data_used, col, tableau_10,
+                                                    aggregation)
                         elif chart_type == "Doughnut Chart":
-                            fig = px.pie(data_used,
-                                         names=col,
-                                         hole=0.4,
-                                         color_discrete_sequence=tableau_10)
-                            insight = "No"
-                            total_count = data_used[col].count()
-                            fig.update_layout(annotations=[
-                                dict(text=str(total_count),
-                                     x=0.5,
-                                     y=0.5,
-                                     font_size=20,
-                                     showarrow=False)
-                            ])
+                            fig, insight = PieChart(data_used,
+                                                    col,
+                                                    tableau_10,
+                                                    aggregation,
+                                                    donut=True)
                     else:
                         chart_type = column2.selectbox(
                             "Select Type of Chart", ["Histogram", "Boxplot"])
@@ -2095,27 +2086,25 @@ def main():
 
                 elif len(selected_columns) == 3:
                     # Membuat scatter plot 3D dengan ukuran dan garis pinggir
-                    fig = go.Figure(data=[go.Scatter3d(
-                        x=data_used[selected_columns[0]],
-                        y=data_used[selected_columns[1]],
-                        z=data_used[selected_columns[2]],
-                        mode='markers',
-                        marker=dict(
-                            size=6,
-                            color='blue',  # set color to an array/list of desired values
-                            opacity=0.8,
-                            line=dict(
-                                color='black',
-                                width=2
-                            )
-                        )
-                    )])
-                    
+                    fig = go.Figure(data=[
+                        go.Scatter3d(
+                            x=data_used[selected_columns[0]],
+                            y=data_used[selected_columns[1]],
+                            z=data_used[selected_columns[2]],
+                            mode='markers',
+                            marker=dict(
+                                size=6,
+                                color=
+                                'blue',  # set color to an array/list of desired values
+                                opacity=0.8,
+                                line=dict(color='black', width=2)))
+                    ])
+
                     fig.update_layout(width=800, height=800)
-                    
+
                     # Menampilkan plot di Streamlit
                     st.plotly_chart(fig)
-                
+
                 elif len(selected_columns) >= 4:
                     cat_cols = data_used[selected_columns].select_dtypes(
                         include='object').columns.tolist()
