@@ -1941,7 +1941,7 @@ def main():
                 if data_used[col].dtype == 'object':  # Categorical columns
                     data_used[col].fillna('Missing Data', inplace=True)
                 else:  # Numerical columns
-                    data_used[col].cat.add_categories([0], inplace=True)
+                    # data_used[col].cat.add_categories([0], inplace=True)
                     data_used[col].fillna(0, inplace=True)
 
             # Layout
