@@ -2141,10 +2141,10 @@ if __name__ == '__main__':
         st.session_state.uploaded = False
     
     # Jika DataFrame belum di-upload, tampilkan menu upload
-    if not st.session_state.uploaded:
-        df = handle_file_upload()
-    else:
+    if st.session_state.uploaded:
         main(df)
+    else:
+        df = handle_file_upload()
         
 
     # # Cek apakah user sudah login atau belum
