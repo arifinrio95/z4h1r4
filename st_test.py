@@ -1560,7 +1560,7 @@ def main():
             if 'button_clicked' not in st.session_state:
                 st.session_state.button_clicked = False
 
-            button = st.button("Submit")
+            button = st.button("Submit", key='btn_submit')
             if button:
                 st.session_state.button_clicked = True
 
@@ -1645,7 +1645,7 @@ def main():
                 ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
             api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
 
-            button = st.button("Submit")
+            button = st.button("Submit", key='btn_submit2')
             if button:
                 # Membagi respons berdasarkan tanda awal dan akhir kode
                 with st.spinner(
@@ -1862,7 +1862,7 @@ def main():
             # selected_classifiers = st.multiselect("Select classification models to compare:", options=available_classifiers, default=['GaussianNB','LogisticRegression','DecisionTreeClassifier','RandomForestClassifier','GradientBoostingClassifier','AdaBoostClassifier'])
 
             # Run LazyPredict
-            if st.button("Run LazyPredict"):
+            if st.button("Run LazyPredict", key='btn_run_lazy_predict'):
                 with st.spinner('Running LazyPredict...'):
                     results = run_lazy_predict(X_train, X_test, y_train,
                                                y_test)
