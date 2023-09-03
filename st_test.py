@@ -1694,117 +1694,190 @@ def main():
             # with st.spinner('Generating insights...'):
 
             #     st.markdown(request_story_prompt(dict_stats))
+            format = st.selectbox('Choose the format :',
+                                   ['Paragraph', 'Visualization'])
+            if format == 'Visualization':
+                min_viz = st.selectbox('Expected number of insights:',
+                                       [3, 4, 5, 6, 7, 8, 9, 10])
+                # min_viz = st.slider('Expected number of insights:', min_value=3, max_value=50)
+    
+                style_choosen = 'Plotly'
+                style_choosen = st.selectbox(
+                    'Choose a Visualization Style:',
+                    ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
+                api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+    
+                if style_choosen == 'Matplotlib':
+                    style_choosen = 'Matplotlib with clean and minimalist style'
+    
+                button = st.button("Submit", key='btn_submit2')
+                if button:
+                    # Membagi respons berdasarkan tanda awal dan akhir kode
+                    with st.spinner(
+                            'Generating insights...(it may takes 1-2 minutes)'):
+                        response = request_story_prompt(schema_str, rows_str,
+                                                        min_viz, api_model,
+                                                        style_choosen)
+                        # st.text(response)
+                        # Extracting the introductions
+                        # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
+                        # pattern = r'st.write\("Insight \d+: (.+?)"\)'
+                        pattern = r'# Insight \d+: (.+?)\n'
+    
+                        introductions = re.findall(pattern, response)
+    
+                        # Printing the extracted introductions
+                        # for intro in introductions:
+                        #     print(intro)
+    
+                        # Saving the introductions to a list
+                        introduction_list = list(introductions)
+                        introduction_list = [
+                            "Analyze the " + s for s in introduction_list
+                        ]
+    
+                        # st.text(introduction_list)
+                        # for query in introduction_list:
+                        #     st.write(get_answer_csv(df, query))
+    
+                        def execute_streamlit_code_with_explanations(
+                                response, introduction_list):
+                            # Split kode berdasarkan st.plotly_chart()
+                            code_segments = response.split('st.plotly_chart(')
+    
+                            modified_code = code_segments[
+                                0]  # Bagian kode sebelum plot pertama
+    
+                            progress_bar = st.progress(0)
+                            for index, segment in enumerate(code_segments[1:]):
+                                # Dapatkan penjelasan untuk segment ini
+                                if index < len(introduction_list):
+                                    explanation = get_answer_csv(
+                                        uploaded_file_path,
+                                        introduction_list[index])
+                                    modified_code += f'\nst.write("{explanation}")\n'
+    
+                                # Tambahkan st.plotly_chart kembali
+                                modified_code += 'st.plotly_chart(' + segment
+    
+                                # Update progress bar
+                                progress_percentage = (index + 1) / len(
+                                    code_segments[1:])
+                                progress_bar.progress(progress_percentage)
+    
+                            # st.code(modified_code)
+                            # Eksekusi kode yang telah dimodifikasi
+                            exec(modified_code)
+    
+                        # execute_streamlit_code_with_explanations(response, introduction_list)
+    
+                        segments = response.split("BEGIN_CODE")
+                        segment_iterator = iter(segments)
+                        for segment in segment_iterator:
+                            # Jika ada kode dalam segmen ini
+                            if "END_CODE" in segment:
+                                code_end = segment.index("END_CODE")
+                                code = segment[:code_end].strip()
+                                explanation = segment[code_end +
+                                                      len("END_CODE"):].strip()
+                                explanation = explanation.replace('"', '\\"')
+    
+                                # Coba eksekusi kode
+                                # try:
+                                # st.code(code)  # Tampilkan kode dalam format kode
+                                # execute_streamlit_code_with_explanations(code, introduction_list)
+                                exec(code)
+                                # st.write("Hasil eksekusi kode:")
+                                # st.write(output)
+                                # except Exception as e:
+                                #     st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
+                                #     st.write(str(e))
+                                # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
+                                # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
+    
+                                # Tampilkan teks penjelasan
+                                if explanation:
+                                    st.write(explanation)
+                            else:
+                                # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                                st.write(segment)
+                        # st.write("For Developer Maintenance Purposed (will remove)")
+                        # st.text(response)
+                        # st.text(introduction_list)
+            else:
+                def request_story_prompt(schema_str,
+                                         rows_str,
+                                         api_model):
+                   
+                    # Versi penjelasan dan code
+                    messages = [{
+                        "role":
+                        "system",
+                        "content":
+                        f"I will create points for you in the form of analysis to be displayed in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
+                    }, {
+                        "role":
+                        "user",
+                        "content":
+                        f"""Create points in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
+                        My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
+                        Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
+                        Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
+                        Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and display them as insight points in Streamlit.
+                        """
+                    }]
+                   
+                    if api_model == 'GPT3.5':
+                        response = openai.ChatCompletion.create(
+                            model="gpt-3.5-turbo",
+                            # model="gpt-4",
+                            messages=messages,
+                            max_tokens=3000,
+                            temperature=0)
+                        script = response.choices[0].message['content']
+                    else:
+                        response = openai.ChatCompletion.create(
+                            # model="gpt-3.5-turbo",
+                            model="gpt-4",
+                            messages=messages,
+                            max_tokens=3000,
+                            temperature=0)
+                        script = response.choices[0].message['content']
+                
+                    return script
+                                             
+                api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+                segments = response.split("BEGIN_CODE")
+                segment_iterator = iter(segments)
+                for segment in segment_iterator:
+                    # Jika ada kode dalam segmen ini
+                    if "END_CODE" in segment:
+                        code_end = segment.index("END_CODE")
+                        code = segment[:code_end].strip()
+                        explanation = segment[code_end +
+                                              len("END_CODE"):].strip()
+                        explanation = explanation.replace('"', '\\"')
 
-            min_viz = st.selectbox('Expected number of insights:',
-                                   [3, 4, 5, 6, 7, 8, 9, 10])
-            # min_viz = st.slider('Expected number of insights:', min_value=3, max_value=50)
+                        # Coba eksekusi kode
+                        # try:
+                        # st.code(code)  # Tampilkan kode dalam format kode
+                        # execute_streamlit_code_with_explanations(code, introduction_list)
+                        exec(code)
+                        # st.write("Hasil eksekusi kode:")
+                        # st.write(output)
+                        # except Exception as e:
+                        #     st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
+                        #     st.write(str(e))
+                        # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
+                        # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
 
-            style_choosen = 'Plotly'
-            style_choosen = st.selectbox(
-                'Choose a Visualization Style:',
-                ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
-            api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
-
-            if style_choosen == 'Matplotlib':
-                style_choosen = 'Matplotlib with clean and minimalist style'
-
-            button = st.button("Submit", key='btn_submit2')
-            if button:
-                # Membagi respons berdasarkan tanda awal dan akhir kode
-                with st.spinner(
-                        'Generating insights...(it may takes 1-2 minutes)'):
-                    response = request_story_prompt(schema_str, rows_str,
-                                                    min_viz, api_model,
-                                                    style_choosen)
-                    # st.text(response)
-                    # Extracting the introductions
-                    # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
-                    # pattern = r'st.write\("Insight \d+: (.+?)"\)'
-                    pattern = r'# Insight \d+: (.+?)\n'
-
-                    introductions = re.findall(pattern, response)
-
-                    # Printing the extracted introductions
-                    # for intro in introductions:
-                    #     print(intro)
-
-                    # Saving the introductions to a list
-                    introduction_list = list(introductions)
-                    introduction_list = [
-                        "Analyze the " + s for s in introduction_list
-                    ]
-
-                    # st.text(introduction_list)
-                    # for query in introduction_list:
-                    #     st.write(get_answer_csv(df, query))
-
-                    def execute_streamlit_code_with_explanations(
-                            response, introduction_list):
-                        # Split kode berdasarkan st.plotly_chart()
-                        code_segments = response.split('st.plotly_chart(')
-
-                        modified_code = code_segments[
-                            0]  # Bagian kode sebelum plot pertama
-
-                        progress_bar = st.progress(0)
-                        for index, segment in enumerate(code_segments[1:]):
-                            # Dapatkan penjelasan untuk segment ini
-                            if index < len(introduction_list):
-                                explanation = get_answer_csv(
-                                    uploaded_file_path,
-                                    introduction_list[index])
-                                modified_code += f'\nst.write("{explanation}")\n'
-
-                            # Tambahkan st.plotly_chart kembali
-                            modified_code += 'st.plotly_chart(' + segment
-
-                            # Update progress bar
-                            progress_percentage = (index + 1) / len(
-                                code_segments[1:])
-                            progress_bar.progress(progress_percentage)
-
-                        # st.code(modified_code)
-                        # Eksekusi kode yang telah dimodifikasi
-                        exec(modified_code)
-
-                    # execute_streamlit_code_with_explanations(response, introduction_list)
-
-                    segments = response.split("BEGIN_CODE")
-                    segment_iterator = iter(segments)
-                    for segment in segment_iterator:
-                        # Jika ada kode dalam segmen ini
-                        if "END_CODE" in segment:
-                            code_end = segment.index("END_CODE")
-                            code = segment[:code_end].strip()
-                            explanation = segment[code_end +
-                                                  len("END_CODE"):].strip()
-                            explanation = explanation.replace('"', '\\"')
-
-                            # Coba eksekusi kode
-                            # try:
-                            # st.code(code)  # Tampilkan kode dalam format kode
-                            # execute_streamlit_code_with_explanations(code, introduction_list)
-                            exec(code)
-                            # st.write("Hasil eksekusi kode:")
-                            # st.write(output)
-                            # except Exception as e:
-                            #     st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
-                            #     st.write(str(e))
-                            # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
-                            # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
-
-                            # Tampilkan teks penjelasan
-                            if explanation:
-                                st.write(explanation)
-                        else:
-                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                            st.write(segment)
-                    # st.write("For Developer Maintenance Purposed (will remove)")
-                    # st.text(response)
-                    # st.text(introduction_list)
-
-            # st.text(request_story_prompt(analyze_dataframe(df)))
-            # visualize_analysis(dict_stats)
+                        # Tampilkan teks penjelasan
+                        if explanation:
+                            st.write(explanation)
+                    else:
+                        # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                        st.write(segment)
+                
 
         # if st.session_state.get('classification', False):
         # elif tabs == "Machine Learning (Classification Model)":
