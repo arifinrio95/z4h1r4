@@ -1982,7 +1982,7 @@ def main():
                             if explanation:
                                 st.write(explanation)
                         else:
-                            Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
                             st.write(segment)
                             
                             # text_summary = segment
