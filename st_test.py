@@ -1705,6 +1705,9 @@ def main():
                 ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
             api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
 
+            if style_choosen == 'Matplotlib':
+                style_choosen = 'Matplotlib with clean and minimalist style'
+
             button = st.button("Submit", key='btn_submit2')
             if button:
                 # Membagi respons berdasarkan tanda awal dan akhir kode
