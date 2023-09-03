@@ -1477,7 +1477,8 @@ def main():
     openai.api_key = st.secrets['user_api']
 
     df = st.session_state.df
-    st.dataframe(df)
+    st.write("Your dataframe (sample 10 first rows).")
+    st.dataframe(df.head(10))
     # try:
     if not df.empty:
         # st.session_state.df = df
@@ -1912,7 +1913,7 @@ def main():
                         "role":
                         "user",
                         "content":
-                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}. Buang insight yang tidak penting, fokus pada insight yang insightful. Tulis dalam 3000 kata. Beri Judul (dengan #) dan Subjudul (dengan ##) sesuai insight."""
+                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}. Buang insight yang tidak penting, fokus pada insight yang insightful. Tulis dalam 3000 kata. Beri Judul (dengan #) dan Subjudul (dengan ###) sesuai insight."""
                     }]
     
                     if api_model == 'GPT3.5':
