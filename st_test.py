@@ -1813,12 +1813,12 @@ def main():
                         "role":
                         "system",
                         "content":
-                        f"I will create a dashboard with many chart in a single cell with {library} and show it in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
+                        f"I will create a dashboard with many chart in a single figure with {library} and show it in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
                     }, {
                         "role":
                         "user",
                         "content":
-                        f"""Create a dashboard with many charts with {library} from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
+                        f"""Create a dashboard with many charts in a single figure with {library} from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
                         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
                         The dashboard contains many charts with proper title.
                         Extract as many as possible charts with high quality insights.
