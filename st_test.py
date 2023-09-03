@@ -1989,6 +1989,9 @@ def main():
 
                     # exec(response)
 
+                    st.write("Display point_summary state:")
+                    st.text(st.session_state.point_summary)
+
                     with st.spinner(
                             'Creating the paragraph...(it may takes 1-2 minutes)'):
                         paragraph = request_summary_wording(
