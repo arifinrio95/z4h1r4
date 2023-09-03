@@ -1477,6 +1477,7 @@ def main():
     openai.api_key = st.secrets['user_api']
 
     df = st.session_state.df
+    st.dataframe(df)
     # try:
     if not df.empty:
         # st.session_state.df = df
