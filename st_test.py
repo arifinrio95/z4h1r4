@@ -1680,18 +1680,7 @@ def main():
             </style>
             """,
                         unsafe_allow_html=True)
-            # dict_stats = analyze_dataframe(df)
-            # # st.write("Temporary showing, under review....")
-            # # st.write(dict_stats)
-            # # for i in dict_stats:
-            # #     st.markdown(request_story_prompt(i))
-            # with st.spinner('Generating visualizations...'):
-            #     input_pengguna = "Buatkan semua visualisasi yang mungkin dengan sedetail mungkin untuk semua case yang relevan."
-            #     script = (input_pengguna, schema_str, rows_str, 'Plotly', None, None, 0)
-            #     # st.subheader("Visualizations")
-            #     exec(str(script))
-            # st.subheader("Insights")
-            # with st.spinner('Generating insights...'):
+            
 
             #     st.markdown(request_story_prompt(dict_stats))
             format = st.selectbox('Choose the format :',
@@ -1824,6 +1813,7 @@ def main():
                         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
                         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
                         Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and display them as insight points in Streamlit.
+                        Write as many insights as possible that can be extracted in the form of bullet points.
                         """
                     }]
                    
@@ -1846,7 +1836,101 @@ def main():
                 
                     return script
 
+                def request_explain_summary(text_summary,
+                                         api_model):
+                   
+                    # Versi penjelasan dan code
+                    messages = [{
+                        "role":
+                        "system",
+                        "content":
+                        f"I will create points for you in the form of analysis to be displayed in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
+                    }, {
+                        "role":
+                        "user",
+                        "content":
+                        f"""Create points in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
+                        My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
+                        Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
+                        Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
+                        Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and display them as insight points in Streamlit.
+                        Write as many insights as possible with various aggregated value that can be extracted in the form of bullet points.
+                        """
+                    }]
+                   
+                    if api_model == 'GPT3.5':
+                        response = openai.ChatCompletion.create(
+                            model="gpt-3.5-turbo",
+                            # model="gpt-4",
+                            messages=messages,
+                            max_tokens=3000,
+                            temperature=0)
+                        script = response.choices[0].message['content']
+                    else:
+                        response = openai.ChatCompletion.create(
+                            # model="gpt-3.5-turbo",
+                            model="gpt-4",
+                            messages=messages,
+                            max_tokens=3000,
+                            temperature=0)
+                        script = response.choices[0].message['content']
+                
+                    return script
+
+                def request_summary_wording(text_summary, language, style_choosen,
+                                            objective, format, api_model):
+                    messages = [{
+                        "role":
+                        "system",
+                        "content":
+                        f"Aku akan menjabarkan summary kamu dengan menggunakan bahasa {language}. Dalam format {format}."
+                    }, {
+                        "role":
+                        "user",
+                        "content":
+                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}."""
+                    }]
+    
+                    if api_model == 'GPT3.5':
+                        response = openai.ChatCompletion.create(
+                            model="gpt-3.5-turbo-16k",
+                            # model="gpt-4",
+                            messages=messages,
+                            max_tokens=3000,
+                            temperature=0.6)
+                        script = response.choices[0].message['content']
+                    else:
+                        response = openai.ChatCompletion.create(
+                            # model="gpt-3.5-turbo",
+                            model="gpt-4",
+                            messages=messages,
+                            max_tokens=3000,
+                            temperature=0.6)
+                        script = response.choices[0].message['content']
+    
+                    return script
+    
+                def split_text_into_lines(text, words_per_line=20):
+                    words = text.split()
+                    lines = []
+                    for i in range(0, len(words), words_per_line):
+                        line = ' '.join(words[i:i + words_per_line])
+                        lines.append(line)
+                    return '\n'.join(lines)
+
+                
                 api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+                language = st.selectbox('Choose Language:',
+                                        ('Indonesia', 'English', 'Sunda'))
+                style_choosen = st.selectbox('Choose the Formality:',
+                                             ('Formal', 'Non-Formal'))
+                objective = st.selectbox('Choose the Style:',
+                                         ('Narative', 'Persuasive', 'Descriptive',
+                                          'Argumentative', 'Satire'))
+                format = st.selectbox(
+                    'Choose the Format:',
+                    ('Paragraf', 'Youtube Script', 'Thread', 'Caption Instagram'))
+            
                 button = st.button("Submit", key='btn_submit2')
                 if button:
                     # Membagi respons berdasarkan tanda awal dan akhir kode
@@ -1872,6 +1956,12 @@ def main():
                         else:
                             # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
                             st.write(segment)
+
+                    paragraph = request_summary_wording(
+                        str(segment), language, style_choosen,
+                        objective, format, api_model)
+                    # st.text(split_text_into_lines(response))
+                    st.write(paragraph)
                 
 
         # if st.session_state.get('classification', False):
