@@ -1449,9 +1449,10 @@ def handle_file_upload():
             file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
             if file:
                 try:
-                    df = pd.read_csv(
-                        file
-                    )  # Gantikan ini dengan fungsi Anda sendiri untuk membaca file
+                    df = load_file_auto_delimiter(file)
+                    # df = pd.read_csv(
+                    #     file
+                    # )  # Gantikan ini dengan fungsi Anda sendiri untuk membaca file
                     st.session_state.df = df
                     st.session_state.uploaded = True
                     st.experimental_rerun()
