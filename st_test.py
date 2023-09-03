@@ -1799,20 +1799,37 @@ def main():
                                          api_model):
                    
                     # Versi penjelasan dan code
+                    # messages = [{
+                    #     "role":
+                    #     "system",
+                    #     "content":
+                    #     f"I will create points for you in the form of analysis to be saved in global variable string named point_summary. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
+                    # }, {
+                    #     "role":
+                    #     "user",
+                    #     "content":
+                    #     f"""Create points in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
+                    #     My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
+                    #     Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
+                    #     Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
+                    #     Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and display them as insight points in Streamlit.
+                    #     Write as many insights as possible that can be extracted in the form of bullet points.
+                    #     """
+                    # }]
+
                     messages = [{
                         "role":
                         "system",
                         "content":
-                        f"I will create points for you in the form of analysis to be displayed in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
+                        f"I will create points for you in the form of analysis to be saved in global variable string named point_summary."
                     }, {
                         "role":
                         "user",
                         "content":
                         f"""Create points in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
                         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
-                        Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
                         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
-                        Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and display them as insight points in Streamlit.
+                        Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into global variables, and saved all insights in global variable string named point_summary.
                         Write as many insights as possible that can be extracted in the form of bullet points.
                         """
                     }]
