@@ -1966,11 +1966,13 @@ class DataViz():
                 st.subheader("B. Distribution")
                 st.dataframe(description, use_container_width=True)
                 st.write('---')
-                st.subheader("C. Grouped Summary")
-                top_bottom_text = ''
-                grouped_summary = data.groupby(
-                    selected_variable)[numeric_cols].describe()
-                j = 1
+                
+                if len(numeric_cols) > 0:
+                    st.subheader("C. Grouped Summary")
+                    top_bottom_text = ''
+                    grouped_summary = data.groupby(
+                        selected_variable)[numeric_cols].describe()
+                    j = 1
                 if len(numeric_cols) > 0:
                     for n_ in numeric_cols:
                         st.subheader(
