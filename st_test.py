@@ -1968,7 +1968,7 @@ def main():
                     st.write('Displayed Response: ')
                     for segment in segment_iterator:
                         # Jika ada kode dalam segmen ini
-                        if "END_CODE" in segment:
+                        if "```" in segment:
                             # code_end = segment.index("END_CODE")
                             code_end = segment.index("```")
                             code = segment[:code_end].strip()
@@ -1976,6 +1976,8 @@ def main():
                                                   # len("END_CODE"):].strip()
                                                   len("```"):].strip()
                             explanation = explanation.replace('"', '\\"')
+                            st.write('The Code to Execute: ')
+                            st.text(code)
                             exec(code)
     
                             # Tampilkan teks penjelasan
