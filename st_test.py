@@ -1953,52 +1953,49 @@ def main():
             
                 button = st.button("Submit", key='btn_submit2')
                 if button:
-                    # if 'point_summary' not in st.session_state:
-                    #     st.session_state.point_summary = ""
-                    else:
-                        # Membagi respons berdasarkan tanda awal dan akhir kode
-                        with st.spinner(
-                                'Generating insights...(it may takes 1-2 minutes)'):
-                            response = request_summary_points(schema_str, rows_str, api_model)
+                    # Membagi respons berdasarkan tanda awal dan akhir kode
+                    with st.spinner(
+                            'Generating insights...(it may takes 1-2 minutes)'):
+                        response = request_summary_points(schema_str, rows_str, api_model)
+
+                    # st.write('Original Response: ')
+                    # st.text(response)
+                    # segments = response.split("BEGIN_CODE")
+                    segments = response.split("```python")
+                    
+                    segment_iterator = iter(segments)
+
+                    # st.write('Displayed Response: ')
+                    for segment in segment_iterator:
+                        # Jika ada kode dalam segmen ini
+                        if "END_CODE" in segment:
+                            # code_end = segment.index("END_CODE")
+                            code_end = segment.index("```")
+                            code = segment[:code_end].strip()
+                            explanation = segment[code_end +
+                                                  # len("END_CODE"):].strip()
+                                                  len("```"):].strip()
+                            explanation = explanation.replace('"', '\\"')
+                            exec(code)
     
-                        # st.write('Original Response: ')
-                        # st.text(response)
-                        # segments = response.split("BEGIN_CODE")
-                        segments = response.split("```python")
-                        
-                        segment_iterator = iter(segments)
-    
-                        # st.write('Displayed Response: ')
-                        for segment in segment_iterator:
-                            # Jika ada kode dalam segmen ini
-                            if "END_CODE" in segment:
-                                # code_end = segment.index("END_CODE")
-                                code_end = segment.index("```")
-                                code = segment[:code_end].strip()
-                                explanation = segment[code_end +
-                                                      # len("END_CODE"):].strip()
-                                                      len("```"):].strip()
-                                explanation = explanation.replace('"', '\\"')
-                                exec(code)
-        
-                                # Tampilkan teks penjelasan
-                                # if explanation:
-                                    # st.write(explanation)
-                            # else:
-                                # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                                # st.write(segment)
-                                
-                                # text_summary = segment
-    
-                        # exec(response)
-    
-                        with st.spinner(
-                                'Creating the paragraph...(it may takes 1-2 minutes)'):
-                            paragraph = request_summary_wording(
-                                st.session_state.point_summary, language, style_choosen,
-                                objective, format, api_model)
-                        # st.text(split_text_into_lines(response))
-                        st.write(paragraph)
+                            # Tampilkan teks penjelasan
+                            # if explanation:
+                                # st.write(explanation)
+                        # else:
+                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                            # st.write(segment)
+                            
+                            # text_summary = segment
+
+                    # exec(response)
+
+                    with st.spinner(
+                            'Creating the paragraph...(it may takes 1-2 minutes)'):
+                        paragraph = request_summary_wording(
+                            st.session_state.point_summary, language, style_choosen,
+                            objective, format, api_model)
+                    # st.text(split_text_into_lines(response))
+                    st.write(paragraph)
                 
 
         # if st.session_state.get('classification', False):
