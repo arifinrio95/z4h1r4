@@ -1833,6 +1833,7 @@ def main():
                         Write as many insights as possible that can be extracted in the form of bullet points. Minimal 15 insights.
                         Only response with python code. Do not respond with anything other than Python code.
                         The value in the string st.session_state.point_summary should already be in the form of a value, not a variable.
+                        Check first if 'point_summary' not in st.session_state
                         """
                     }]
                    
@@ -1952,8 +1953,8 @@ def main():
             
                 button = st.button("Submit", key='btn_submit2')
                 if button:
-                    if 'point_summary' not in st.session_state:
-                        st.session_state.point_summary = ""
+                    # if 'point_summary' not in st.session_state:
+                    #     st.session_state.point_summary = ""
                     else:
                         # Membagi respons berdasarkan tanda awal dan akhir kode
                         with st.spinner(
