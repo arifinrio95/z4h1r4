@@ -1830,7 +1830,7 @@ def main():
                         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
                         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
                         Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and saved all insights in string st.session_state.point_summary.
-                        Write as many insights as possible that can be extracted in the form of bullet points. Minimal 15 insights.
+                        Write as many insights as possible that can be extracted in the form of bullet points. Minimal 25 insights.
                         Only response with python code. Do not respond with anything other than Python code.
                         The value in the string st.session_state.point_summary should already be in the form of a value, not a variable.
                         Define first 'point_summary' in st.session_state as empty string.
@@ -1908,7 +1908,7 @@ def main():
                         "role":
                         "user",
                         "content":
-                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}. Buang insight yang tidak penting, fokus pada insight yang insightful."""
+                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}. Buang insight yang tidak penting, fokus pada insight yang insightful. Tulis dalam 3000 kata."""
                     }]
     
                     if api_model == 'GPT3.5':
@@ -1958,14 +1958,14 @@ def main():
                             'Generating insights...(it may takes 1-2 minutes)'):
                         response = request_summary_points(schema_str, rows_str, api_model)
 
-                    st.write('Original Response: ')
-                    st.text(response)
+                    # st.write('Original Response: ')
+                    # st.text(response)
                     # segments = response.split("BEGIN_CODE")
                     segments = response.split("```python")
                     
                     segment_iterator = iter(segments)
 
-                    st.write('Displayed Response: ')
+                    # st.write('Displayed Response: ')
                     for segment in segment_iterator:
                         # Jika ada kode dalam segmen ini
                         if "```" in segment:
@@ -1976,23 +1976,23 @@ def main():
                                                   # len("END_CODE"):].strip()
                                                   len("```"):].strip()
                             explanation = explanation.replace('"', '\\"')
-                            st.write('The Code to Execute: ')
-                            st.text(code)
+                            # st.write('The Code to Execute: ')
+                            # st.text(code)
                             exec(code)
     
                             # Tampilkan teks penjelasan
-                            if explanation:
-                                st.write(explanation)
-                        else:
-                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                            st.write(segment)
+                            # if explanation:
+                            #     st.write(explanation)
+                        # else:
+                        #     # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                        #     st.write(segment)
                             
                             # text_summary = segment
 
                     # exec(response)
 
-                    st.write("Display point_summary state:")
-                    st.text(st.session_state.point_summary)
+                    # st.write("Display point_summary state:")
+                    # st.text(st.session_state.point_summary)
 
                     with st.spinner(
                             'Creating the paragraph...(it may takes 1-2 minutes)'):
@@ -2001,6 +2001,9 @@ def main():
                             objective, format, api_model)
                     # st.text(split_text_into_lines(response))
                     st.write(paragraph)
+
+                    st.write("List Insights:")
+                    st.text(st.session_state.point_summary)
                 
 
         # if st.session_state.get('classification', False):
