@@ -1824,6 +1824,7 @@ def main():
                         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
                         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
                         The charts must be unique and interesting, {min_viz} most important insights from the data.
+                        Do not give any explanation. Response only with script start with 'BEGIN_CODE' and end with 'END_CODE'.
                         """
                     }]
                     
@@ -1857,6 +1858,9 @@ def main():
                             'Generating simple dashboard...(it may takes 1-2 minutes)'):
                         response = request_dashboard(schema_str, rows_str,
                                                         min_viz, api_model)
+                        
+                        st.write("Cek output.")
+                        st.text(response)
                         segments = response.split("BEGIN_CODE")
                         segment_iterator = iter(segments)
                         for segment in segment_iterator:
