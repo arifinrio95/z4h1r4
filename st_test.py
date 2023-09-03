@@ -1691,8 +1691,8 @@ def main():
 
             #     st.markdown(request_story_prompt(dict_stats))
             format = st.selectbox('Choose the Output:',
-                                   ['Reports', 'Visualizations'])
-            if format == 'Visualization':
+                                   ['Reports', 'Visualizations', 'Dashboard'])
+            if format == 'Visualizations':
                 min_viz = st.selectbox('Expected number of insights:',
                                        [3, 4, 5, 6, 7, 8, 9, 10])
                 # min_viz = st.slider('Expected number of insights:', min_value=3, max_value=50)
@@ -1801,6 +1801,80 @@ def main():
                         # st.write("For Developer Maintenance Purposed (will remove)")
                         # st.text(response)
                         # st.text(introduction_list)
+            elif format == 'Dashboard':
+                def request_dashboard(schema_str,
+                                         rows_str,
+                                         min_viz,
+                                         api_model):
+                
+                    # Versi penjelasan dan code
+                    messages = [{
+                        "role":
+                        "system",
+                        "content":
+                        f"I will create a dashboard with many chart in a single cell with Bokeh and show it in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
+                    }, {
+                        "role":
+                        "user",
+                        "content":
+                        f"""Create a dashboard with many charts with Bokeh from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
+                        My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
+                        The dashboard contains many charts with proper title.
+                        Extract as many as possible charts with high quality insights.
+                        Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
+                        Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
+                        The charts must be unique and interesting, {min_viz} most important insights from the data.
+                        """
+                    }]
+                    
+                    if api_model == 'GPT3.5':
+                        response = openai.ChatCompletion.create(
+                            model="gpt-3.5-turbo",
+                            # model="gpt-4",
+                            messages=messages,
+                            max_tokens=3000,
+                            temperature=0)
+                        script = response.choices[0].message['content']
+                    else:
+                        response = openai.ChatCompletion.create(
+                            # model="gpt-3.5-turbo",
+                            model="gpt-4",
+                            messages=messages,
+                            max_tokens=3000,
+                            temperature=0)
+                        script = response.choices[0].message['content']
+                    return script
+
+                min_viz = st.selectbox('Expected number of insights:',
+                                       [3, 4, 5, 6, 7, 8, 9, 10])
+
+                api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+
+                button = st.button("Submit", key='btn_submit3')
+                if button:
+                    # Membagi respons berdasarkan tanda awal dan akhir kode
+                    with st.spinner(
+                            'Generating simple dashboard...(it may takes 1-2 minutes)'):
+                        response = request_dashboard(schema_str, rows_str,
+                                                        min_viz, api_model)
+                        segments = response.split("BEGIN_CODE")
+                        segment_iterator = iter(segments)
+                        for segment in segment_iterator:
+                            # Jika ada kode dalam segmen ini
+                            if "END_CODE" in segment:
+                                code_end = segment.index("END_CODE")
+                                code = segment[:code_end].strip()
+                                explanation = segment[code_end +
+                                                      len("END_CODE"):].strip()
+                                explanation = explanation.replace('"', '\\"')
+                                exec(code)
+                                # Tampilkan teks penjelasan
+                                if explanation:
+                                    st.write(explanation)
+                            else:
+                                # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                                st.write(segment)
+                
             else:
                 def request_summary_points(schema_str,
                                          rows_str,
