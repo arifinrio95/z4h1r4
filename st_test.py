@@ -1958,14 +1958,14 @@ def main():
                             'Generating insights...(it may takes 1-2 minutes)'):
                         response = request_summary_points(schema_str, rows_str, api_model)
 
-                    # st.write('Original Response: ')
-                    # st.text(response)
+                    st.write('Original Response: ')
+                    st.text(response)
                     # segments = response.split("BEGIN_CODE")
                     segments = response.split("```python")
                     
                     segment_iterator = iter(segments)
 
-                    # st.write('Displayed Response: ')
+                    st.write('Displayed Response: ')
                     for segment in segment_iterator:
                         # Jika ada kode dalam segmen ini
                         if "END_CODE" in segment:
@@ -1978,12 +1978,12 @@ def main():
                             explanation = explanation.replace('"', '\\"')
                             exec(code)
     
-                            # Tampilkan teks penjelasan
-                            # if explanation:
-                                # st.write(explanation)
-                        # else:
-                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                            # st.write(segment)
+                            Tampilkan teks penjelasan
+                            if explanation:
+                                st.write(explanation)
+                        else:
+                            Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                            st.write(segment)
                             
                             # text_summary = segment
 
