@@ -1449,7 +1449,7 @@ def handle_file_upload():
             file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
             if file:
                 try:
-                    df = load_file_auto_delimiter(file)
+                    df = LoadDataframe.load_file_auto_delimiter(file)
                     # df = pd.read_csv(
                     #     file
                     # )  # Gantikan ini dengan fungsi Anda sendiri untuk membaca file
