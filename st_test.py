@@ -1855,7 +1855,14 @@ def main():
                 library = 'Matplotlib'
                 library = st.selectbox(
                     'Choose a Visualization Library:',
-                    ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
+                    ('Altair', 'Seaborn', 'Matplotlib'))
+
+                if library == 'Altair':
+                    library = 'Altair (concat)'
+                if library == 'Seaborn':
+                    library = 'Seaborn (facetgrid)'
+                if library == 'Matplotlib':
+                    library = 'Matplotlib (subplots)'
                 button = st.button("Submit", key='btn_submit3')
                 if button:
                     # Membagi respons berdasarkan tanda awal dan akhir kode
