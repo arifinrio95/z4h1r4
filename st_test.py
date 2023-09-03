@@ -1908,7 +1908,7 @@ def main():
                     return script
 
                 def request_summary_wording(text_summary, language, style_choosen,
-                                            objective, format, api_model):
+                                            objective, format, api_model, context):
                     messages = [{
                         "role":
                         "system",
@@ -1918,7 +1918,7 @@ def main():
                         "role":
                         "user",
                         "content":
-                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}. Buang insight yang tidak penting, fokus pada insight yang insightful. Tulis dalam 3000 kata. Beri Judul (dengan #) dan Subjudul (dengan ###) sesuai insight."""
+                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}. Buang insight yang tidak penting, fokus pada insight yang insightful. Tulis dalam 3000 kata. Beri Judul (dengan #) dan Subjudul (dengan ###) sesuai insight. {context}"""
                     }]
     
                     if api_model == 'GPT3.5':
@@ -2010,7 +2010,7 @@ def main():
                             'Creating the paragraph...(it may takes 1-2 minutes)'):
                         paragraph = request_summary_wording(
                             st.session_state.point_summary, language, style_choosen,
-                            objective, format, api_model)
+                            objective, format, api_model, context_user)
                     # st.text(split_text_into_lines(response))
                     st.write(paragraph)
 
