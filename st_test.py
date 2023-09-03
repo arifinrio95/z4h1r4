@@ -1846,14 +1846,14 @@ def main():
                 
                     return script
 
+                api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
                 button = st.button("Submit", key='btn_submit2')
                 if button:
                     # Membagi respons berdasarkan tanda awal dan akhir kode
                     with st.spinner(
                             'Generating insights...(it may takes 1-2 minutes)'):
                         response = request_summary_points(schema_str, rows_str, api_model)
-                                
-                    api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+
                     segments = response.split("BEGIN_CODE")
                     segment_iterator = iter(segments)
                     for segment in segment_iterator:
