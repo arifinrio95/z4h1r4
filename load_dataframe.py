@@ -3,8 +3,8 @@ import csv
 
 class LoadDataframe():
   
-    def __init__(self, file):
-        self.file = file
+    def __init__(self, uploaded_file):
+        self.file = uploaded_file
         self.df = None
 
     def detect_delimiter(self):
