@@ -1921,7 +1921,7 @@ def main():
                 
                 api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
                 language = st.selectbox('Choose Language:',
-                                        ('Indonesia', 'English', 'Sunda'), key='btn_lang'))
+                                        ('Indonesia', 'English', 'Sunda'), key='btn_lang')
                 style_choosen = st.selectbox('Choose the Formality:',
                                              ('Formal', 'Non-Formal'), key='btn_style')
                 objective = st.selectbox('Choose the Style:',
