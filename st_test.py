@@ -1821,7 +1821,7 @@ def main():
                         "role":
                         "system",
                         "content":
-                        f"I will create python code to generate insight points for you in the form of analysis to be saved in st.session_state.point_summary"
+                        f"I will create python code to generate insight points for you in the form of analysis to be saved in string st.session_state.point_summary"
                     }, {
                         "role":
                         "user",
@@ -1829,9 +1829,10 @@ def main():
                         f"""Create python code to generate insight points in the form of insights that are insightful from dataframe df with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
                         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
                         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
-                        Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and saved all insights in st.session_state.point_summary.
+                        Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and saved all insights in string st.session_state.point_summary.
                         Write as many insights as possible that can be extracted in the form of bullet points.
                         Only response with python code. Do not respond with anything other than Python code.
+                        The value in the string st.session_state.point_summary should already be in the form of a value, not a variable.
                         """
                     }]
                    
@@ -1985,7 +1986,7 @@ def main():
                             
                             text_summary = segment
 
-                    exec(response)
+                    # exec(response)
 
                     with st.spinner(
                             'Creating the paragraph...(it may takes 1-2 minutes)'):
