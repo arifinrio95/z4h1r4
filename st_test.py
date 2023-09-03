@@ -1957,9 +1957,11 @@ def main():
                             # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
                             st.write(segment)
 
-                    paragraph = request_summary_wording(
-                        str(segment), language, style_choosen,
-                        objective, format, api_model)
+                    with st.spinner(
+                            'Creating the paragraph...(it may takes 1-2 minutes)'):
+                        paragraph = request_summary_wording(
+                            str(segment), language, style_choosen,
+                            objective, format, api_model)
                     # st.text(split_text_into_lines(response))
                     st.write(paragraph)
                 
