@@ -1417,6 +1417,7 @@ def get_sample_data(dataset_name):
 
 
 def handle_file_upload():
+    st.session_state.uploaded = False
     # Inisialisasi API Kaggle
     # api = KaggleApi()
     # api.authenticate()
