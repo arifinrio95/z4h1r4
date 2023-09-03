@@ -1994,7 +1994,7 @@ def main():
                     with st.spinner(
                             'Creating the paragraph...(it may takes 1-2 minutes)'):
                         paragraph = request_summary_wording(
-                            str(st.session_state.point_summary), language, style_choosen,
+                            st.session_state.point_summary, language, style_choosen,
                             objective, format, api_model)
                     # st.text(split_text_into_lines(response))
                     st.write(paragraph)
