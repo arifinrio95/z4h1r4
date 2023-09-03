@@ -1477,7 +1477,7 @@ def main():
     openai.api_key = st.secrets['user_api']
 
     df = st.session_state.df
-    st.write("Your dataframe (sample 10 first rows).")
+    st.subheader("Your dataframe (sample 10 first rows).")
     st.dataframe(df.head(10))
     # try:
     if not df.empty:
