@@ -1804,7 +1804,8 @@ def main():
             else:
                 def request_summary_points(schema_str,
                                          rows_str,
-                                         api_model):
+                                         api_model,
+                                         context=''):
                    
                     # Versi penjelasan dan code
                     # messages = [{
@@ -1842,6 +1843,7 @@ def main():
                         Only response with python code. Do not respond with anything other than Python code.
                         The value in the string st.session_state.point_summary should already be in the form of a value, not a variable.
                         Define first 'point_summary' in st.session_state as empty string.
+                        {context}
                         """
                     }]
                    
@@ -1958,13 +1960,15 @@ def main():
                 format = st.selectbox(
                     'Choose the Format:',
                     ('Paragraf', 'Youtube Script', 'Thread', 'Caption Instagram'), key='btn_format')
+
+                context_user = st.text_area("Berikan context untuk fokus pada analisis tertentu jika perlu. Kosongkan untuk analisis secara umum.", value='')
             
                 button = st.button("Submit", key='btn_submit2')
                 if button:
                     # Membagi respons berdasarkan tanda awal dan akhir kode
                     with st.spinner(
                             'Generating insights...(it may takes 1-2 minutes)'):
-                        response = request_summary_points(schema_str, rows_str, api_model)
+                        response = request_summary_points(schema_str, rows_str, api_model, context_user)
 
                     # st.write('Original Response: ')
                     # st.text(response)
