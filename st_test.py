@@ -1871,8 +1871,8 @@ def main():
                         response = request_dashboard(schema_str, rows_str,
                                                         min_viz, api_model, library)
                         
-                        st.write("Cek output.")
-                        st.text(response)
+                        # st.write("Cek output.")
+                        # st.text(response)
                         segments = response.split("BEGIN_CODE")
                         segment_iterator = iter(segments)
                         for segment in segment_iterator:
@@ -1883,8 +1883,8 @@ def main():
                                 explanation = segment[code_end +
                                                       len("END_CODE"):].strip()
                                 explanation = explanation.replace('"', '\\"')
-                                st.write("Cek code.")
-                                st.text(code)
+                                # st.write("Cek code.")
+                                # st.text(code)
                                 exec(code)
                                 # Tampilkan teks penjelasan
                                 if explanation:
