@@ -1939,7 +1939,7 @@ def main():
                         response = request_summary_points(schema_str, rows_str, api_model)
 
                     st.write('Original Response: ')
-                    st.write(response)
+                    st.text(response)
                     segments = response.split("BEGIN_CODE")
                     segment_iterator = iter(segments)
                     for segment in segment_iterator:
