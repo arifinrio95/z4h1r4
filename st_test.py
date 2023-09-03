@@ -1912,7 +1912,7 @@ def main():
                         "role":
                         "user",
                         "content":
-                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}. Buang insight yang tidak penting, fokus pada insight yang insightful. Tulis dalam 3000 kata."""
+                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}. Buang insight yang tidak penting, fokus pada insight yang insightful. Tulis dalam 3000 kata. Beri Judul dan Subjudul sesuai insight."""
                     }]
     
                     if api_model == 'GPT3.5':
@@ -2006,7 +2006,7 @@ def main():
                     # st.text(split_text_into_lines(response))
                     st.write(paragraph)
 
-                    st.write("List Insights:")
+                    st.write("Details:")
                     st.text(st.session_state.point_summary)
                 
 
