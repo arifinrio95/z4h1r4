@@ -1448,17 +1448,17 @@ def handle_file_upload():
         if option == 'Upload Your File':
             file = st.file_uploader("Upload file", type=['csv', 'xls', 'xlsx'])
             if file:
-                try:
-                    df = LoadDataframe.load_file_auto_delimiter(file)
-                    # df = pd.read_csv(
-                    #     file
-                    # )  # Gantikan ini dengan fungsi Anda sendiri untuk membaca file
-                    st.session_state.df = df
-                    st.session_state.uploaded = True
-                    st.experimental_rerun()
-                    # main()
-                except:
-                    st.error("Mohon masukkan file dengan format yang benar.")
+                # try:
+                df = LoadDataframe.load_file_auto_delimiter(file)
+                # df = pd.read_csv(
+                #     file
+                # )  # Gantikan ini dengan fungsi Anda sendiri untuk membaca file
+                st.session_state.df = df
+                st.session_state.uploaded = True
+                st.experimental_rerun()
+                # main()
+                # except:
+                #     st.error("Mohon masukkan file dengan format yang benar.")
         # Tambahkan logika lainnya untuk opsi lainnya di sini
         else:
             df = get_sample_data(option)
