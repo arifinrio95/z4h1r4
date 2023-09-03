@@ -1978,7 +1978,7 @@ def main():
                             exec(code)
     
                             # Tampilkan teks penjelasan
-                            if explanation:
+                            # if explanation:
                                 # st.write(explanation)
                         # else:
                             # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
