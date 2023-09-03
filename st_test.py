@@ -1821,12 +1821,12 @@ def main():
                         "role":
                         "system",
                         "content":
-                        f"I will create points for you in the form of analysis to be saved in global variable string named point_summary."
+                        f"I will create python code to generate insight points for you in the form of analysis to be saved in global variable string named point_summary."
                     }, {
                         "role":
                         "user",
                         "content":
-                        f"""Create points in the form of insights that are insightful from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
+                        f"""Create python code to generate insight points in the form of insights that are insightful from dataframe df with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
                         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
                         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
                         Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into global variables, and saved all insights in global variable string named point_summary.
@@ -1957,28 +1957,30 @@ def main():
 
                     st.write('Original Response: ')
                     st.text(response)
-                    segments = response.split("BEGIN_CODE")
-                    segment_iterator = iter(segments)
+                    # segments = response.split("BEGIN_CODE")
+                    # segment_iterator = iter(segments)
 
                     st.write('Displayed Response: ')
-                    for segment in segment_iterator:
-                        # Jika ada kode dalam segmen ini
-                        if "END_CODE" in segment:
-                            code_end = segment.index("END_CODE")
-                            code = segment[:code_end].strip()
-                            explanation = segment[code_end +
-                                                  len("END_CODE"):].strip()
-                            explanation = explanation.replace('"', '\\"')
-                            exec(code)
+                    # for segment in segment_iterator:
+                    #     # Jika ada kode dalam segmen ini
+                    #     if "END_CODE" in segment:
+                    #         code_end = segment.index("END_CODE")
+                    #         code = segment[:code_end].strip()
+                    #         explanation = segment[code_end +
+                    #                               len("END_CODE"):].strip()
+                    #         explanation = explanation.replace('"', '\\"')
+                    #         exec(code)
     
-                            # Tampilkan teks penjelasan
-                            if explanation:
-                                st.write(explanation)
-                        else:
-                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                            st.write(segment)
+                    #         # Tampilkan teks penjelasan
+                    #         if explanation:
+                    #             st.write(explanation)
+                    #     else:
+                    #         # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                    #         st.write(segment)
                             
-                            text_summary = segment
+                    #         text_summary = segment
+
+                    exec(response)
 
                     with st.spinner(
                             'Creating the paragraph...(it may takes 1-2 minutes)'):
