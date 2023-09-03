@@ -1825,7 +1825,6 @@ def main():
                         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
                         The charts must be unique and interesting, {min_viz} most important insights from the data.
                         Do not give any explanation. Response only with script start with 'BEGIN_CODE' and end with 'END_CODE'.
-                        Fillna numerical column with mean and categorical column with modus first.
                         """
                     }]
                     
@@ -1872,6 +1871,8 @@ def main():
                                 explanation = segment[code_end +
                                                       len("END_CODE"):].strip()
                                 explanation = explanation.replace('"', '\\"')
+                                st.write("Cek code.")
+                                st.text(code)
                                 exec(code)
                                 # Tampilkan teks penjelasan
                                 if explanation:
