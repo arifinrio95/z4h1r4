@@ -1844,7 +1844,7 @@ def main():
                         "role":
                         "system",
                         "content":
-                        f"I will create points for you in the form of analysis to be displayed in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
+                        f"I will create points for you in the form of analysis to be save as string. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
                     }, {
                         "role":
                         "user",
@@ -1853,7 +1853,7 @@ def main():
                         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
                         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
                         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
-                        Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and display them as insight points in Streamlit.
+                        Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and save them as string.
                         Write as many insights as possible with various aggregated value that can be extracted in the form of bullet points.
                         """
                     }]
@@ -1888,7 +1888,7 @@ def main():
                         "role":
                         "user",
                         "content":
-                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}."""
+                        f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}. Buang insight yang tidak penting, fokus pada insight yang insightful."""
                     }]
     
                     if api_model == 'GPT3.5':
