@@ -1805,19 +1805,20 @@ def main():
                 def request_dashboard(schema_str,
                                          rows_str,
                                          min_viz,
-                                         api_model):
+                                         api_model,
+                                         library='Matplotlib'):
                 
                     # Versi penjelasan dan code
                     messages = [{
                         "role":
                         "system",
                         "content":
-                        f"I will create a dashboard with many chart in a single cell with Bokeh and show it in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
+                        f"I will create a dashboard with many chart in a single cell with {library} and show it in Streamlit. Every script should start with 'BEGIN_CODE' and end with 'END_CODE'."
                     }, {
                         "role":
                         "user",
                         "content":
-                        f"""Create a dashboard with many charts with Bokeh from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
+                        f"""Create a dashboard with many charts with {library} from data with the schema: {schema_str}, and the first 2 sample rows as an illustration: {rows_str}.
                         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
                         The dashboard contains many charts with proper title.
                         Extract as many as possible charts with high quality insights.
@@ -1851,14 +1852,17 @@ def main():
                                        [3, 4, 5, 6, 7, 8, 9, 10])
 
                 api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
-
+                library = 'Matplotlib'
+                library = st.selectbox(
+                    'Choose a Visualization Library:',
+                    ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
                 button = st.button("Submit", key='btn_submit3')
                 if button:
                     # Membagi respons berdasarkan tanda awal dan akhir kode
                     with st.spinner(
                             'Generating simple dashboard...(it may takes 1-2 minutes)'):
                         response = request_dashboard(schema_str, rows_str,
-                                                        min_viz, api_model)
+                                                        min_viz, api_model, library)
                         
                         st.write("Cek output.")
                         st.text(response)
