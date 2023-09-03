@@ -1805,7 +1805,7 @@ def main():
                         # st.text(response)
                         # st.text(introduction_list)
             else:
-                def request_story_prompt(schema_str,
+                def request_summary_points(schema_str,
                                          rows_str,
                                          api_model):
                    
@@ -1845,38 +1845,33 @@ def main():
                         script = response.choices[0].message['content']
                 
                     return script
-                                             
-                api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
-                segments = response.split("BEGIN_CODE")
-                segment_iterator = iter(segments)
-                for segment in segment_iterator:
-                    # Jika ada kode dalam segmen ini
-                    if "END_CODE" in segment:
-                        code_end = segment.index("END_CODE")
-                        code = segment[:code_end].strip()
-                        explanation = segment[code_end +
-                                              len("END_CODE"):].strip()
-                        explanation = explanation.replace('"', '\\"')
 
-                        # Coba eksekusi kode
-                        # try:
-                        # st.code(code)  # Tampilkan kode dalam format kode
-                        # execute_streamlit_code_with_explanations(code, introduction_list)
-                        exec(code)
-                        # st.write("Hasil eksekusi kode:")
-                        # st.write(output)
-                        # except Exception as e:
-                        #     st.write("Maaf terjadi kesalahan saat mengeksekusi kode untuk insight ini. Error:")
-                        #     st.write(str(e))
-                        # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
-                        # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
-
-                        # Tampilkan teks penjelasan
-                        if explanation:
-                            st.write(explanation)
-                    else:
-                        # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                        st.write(segment)
+                button = st.button("Submit", key='btn_submit2')
+                if button:
+                    # Membagi respons berdasarkan tanda awal dan akhir kode
+                    with st.spinner(
+                            'Generating insights...(it may takes 1-2 minutes)'):
+                        response = request_summary_points(schema_str, rows_str, api_model)
+                                
+                    api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+                    segments = response.split("BEGIN_CODE")
+                    segment_iterator = iter(segments)
+                    for segment in segment_iterator:
+                        # Jika ada kode dalam segmen ini
+                        if "END_CODE" in segment:
+                            code_end = segment.index("END_CODE")
+                            code = segment[:code_end].strip()
+                            explanation = segment[code_end +
+                                                  len("END_CODE"):].strip()
+                            explanation = explanation.replace('"', '\\"')
+                            exec(code)
+    
+                            # Tampilkan teks penjelasan
+                            if explanation:
+                                st.write(explanation)
+                        else:
+                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                            st.write(segment)
                 
 
         # if st.session_state.get('classification', False):
