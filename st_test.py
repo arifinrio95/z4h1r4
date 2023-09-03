@@ -1978,7 +1978,7 @@ def main():
                             explanation = explanation.replace('"', '\\"')
                             exec(code)
     
-                            Tampilkan teks penjelasan
+                            # Tampilkan teks penjelasan
                             if explanation:
                                 st.write(explanation)
                         else:
