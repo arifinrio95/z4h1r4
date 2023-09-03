@@ -1858,7 +1858,7 @@ def main():
                     ('Altair', 'Seaborn', 'Matplotlib'))
 
                 if library == 'Altair':
-                    library = 'Altair (hconcat and vconcat)'
+                    library = 'Altair (hconcat max 3 charts and vconcat for the rest)'
                 if library == 'Seaborn':
                     library = 'Seaborn (facetgrid)'
                 if library == 'Matplotlib':
