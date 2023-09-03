@@ -1855,14 +1855,14 @@ def main():
                 library = 'Matplotlib'
                 library = st.selectbox(
                     'Choose a Visualization Library:',
-                    ('Altair', 'Seaborn', 'Matplotlib'))
+                    ('Altair', 'Matplotlib'))
 
                 if library == 'Altair':
                     library = 'Altair (hconcat max 3 charts and vconcat for the rest with the same chart size)'
                 if library == 'Seaborn':
                     library = 'Seaborn (facetgrid)'
                 if library == 'Matplotlib':
-                    library = 'Matplotlib (subplots)'
+                    library = 'Matplotlib (subplots max 3 charts in a gird row and vertical for the rest) with minimalist style'
                 button = st.button("Submit", key='btn_submit3')
                 if button:
                     # Membagi respons berdasarkan tanda awal dan akhir kode
