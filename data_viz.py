@@ -2100,7 +2100,7 @@ class DataViz():
                                       'Argumentative', 'Satire'))
             format = st.selectbox(
                 'Choose the Format:',
-                ('Paragraf', 'Youtube Script', 'Thread', 'Caption Instagram'))
+                ('Paragraph', 'Youtube Script', 'Thread', 'Caption Instagram'))
             button = st.button("Give Me Summarize!")
 
             # openai.api_key = st.secrets['user_api']
