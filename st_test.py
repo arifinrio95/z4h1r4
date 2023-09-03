@@ -1830,7 +1830,7 @@ def main():
                         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
                         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
                         Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and saved all insights in string st.session_state.point_summary.
-                        Write as many insights as possible that can be extracted in the form of bullet points.
+                        Write as many insights as possible that can be extracted in the form of bullet points. Minimal 15 insights.
                         Only response with python code. Do not respond with anything other than Python code.
                         The value in the string st.session_state.point_summary should already be in the form of a value, not a variable.
                         """
@@ -1957,14 +1957,14 @@ def main():
                             'Generating insights...(it may takes 1-2 minutes)'):
                         response = request_summary_points(schema_str, rows_str, api_model)
 
-                    st.write('Original Response: ')
-                    st.text(response)
+                    # st.write('Original Response: ')
+                    # st.text(response)
                     # segments = response.split("BEGIN_CODE")
                     segments = response.split("```python")
                     
                     segment_iterator = iter(segments)
 
-                    st.write('Displayed Response: ')
+                    # st.write('Displayed Response: ')
                     for segment in segment_iterator:
                         # Jika ada kode dalam segmen ini
                         if "END_CODE" in segment:
@@ -1979,12 +1979,12 @@ def main():
     
                             # Tampilkan teks penjelasan
                             if explanation:
-                                st.write(explanation)
+                                # st.write(explanation)
                         else:
                             # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                            st.write(segment)
+                            # st.write(segment)
                             
-                            text_summary = segment
+                            # text_summary = segment
 
                     # exec(response)
 
