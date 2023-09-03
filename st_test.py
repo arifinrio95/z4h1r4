@@ -1921,15 +1921,15 @@ def main():
                 
                 api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
                 language = st.selectbox('Choose Language:',
-                                        ('Indonesia', 'English', 'Sunda'))
+                                        ('Indonesia', 'English', 'Sunda'), key='btn_lang'))
                 style_choosen = st.selectbox('Choose the Formality:',
-                                             ('Formal', 'Non-Formal'))
+                                             ('Formal', 'Non-Formal'), key='btn_style')
                 objective = st.selectbox('Choose the Style:',
                                          ('Narative', 'Persuasive', 'Descriptive',
-                                          'Argumentative', 'Satire'))
+                                          'Argumentative', 'Satire'), key='btn_obj')
                 format = st.selectbox(
                     'Choose the Format:',
-                    ('Paragraf', 'Youtube Script', 'Thread', 'Caption Instagram'))
+                    ('Paragraf', 'Youtube Script', 'Thread', 'Caption Instagram'), key='btn_format')
             
                 button = st.button("Submit", key='btn_submit2')
                 if button:
