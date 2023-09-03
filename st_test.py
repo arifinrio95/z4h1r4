@@ -1853,7 +1853,7 @@ def main():
                         My dataframe has been loaded previously, named 'df'. Use it directly; do not reload the dataframe, and do not redefine the dataframe.
                         Every script should start with 'BEGIN_CODE' and end with 'END_CODE'.
                         Use df directly; it's been loaded before, do not reload the df, and do not redefine the df.
-                        Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and display them as insight points in Streamlit.
+                        Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into global variables, and display them as insight points in Streamlit.
                         Write as many insights as possible with various aggregated value that can be extracted in the form of bullet points.
                         """
                     }]
@@ -1938,6 +1938,8 @@ def main():
                             'Generating insights...(it may takes 1-2 minutes)'):
                         response = request_summary_points(schema_str, rows_str, api_model)
 
+                    st.write('Original Response: ')
+                            st.write(response)
                     segments = response.split("BEGIN_CODE")
                     segment_iterator = iter(segments)
                     for segment in segment_iterator:
@@ -1956,6 +1958,8 @@ def main():
                         else:
                             # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
                             st.write(segment)
+                            
+                            text_summary = segment
 
                     with st.spinner(
                             'Creating the paragraph...(it may takes 1-2 minutes)'):
