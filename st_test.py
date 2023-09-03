@@ -1682,6 +1682,9 @@ def main():
                         unsafe_allow_html=True)
             
 
+            if 'point_summary' not in st.session_state:
+                st.session_state.point_summary = ""
+
             #     st.markdown(request_story_prompt(dict_stats))
             format = st.selectbox('Choose the format :',
                                    ['Paragraph', 'Visualization'])
