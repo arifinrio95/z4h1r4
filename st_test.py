@@ -1477,6 +1477,8 @@ def main():
     openai.api_key = st.secrets['user_api']
 
     df = st.session_state.df
+    if st.button('Change the dataset.'):
+        handle_file_upload()
     st.subheader("Your dataframe (sample 10 first rows).")
     st.dataframe(df.head(10))
     # try:
