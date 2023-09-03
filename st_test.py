@@ -1832,6 +1832,7 @@ def main():
                         Create insight points whose values are extracted from the dataframe df with schema: {schema_str}, then turn them into variables, and saved all insights in st.session_state.point_summary.
                         Write as many insights as possible that can be extracted in the form of bullet points.
                         Only response with python code. Do not respond with anything other than Python code.
+                        Python code should start with 'BEGIN_CODE' and end with 'END_CODE'.
                         """
                     }]
                    
@@ -1958,28 +1959,28 @@ def main():
 
                     st.write('Original Response: ')
                     st.text(response)
-                    # segments = response.split("BEGIN_CODE")
-                    # segment_iterator = iter(segments)
+                    segments = response.split("BEGIN_CODE")
+                    segment_iterator = iter(segments)
 
                     st.write('Displayed Response: ')
-                    # for segment in segment_iterator:
-                    #     # Jika ada kode dalam segmen ini
-                    #     if "END_CODE" in segment:
-                    #         code_end = segment.index("END_CODE")
-                    #         code = segment[:code_end].strip()
-                    #         explanation = segment[code_end +
-                    #                               len("END_CODE"):].strip()
-                    #         explanation = explanation.replace('"', '\\"')
-                    #         exec(code)
+                    for segment in segment_iterator:
+                        # Jika ada kode dalam segmen ini
+                        if "END_CODE" in segment:
+                            code_end = segment.index("END_CODE")
+                            code = segment[:code_end].strip()
+                            explanation = segment[code_end +
+                                                  len("END_CODE"):].strip()
+                            explanation = explanation.replace('"', '\\"')
+                            exec(code)
     
-                    #         # Tampilkan teks penjelasan
-                    #         if explanation:
-                    #             st.write(explanation)
-                    #     else:
-                    #         # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
-                    #         st.write(segment)
+                            # Tampilkan teks penjelasan
+                            if explanation:
+                                st.write(explanation)
+                        else:
+                            # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
+                            st.write(segment)
                             
-                    #         text_summary = segment
+                            text_summary = segment
 
                     exec(response)
 
