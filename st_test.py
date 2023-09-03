@@ -1686,8 +1686,8 @@ def main():
                         unsafe_allow_html=True)
 
             #     st.markdown(request_story_prompt(dict_stats))
-            format = st.selectbox('Choose the format :',
-                                   ['Paragraph', 'Visualization'])
+            format = st.selectbox('Choose the Output:',
+                                   ['Reports', 'Visualizations'])
             if format == 'Visualization':
                 min_viz = st.selectbox('Expected number of insights:',
                                        [3, 4, 5, 6, 7, 8, 9, 10])
