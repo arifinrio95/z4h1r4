@@ -469,19 +469,19 @@ class DataViz():
                     wide_format = dc2.checkbox("Wide Format Data")
     
                     if VAR5 != 'None':
-                        data = data[[VAR3, VAR4, VAR5]].copy()
+                        data_line = data[[VAR3, VAR4, VAR5]].copy()
                         # Check if the number of unique categories is greater than 3
-                        if data[VAR5].nunique() > 3:
+                        if data_line[VAR5].nunique() > 3:
                             # Get the top N categories
-                            top_categories = data[VAR5].value_counts().nlargest(
+                            top_categories = data_line[VAR5].value_counts().nlargest(
                                 3).index.tolist()
                             # Create a new categorical variable that groups top N categories and labels the rest as 'Others'
-                            data[VAR5] = data[VAR5].apply(
+                            data_line[VAR5] = data_line[VAR5].apply(
                                 lambda x: x if x in top_categories else 'Others')
                     else:
-                        data = data[[VAR3, VAR4]].copy()
+                        data_line = data[[VAR3, VAR4]].copy()
     
-                    df_to_plot = data.sort_values(
+                    df_to_plot = data_line.sort_values(
                         by=VAR4,
                         ascending=True).reset_index().drop(columns=['index'])
     
