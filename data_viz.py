@@ -1095,6 +1095,12 @@ class DataViz():
                                                axis=1)
     
                 # Your existing code for vectorizing and calculating word frequencies
+                note_text = None
+                if all(len(text.split()) < ngrams for text in processed_text):
+                    note_text = "Using unigrams because all records have only one word."
+                    desc_col.write(note_text)
+                    ngrams = 1
+                    
                 vectorizer = CountVectorizer(ngram_range=(ngrams, ngrams))
                 bag_of_words = vectorizer.fit_transform(processed_text)
                 sum_words = bag_of_words.sum(axis=0)
