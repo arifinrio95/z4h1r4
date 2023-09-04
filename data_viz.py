@@ -1911,7 +1911,7 @@ class DataViz():
 
                         st.write("---")
                 else:
-                    st.write("No Categorical Variables")
+                    st.write(f"There are no significant categories variables that related with {selected_variable} based on our criteria.")
                     st.write('---')
 
                 st.subheader("D. Correlation Summary")
