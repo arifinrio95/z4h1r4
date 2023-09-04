@@ -1936,7 +1936,7 @@ class DataViz():
                             f"No Variables have strong correlation with {selected_variable}."
                         )
                 else:
-                    st.write("No Categorical Variables")
+                    st.write(f"There are no significant numerical variables that related with {selected_variable} based on our criteria.")
                 st.write('---')
                 all_text = f"Variable {selected_variable} have the following summary: \n " + text + top_bottom_text + corr_text
                 all_text_without_corr = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text
@@ -1965,14 +1965,13 @@ class DataViz():
                 st.subheader("B. Distribution")
                 st.dataframe(description, use_container_width=True)
                 st.write('---')
-                
+
+                top_bottom_text = ''
                 if len(numeric_cols) > 0:
                     st.subheader("C. Grouped Summary")
-                    top_bottom_text = ''
                     grouped_summary = data.groupby(
                         selected_variable)[numeric_cols].describe()
                     j = 1
-                if len(numeric_cols) > 0:
                     for n_ in numeric_cols:
                         st.subheader(
                             f"{j}. Summary of {selected_variable} grouped by {n_}"
@@ -2012,7 +2011,7 @@ class DataViz():
 
                         st.write("---")
                 else:
-                    st.write("No Numerical Variables")
+                    st.write(f"There are no significant numerical variables that related with {selected_variable} based on our criteria.")
                     st.write("---")
 
                 st.subheader("D. Correlation Summary")
@@ -2086,9 +2085,9 @@ class DataViz():
                 else:
                     st.write("No Categorical Variables")
                     st.write("---")
-                if len(numeric_cols) > 0:
-                    all_text = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text + corr_text
-                    all_text_without_corr = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text
+
+                all_text = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text + corr_text
+                all_text_without_corr = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text
             else:
                 st.write(
                     f"{selected_variable} is a Date columns, we will not show any analytics for it."
@@ -2164,8 +2163,15 @@ class DataViz():
                 # st.text(all_text)
                 with st.spinner(
                         'Generating insights...(it may takes 1-2 minutes)'):
-                    response = request_summary_wording(
-                        str(all_text_without_corr), language, style_choosen,
-                        objective, format, api_model)
-                    # st.text(split_text_into_lines(response))
-                    st.write(response)
+                    try:
+                        response = request_summary_wording(
+                            str(all_text), language, style_choosen,
+                            objective, format, api_model)
+                        # st.text(split_text_into_lines(response))
+                        st.write(response)
+                    except:
+                        response = request_summary_wording(
+                            str(all_text_without_corr), language, style_choosen,
+                            objective, format, api_model)
+                        # st.text(split_text_into_lines(response))
+                        st.write(response)
