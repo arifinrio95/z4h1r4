@@ -116,7 +116,7 @@ class DataViz():
             # Step 2: Check the number of numerical and categorical variables
             if len(numerical_vars) >= 5:
                 # Step 3: Permutation Importance
-                data = self.df.dropna()
+                data[numerical_vars] = self.df[numerical_vars].fillna(0)                
                 X = data[numerical_vars]
                 y = data[selected_variables]
 
