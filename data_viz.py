@@ -1766,7 +1766,7 @@ class DataViz():
             integer_cols = self.integer_cols.tolist()
             numeric_cols = self.numeric_cols.tolist()
             float_cols = self.float_cols.tolist()
-            categorical_cols = elf.categorical_cols.tolist()
+            categorical_cols = self.categorical_cols.tolist()
             text1 = f'''We have {r} records with {c} columns. The Columns consits of:  
             1. Have {len(date_cols)} date columns : {date_cols}.  
             2. Have {len(numeric_cols)} numeric columns : {numeric_cols}.  
