@@ -92,6 +92,7 @@ class DataViz():
         # Step 1: Split data into numerical and categorical variables
         numerical_vars = self.num_df.columns.tolist()
         categorical_vars = self.cat_df.columns.tolist()
+        data = self.df.copy()
         variables_to_remove = []
         for var in numerical_vars:
             if self.df[var].value_counts(
