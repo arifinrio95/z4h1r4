@@ -1097,7 +1097,7 @@ class DataViz():
                 # Your existing code for vectorizing and calculating word frequencies
                 note_text = None
                 if all(len(text.split()) < ngrams for text in processed_text):
-                    ngrams = max(len(text.split()) < ngrams for text in processed_text)
+                    ngrams = max(len(text.split()) for text in processed_text)
                     note_text = f"Using {ngrams}-grams because records have at max {ngrams} word."
                     desc_col.write(note_text)
                     
