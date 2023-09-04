@@ -2083,7 +2083,7 @@ class DataViz():
                             i += 2
 
                 else:
-                    st.write("No Categorical Variables")
+                    st.write(f"There are no significant categories variables that related with {selected_variable} based on our criteria.")
                     st.write("---")
 
                 all_text = f"Variable {selected_variable} have the following summary:  \n" + text + top_bottom_text + corr_text
