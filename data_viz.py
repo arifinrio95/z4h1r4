@@ -145,7 +145,7 @@ class DataViz():
 
             if len(categorical_vars) >= 5:
                 # Step 3: Permutation Importance
-                data = self.df.dropna()
+                data[categorical_vars] = self.df[categorical_vars].fillna('Missing Data') 
                 X = data[categorical_vars]
                 y = data[selected_variables]
 
@@ -199,7 +199,7 @@ class DataViz():
                 ]
 
             if len(numerical_vars) >= 5:
-                data = self.df.dropna()
+                data[numerical_vars] = self.df[numerical_vars].fillna(0) 
                 X = data[numerical_vars]
                 y = data[selected_variables]
                 X_train, X_test, y_train, y_test = train_test_split(
