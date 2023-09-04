@@ -1762,26 +1762,25 @@ class DataViz():
             st.subheader("A. Data Summary")
             st.dataframe(self.df.head(), use_container_width=True)
             r, c = self.df.shape
-            date_cols = self.df.select_dtypes(
-                include='datetime64[ns]').columns.tolist()
-            integer_cols = self.df.select_dtypes(['int16', 'int32',
-                                                  'int64']).columns.tolist()
-            numeric_cols = self.num_df.columns.tolist()
-            float_cols = self.df.select_dtypes(
-                ['float16', 'float32', 'float64']).columns.tolist()
-            categorical_cols = self.cat_df.columns.tolist()
+            date_cols = self.date_cols.tolist()
+            integer_cols = self.integer_cols.tolist()
+            numeric_cols = self.numeric_cols.tolist()
+            float_cols = self.float_cols.tolist()
+            categorical_cols = elf.categorical_cols.tolist()
             text1 = f'''We have {r} records with {c} columns. The Columns consits of:  
             1. Have {len(date_cols)} date columns : {date_cols}.  
             2. Have {len(numeric_cols)} numeric columns : {numeric_cols}.  
             2.a. Have {len(integer_cols)} integer columns : {integer_cols}.  
             2.b. Have {len(float_cols)} float columns : {float_cols}.  
             3. Have {len(categorical_cols)} categorical columns : {categorical_cols}.'''
-
+            data = self.df.copy()
+            data[categorical_cols] = data[categorical_cols].fillna('Missing Data')
+            data[numeric_cols] = data[numeric_cols].fillna(0)
             st.markdown(text1)
             st.write('---')
             selected_variable = st.selectbox(
                 "Select a Variables for detail Summary:",
-                self.df.columns.tolist())
+                data.columns.tolist())
             st.session_state.button_clicked = False
             message_placeholder = st.empty()
             message_placeholder.write("Processing... please wait!!!")
@@ -1794,7 +1793,7 @@ class DataViz():
 
             st.write("---")
 
-            data = self.df[cols_used + [selected_variable]].copy()
+            data = data[cols_used + [selected_variable]].copy()
             date_cols = data.select_dtypes(
                 include='datetime64[ns]').columns.tolist()
             integer_cols = data.select_dtypes(['int16', 'int32',
@@ -1997,7 +1996,7 @@ class DataViz():
                         i += 1
                         top_bottom_text += f"{i}. Bottom 3 {selected_variable} with lowest Average of {n_}: {bottom_mean_text} \n "
                         i += 1
-                        st.dataframe(grouped_summary[n_])
+                        st.dataframe(grouped_summary[n_], use_container_width=True)
                         # Display top and bottom categories (based on mean)
                         c1, c2 = st.columns(2)
                         with c1:
@@ -2035,6 +2034,13 @@ class DataViz():
                                 contingency_table.values == max_value)
                             min_indices = np.where(
                                 contingency_table.values == min_value)
+
+                            # Limit to only three indices if there are more than 3
+                            if max_indices[0].size > 3:
+                                max_indices = (max_indices[0][:3], max_indices[1][:3])
+                            
+                            if min_indices[0].size > 3:
+                                min_indices = (min_indices[0][:3], min_indices[1][:3])
 
                             # Get corresponding row and column labels
                             max_rows = [
