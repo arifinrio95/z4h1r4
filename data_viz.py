@@ -294,32 +294,34 @@ class DataViz():
                 selected_sorting = dc2.selectbox(
                     "Select Bar Plot Sorting Order:", sorting_options)
 
+                data = self.df.copy()
+
                 # Check if the number of unique categories is greater than N
-                if self.df[VAR].nunique() > int(selected_total_category):
+                if data[VAR].nunique() > int(selected_total_category):
                     # Get the top N categories
-                    top_categories = self.df[VAR].value_counts().nlargest(
+                    top_categories = data[VAR].value_counts().nlargest(
                         int(selected_total_category)).index.tolist()
                     # Create a new categorical variable that groups top N categories and labels the rest as 'Others'
-                    self.df[f'{VAR}NEW'] = self.df[VAR].apply(
+                    data[f'{VAR}NEW'] = data[VAR].apply(
                         lambda x: x if x in top_categories else 'Others')
                 else:
-                    self.df[f'{VAR}NEW'] = self.df[VAR]
+                    data[f'{VAR}NEW'] = data[VAR]
 
                 # Apply selected aggregation function or counting
                 if selected_aggregation == 'sum':
-                    aggregated_data = self.df.groupby(
+                    aggregated_data = data.groupby(
                         f'{VAR}NEW')[selected_aggregator].sum()
                     LABEL_PLOT = f'Sum of {selected_aggregator} by {VAR}'
                 elif selected_aggregation == 'mean':
-                    aggregated_data = self.df.groupby(
+                    aggregated_data = data.groupby(
                         f'{VAR}NEW')[selected_aggregator].mean()
                     LABEL_PLOT = f'Mean of {selected_aggregator} by {VAR}'
                 elif selected_aggregation == 'median':
-                    aggregated_data = self.df.groupby(
+                    aggregated_data = data.groupby(
                         f'{VAR}NEW')[selected_aggregator].median()
                     LABEL_PLOT = f'Median of {selected_aggregator} by {VAR}'
                 else:
-                    aggregated_data = self.df[f'{VAR}NEW'].value_counts()
+                    aggregated_data = data[f'{VAR}NEW'].value_counts()
                     LABEL_PLOT = f'Count of {VAR}'
 
                 # Sort the data based on the selected sorting order
@@ -383,23 +385,23 @@ class DataViz():
                 #     "Select # of Top Categories for Pie Chart:", ['5', '10', '20'])
 
                 # Check if the number of unique categories is greater than 3
-                if self.df[VAR2].nunique() > 3:
+                if data[VAR2].nunique() > 3:
                     # Get the top N categories
-                    top_categories = self.df[VAR2].value_counts().nlargest(
+                    top_categories = data[VAR2].value_counts().nlargest(
                         3).index.tolist()
                     # Create a new categorical variable that groups top N categories and labels the rest as 'Others'
-                    self.df[f'{VAR2}NEW'] = self.df[VAR2].apply(
+                    data[f'{VAR2}NEW'] = data[VAR2].apply(
                         lambda x: x if x in top_categories else 'Others')
                 else:
-                    self.df[f'{VAR2}NEW'] = self.df[VAR2]
+                    data[f'{VAR2}NEW'] = data[VAR2]
 
                 # Apply selected aggregation function or counting
                 if selected_aggregation == 'Sum':
-                    aggregated_data = self.df.groupby(
+                    aggregated_data = data.groupby(
                         f'{VAR2}NEW')[selected_aggregator].sum()
                     LABEL_PLOT = f'Sum of {selected_aggregator} by {VAR2}'
                 else:
-                    aggregated_data = self.df[f'{VAR2}NEW'].value_counts()
+                    aggregated_data = data[f'{VAR2}NEW'].value_counts()
                     LABEL_PLOT = f'Percent Count of {VAR2}'
 
                 # Calculate the total aggregated value
@@ -467,7 +469,7 @@ class DataViz():
                     wide_format = dc2.checkbox("Wide Format Data")
     
                     if VAR5 != 'None':
-                        data = self.df[[VAR3, VAR4, VAR5]].copy()
+                        data = data[[VAR3, VAR4, VAR5]].copy()
                         # Check if the number of unique categories is greater than 3
                         if data[VAR5].nunique() > 3:
                             # Get the top N categories
@@ -477,7 +479,7 @@ class DataViz():
                             data[VAR5] = data[VAR5].apply(
                                 lambda x: x if x in top_categories else 'Others')
                     else:
-                        data = self.df[[VAR3, VAR4]].copy()
+                        data = data[[VAR3, VAR4]].copy()
     
                     df_to_plot = data.sort_values(
                         by=VAR4,
@@ -585,17 +587,17 @@ class DataViz():
 
                 # Create a custom pivot table using pandas
                 if selected_rows is None and selected_columns is None:
-                    pivot_table = pd.DataFrame({'Count': [self.df.shape[0]]})
+                    pivot_table = pd.DataFrame({'Count': [data.shape[0]]})
                     pivot_table['Count'] = pivot_table['Count'].map(
                         self.format_value)
                 elif selected_rows is not None and selected_columns is None:
-                    pivot_table = self.df[selected_rows].value_counts(
+                    pivot_table = data[selected_rows].value_counts(
                     ).reset_index()
                     pivot_table.columns = [selected_rows, 'Count']
                     pivot_table['Count'] = pivot_table['Count'].map(
                         self.format_value)
                 elif selected_rows is None and selected_columns is not None:
-                    pivot_table = self.df[selected_columns].value_counts(
+                    pivot_table = data[selected_columns].value_counts(
                     ).reset_index()
                     pivot_table.columns = [selected_columns, 'Count']
                     pivot_table['Count'] = pivot_table['Count'].map(
@@ -603,8 +605,8 @@ class DataViz():
                 elif selected_rows is not None and selected_columns is not None and selected_values is None:
                     if selected_value_adjustment == 'percentage by columns':
                         pivot_table = pd.crosstab(
-                            index=self.df[selected_rows],
-                            columns=self.df[selected_columns])
+                            index=data[selected_rows],
+                            columns=data[selected_columns])
 
                         column_totals = pivot_table.sum(axis=0)
 
@@ -639,8 +641,8 @@ class DataViz():
                             lambda x: f"{x:.2f}%" if not np.isnan(x) else "-")
                     elif selected_value_adjustment == 'percentage by rows':
                         pivot_table = pd.crosstab(
-                            index=self.df[selected_rows],
-                            columns=self.df[selected_columns])
+                            index=data[selected_rows],
+                            columns=data[selected_columns])
 
                         row_totals = pivot_table.sum(axis=1)
 
@@ -676,8 +678,8 @@ class DataViz():
                             lambda x: f"{x:.2f}%" if not np.isnan(x) else "-")
                     elif selected_value_adjustment == 'percentage by all':
                         pivot_table = pd.crosstab(
-                            index=self.df[selected_rows],
-                            columns=self.df[selected_columns])
+                            index=data[selected_rows],
+                            columns=data[selected_columns])
 
                         all_values = pivot_table.values.sum()
 
@@ -707,8 +709,8 @@ class DataViz():
                             lambda x: f"{x:.2f}%" if not np.isnan(x) else "-")
                     else:
                         pivot_table = pd.crosstab(
-                            index=self.df[selected_rows],
-                            columns=self.df[selected_columns],
+                            index=data[selected_rows],
+                            columns=data[selected_columns],
                             margins=True)
                 else:
                     if selected_value_adjustment == 'sum':
