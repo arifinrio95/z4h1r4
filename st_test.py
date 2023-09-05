@@ -1,77 +1,47 @@
+import os
+import re
+import json
+import warnings
+import base64
+import hashlib
 import openai
 import streamlit as st
-import re
-from dataviz.barchart import BarChart
-from dataviz.piechart import PieChart
-
-from load_dataframe import LoadDataframe
-from data_viz import DataViz
 
 import pandas as pd
 import numpy as np
 from scipy import stats
 import statsmodels.api as sm
-
-import requests
-import json
-import warnings
-import time
-import base64
+from itertools import combinations
 
 import seaborn as sns
 import matplotlib.pyplot as plt
-from io import StringIO
 import plotly.express as px
-from bokeh.plotting import figure
-import altair as alt
-
-from pandas_profiling import ProfileReport
-from streamlit_pandas_profiling import st_profile_report
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.decomposition import PCA
-
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, confusion_matrix, accuracy_score, classification_report, roc_curve, auc, silhouette_score
-from sklearn.linear_model import LogisticRegression
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import LabelEncoder
-from sklearn.cluster import AgglomerativeClustering
-from scipy.cluster.hierarchy import dendrogram, linkage
-from scipy.spatial.distance import cdist
-from wordcloud import WordCloud
-
-import pygwalker as pyg
-from itertools import chain, combinations
-from scipy.stats import zscore
-from autoviz.AutoViz_Class import AutoViz_Class
-import os
-# from IPython.display import display
-
-import dtale
-import dtale.app as dtale_app
-import streamlit.components.v1 as components
-# from transformers import BartTokenizer, BartForSequenceClassification
-
-from utils import get_answer_csv
-from lazypredict.Supervised import LazyClassifier
-
-import hashlib
-
-from kaggle.api.kaggle_api_extended import KaggleApi
-
 import plotly.graph_objects as go
 
-import psycopg2
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelEncoder
+from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, confusion_matrix, accuracy_score, classification_report, roc_curve, auc, silhouette_score
 
-# Establish a connection to the database
-# connection = psycopg2.connect(
-#     host="172.104.32.208",
-#     port="3768",
-#     database="public",
-#     user=st.secrets['user_db'],
-#     password=st.secrets['pass_db']
-# )
+from sklearn.linear_model import LogisticRegression, LinearRegression
+from sklearn.cluster import KMeans
+from scipy.cluster.hierarchy import dendrogram, linkage
+from scipy.spatial.distance import cdist
+from scipy.stats import zscore
+
+from wordcloud import WordCloud
+
+from autoviz.AutoViz_Class import AutoViz_Class
+import dtale
+import streamlit.components.v1 as components
+
+from lazypredict.Supervised import LazyClassifier
+
+from utils import get_answer_csv
+from load_dataframe import LoadDataframe
+from data_viz import DataViz
+from dataviz.barchart import BarChart
+from dataviz.piechart import PieChart
 
 
 # Fungsi untuk mengenkripsi password
@@ -117,7 +87,7 @@ def login():
     st.markdown('<div id="ulikdata">Ulikdata</div>', unsafe_allow_html=True)
     st.markdown("---")
 
-    col1, col2, col3 = st.columns(3)
+    _, col2, _ = st.columns(3)
 
     # Tambahkan gambar dari Google Drive di kolom pertama (col1)
     # col1.image(
@@ -189,20 +159,6 @@ def login():
         st.markdown('</div>', unsafe_allow_html=True)
 
 
-# CSS untuk tombol
-# st.markdown("""
-#     <style>
-#         .stButton>button {
-#             background-color: lightblue;
-#             color: white;
-#         }
-#         .stButton:hover>button {
-#             background-color: pink;
-#         }
-#     </style>
-# """, unsafe_allow_html=True)
-
-
 def display(obj, *args, **kwargs):
     """Mock the Jupyter display function to use show() instead."""
     try:
@@ -229,7 +185,6 @@ hide_menu = """
 </style>
 """
 
-# Find more emojis here: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="Ulikdata", page_icon=":tada:", layout="wide")
 
 
@@ -242,22 +197,17 @@ def local_css(file_name):
 local_css("style.css")
 
 ## or use this:
+## CSS untuk tombol
+#  .stButton>button {
+#       background-color: lightblue;
+#       color: white;
+# }
+#  .stButton:hover>button {
+#       background-color: pink;
+# }
 # .css-ztfqz8 {
 #     display: none !important;
 # }
-
-# Fungsi untuk mengisi missing values berdasarkan pilihan pengguna
-# def fill_missing_values(df, column, method):
-#     if df[column].dtype == 'float64' or df[column].dtype == 'int64': # Jika numeric
-#         if method == '0':
-#             df[column].fillna(0, inplace=True)
-#         elif method == 'Average':
-#             df[column].fillna(df[column].mean(), inplace=True)
-#     else: # Jika kategorikal
-#         if method == 'Modus':
-#             df[column].fillna(df[column].mode().iloc[0], inplace=True)
-#         elif method == 'Unknown':
-#             df[column].fillna('Unknown', inplace=True)
 
 
 def request_prompt(input_pengguna,
@@ -268,7 +218,8 @@ def request_prompt(input_pengguna,
                    error_message=None,
                    previous_script=None,
                    retry_count=0):
-    # versi code + penjelasan prompt
+    '''
+    versi code + penjelasan prompt
     # messages = [
     #     {"role": "system", "content": "I only response with python syntax streamlit version, no other text explanation."},
     #     {"role": "user", "content": f"""I have a dataframe name df with the following column schema: {schema_str}, and 2 sample rows: {rows_str}.
@@ -278,8 +229,8 @@ def request_prompt(input_pengguna,
     #     4. Start your response with “import”.
     #     5. Show all your response to streamlit apps.
     #     6. Use Try and Except.
-    #     7. Pay attention to the column type before creating the script."""}
-    # ]
+    #     7. Pay attention to the column type before creating the script.
+    '''
 
     if style == 'General Question':
         script = get_answer_csv(df, input_pengguna)
@@ -641,8 +592,6 @@ def show_correlation_matrix(df):
 
     # Button to download the correlation table as CSV
     if st.button('Download correlation table as CSV'):
-        import csv
-        import base64
 
         # Convert DataFrame to CSV
         csv_file = corr.to_csv(index=False)
@@ -692,8 +641,8 @@ def perform_pca(df):
     combined_df = pd.concat([df.reset_index(drop=True), pca_df], axis=1)
 
     # Tombol Unduh
-    csv = combined_df.to_csv(index=False)
-    b64 = base64.b64encode(csv.encode()).decode()  # Beberapa byte dance
+    csv_file = combined_df.to_csv(index=False)
+    b64 = base64.b64encode(csv_file.encode()).decode()  # Beberapa byte dance
     href = f'<a href="data:file/csv;base64,{b64}" download="pca_result.csv">Download CSV File</a>'
     st.markdown(href, unsafe_allow_html=True)
 
@@ -1472,7 +1421,6 @@ def handle_file_upload():
 
 
 def main():
-    import warnings
     warnings.filterwarnings('ignore')
     st.set_option('deprecation.showPyplotGlobalUse', False)
     openai.api_key = st.secrets['user_api']
@@ -1691,59 +1639,61 @@ def main():
 
             #     st.markdown(request_story_prompt(dict_stats))
             format = st.selectbox('Choose the Output:',
-                                   ['Reports', 'Visualizations', 'Dashboard'])
+                                  ['Reports', 'Visualizations', 'Dashboard'])
             if format == 'Visualizations':
                 min_viz = st.selectbox('Expected number of insights:',
                                        [3, 4, 5, 6, 7, 8, 9, 10])
                 # min_viz = st.slider('Expected number of insights:', min_value=3, max_value=50)
-    
+
                 style_choosen = 'Plotly'
                 style_choosen = st.selectbox(
                     'Choose a Visualization Style:',
                     ('Plotly', 'Vega', 'Seaborn', 'Matplotlib'))
-                api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
-    
+                api_model = st.selectbox('Choose LLM Model:',
+                                         ('GPT4', 'GPT3.5'))
+
                 if style_choosen == 'Matplotlib':
                     style_choosen = 'Matplotlib with clean and minimalist style'
-    
+
                 button = st.button("Submit", key='btn_submit2')
                 if button:
                     # Membagi respons berdasarkan tanda awal dan akhir kode
                     with st.spinner(
-                            'Generating insights...(it may takes 1-2 minutes)'):
-                        response = request_story_prompt(schema_str, rows_str,
-                                                        min_viz, api_model,
-                                                        style_choosen)
+                            'Generating insights...(it may takes 1-2 minutes)'
+                    ):
+                        response = request_story_prompt(
+                            schema_str, rows_str, min_viz, api_model,
+                            style_choosen)
                         # st.text(response)
                         # Extracting the introductions
                         # pattern = r'st.write\("Insight \d+: .+?"\)\nst.write\("(.+?)"\)'
                         # pattern = r'st.write\("Insight \d+: (.+?)"\)'
                         pattern = r'# Insight \d+: (.+?)\n'
-    
+
                         introductions = re.findall(pattern, response)
-    
+
                         # Printing the extracted introductions
                         # for intro in introductions:
                         #     print(intro)
-    
+
                         # Saving the introductions to a list
                         introduction_list = list(introductions)
                         introduction_list = [
                             "Analyze the " + s for s in introduction_list
                         ]
-    
+
                         # st.text(introduction_list)
                         # for query in introduction_list:
                         #     st.write(get_answer_csv(df, query))
-    
+
                         def execute_streamlit_code_with_explanations(
                                 response, introduction_list):
                             # Split kode berdasarkan st.plotly_chart()
                             code_segments = response.split('st.plotly_chart(')
-    
+
                             modified_code = code_segments[
                                 0]  # Bagian kode sebelum plot pertama
-    
+
                             progress_bar = st.progress(0)
                             for index, segment in enumerate(code_segments[1:]):
                                 # Dapatkan penjelasan untuk segment ini
@@ -1752,22 +1702,21 @@ def main():
                                         uploaded_file_path,
                                         introduction_list[index])
                                     modified_code += f'\nst.write("{explanation}")\n'
-    
+
                                 # Tambahkan st.plotly_chart kembali
                                 modified_code += 'st.plotly_chart(' + segment
-    
+
                                 # Update progress bar
                                 progress_percentage = (index + 1) / len(
                                     code_segments[1:])
                                 progress_bar.progress(progress_percentage)
-    
+
                             # st.code(modified_code)
                             # Eksekusi kode yang telah dimodifikasi
                             exec(modified_code)
-    
+
                         # execute_streamlit_code_with_explanations(response, introduction_list)
 
-                        
                         segments = response.split("BEGIN_CODE")
                         segment_iterator = iter(segments)
                         for segment in segment_iterator:
@@ -1776,9 +1725,10 @@ def main():
                                 code_end = segment.index("END_CODE")
                                 code = segment[:code_end].strip()
                                 explanation = segment[code_end +
-                                                      len("END_CODE"):].strip()
+                                                      len("END_CODE"):].strip(
+                                                      )
                                 explanation = explanation.replace('"', '\\"')
-    
+
                                 # Coba eksekusi kode
                                 # try:
                                 # st.code(code)  # Tampilkan kode dalam format kode
@@ -1791,7 +1741,7 @@ def main():
                                 #     st.write(str(e))
                                 # next(segment_iterator, None)  # Lewati segmen penjelasan berikutnya
                                 # continue  # Lanjut ke segmen berikutnya setelah segmen penjelasan
-    
+
                                 # Tampilkan teks penjelasan
                                 if explanation:
                                     st.write(explanation)
@@ -1802,12 +1752,13 @@ def main():
                         # st.text(response)
                         # st.text(introduction_list)
             elif format == 'Dashboard':
+
                 def request_dashboard(schema_str,
-                                         rows_str,
-                                         min_viz,
-                                         api_model,
-                                         library='Matplotlib'):
-                
+                                      rows_str,
+                                      min_viz,
+                                      api_model,
+                                      library='Matplotlib'):
+
                     # Versi penjelasan dan code
                     messages = [{
                         "role":
@@ -1829,7 +1780,7 @@ def main():
                         Give the title of dashboard with st.title().
                         """
                     }]
-                    
+
                     if api_model == 'GPT3.5':
                         response = openai.ChatCompletion.create(
                             model="gpt-3.5-turbo",
@@ -1851,11 +1802,11 @@ def main():
                 min_viz = st.selectbox('Expected number of insights:',
                                        [3, 4, 5, 6, 7, 8, 9, 10])
 
-                api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+                api_model = st.selectbox('Choose LLM Model:',
+                                         ('GPT4', 'GPT3.5'))
                 library = 'Matplotlib'
-                library = st.selectbox(
-                    'Choose a Visualization Library:',
-                    ('Altair', 'Matplotlib'))
+                library = st.selectbox('Choose a Visualization Library:',
+                                       ('Altair', 'Matplotlib'))
 
                 if library == 'Altair':
                     library = 'Altair (hconcat max 3 charts and vconcat for the rest with the same chart size)'
@@ -1867,10 +1818,12 @@ def main():
                 if button:
                     # Membagi respons berdasarkan tanda awal dan akhir kode
                     with st.spinner(
-                            'Generating simple dashboard...(it may takes 1-2 minutes)'):
+                            'Generating simple dashboard...(it may takes 1-2 minutes)'
+                    ):
                         response = request_dashboard(schema_str, rows_str,
-                                                        min_viz, api_model, library)
-                        
+                                                     min_viz, api_model,
+                                                     library)
+
                         # st.write("Cek output.")
                         # st.text(response)
                         segments = response.split("BEGIN_CODE")
@@ -1881,7 +1834,8 @@ def main():
                                 code_end = segment.index("END_CODE")
                                 code = segment[:code_end].strip()
                                 explanation = segment[code_end +
-                                                      len("END_CODE"):].strip()
+                                                      len("END_CODE"):].strip(
+                                                      )
                                 explanation = explanation.replace('"', '\\"')
                                 # st.write("Cek code.")
                                 # st.text(code)
@@ -1892,13 +1846,14 @@ def main():
                             else:
                                 # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
                                 st.write(segment)
-                
+
             else:
+
                 def request_summary_points(schema_str,
-                                         rows_str,
-                                         api_model,
-                                         context=''):
-                   
+                                           rows_str,
+                                           api_model,
+                                           context=''):
+
                     # Versi penjelasan dan code
                     # messages = [{
                     #     "role":
@@ -1938,7 +1893,7 @@ def main():
                         {context}
                         """
                     }]
-                   
+
                     if api_model == 'GPT3.5':
                         response = openai.ChatCompletion.create(
                             model="gpt-3.5-turbo",
@@ -1955,12 +1910,11 @@ def main():
                             max_tokens=3000,
                             temperature=0)
                         script = response.choices[0].message['content']
-                
+
                     return script
 
-                def request_explain_summary(text_summary,
-                                         api_model):
-                   
+                def request_explain_summary(text_summary, api_model):
+
                     # Versi penjelasan dan code
                     messages = [{
                         "role":
@@ -1979,7 +1933,7 @@ def main():
                         Write as many insights as possible with various aggregated value that can be extracted in the form of bullet points.
                         """
                     }]
-                   
+
                     if api_model == 'GPT3.5':
                         response = openai.ChatCompletion.create(
                             model="gpt-3.5-turbo",
@@ -1996,11 +1950,12 @@ def main():
                             max_tokens=3000,
                             temperature=0)
                         script = response.choices[0].message['content']
-                
+
                     return script
 
-                def request_summary_wording(text_summary, language, style_choosen,
-                                            objective, format, api_model, context):
+                def request_summary_wording(text_summary, language,
+                                            style_choosen, objective, format,
+                                            api_model, context):
                     messages = [{
                         "role":
                         "system",
@@ -2012,7 +1967,7 @@ def main():
                         "content":
                         f"""Buatkan laporan yang insightful dengan gaya {style_choosen} dan {objective}, menggunakan bahasa {language}, dalam format {format}, serta berikan opinimu dari informasi umum yang diketahui untuk setiap point dari informasi berikut: {text_summary}. Buang insight yang tidak penting, fokus pada insight yang insightful. Tulis dalam 3000 kata. Beri Judul (dengan #) dan Subjudul (dengan ###) sesuai insight. {context}"""
                     }]
-    
+
                     if api_model == 'GPT3.5':
                         response = openai.ChatCompletion.create(
                             model="gpt-3.5-turbo-16k",
@@ -2029,9 +1984,9 @@ def main():
                             max_tokens=3000,
                             temperature=0.6)
                         script = response.choices[0].message['content']
-    
+
                     return script
-    
+
                 def split_text_into_lines(text, words_per_line=20):
                     words = text.split()
                     lines = []
@@ -2040,33 +1995,42 @@ def main():
                         lines.append(line)
                     return '\n'.join(lines)
 
-                
-                api_model = st.selectbox('Choose LLM Model:', ('GPT4', 'GPT3.5'))
+                api_model = st.selectbox('Choose LLM Model:',
+                                         ('GPT4', 'GPT3.5'))
                 language = st.selectbox('Choose Language:',
-                                        ('Indonesia', 'English', 'Sunda'), key='btn_lang')
+                                        ('Indonesia', 'English', 'Sunda'),
+                                        key='btn_lang')
                 style_choosen = st.selectbox('Choose the Formality:',
-                                             ('Formal', 'Non-Formal'), key='btn_style')
-                objective = st.selectbox('Choose the Style:',
-                                         ('Narative', 'Persuasive', 'Descriptive',
-                                          'Argumentative', 'Satire'), key='btn_obj')
-                format = st.selectbox(
-                    'Choose the Format:',
-                    ('Paragraf', 'Youtube Script', 'Thread', 'Caption Instagram'), key='btn_format')
+                                             ('Formal', 'Non-Formal'),
+                                             key='btn_style')
+                objective = st.selectbox(
+                    'Choose the Style:',
+                    ('Narative', 'Persuasive', 'Descriptive', 'Argumentative',
+                     'Satire'),
+                    key='btn_obj')
+                format = st.selectbox('Choose the Format:',
+                                      ('Paragraf', 'Youtube Script', 'Thread',
+                                       'Caption Instagram'),
+                                      key='btn_format')
 
-                context_user = st.text_area("Berikan context untuk fokus pada analisis tertentu jika perlu. Kosongkan untuk analisis secara umum.", value='')
-            
+                context_user = st.text_area(
+                    "Berikan context untuk fokus pada analisis tertentu jika perlu. Kosongkan untuk analisis secara umum.",
+                    value='')
+
                 button = st.button("Submit", key='btn_submit2')
                 if button:
                     # Membagi respons berdasarkan tanda awal dan akhir kode
                     with st.spinner(
-                            'Generating insights...(it may takes 1-2 minutes)'):
-                        response = request_summary_points(schema_str, rows_str, api_model, context_user)
+                            'Generating insights...(it may takes 1-2 minutes)'
+                    ):
+                        response = request_summary_points(
+                            schema_str, rows_str, api_model, context_user)
 
                     # st.write('Original Response: ')
                     # st.text(response)
                     # segments = response.split("BEGIN_CODE")
                     segments = response.split("```python")
-                    
+
                     segment_iterator = iter(segments)
 
                     # st.write('Displayed Response: ')
@@ -2083,15 +2047,15 @@ def main():
                             # st.write('The Code to Execute: ')
                             # st.text(code)
                             exec(code)
-    
+
                             # Tampilkan teks penjelasan
                             # if explanation:
                             #     st.write(explanation)
                         # else:
                         #     # Jika tidak ada kode dalam segmen ini, hanya tampilkan teks
                         #     st.write(segment)
-                            
-                            # text_summary = segment
+
+                        # text_summary = segment
 
                     # exec(response)
 
@@ -2099,16 +2063,17 @@ def main():
                     # st.text(st.session_state.point_summary)
 
                     with st.spinner(
-                            'Creating the paragraph...(it may takes 1-2 minutes)'):
+                            'Creating the paragraph...(it may takes 1-2 minutes)'
+                    ):
                         paragraph = request_summary_wording(
-                            st.session_state.point_summary, language, style_choosen,
-                            objective, format, api_model, context_user)
+                            st.session_state.point_summary, language,
+                            style_choosen, objective, format, api_model,
+                            context_user)
                     # st.text(split_text_into_lines(response))
                     st.write(paragraph)
 
                     st.write("Details:")
                     st.text(st.session_state.point_summary)
-                
 
         # if st.session_state.get('classification', False):
         # elif tabs == "Machine Learning (Classification Model)":
@@ -2310,6 +2275,7 @@ def main():
                 column2.subheader("Visualization")
                 if len(selected_columns) == 1:
                     col = selected_columns[0]
+                    fig = None
                     if data_used[col].dtype == 'object':
                         chart_type = column2.selectbox(
                             "Select Type of Chart", [
@@ -2541,9 +2507,6 @@ def main():
         #     # Download the output as CSV
         #     st.download_button("Download CSV with sentiments", df.to_csv(index=False), "sentiments.csv", "text/csv")
 
-
-# if __name__ == "__main__":
-#     main()
 
 if __name__ == '__main__':
     # # Inisialisasi session state untuk df dan status upload jika belum ada
