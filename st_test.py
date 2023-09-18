@@ -31,7 +31,7 @@ from scipy.stats import zscore
 
 from wordcloud import WordCloud
 
-from autoviz.AutoViz_Class import AutoViz_Class
+from auto_viz_manual.AutoVizManual import AutoVizManual
 import dtale
 import streamlit.components.v1 as components
 
