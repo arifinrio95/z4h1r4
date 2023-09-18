@@ -2242,6 +2242,7 @@ def main():
                                 filter_values[col] = st.text_input(
                                     f"Filter {col} (text)")
                             else:
+                                data_used[col] = data_used[col].cat.as_ordered()
                                 min_val, max_val = st.slider(
                                     f"Filter {col} (range)",
                                     float(data_used[col].min()),
