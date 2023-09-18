@@ -2202,192 +2202,192 @@ def main():
 
         # if st.session_state.get('vizz_tools', False):
         # elif tabs == "Testing BI Tools (under development)":
-        with tab_reco_vizz:
-            st.subheader("Recomender Visualization")
-            # Tableau 10 color palette
-            tableau_10 = [
-                '#1F77B4', '#FF7F0E', '#2CA02C', '#D62728', '#9467BD',
-                '#8C564B', '#E377C2', '#7F7F7F', '#BCBD22', '#17BECF'
-            ]
+        # with tab_reco_vizz:
+        #     st.subheader("Recomender Visualization")
+        #     # Tableau 10 color palette
+        #     tableau_10 = [
+        #         '#1F77B4', '#FF7F0E', '#2CA02C', '#D62728', '#9467BD',
+        #         '#8C564B', '#E377C2', '#7F7F7F', '#BCBD22', '#17BECF'
+        #     ]
 
-            # Load your DataFrame here
-            data_used = df.copy()
-            numeric_cols = data_used.select_dtypes(include=['number']).columns
-            data_used[numeric_cols] = data_used[numeric_cols].fillna(0)
+        #     # Load your DataFrame here
+        #     data_used = df.copy()
+        #     numeric_cols = data_used.select_dtypes(include=['number']).columns
+        #     data_used[numeric_cols] = data_used[numeric_cols].fillna(0)
 
-            object_cols = data_used.select_dtypes(include=['object']).columns
-            data_used[object_cols] = data_used[object_cols].fillna(
-                'Missing Data')
+        #     object_cols = data_used.select_dtypes(include=['object']).columns
+        #     data_used[object_cols] = data_used[object_cols].fillna(
+        #         'Missing Data')
 
-            # Layout
-            column1, column2 = st.columns([1, 3])
-            # Sidebar for DataFrame column selection
-            with column1:
-                st.subheader("Toolkit!")
-                with st.expander("Select Columns"):
-                    selected_columns = []
-                    for col in data_used.columns:
-                        prefix = '09' if data_used[
-                            col].dtype != 'object' else 'AZ'
-                        display_name = f"{prefix} - {col}"
-                        if st.checkbox(display_name, False):
-                            selected_columns.append(col)
+        #     # Layout
+        #     column1, column2 = st.columns([1, 3])
+        #     # Sidebar for DataFrame column selection
+        #     with column1:
+        #         st.subheader("Toolkit!")
+        #         with st.expander("Select Columns"):
+        #             selected_columns = []
+        #             for col in data_used.columns:
+        #                 prefix = '09' if data_used[
+        #                     col].dtype != 'object' else 'AZ'
+        #                 display_name = f"{prefix} - {col}"
+        #                 if st.checkbox(display_name, False):
+        #                     selected_columns.append(col)
 
-                # Sidebar for DataFrame column filtering and aggregation
-                with st.expander("Filter and Aggregate"):
-                    if selected_columns:
-                        filter_values = {}
-                        for col in selected_columns:
-                            if data_used[col].dtype == 'object':
-                                filter_values[col] = st.text_input(
-                                    f"Filter {col} (text)")
-                            else:
-                                data_used[col] = data_used[col].cat.as_ordered()
-                                min_val, max_val = st.slider(
-                                    f"Filter {col} (range)",
-                                    float(data_used[col].min()),
-                                    float(data_used[col].max()),
-                                    (float(data_used[col].min()),
-                                     float(data_used[col].max())))
-                                filter_values[col] = (min_val, max_val)
-                        if len(selected_columns) > 1:
-                            aggregation = st.selectbox(
-                                "Aggregation",
-                                ["sum", "min", "max", "mean", "median"])
-                        else:
-                            aggregation = "count"
+        #         # Sidebar for DataFrame column filtering and aggregation
+        #         with st.expander("Filter and Aggregate"):
+        #             if selected_columns:
+        #                 filter_values = {}
+        #                 for col in selected_columns:
+        #                     if data_used[col].dtype == 'object':
+        #                         filter_values[col] = st.text_input(
+        #                             f"Filter {col} (text)")
+        #                     else:
+        #                         data_used[col] = data_used[col].cat.as_ordered()
+        #                         min_val, max_val = st.slider(
+        #                             f"Filter {col} (range)",
+        #                             float(data_used[col].min()),
+        #                             float(data_used[col].max()),
+        #                             (float(data_used[col].min()),
+        #                              float(data_used[col].max())))
+        #                         filter_values[col] = (min_val, max_val)
+        #                 if len(selected_columns) > 1:
+        #                     aggregation = st.selectbox(
+        #                         "Aggregation",
+        #                         ["sum", "min", "max", "mean", "median"])
+        #                 else:
+        #                     aggregation = "count"
 
-                with st.expander("Data Selection Customizer"):
-                    if len(selected_columns) > 1 and len(selected_columns) < 4:
-                        customizer = {}
-                        customizer['X'] = st.selectbox(
-                            "Select X Variable:",
-                            [x for x in selected_columns])
-                        customizer['Y'] = st.selectbox(
-                            "Select Y Variable:",
-                            [x for x in selected_columns])
-                        if len(selected_columns) == 3:
-                            customizer['Z'] = st.selectbox(
-                                "Select Z Variable:",
-                                [x for x in selected_columns])
+        #         with st.expander("Data Selection Customizer"):
+        #             if len(selected_columns) > 1 and len(selected_columns) < 4:
+        #                 customizer = {}
+        #                 customizer['X'] = st.selectbox(
+        #                     "Select X Variable:",
+        #                     [x for x in selected_columns])
+        #                 customizer['Y'] = st.selectbox(
+        #                     "Select Y Variable:",
+        #                     [x for x in selected_columns])
+        #                 if len(selected_columns) == 3:
+        #                     customizer['Z'] = st.selectbox(
+        #                         "Select Z Variable:",
+        #                         [x for x in selected_columns])
 
-            with column2:
-                insight = None
-                column2.subheader("Visualization")
-                if len(selected_columns) == 1:
-                    col = selected_columns[0]
-                    fig = None
-                    if data_used[col].dtype == 'object':
-                        chart_type = column2.selectbox(
-                            "Select Type of Chart", [
-                                "Bar Chart", "Columns Chart", "Pie Chart",
-                                "Doughnut Chart"
-                            ])
-                        if chart_type == "Bar Chart":
-                            fig, insight = BarChart(data_used, col, tableau_10,
-                                                    aggregation)
+        #     with column2:
+        #         insight = None
+        #         column2.subheader("Visualization")
+        #         if len(selected_columns) == 1:
+        #             col = selected_columns[0]
+        #             fig = None
+        #             if data_used[col].dtype == 'object':
+        #                 chart_type = column2.selectbox(
+        #                     "Select Type of Chart", [
+        #                         "Bar Chart", "Columns Chart", "Pie Chart",
+        #                         "Doughnut Chart"
+        #                     ])
+        #                 if chart_type == "Bar Chart":
+        #                     fig, insight = BarChart(data_used, col, tableau_10,
+        #                                             aggregation)
 
-                        elif chart_type == "Columns Chart":
-                            fig, insight = BarChart(data_used,
-                                                    col,
-                                                    tableau_10,
-                                                    aggregation,
-                                                    columns_chart=True)
-                        elif chart_type == "Pie Chart":
-                            fig, insight = PieChart(data_used, col, tableau_10,
-                                                    aggregation)
-                        elif chart_type == "Doughnut Chart":
-                            fig, insight = PieChart(data_used,
-                                                    col,
-                                                    tableau_10,
-                                                    aggregation,
-                                                    donut=True)
-                    else:
-                        chart_type = column2.selectbox(
-                            "Select Type of Chart", ["Histogram", "Boxplot"])
-                        if chart_type == "Histogram":
-                            fig = px.histogram(
-                                data_used,
-                                x=col,
-                                color_discrete_sequence=tableau_10)
-                            insight = "No"
-                        elif chart_type == "Boxplot":
-                            fig = px.box(data_used,
-                                         x=col,
-                                         color_discrete_sequence=tableau_10)
-                            insight = "No"
+        #                 elif chart_type == "Columns Chart":
+        #                     fig, insight = BarChart(data_used,
+        #                                             col,
+        #                                             tableau_10,
+        #                                             aggregation,
+        #                                             columns_chart=True)
+        #                 elif chart_type == "Pie Chart":
+        #                     fig, insight = PieChart(data_used, col, tableau_10,
+        #                                             aggregation)
+        #                 elif chart_type == "Doughnut Chart":
+        #                     fig, insight = PieChart(data_used,
+        #                                             col,
+        #                                             tableau_10,
+        #                                             aggregation,
+        #                                             donut=True)
+        #             else:
+        #                 chart_type = column2.selectbox(
+        #                     "Select Type of Chart", ["Histogram", "Boxplot"])
+        #                 if chart_type == "Histogram":
+        #                     fig = px.histogram(
+        #                         data_used,
+        #                         x=col,
+        #                         color_discrete_sequence=tableau_10)
+        #                     insight = "No"
+        #                 elif chart_type == "Boxplot":
+        #                     fig = px.box(data_used,
+        #                                  x=col,
+        #                                  color_discrete_sequence=tableau_10)
+        #                     insight = "No"
 
-                    column2.plotly_chart(fig, use_container_width=True)
-                    column2.write('---')
-                    column2.markdown("#### :blue[Insight!]")
-                    column2.write(insight)
+        #             column2.plotly_chart(fig, use_container_width=True)
+        #             column2.write('---')
+        #             column2.markdown("#### :blue[Insight!]")
+        #             column2.write(insight)
 
-                elif len(selected_columns) == 2:
-                    col1 = selected_columns[0]
-                    col2 = selected_columns[1]
-                    if data_used[col1].dtype == 'object' and data_used[
-                            col2].dtype == 'object':
-                        fig = px.bar(data_used,
-                                     x=col1,
-                                     color=col2,
-                                     color_discrete_sequence=tableau_10)
-                        insight = "No"
+        #         elif len(selected_columns) == 2:
+        #             col1 = selected_columns[0]
+        #             col2 = selected_columns[1]
+        #             if data_used[col1].dtype == 'object' and data_used[
+        #                     col2].dtype == 'object':
+        #                 fig = px.bar(data_used,
+        #                              x=col1,
+        #                              color=col2,
+        #                              color_discrete_sequence=tableau_10)
+        #                 insight = "No"
 
-                    elif data_used[col1].dtype != 'object' and data_used[
-                            col2].dtype != 'object':
-                        fig = px.scatter(data_used,
-                                         x=col1,
-                                         y=col2,
-                                         color_discrete_sequence=tableau_10)
-                        insight = "No"
-                    elif data_used[col1].dtype == 'object' and data_used[
-                            col2].dtype != 'object':
-                        fig, insight = BarChart(data_used,
-                                                col1,
-                                                tableau_10,
-                                                aggregation,
-                                                col2=col2)
-                    else:
-                        fig, insight = BarChart(data_used,
-                                                col2,
-                                                tableau_10,
-                                                aggregation,
-                                                col2=col1)
-                    column2.plotly_chart(fig, use_container_width=True)
-                    column2.write('---')
-                    column2.markdown("#### :blue[Insight!]")
-                    column2.write(insight)
+        #             elif data_used[col1].dtype != 'object' and data_used[
+        #                     col2].dtype != 'object':
+        #                 fig = px.scatter(data_used,
+        #                                  x=col1,
+        #                                  y=col2,
+        #                                  color_discrete_sequence=tableau_10)
+        #                 insight = "No"
+        #             elif data_used[col1].dtype == 'object' and data_used[
+        #                     col2].dtype != 'object':
+        #                 fig, insight = BarChart(data_used,
+        #                                         col1,
+        #                                         tableau_10,
+        #                                         aggregation,
+        #                                         col2=col2)
+        #             else:
+        #                 fig, insight = BarChart(data_used,
+        #                                         col2,
+        #                                         tableau_10,
+        #                                         aggregation,
+        #                                         col2=col1)
+        #             column2.plotly_chart(fig, use_container_width=True)
+        #             column2.write('---')
+        #             column2.markdown("#### :blue[Insight!]")
+        #             column2.write(insight)
 
-                elif len(selected_columns) == 3:
-                    # Membuat scatter plot 3D dengan ukuran dan garis pinggir
-                    fig = go.Figure(data=[
-                        go.Scatter3d(
-                            x=data_used[selected_columns[0]],
-                            y=data_used[selected_columns[1]],
-                            z=data_used[selected_columns[2]],
-                            mode='markers',
-                            marker=dict(
-                                size=6,
-                                color=
-                                'blue',  # set color to an array/list of desired values
-                                opacity=0.8,
-                                line=dict(color='black', width=2)))
-                    ])
+        #         elif len(selected_columns) == 3:
+        #             # Membuat scatter plot 3D dengan ukuran dan garis pinggir
+        #             fig = go.Figure(data=[
+        #                 go.Scatter3d(
+        #                     x=data_used[selected_columns[0]],
+        #                     y=data_used[selected_columns[1]],
+        #                     z=data_used[selected_columns[2]],
+        #                     mode='markers',
+        #                     marker=dict(
+        #                         size=6,
+        #                         color=
+        #                         'blue',  # set color to an array/list of desired values
+        #                         opacity=0.8,
+        #                         line=dict(color='black', width=2)))
+        #             ])
 
-                    fig.update_layout(width=800, height=800)
+        #             fig.update_layout(width=800, height=800)
 
-                    # Menampilkan plot di Streamlit
-                    st.plotly_chart(fig)
+        #             # Menampilkan plot di Streamlit
+        #             st.plotly_chart(fig)
 
-                elif len(selected_columns) >= 4:
-                    cat_cols = data_used[selected_columns].select_dtypes(
-                        include='object').columns.tolist()
-                    if len(cat_cols) > 0:
-                        data = data_used[selected_columns].groupby(
-                            by=cat_cols).agg(aggregation)
-                    else:
-                        data = data_used[selected_columns].copy()
-                    column2.dataframe(data, use_container_width=True)
+        #         elif len(selected_columns) >= 4:
+        #             cat_cols = data_used[selected_columns].select_dtypes(
+        #                 include='object').columns.tolist()
+        #             if len(cat_cols) > 0:
+        #                 data = data_used[selected_columns].groupby(
+        #                     by=cat_cols).agg(aggregation)
+        #             else:
+        #                 data = data_used[selected_columns].copy()
+        #             column2.dataframe(data, use_container_width=True)
             # Sidebar kiri atas: Radio button untuk memilih kolom
             # selected_columns = st.sidebar.multiselect("Select columns to visualize", df.columns)
             # Inisialisasi state jika belum ada
