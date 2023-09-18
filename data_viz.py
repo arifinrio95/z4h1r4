@@ -1784,6 +1784,8 @@ class DataViz():
             2.b. Have {len(float_cols)} float columns : {float_cols}.  
             3. Have {len(categorical_cols)} categorical columns : {categorical_cols}.'''
             data = self.df.copy()
+            for col in categorical_cols:
+                data[col] = data[col].cat.add_categories(['Missing Data'])
             data[categorical_cols] = data[categorical_cols].fillna('Missing Data')
             data[numeric_cols] = data[numeric_cols].fillna(0)
             st.markdown(text1)
