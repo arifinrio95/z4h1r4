@@ -40,9 +40,12 @@ class DataViz():
              'float64']).columns
         self.float_cols = self.df.select_dtypes(
             ['float16', 'float32', 'float64']).columns
-        self.categorical_cols = self.df.select_dtypes(exclude=[
-            'int16', 'int32', 'int64', 'float16', 'float32', 'float64'
-        ]).columns
+        # self.categorical_cols = self.df.select_dtypes(exclude=[
+        #     'int16', 'int32', 'int64', 'float16', 'float32', 'float64'
+        # ]).columns
+        self.categorical_cols = self.df.select_dtypes(include=[
+                'object'
+            ]).columns
 
     def format_value(self, valu):
         '''
