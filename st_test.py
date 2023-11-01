@@ -1556,8 +1556,8 @@ def main():
             ])
 
         # if st.session_state.get('manual_exploration', False):
-        with tab_manual:
-            dataviz.visualization()
+        # with tab_manual:
+        #     dataviz.visualization()
 
         # if st.session_state.get('show_natural_language_exploration', False):
         # if tabs == "Explore Visualization & Insight with UlikData":
