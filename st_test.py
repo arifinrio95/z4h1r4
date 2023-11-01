@@ -2045,7 +2045,7 @@ def main():
                                                   len("```"):].strip()
                             explanation = explanation.replace('"', '\\"')
                             # st.write('The Code to Execute: ')
-                            # st.text(code)
+                            st.text(code)
                             exec(code)
 
                             # Tampilkan teks penjelasan
